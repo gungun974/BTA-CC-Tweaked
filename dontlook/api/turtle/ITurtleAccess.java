@@ -5,17 +5,16 @@
  */
 package dan200.computercraft.api.turtle;
 
-import com.mojang.authlib.GameProfile;
+import com.mojang.nbt.tags.CompoundTag;
+import dan200.computercraft.BlockPos;
 import dan200.computercraft.api.lua.ILuaCallback;
 import dan200.computercraft.api.lua.MethodResult;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.shared.util.ItemStorage;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.player.inventory.container.Container;
+import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.util.phys.Vec3;
+import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -64,7 +63,7 @@ public interface ITurtleAccess
      * @see #getVisualYaw(float)
      */
     @Nonnull
-    Vec3d getVisualPosition( float f );
+    Vec3 getVisualPosition(float f );
 
     /**
      * Returns the yaw the turtle is facing when it is rendered.
@@ -254,7 +253,7 @@ public interface ITurtleAccess
      * @see #updateUpgradeNBTData(TurtleSide)
      */
     @Nonnull
-    CompoundTag getUpgradeNBTData( @Nullable TurtleSide side );
+    CompoundTag getUpgradeNBTData(@Nullable TurtleSide side );
 
     /**
      * Mark the upgrade-specific data as dirty on a specific side. This is required for the data to be synced to the client and persisted.
@@ -277,5 +276,5 @@ public interface ITurtleAccess
      * @return This turtle's inventory
      */
     @Nonnull
-    Inventory getInventory();
+    Container getInventory();
 }

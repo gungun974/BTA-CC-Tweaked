@@ -5,9 +5,7 @@
  */
 package dan200.computercraft.shared.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.core.block.Block;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;

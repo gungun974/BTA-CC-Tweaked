@@ -5,10 +5,8 @@
  */
 package dan200.computercraft.shared.util;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.util.helper.Direction;
 
 import javax.annotation.Nonnull;
 
@@ -32,9 +30,9 @@ public interface ItemStorage
         return inventory instanceof SidedInventory ? new SidedInventoryWrapper( (SidedInventory) inventory, facing ) : new InventoryWrapper( inventory );
     }
 
-    static boolean areStackable( @Nonnull ItemStack a, @Nonnull ItemStack b )
+    static boolean areStackable(@Nonnull ItemStack a, @Nonnull ItemStack b )
     {
-        return a == b || (a.getItem() == b.getItem() && ItemStack.areTagsEqual( a, b ));
+        return a == b || (a.getItem().equals(b.getItem()) && a.getData().equals(b.getData()));
     }
 
     int size();
@@ -80,7 +78,7 @@ public interface ItemStorage
         public ItemStack take( int slot, int limit, @Nonnull ItemStack filter, boolean simulate )
         {
             ItemStack existing = inventory.getStack( slot );
-            if( existing.isEmpty() || !canExtract( slot, existing ) || (!filter.isEmpty() && !areStackable( existing, filter )) )
+            if( existing.stackSize == 0 || !canExtract( slot, existing ) || (!(filter.stackSize == 0) && !areStackable( existing, filter )) )
             {
                 return ItemStack.EMPTY;
             }
@@ -122,13 +120,13 @@ public interface ItemStorage
         @Nonnull
         public ItemStack store( int slot, @Nonnull ItemStack stack, boolean simulate )
         {
-            if( stack.isEmpty() || !inventory.isValid( slot, stack ) )
+            if( stack.stackSize == 0 || !inventory.isValid( slot, stack ) )
             {
                 return stack;
             }
 
             ItemStack existing = inventory.getStack( slot );
-            if( existing.isEmpty() )
+            if( existing.stackSize == 0 )
             {
                 int limit = Math.min( stack.getMaxCount(), inventory.getMaxCountPerStack() );
                 if( limit <= 0 )
@@ -136,7 +134,7 @@ public interface ItemStorage
                     return stack;
                 }
 
-                if( stack.getCount() < limit )
+                if( stack.stackSize < limit )
                 {
                     if( !simulate )
                     {

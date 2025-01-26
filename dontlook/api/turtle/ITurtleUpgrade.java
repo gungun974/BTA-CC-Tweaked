@@ -11,7 +11,7 @@ import dan200.computercraft.api.client.TransformedModel;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.util.helper.Direction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

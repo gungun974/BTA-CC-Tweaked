@@ -1,0 +1,65 @@
+/*
+ * This file is part of the public ComputerCraft API - http://www.computercraft.info
+ * Copyright Daniel Ratcliffe, 2011-2022. This API may be redistributed unmodified and in full only.
+ * For help using the API, and posting your mods, visit the forums at computercraft.info.
+ */
+package dan200.computercraft.api.pocket;
+
+import net.minecraft.core.item.IItemConvertible;
+import net.minecraft.core.item.ItemStack;
+
+import javax.annotation.Nonnull;
+
+/**
+ * A base class for {@link IPocketUpgrade}s.
+ *
+ * One does not have to use this, but it does provide a convenient template.
+ */
+public abstract class AbstractPocketUpgrade implements IPocketUpgrade
+{
+    private final int id;
+    private final String adjective;
+    private final ItemStack stack;
+
+    protected AbstractPocketUpgrade( int id, IItemConvertible item )
+    {
+        //this( id, Util.createTranslationKey( "upgrade", id ) + ".adjective", item );
+        this( id, "upgrade" + id  + ".adjective", item );
+    }
+
+    protected AbstractPocketUpgrade( int id, String adjective, IItemConvertible item )
+    {
+        this.id = id;
+        this.adjective = adjective;
+        stack = new ItemStack( item );
+    }
+
+    protected AbstractPocketUpgrade( int id, String adjective, ItemStack stack )
+    {
+        this.id = id;
+        this.adjective = adjective;
+        this.stack = stack;
+    }
+
+
+    @Nonnull
+    @Override
+    public final int getUpgradeID()
+    {
+        return id;
+    }
+
+    @Nonnull
+    @Override
+    public final String getUnlocalisedAdjective()
+    {
+        return adjective;
+    }
+
+    @Nonnull
+    @Override
+    public final ItemStack getCraftingItem()
+    {
+        return stack;
+    }
+}

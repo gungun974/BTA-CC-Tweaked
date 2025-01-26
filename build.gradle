@@ -46,6 +46,10 @@ repositories {
         name = 'SignalumMavenReleases'
         url = 'https://maven.thesignalumproject.net/releases'
     }
+    maven {
+        name "SquidDev"
+        url "https://squiddev.cc/maven"
+    }
     ivy {
         url = "https://github.com/Better-than-Adventure"
         patternLayout {
@@ -81,6 +85,11 @@ repositories {
 
 }
 
+configurations {
+    implementation.extendsFrom shade
+}
+
+
 dependencies {
     minecraft "::${project.bta_version}"
     mappings loom.layered() {}
@@ -115,6 +124,17 @@ dependencies {
     implementation "org.lwjgl:lwjgl-openal:$lwjglVersion"
     implementation "org.lwjgl:lwjgl-opengl:$lwjglVersion"
     implementation "org.lwjgl:lwjgl-stb:$lwjglVersion"
+
+    shade 'org.squiddev:Cobalt:0.5.2-SNAPSHOT'
+
+    implementation 'io.netty:netty-all:4.1.95.Final'
+    implementation 'it.unimi.dsi:fastutil:8.5.12'
+
+    implementation 'com.electronwill.night-config:core:3.6.5'
+    implementation 'com.electronwill.night-config:toml:3.6.5'
+
+    implementation 'commons-codec:commons-codec:1.16.0'
+
 }
 
 java {
