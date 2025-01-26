@@ -20,8 +20,8 @@
 		"Toad-Dev"
     ],
     "depends": {
-        "fabricloader": ">=0.4.0",
-        "fabric": "*"
+        "minecraft": "*",
+        "fabricloader": ">=0.15.5"
     },
     "suggests": {
         "modmenu": "*"
@@ -36,10 +36,8 @@
             "dan200.computercraft.ComputerCraft"
         ],
         "client": [
-            "dan200.computercraft.client.proxy.ComputerCraftProxyClient"
         ],
         "modmenu": [
-            "dan200.computercraft.shared.integration.ModMenuIntegration"
         ]
     },
     "mixins": [

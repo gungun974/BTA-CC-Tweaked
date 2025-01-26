@@ -5,34 +5,13 @@
  */
 package dan200.computercraft;
 
+/*
 import dan200.computercraft.api.turtle.event.TurtleAction;
 import dan200.computercraft.core.apis.http.options.Action;
 import dan200.computercraft.core.apis.http.options.AddressRule;
-import dan200.computercraft.shared.common.ColourableRecipe;
 import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
 import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
-import dan200.computercraft.shared.computer.recipe.ComputerUpgradeRecipe;
-import dan200.computercraft.shared.data.BlockNamedEntityLootCondition;
-import dan200.computercraft.shared.data.HasComputerIdLootCondition;
-import dan200.computercraft.shared.data.PlayerCreativeLootCondition;
-import dan200.computercraft.shared.media.recipes.DiskRecipe;
-import dan200.computercraft.shared.media.recipes.PrintoutRecipe;
 import dan200.computercraft.shared.peripheral.monitor.MonitorRenderer;
-import dan200.computercraft.shared.pocket.recipes.PocketComputerUpgradeRecipe;
-import dan200.computercraft.shared.proxy.ComputerCraftProxyCommon;
-import dan200.computercraft.shared.turtle.recipes.TurtleRecipe;
-import dan200.computercraft.shared.turtle.recipes.TurtleUpgradeRecipe;
-import dan200.computercraft.shared.util.ImpostorRecipe;
-import dan200.computercraft.shared.util.ImpostorShapelessRecipe;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,11 +23,15 @@ import java.util.concurrent.TimeUnit;
 
 import static dan200.computercraft.shared.ComputerCraftRegistry.ModBlocks;
 import static dan200.computercraft.shared.ComputerCraftRegistry.init;
+ */
+
+import net.fabricmc.api.ModInitializer;
 
 public final class ComputerCraft implements ModInitializer
 {
     public static final String MOD_ID = "computercraft";
 
+    /*
     // Configuration fields
     public static int computerSpaceLimit = 1000 * 1000;
     public static int floppySpaceLimit = 125 * 1000;
@@ -107,11 +90,13 @@ public final class ComputerCraft implements ModInitializer
     // Logging
     public static final Logger log = LogManager.getLogger( MOD_ID );
 
-    public static ItemGroup MAIN_GROUP = FabricItemGroupBuilder.build( new Identifier( MOD_ID, "main" ), () -> new ItemStack( ModBlocks.COMPUTER_NORMAL ) );
+    //public static ItemGroup MAIN_GROUP = FabricItemGroupBuilder.build( new Identifier( MOD_ID, "main" ), () -> new ItemStack( ModBlocks.COMPUTER_NORMAL ) );
 
+     */
     @Override
     public void onInitialize()
     {
+        /*
         ComputerCraftProxyCommon.init();
         Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "colour" ), ColourableRecipe.SERIALIZER );
         Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "computer_upgrade" ), ComputerUpgradeRecipe.SERIALIZER );
@@ -132,5 +117,6 @@ public final class ComputerCraft implements ModInitializer
             ResourceManagerHelper.registerBuiltinResourcePack( new Identifier( MOD_ID, "classic" ), modContainer, ResourcePackActivationType.NORMAL );
             ResourceManagerHelper.registerBuiltinResourcePack( new Identifier( MOD_ID, "overhaul" ), modContainer, ResourcePackActivationType.NORMAL );
         } );
+         */
     }
 }

@@ -5,10 +5,9 @@
  */
 package dan200.computercraft.core.terminal;
 
+import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.shared.util.Colour;
 import dan200.computercraft.shared.util.Palette;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketByteBuf;
 
 import javax.annotation.Nonnull;
 

@@ -5,8 +5,9 @@
  */
 package dan200.computercraft.shared.util;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketByteBuf;
+import com.mojang.nbt.tags.CompoundTag;
+
+import java.util.Arrays;
 
 public class Palette
 {
@@ -82,7 +83,7 @@ public class Palette
         }
     }
 
-    public CompoundTag writeToNBT( CompoundTag nbt )
+    public CompoundTag writeToNBT(CompoundTag nbt )
     {
         int[] rgb8 = new int[colours.length];
 
@@ -91,7 +92,7 @@ public class Palette
             rgb8[i] = encodeRGB8( colours[i] );
         }
 
-        nbt.putIntArray( "term_palette", rgb8 );
+        nbt.putLongArray( "term_palette", Arrays.stream(rgb8).asLongStream().toArray());
         return nbt;
     }
 
@@ -106,11 +107,11 @@ public class Palette
 
     public void readFromNBT( CompoundTag nbt )
     {
-        if( !nbt.contains( "term_palette" ) )
+        if( !nbt.containsKey( "term_palette" ) )
         {
             return;
         }
-        int[] rgb8 = nbt.getIntArray( "term_palette" );
+        int[] rgb8 = Arrays.stream(nbt.getLongArray( "term_palette" )).mapToInt(i -> (int) i).toArray();
 
         if( rgb8.length != colours.length )
         {

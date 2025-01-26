@@ -1,158 +1,147 @@
 plugins {
-    id 'fabric-loom' version '0.7-SNAPSHOT'
-    id 'maven-publish'
-    id "checkstyle"
-    id "com.github.hierynomus.license" version "0.15.0"
+    id 'fabric-loom' version '1.7.bta'
+    id 'java'
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-        vendor = JvmVendorSpec.ADOPTOPENJDK
-    }
-}
+import org.gradle.internal.os.OperatingSystem
 
-version = mod_version
+project.ext.lwjglVersion = "3.3.4"
+
+switch (OperatingSystem.current()) {
+    case OperatingSystem.LINUX:
+        project.ext.lwjglNatives = "natives-linux"
+        break
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos"
+}
 
 group = "dan200.computercraft"
 archivesBaseName = "cc-restiched"
+version = project.mod_version
+
+loom {
+    noIntermediateMappings()
+    customMinecraftMetadata.set("https://github.com/Turnip-Labs/bta-manifest-repo/releases/download/v${project.bta_version}/${project.bta_version}.json")
+}
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }
-    maven { url "https://maven.shedaniel.me/" }
+    maven { url = "https://jitpack.io" }
     maven {
-        name "SquidDev"
-        url "https://squiddev.cc/maven"
+        name = 'Babric'
+        url = 'https://maven.glass-launcher.net/babric'
     }
-}
+    maven {
+        name = 'Fabric'
+        url = 'https://maven.fabricmc.net/'
+    }
+    maven {
+        name = 'SignalumMavenInfrastructure'
+        url = 'https://maven.thesignalumproject.net/infrastructure'
+    }
+    maven {
+        name = 'SignalumMavenReleases'
+        url = 'https://maven.thesignalumproject.net/releases'
+    }
+    ivy {
+        url = "https://github.com/Better-than-Adventure"
+        patternLayout {
+            artifact "[organisation]/releases/download/v[revision]/[module].jar"
+            m2compatible = true
+        }
+        metadataSources { artifact() }
+    }
+    ivy {
+        url = "https://downloads.betterthanadventure.net/bta-client/${project.bta_channel}/"
+        patternLayout {
+            artifact "/v[revision]/client.jar"
+            m2compatible = true
+        }
+        metadataSources { artifact() }
+    }
+    ivy {
+        url = "https://downloads.betterthanadventure.net/bta-server/${project.bta_channel}/"
+        patternLayout {
+            artifact "/v[revision]/server.jar"
+            m2compatible = true
+        }
+        metadataSources { artifact() }
+    }
+    ivy {
+        url = "https://piston-data.mojang.com"
+        patternLayout {
+            artifact "v1/[organisation]/[revision]/[module].jar"
+            m2compatible = true
+        }
+        metadataSources { artifact() }
+    }
 
-configurations {
-    implementation.extendsFrom shade
 }
 
 dependencies {
-    checkstyle "com.puppycrawl.tools:checkstyle:8.25"
+    minecraft "::${project.bta_version}"
+    mappings loom.layered() {}
 
-    minecraft "com.mojang:minecraft:${mc_version}"
-    mappings "net.fabricmc:yarn:${mc_version}+build.${mappings_version}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    modRuntimeOnly "objects:client:43db9b498cb67058d2e12d394e6507722e71bb45" // https://piston-data.mojang.com/v1/objects/43db9b498cb67058d2e12d394e6507722e71bb45/client.jar
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-    modImplementation "io.github.prospector:modmenu:${modmenu_version}"
-    modImplementation "me.shedaniel.cloth.api:cloth-utils-v1:${cloth_api_version}"
+    implementation "org.slf4j:slf4j-api:1.8.0-beta4"
+    implementation "org.apache.logging.log4j:log4j-slf4j18-impl:2.16.0"
 
-    implementation 'com.electronwill.night-config:toml:3.6.3'
-    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'com.google.guava:guava:33.0.0-jre'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+    var log4jVersion = "2.20.0"
+    implementation("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+    implementation("org.apache.logging.log4j:log4j-api:${log4jVersion}")
+    implementation("org.apache.logging.log4j:log4j-1.2-api:${log4jVersion}")
 
-    shade 'org.squiddev:Cobalt:0.5.2-SNAPSHOT'
+    include(implementation("org.apache.commons:commons-lang3:3.12.0"))
 
-    include "me.shedaniel.cloth.api:cloth-utils-v1:${cloth_api_version}"
-    include 'com.electronwill.night-config:core:3.6.3'
-    include 'com.electronwill.night-config:toml:3.6.3'
-    include "me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}"
+    modImplementation("com.github.zarzelcow:legacy-lwjgl3:1.0.4")
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
-    modRuntime "me.shedaniel:RoughlyEnoughItems-api:5.12.248"
-    modRuntime "me.shedaniel:RoughlyEnoughItems:5.12.248"
+    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+    implementation "org.lwjgl:lwjgl:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-assimp:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-glfw:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-openal:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-opengl:$lwjglVersion"
+    implementation "org.lwjgl:lwjgl-stb:$lwjglVersion"
 }
 
-processResources {
-    inputs.property "version", project.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
-        expand "version": project.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
-    }
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
-
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
-    from sourceSets.main.allSource
+tasks.withType(JavaCompile).configureEach {
+    options.release.set 8
 }
 
 jar {
-    from "LICENSE"
-
-    from configurations.shade.collect { it.isDirectory() ? it : zipTree(it) }
-}
-
-
-import com.hierynomus.gradle.license.tasks.LicenseCheck
-import com.hierynomus.gradle.license.tasks.LicenseFormat
-
-license {
-    mapping("java", "SLASHSTAR_STYLE")
-    strictCheck true
-
-    ext.year = Calendar.getInstance().get(Calendar.YEAR)
-}
-
-[licenseMain, licenseFormatMain].forEach {
-    it.configure {
-        include("**/*.java")
-        exclude("dan200/computercraft/api/**")
-        header file('config/license/main.txt')
+    from("LICENSE") {
+        rename { "${it}_${archivesBaseName}" }
     }
 }
 
-[licenseTest, licenseFormatTest].forEach {
-    it.configure {
-        include("**/*.java")
-        header file('config/license/main.txt')
-    }
+configurations.configureEach {
+    // Removes LWJGL2 dependencies
+    exclude group: "org.lwjgl.lwjgl"
 }
 
-gradle.projectsEvaluated {
-    tasks.withType(LicenseFormat) {
-        outputs.upToDateWhen { false }
-    }
-}
+processResources {
+    inputs.property "version", version
 
-
-task licenseAPI(type: LicenseCheck);
-task licenseFormatAPI(type: LicenseFormat);
-[licenseAPI, licenseFormatAPI].forEach {
-    it.configure {
-        source = sourceSets.main.java
-        include("dan200/computercraft/api/**")
-        header file('config/license/api.txt')
-    }
-}
-
-// configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
-            }
-        }
-    }
-
-    // select the repositories you want to publish to
-    repositories {
-        // uncomment to publish to the local maven
-        // mavenLocal()
+    filesMatching("fabric.mod.json") {
+        expand "version": version
     }
 }
