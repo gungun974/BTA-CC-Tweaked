@@ -5,6 +5,7 @@
  */
 package dan200.computercraft.client.gui;
 
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.core.terminal.TextBuffer;
 import dan200.computercraft.shared.util.Colour;
@@ -43,6 +44,8 @@ public final class FixedWidthFontRenderer
 
         Tessellator tessellator = Tessellator.instance;
 
+        tessellator.startDrawingQuads();
+
         drawString(
             x,
             y,
@@ -71,6 +74,8 @@ public final class FixedWidthFontRenderer
         {
             drawBackground( x, y, backgroundColour, palette, greyscale, leftMarginSize, rightMarginSize, FONT_HEIGHT );
         }
+
+        ComputerCraft.log.info(text.toString());
 
         for( int i = 0; i < text.length(); i++ )
         {
@@ -356,6 +361,8 @@ public final class FixedWidthFontRenderer
         bindFont();
 
         Tessellator tessellator = Tessellator.instance;
+
+        tessellator.startDrawingQuads();
 
         drawTerminalWithoutCursor(  x, y, terminal, greyscale, topMarginSize, bottomMarginSize, leftMarginSize, rightMarginSize );
         drawCursor( x, y, terminal, greyscale );

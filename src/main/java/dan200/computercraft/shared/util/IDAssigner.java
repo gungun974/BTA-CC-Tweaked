@@ -9,10 +9,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.fabric.mixin.WorldSavePathAccess;
-import me.shedaniel.cloth.api.utils.v1.GameInstanceUtils;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.WorldSavePath;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.world.World;
 
 import java.io.File;
 import java.io.Reader;
@@ -27,14 +25,14 @@ import java.util.Map;
 
 public final class IDAssigner
 {
-    private static final WorldSavePath FOLDER = WorldSavePathAccess.createWorldSavePath( ComputerCraft.MOD_ID );
+    //private static final WorldSavePath FOLDER = WorldSavePathAccess.createWorldSavePath( ComputerCraft.MOD_ID );
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
         .create();
     private static final Type ID_TOKEN = new TypeToken<Map<String, Integer>>()
     {
     }.getType();
     private static Map<String, Integer> ids;
-    private static WeakReference<MinecraftServer> server;
+    //private static WeakReference<MinecraftServer> server;
     private static Path idFile;
 
     private IDAssigner()
@@ -43,13 +41,13 @@ public final class IDAssigner
 
     public static synchronized int getNextId( String kind )
     {
-        MinecraftServer currentServer = getCachedServer();
-        if( currentServer == null )
-        {
-            // The server has changed, refetch our ID map
-            if( GameInstanceUtils.getServer() != null )
-            {
-                server = new WeakReference<>( GameInstanceUtils.getServer() );
+//        MinecraftServer currentServer = getCachedServer();
+//        if( currentServer == null )
+//        {
+//            // The server has changed, refetch our ID map
+//            if( GameInstanceUtils.getServer() != null )
+//            {
+//                server = new WeakReference<>( GameInstanceUtils.getServer() );
 
                 File dir = getDir();
                 dir.mkdirs();
@@ -72,8 +70,8 @@ public final class IDAssigner
                 {
                     ids = new HashMap<>();
                 }
-            }
-        }
+//            }
+//        }
 
         Integer existing = ids.get( kind );
         int next = existing == null ? 0 : existing + 1;
@@ -92,30 +90,33 @@ public final class IDAssigner
         return next;
     }
 
-    private static MinecraftServer getCachedServer()
-    {
-        if( server == null )
-        {
-            return null;
-        }
-
-        MinecraftServer currentServer = server.get();
-        if( currentServer == null )
-        {
-            return null;
-        }
-
-        if( currentServer != GameInstanceUtils.getServer() )
-        {
-            return null;
-        }
-        return currentServer;
-    }
+//    private static MinecraftServer getCachedServer()
+//    {
+//        if( server == null )
+//        {
+//            return null;
+//        }
+//
+//        MinecraftServer currentServer = server.get();
+//        if( currentServer == null )
+//        {
+//            return null;
+//        }
+//
+//        if( currentServer != GameInstanceUtils.getServer() )
+//        {
+//            return null;
+//        }
+//        return currentServer;
+//    }
 
     public static File getDir()
     {
-        return GameInstanceUtils.getServer()
-            .getSavePath( FOLDER )
-            .toFile();
+        return getWorldDir(Minecraft.getMinecraft().currentWorld);
+    }
+
+    public static File getWorldDir(World world) {
+        Minecraft mc = Minecraft.getMinecraft();
+        return new File(mc.getMinecraftDir(), "saves/" + world.getLevelData().getWorldName());
     }
 }

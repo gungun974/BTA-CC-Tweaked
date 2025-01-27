@@ -1,13 +1,23 @@
-View the source code at https://github.com/Merith-TK/cc-restiched
-View the documentation at https://wiki.computercraft.cc
-Visit the forum at https://forums.computercraft.cc
-You can disable these messages by running "set motd.enable false"
-You can create directories with "mkdir".
-Want to see hidden files? Run "set list.show_hidden true".
-Run "list" or "ls" to see all files in a directory.
-You can delete files and directories with "delete" or "rm".
+Please report bugs at https://github.com/Merith-TK/cc-restitched/issues. Thanks!
+View the documentation at https://tweaked.cc
+Show off your programs or ask for help at our forum: https://forums.computercraft.cc
+You can disable these messages by running "set motd.enable false".
 Use "pastebin put" to upload a program to pastebin.
-Use "pastebin get" to download a program from pastebin.
-Use "pastebin run" to run a program from pastebin without saving it.
 Use the "edit" program to create and edit your programs.
-You can copy files with "copy" or "cp".
+You can use "wget" to download a file from the internet.
+On an advanced computer you can use "fg" or "bg" to run multiple programs at the same time.
+Use an advanced computer to use colours and the mouse.
+With a speaker you can play sounds.
+Programs that are placed in the "startup" folder in the root of a computer are started on boot.
+Use a modem to connect with other computers.
+With the "gps" program you can get the position of a computer.
+Use "monitor" to run a program on a attached monitor.
+Don't forget to label your computer with "label set".
+Feeling creative? Use a printer to print a book!
+Files beginning with a "." are hidden from "list" by default.
+Running "set" lists the current values of all settings.
+Some programs are only available on advanced computers, turtles, pocket computers or command computers.
+The "equip" programs let you add upgrades to a turtle without crafting.
+You can change the color of a disk by crafting or right clicking it with dye.
+You can print on a printed page again to get multiple colors.
+Holding the Ctrl and T keys terminates the running program.

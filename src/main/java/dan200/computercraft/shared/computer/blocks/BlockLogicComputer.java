@@ -58,6 +58,7 @@ public class BlockLogicComputer extends BlockLogicRotatable {
 
             thread2.start();
 
+server.turnOn();
 
             Minecraft.getMinecraft().displayScreen(new GuiComputer(client, server.getTerminal().getWidth(), server.getTerminal().getHeight()));
         }

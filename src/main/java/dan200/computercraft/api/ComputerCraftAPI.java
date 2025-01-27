@@ -135,17 +135,17 @@ public final class ComputerCraftAPI
         return getInstance().createResourceMount( domain, subPath );
     }
 
-    /**
-     * Registers a peripheral provider to convert blocks into {@link IPeripheral} implementations.
-     *
-     * @param provider The peripheral provider to register.
-     * @see IPeripheral
-     * @see IPeripheralProvider
-     */
-    public static void registerPeripheralProvider( @Nonnull IPeripheralProvider provider )
-    {
-        getInstance().registerPeripheralProvider( provider );
-    }
+//    /**
+//     * Registers a peripheral provider to convert blocks into {@link IPeripheral} implementations.
+//     *
+//     * @param provider The peripheral provider to register.
+//     * @see IPeripheral
+//     * @see IPeripheralProvider
+//     */
+//    public static void registerPeripheralProvider( @Nonnull IPeripheralProvider provider )
+//    {
+//        getInstance().registerPeripheralProvider( provider );
+//    }
 
     /**
      * Registers a method source for generic peripherals.
@@ -172,90 +172,90 @@ public final class ComputerCraftAPI
     }
      */
 
-    /**
-     * Registers a bundled redstone provider to provide bundled redstone output for blocks.
-     *
-     * @param provider The bundled redstone provider to register.
-     * @see IBundledRedstoneProvider
-     */
-    public static void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider )
-    {
-        getInstance().registerBundledRedstoneProvider( provider );
-    }
+//    /**
+//     * Registers a bundled redstone provider to provide bundled redstone output for blocks.
+//     *
+//     * @param provider The bundled redstone provider to register.
+//     * @see IBundledRedstoneProvider
+//     */
+//    public static void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider )
+//    {
+//        getInstance().registerBundledRedstoneProvider( provider );
+//    }
 
-    /**
-     * If there is a Computer or Turtle at a certain position in the world, get it's bundled redstone output.
-     *
-     * @param world The world this block is in.
-     * @param pos   The position this block is at.
-     * @param side  The side to extract the bundled redstone output from.
-     * @return If there is a block capable of emitting bundled redstone at the location, it's signal (0-65535) will be returned. If there is no block
-     * capable of emitting bundled redstone at the location, -1 will be returned.
-     * @see IBundledRedstoneProvider
-     */
-    public static int getBundledRedstoneOutput( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
-    {
-        return getInstance().getBundledRedstoneOutput( world, pos, side );
-    }
+//    /**
+//     * If there is a Computer or Turtle at a certain position in the world, get it's bundled redstone output.
+//     *
+//     * @param world The world this block is in.
+//     * @param pos   The position this block is at.
+//     * @param side  The side to extract the bundled redstone output from.
+//     * @return If there is a block capable of emitting bundled redstone at the location, it's signal (0-65535) will be returned. If there is no block
+//     * capable of emitting bundled redstone at the location, -1 will be returned.
+//     * @see IBundledRedstoneProvider
+//     */
+//    public static int getBundledRedstoneOutput( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
+//    {
+//        return getInstance().getBundledRedstoneOutput( world, pos, side );
+//    }
 
-    /**
-     * Registers a media provider to provide {@link IMedia} implementations for Items.
-     *
-     * @param provider The media provider to register.
-     * @see IMediaProvider
-     */
-    public static void registerMediaProvider( @Nonnull IMediaProvider provider )
-    {
-        getInstance().registerMediaProvider( provider );
-    }
+//    /**
+//     * Registers a media provider to provide {@link IMedia} implementations for Items.
+//     *
+//     * @param provider The media provider to register.
+//     * @see IMediaProvider
+//     */
+//    public static void registerMediaProvider( @Nonnull IMediaProvider provider )
+//    {
+//        getInstance().registerMediaProvider( provider );
+//    }
+//
+//    public static void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade )
+//    {
+//        getInstance().registerPocketUpgrade( upgrade );
+//    }
 
-    public static void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade )
-    {
-        getInstance().registerPocketUpgrade( upgrade );
-    }
-
-    /**
-     * Attempt to get the game-wide wireless network.
-     *
-     * @return The global wireless network, or {@code null} if it could not be fetched.
-     */
-    public static IPacketNetwork getWirelessNetwork()
-    {
-        return getInstance().getWirelessNetwork();
-    }
+//    /**
+//     * Attempt to get the game-wide wireless network.
+//     *
+//     * @return The global wireless network, or {@code null} if it could not be fetched.
+//     */
+//    public static IPacketNetwork getWirelessNetwork()
+//    {
+//        return getInstance().getWirelessNetwork();
+//    }
 
     public static void registerAPIFactory( @Nonnull ILuaAPIFactory factory )
     {
         getInstance().registerAPIFactory( factory );
     }
 
-    /**
-     * Construct a new wired node for a given wired element.
-     *
-     * @param element The element to construct it for
-     * @return The element's node
-     * @see IWiredElement#getNode()
-     */
-    @Nonnull
-    public static IWiredNode createWiredNodeForElement( @Nonnull IWiredElement element )
-    {
-        return getInstance().createWiredNodeForElement( element );
-    }
+//    /**
+//     * Construct a new wired node for a given wired element.
+//     *
+//     * @param element The element to construct it for
+//     * @return The element's node
+//     * @see IWiredElement#getNode()
+//     */
+//    @Nonnull
+//    public static IWiredNode createWiredNodeForElement( @Nonnull IWiredElement element )
+//    {
+//        return getInstance().createWiredNodeForElement( element );
+//    }
 
-    /**
-     * Get the wired network element for a block in world.
-     *
-     * @param world The world the block exists in
-     * @param pos   The position the block exists in
-     * @param side  The side to extract the network element from
-     * @return The element's node
-     * @see IWiredElement#getNode()
-     */
-    @Nullable
-    public static IWiredElement getWiredElementAt( @Nonnull BlockView world, @Nonnull BlockPos pos, @Nonnull Direction side )
-    {
-        return getInstance().getWiredElementAt( world, pos, side );
-    }
+//    /**
+//     * Get the wired network element for a block in world.
+//     *
+//     * @param world The world the block exists in
+//     * @param pos   The position the block exists in
+//     * @param side  The side to extract the network element from
+//     * @return The element's node
+//     * @see IWiredElement#getNode()
+//     */
+//    @Nullable
+//    public static IWiredElement getWiredElementAt( @Nonnull BlockView world, @Nonnull BlockPos pos, @Nonnull Direction side )
+//    {
+//        return getInstance().getWiredElementAt( world, pos, side );
+//    }
 
     public interface IComputerCraftAPI
     {
@@ -270,29 +270,29 @@ public final class ComputerCraftAPI
         @Nullable
         IMount createResourceMount( @Nonnull String domain, @Nonnull String subPath );
 
-        void registerPeripheralProvider( @Nonnull IPeripheralProvider provider );
+//        void registerPeripheralProvider( @Nonnull IPeripheralProvider provider );
 
         void registerGenericSource( @Nonnull GenericSource source );
 
         //void registerTurtleUpgrade( @Nonnull ITurtleUpgrade upgrade );
+//
+//        void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider );
+//
+//        int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side );
 
-        void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider );
-
-        int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side );
-
-        void registerMediaProvider( @Nonnull IMediaProvider provider );
-
-        void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade );
-
-        @Nonnull
-        IPacketNetwork getWirelessNetwork();
+//        void registerMediaProvider( @Nonnull IMediaProvider provider );
+//
+//        void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade );
+//
+//        @Nonnull
+//        IPacketNetwork getWirelessNetwork();
 
         void registerAPIFactory( @Nonnull ILuaAPIFactory factory );
 
-        @Nonnull
-        IWiredNode createWiredNodeForElement( @Nonnull IWiredElement element );
-
-        @Nullable
-        IWiredElement getWiredElementAt(@Nonnull BlockView world, @Nonnull BlockPos pos, @Nonnull Direction side );
+//        @Nonnull
+//        IWiredNode createWiredNodeForElement( @Nonnull IWiredElement element );
+//
+//        @Nullable
+//        IWiredElement getWiredElementAt(@Nonnull BlockView world, @Nonnull BlockPos pos, @Nonnull Direction side );
     }
 }

@@ -9,28 +9,27 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.io.ByteStreams;
 import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.ResourceManager;
+import dan200.computercraft.ResourceManager.Identifier;
+import dan200.computercraft.ResourceManager.Resource;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.core.apis.handles.ArrayByteChannel;
 import dan200.computercraft.shared.util.IoUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public final class ResourceMount implements IMount
 {
-    private Mount m_rootMount;
-    private Map<String, Mount> m_mounts;
-
     /**
      * Only cache files smaller than 1MiB.
      */
@@ -91,7 +90,7 @@ public final class ResourceMount implements IMount
         String existingNamespace = null;
 
         FileEntry newRoot = new FileEntry( new Identifier( namespace, subPath ) );
-        for( Identifier file : manager.findResources( subPath, s -> true ) )
+        for( Identifier file : manager.findResources( namespace, subPath ) )
         {
             existingNamespace = file.getNamespace();
 
@@ -147,15 +146,15 @@ public final class ResourceMount implements IMount
             if( nextEntry == null )
             {
                 Identifier childPath;
-                try
-                {
+//                try
+//                {
                     childPath = new Identifier( namespace, subPath + "/" + path );
-                }
-                catch( InvalidIdentifierException e )
-                {
-                    ComputerCraft.log.warn( "Cannot create resource location for {} ({})", part, e.getMessage() );
-                    return;
-                }
+//                }
+//                catch( InvalidIdentifierException e )
+//                {
+//                    ComputerCraft.log.warn( "Cannot create resource location for {} ({})", part, e.getMessage() );
+//                    return;
+//                }
                 lastEntry.children.put( part, nextEntry = new FileEntry( childPath ) );
             }
 
@@ -232,7 +231,6 @@ public final class ResourceMount implements IMount
 
             try
             {
-                File file = this.getRealPath(this.sanitizePath(path));
                 InputStream stream = manager.getResource( file.identifier ).getInputStream();
                 if( stream.available() > MAX_CACHED_SIZE ) return Channels.newChannel( stream );
 
@@ -250,8 +248,6 @@ public final class ResourceMount implements IMount
             }
             catch( FileNotFoundException ignored )
             {
-            } catch (FileSystemException e) {
-                throw new RuntimeException(e);
             }
         }
 
@@ -280,146 +276,38 @@ public final class ResourceMount implements IMount
         }
     }
 
-    /**
-     * An {@link IdentifiableResourceReloadListener} which reloads any associated mounts and correctly updates the resource manager they
-     * point to.
-     */
-    public static final IdentifiableResourceReloadListener RELOAD_LISTENER = new SimpleResourceReloadListener<Void>()
-    {
-        @Override
-        public Identifier getFabricId()
-        {
-            return new Identifier( ComputerCraft.MOD_ID, "resource_mount_reload_listener" );
-        }
-
-        @Override
-        public CompletableFuture<Void> load( ResourceManager manager, Profiler profiler, Executor executor )
-        {
-            return CompletableFuture.runAsync( () -> {
-                profiler.push( "Reloading ComputerCraft mounts" );
-                try
-                {
-                    for( ResourceMount mount : MOUNT_CACHE.values() ) mount.load( manager );
-                }
-                finally
-                {
-                    profiler.pop();
-                }
-            }, executor );
-        }
-
-        @Override
-        public CompletableFuture<Void> apply( Void data, ResourceManager manager, Profiler profiler, Executor executor )
-        {
-            return CompletableFuture.runAsync( () -> { }, executor );
-        }
-    };
-
-    private static class Identifier {
-        private final String namespace;
-        private final String subPath;
-
-        public Identifier(String namespace, String subPath) {
-            this.namespace = namespace;
-            this.subPath = subPath;
-        }
-    }
-
-
-
-    private String sanitizePath(String path) {
-        path = path.replace('\\', '/');
-        String[] parts = path.split("/");
-        Stack<String> outputParts = new Stack<String>();
-        for (int n = 0; n < parts.length; ++n) {
-            String part = parts[n];
-            if (part.length() == 0 || part.equals(".")) continue;
-            if (part.equals("..")) {
-                if (!outputParts.empty()) {
-                    String top = (String) outputParts.peek();
-                    if (!top.equals("..")) {
-                        outputParts.pop();
-                        continue;
-                    }
-                    outputParts.push("..");
-                    continue;
-                }
-                outputParts.push("..");
-                continue;
-            }
-            outputParts.push(part);
-        }
-        StringBuilder result = new StringBuilder("");
-        Iterator it = outputParts.iterator();
-        while (it.hasNext()) {
-            String part = (String) it.next();
-            result.append(part);
-            if (!it.hasNext()) continue;
-            result.append('/');
-        }
-        return result.toString();
-    }
-
-    private Mount getMount(String path) {
-        for (Mount mount : this.m_mounts.values()) {
-            if (!this._contains(mount.location, path)) continue;
-            return mount;
-        }
-        if (this._contains(this.m_rootMount.location, path)) {
-            return this.m_rootMount;
-        }
-        return null;
-    }
-
-    private File getRealPath(String path) throws FileSystemException {
-        Mount mount = this.getMount(path);
-        if (mount == null) {
-            throw new FileSystemException("Invalid path.");
-        }
-        return new File(mount.realPath, mount.toLocal(path));
-    }
-
-    private boolean _contains(String pathA, String pathB) {
-        if (pathB.indexOf("..") >= 0) {
-            return false;
-        }
-        if (pathB.equals(pathA)) {
-            return true;
-        }
-        if (pathA.length() == 0) {
-            return true;
-        }
-        return pathB.startsWith(pathA + "/");
-    }
-
-    private class Mount {
-        String name;
-        String location;
-        String parentLocation;
-        File realPath;
-        boolean readOnly;
-
-        Mount(String _location, File _realPath, boolean _readOnly) {
-            this.location = _location;
-            this.realPath = _realPath;
-            this.readOnly = _readOnly;
-            int lastSlash = this.location.lastIndexOf(47);
-            if (lastSlash >= 0) {
-                this.name = this.location.substring(lastSlash + 1);
-                this.parentLocation = this.location.substring(0, lastSlash);
-            } else {
-                this.name = this.location;
-                this.parentLocation = "";
-            }
-        }
-
-        private String toLocal(String path) {
-            assert ResourceMount.this._contains(this.location, path);
-            String local = path.substring(this.location.length());
-            if (local.startsWith("/")) {
-                return local.substring(1);
-            }
-            return local;
-        }
-    }
+//    /**
+//     * An {@link IdentifiableResourceReloadListener} which reloads any associated mounts and correctly updates the resource manager they
+//     * point to.
+//     */
+//    public static final IdentifiableResourceReloadListener RELOAD_LISTENER = new SimpleResourceReloadListener<Void>()
+//    {
+//        @Override
+//        public Identifier getFabricId()
+//        {
+//            return new Identifier( ComputerCraft.MOD_ID, "resource_mount_reload_listener" );
+//        }
+//
+//        @Override
+//        public CompletableFuture<Void> load( ResourceManager manager, Profiler profiler, Executor executor )
+//        {
+//            return CompletableFuture.runAsync( () -> {
+//                profiler.push( "Reloading ComputerCraft mounts" );
+//                try
+//                {
+//                    for( ResourceMount mount : MOUNT_CACHE.values() ) mount.load( manager );
+//                }
+//                finally
+//                {
+//                    profiler.pop();
+//                }
+//            }, executor );
+//        }
+//
+//        @Override
+//        public CompletableFuture<Void> apply( Void data, ResourceManager manager, Profiler profiler, Executor executor )
+//        {
+//            return CompletableFuture.runAsync( () -> { }, executor );
+//        }
+//    };
 }
