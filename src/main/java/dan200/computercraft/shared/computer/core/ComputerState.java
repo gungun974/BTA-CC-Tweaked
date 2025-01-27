@@ -5,11 +5,9 @@
  */
 package dan200.computercraft.shared.computer.core;
 
-import net.minecraft.util.StringIdentifiable;
-
 import javax.annotation.Nonnull;
 
-public enum ComputerState implements StringIdentifiable
+public enum ComputerState// implements StringIdentifiable
 {
     OFF( "off" ), ON( "on" ), BLINKING( "blinking" );
 
@@ -20,6 +18,7 @@ public enum ComputerState implements StringIdentifiable
         this.name = name;
     }
 
+    /*
     @Nonnull
     @Override
     public String asString()
@@ -32,4 +31,5 @@ public enum ComputerState implements StringIdentifiable
     {
         return name;
     }
+     */
 }

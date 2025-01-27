@@ -5,8 +5,9 @@
  */
 package dan200.computercraft.shared.computer.core;
 
+import com.mojang.nbt.tags.CompoundTag;
+import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.ComputerCraftAPIImpl;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
@@ -17,21 +18,9 @@ import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.core.computer.IComputerEnvironment;
 import dan200.computercraft.shared.common.ServerTerminal;
-import dan200.computercraft.shared.network.NetworkHandler;
-import dan200.computercraft.shared.network.NetworkMessage;
-import dan200.computercraft.shared.network.client.ComputerDataClientMessage;
-import dan200.computercraft.shared.network.client.ComputerDeletedClientMessage;
-import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
-import me.shedaniel.cloth.api.utils.v1.GameInstanceUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.InputStream;
 
 public class ServerComputer extends ServerTerminal implements IComputer, IComputerEnvironment
@@ -87,7 +76,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
 
     public void setPosition( BlockPos pos )
     {
-        position = new BlockPos( pos );
+        position = pos;
     }
 
     public IAPIEnvironment getAPIEnvironment()
@@ -141,6 +130,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         changed = true;
     }
 
+    /*
     public void broadcastState( boolean force )
     {
         if( hasOutputChanged() || force )
@@ -176,12 +166,14 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
             }
         }
     }
+     */
 
     public boolean hasOutputChanged()
     {
         return changedLastFrame;
     }
 
+    /*
     private NetworkMessage createComputerPacket()
     {
         return new ComputerDataClientMessage( this );
@@ -214,6 +206,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         IContainerComputer computerContainer = (IContainerComputer) container;
         return computerContainer.getComputer() != this ? null : computerContainer;
     }
+     */
 
     @Override
     public int getInstanceID()
@@ -244,12 +237,14 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         computer.reboot();
     }
 
+    /*
     @Override
     public void queueEvent( String event, Object[] arguments )
     {
         // Queue event
         computer.queueEvent( event, arguments );
     }
+     */
 
     @Override
     public boolean isOn()
@@ -263,6 +258,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         return computer.isOn() && computer.isBlinking();
     }
 
+    /*
     public void sendComputerState( PlayerEntity player )
     {
         // Send state to client
@@ -284,6 +280,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
             NetworkHandler.sendToAllPlayers( server, new ComputerDeletedClientMessage( getInstanceID() ) );
         }
     }
+     */
 
     public int getID()
     {
@@ -351,13 +348,13 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
     @Override
     public int getDay()
     {
-        return (int) ((world.getTimeOfDay() + 6000) / 24000) + 1;
+        return (int) ((world.getWorldTime() + 6000) / 24000) + 1;
     }
 
     @Override
     public double getTimeOfDay()
     {
-        return (world.getTimeOfDay() + 6000) % 24000 / 1000.0;
+        return (world.getWorldTime() + 6000) % 24000 / 1000.0;
     }
 
     @Override
@@ -399,8 +396,9 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
     }
 
     @Override
-    public InputStream createResourceFile( String domain, String subPath )
+    public InputStream createResourceFile(String domain, String subPath )
     {
-        return ComputerCraftAPIImpl.getResourceFile( domain, subPath );
+        //return ComputerCraftAPIImpl.getResourceFile( domain, subPath );
+        return null;
     }
 }

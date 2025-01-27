@@ -6,8 +6,6 @@
 package dan200.computercraft.shared.common;
 
 import dan200.computercraft.core.terminal.Terminal;
-import dan200.computercraft.shared.network.client.TerminalState;
-import net.minecraft.nbt.CompoundTag;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -79,6 +77,7 @@ public class ServerTerminal implements ITerminal
         return colour;
     }
 
+    /*
     public TerminalState write()
     {
         return new TerminalState( colour, terminal );
@@ -96,4 +95,5 @@ public class ServerTerminal implements ITerminal
             nbt.put( "terminal", terminal );
         }
     }
+     */
 }

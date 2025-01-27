@@ -13,11 +13,12 @@ import dan200.computercraft.core.filesystem.FileSystem;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.core.tracking.Tracking;
 import dan200.computercraft.core.tracking.TrackingField;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+//import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+//import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -57,7 +58,7 @@ public final class Environment implements IAPIEnvironment
     private final IPeripheral[] peripherals = new IPeripheral[ComputerSide.COUNT];
     private IPeripheralChangeListener peripheralListener = null;
 
-    private final Int2ObjectMap<Timer> timers = new Int2ObjectOpenHashMap<>();
+    private final HashMap<Integer, Timer> timers = new HashMap<>();
     private int nextTimerToken = 0;
 
     Environment( Computer computer )
@@ -232,16 +233,16 @@ public final class Environment implements IAPIEnvironment
         synchronized( timers )
         {
             // Countdown all of our active timers
-            Iterator<Int2ObjectMap.Entry<Timer>> it = timers.int2ObjectEntrySet().iterator();
+            Iterator<HashMap.Entry<Integer, Timer>> it = timers.entrySet().iterator();
             while( it.hasNext() )
             {
-                Int2ObjectMap.Entry<Timer> entry = it.next();
+                HashMap.Entry<Integer, Timer> entry = it.next();
                 Timer timer = entry.getValue();
                 timer.ticksLeft--;
                 if( timer.ticksLeft <= 0 )
                 {
                     // Queue the "timer" event
-                    queueEvent( TIMER_EVENT, entry.getIntKey() );
+                    queueEvent( TIMER_EVENT, entry.getKey() );
                     it.remove();
                 }
             }
