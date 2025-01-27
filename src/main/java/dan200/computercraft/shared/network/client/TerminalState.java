@@ -5,13 +5,12 @@
  */
 package dan200.computercraft.shared.network.client;
 
+import dan200.computercraft.PacketByteBuf;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.shared.util.IoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
-import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
-import net.minecraft.network.PacketByteBuf;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -62,7 +61,12 @@ public class TerminalState
             height = terminal.getHeight();
 
             ByteBuf buf = buffer = Unpooled.buffer();
-            terminal.write( new PacketByteBuf( buf ) );
+
+            PacketByteBuf packet = new PacketByteBuf();
+
+            packet.writeBytes(buf.array());
+
+            terminal.write( packet );
         }
     }
 
@@ -73,10 +77,10 @@ public class TerminalState
 
         if( buf.readBoolean() )
         {
-            width = buf.readVarInt();
-            height = buf.readVarInt();
+            width = buf.readInt();
+            height = buf.readInt();
 
-            int length = buf.readVarInt();
+            int length = buf.readInt();
             buffer = readCompressed( buf, length, compress );
         }
         else
@@ -86,7 +90,7 @@ public class TerminalState
         }
     }
 
-    private static ByteBuf readCompressed( ByteBuf buf, int length, boolean compress )
+    private static ByteBuf readCompressed(PacketByteBuf buf, int length, boolean compress )
     {
         if( compress )
         {
@@ -94,7 +98,7 @@ public class TerminalState
             InputStream stream = null;
             try
             {
-                stream = new GZIPInputStream( new ByteBufInputStream( buf, length ) );
+                stream = new GZIPInputStream( buf.readBytesAsStream( length ) );
                 byte[] swap = new byte[8192];
                 while( true )
                 {
@@ -119,7 +123,7 @@ public class TerminalState
         else
         {
             ByteBuf buffer = Unpooled.buffer( length );
-            buf.readBytes( buffer, length );
+            buf.readBytes( buffer.array(), length );
             return buffer;
         }
     }
@@ -132,12 +136,13 @@ public class TerminalState
         buf.writeBoolean( buffer != null );
         if( buffer != null )
         {
-            buf.writeVarInt( width );
-            buf.writeVarInt( height );
+            buf.writeInt( width );
+            buf.writeInt( height );
 
             ByteBuf sendBuffer = getCompressed();
-            buf.writeVarInt( sendBuffer.readableBytes() );
-            buf.writeBytes( sendBuffer, sendBuffer.readerIndex(), sendBuffer.readableBytes() );
+            buf.writeInt( sendBuffer.readableBytes() );
+            buf.writeBytes(sendBuffer.array());
+            buf.writeBytes(sendBuffer.readerIndex(), sendBuffer.readableBytes() );
         }
     }
 
@@ -191,6 +196,10 @@ public class TerminalState
         {
             throw new NullPointerException( "buffer" );
         }
-        terminal.read( new PacketByteBuf( buffer ) );
+        PacketByteBuf packet = new PacketByteBuf();
+
+        packet.writeBytes(buffer.array());
+
+        terminal.read( packet );
     }
 }

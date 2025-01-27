@@ -5,10 +5,11 @@
  */
 package dan200.computercraft.client.gui.widgets;
 
-import net.minecraft.client.gui.Element;
+//import net.minecraft.client.gui.Element;
 
-public class WidgetWrapper implements Element
+public class WidgetWrapper// implements Element
 {
+    /*
     private final Element listener;
     private final int x;
     private final int y;
@@ -102,4 +103,5 @@ public class WidgetWrapper implements Element
     {
         return height;
     }
+     */
 }

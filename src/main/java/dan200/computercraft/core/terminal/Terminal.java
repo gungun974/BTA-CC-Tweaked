@@ -6,6 +6,7 @@
 package dan200.computercraft.core.terminal;
 
 import com.mojang.nbt.tags.CompoundTag;
+import dan200.computercraft.PacketByteBuf;
 import dan200.computercraft.shared.util.Colour;
 import dan200.computercraft.shared.util.Palette;
 
@@ -309,7 +310,7 @@ public class Terminal
         if( onChanged != null ) onChanged.run();
     }
 
-    /*
+
     public synchronized void write( PacketByteBuf buffer )
     {
         buffer.writeInt( cursorX );
@@ -365,7 +366,6 @@ public class Terminal
         palette.read( buffer );
         setChanged();
     }
-     */
 
     public synchronized CompoundTag writeToNBT( CompoundTag nbt )
     {

@@ -2,8 +2,12 @@ package dan200.computercraft.shared.computer.blocks;
 
 import com.mojang.logging.LogUtils;
 import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.client.gui.GuiComputer;
+import dan200.computercraft.shared.computer.core.ClientComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerComputer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.container.ScreenFurnace;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogicRotatable;
 import net.minecraft.core.block.Blocks;
@@ -40,8 +44,22 @@ public class BlockLogicComputer extends BlockLogicRotatable {
 
     public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
         if (!world.isClientSide) {
-            TileEntityComputer tileentityfurnace = (TileEntityComputer)world.getTileEntity(x, y, z);
-            tileentityfurnace.createServerComputer();
+            TileEntityComputer tileEntityComputer = (TileEntityComputer)world.getTileEntity(x, y, z);
+            ServerComputer server = tileEntityComputer.createServerComputer();
+
+            ClientComputer client = new ClientComputer(server.getInstanceID());
+
+
+            Thread thread2 = new Thread(() -> {
+                while (true) {
+                    client.read(server.write());
+                }
+            });
+
+            thread2.start();
+
+
+            Minecraft.getMinecraft().displayScreen(new GuiComputer(client, server.getTerminal().getWidth(), server.getTerminal().getHeight()));
         }
 
         return true;

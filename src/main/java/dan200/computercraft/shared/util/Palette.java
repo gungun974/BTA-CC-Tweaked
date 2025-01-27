@@ -6,6 +6,7 @@
 package dan200.computercraft.shared.util;
 
 import com.mojang.nbt.tags.CompoundTag;
+import dan200.computercraft.PacketByteBuf;
 
 import java.util.Arrays;
 
@@ -61,7 +62,6 @@ public class Palette
         return null;
     }
 
-    /*
     public void write( PacketByteBuf buffer )
     {
         for( double[] colour : colours )
@@ -83,7 +83,6 @@ public class Palette
             }
         }
     }
-     */
 
     public CompoundTag writeToNBT(CompoundTag nbt )
     {
