@@ -204,7 +204,7 @@ public final class FixedWidthFontRenderer
 //            .next();
 
 
-        tessellator.startDrawing(8);
+        tessellator.startDrawing(6);
 
         tessellator.setColorRGBA_F(r,g,b, 1f);
         tessellator.addVertexWithUV(x, y, 0, xStart / WIDTH, yStart / WIDTH);
@@ -213,6 +213,11 @@ public final class FixedWidthFontRenderer
 
         tessellator.addVertexWithUV(x + FONT_WIDTH, y, 0f, (xStart + FONT_WIDTH) / WIDTH, yStart / WIDTH );
 
+        tessellator.draw();
+
+        tessellator.startDrawing(6);
+
+        tessellator.setColorRGBA_F(r,g,b, 1f);
 
         tessellator.addVertexWithUV(x + FONT_WIDTH, y, 0f, (xStart + FONT_WIDTH) / WIDTH, yStart / WIDTH );
 
@@ -273,12 +278,20 @@ public final class FixedWidthFontRenderer
 //            .texture( BACKGROUND_END, BACKGROUND_END )
 //            .next();
 
-        tessellator.startDrawing(8);
+        tessellator.startDrawing(6);
 
         tessellator.setColorRGBA_F(r,g,b, 1f);
+
         tessellator.addVertexWithUV(x, y, 0, BACKGROUND_START, BACKGROUND_START);
         tessellator.addVertexWithUV(x, y + height, 0, BACKGROUND_START, BACKGROUND_END);
         tessellator.addVertexWithUV(x + width, y, 0, BACKGROUND_END, BACKGROUND_START);
+
+        tessellator.draw();
+
+        tessellator.startDrawing(6);
+
+        tessellator.setColorRGBA_F(r,g,b, 1f);
+
         tessellator.addVertexWithUV(x + width, y, 0, BACKGROUND_END, BACKGROUND_START);
         tessellator.addVertexWithUV(x, y + height, 0, BACKGROUND_START, BACKGROUND_END);
         tessellator.addVertexWithUV(x + width, y + height, 0, BACKGROUND_END, BACKGROUND_END);
