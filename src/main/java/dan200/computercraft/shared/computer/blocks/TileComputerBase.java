@@ -15,17 +15,12 @@ import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.util.DirectionUtil;
-import dan200.computercraft.shared.util.RedstoneUtil;
-import joptsimple.internal.Strings;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.util.phys.HitResult;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Objects;
 
-public abstract class TileComputerBase extends TileGeneric implements IComputerTile, IPeripheralTile
+public abstract class TileComputerBase extends TileGeneric implements IComputerTile//, IPeripheralTile
 {
     private static final String NBT_ID = "ComputerId";
     private static final String NBT_LABEL = "Label";
@@ -64,9 +59,9 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     {
         if( instanceID >= 0 )
         {
-            if( !worldObj.isClientSide )
+            if( true || !worldObj.isClientSide )
             {
-                //ComputerCraft.serverComputerRegistry.remove( instanceID );
+                ComputerCraft.serverComputerRegistry.remove( instanceID );
             }
             instanceID = -1;
         }
@@ -109,10 +104,10 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         return false;
     }
 
-    /*
+
     public ServerComputer createServerComputer()
     {
-        if( worldObj.isClientSide )
+        if( false && worldObj.isClientSide )
         {
             return null;
         }
@@ -132,20 +127,16 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         }
         if( changed )
         {
-            updateBlock();
-            updateInput();
+            //updateBlock();
+            //updateInput();
         }
         return ComputerCraft.serverComputerRegistry.get( instanceID );
     }
 
-     */
-
-    /*
     public ServerComputer getServerComputer()
     {
-        return getWorld().isClient ? null : ComputerCraft.serverComputerRegistry.get( instanceID );
+        return false && worldObj.isClientSide ? null : ComputerCraft.serverComputerRegistry.get( instanceID );
     }
-     */
 
     protected abstract ServerComputer createComputer( int instanceID, int id );
 
@@ -267,9 +258,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     @Override
     public void tick()
     {
-        return;
-        /*
-        if( !getWorld().isClient )
+        if( true || !worldObj.isClientSide )
         {
             ServerComputer computer = createServerComputer();
             if( computer == null )
@@ -305,20 +294,17 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
                 updateOutput();
             }
         }
-         */
     }
 
-    /*
     public void updateOutput()
     {
         // Update redstone
-        updateBlock();
+        //updateBlock();
         for( Direction dir : DirectionUtil.FACINGS )
         {
-            RedstoneUtil.propagateRedstoneOutput( getWorld(), getPos(), dir );
+            //RedstoneUtil.propagateRedstoneOutput( getWorld(), getPos(), dir );
         }
     }
-     */
 
     protected abstract void updateBlockState( ComputerState newState );
 
@@ -415,11 +401,10 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         return computerID;
     }
 
-    /*
     @Override
     public final void setComputerID( int id )
     {
-        if( worldObj.isClientSide || computerID == id )
+        if( false && worldObj.isClientSide || computerID == id )
         {
             return;
         }
@@ -430,9 +415,8 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         {
             computer.setID( computerID );
         }
-        markDirty();
+        //markDirty();
     }
-     */
 
     @Override
     public final String getLabel()
@@ -442,14 +426,13 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     // Networking stuff
 
-    /*
     @Override
     public final void setLabel( String label )
     {
-        if( getWorld().isClient || Objects.equals( this.label, label ) )
-        {
-            return;
-        }
+//        if( getWorld().isClient || Objects.equals( this.label, label ) )
+//        {
+//            return;
+//        }
 
         this.label = label;
         ServerComputer computer = getServerComputer();
@@ -457,9 +440,8 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         {
             computer.setLabel( label );
         }
-        markDirty();
+        //markDirty();
     }
-     */
 
     @Override
     public ComputerFamily getFamily()
@@ -484,6 +466,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
      */
 
+    /*
     @Nonnull
     @Override
     public IPeripheral getPeripheral( Direction side )
@@ -492,6 +475,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     public abstract ComputerProxy createProxy();
+     */
 
     /*
     @Nonnull

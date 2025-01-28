@@ -7,7 +7,9 @@ import java.util.Random;
 
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
+import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogicFurnace;
@@ -25,12 +27,14 @@ import net.minecraft.core.item.Items;
 import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.net.packet.PacketTileEntityData;
 import net.minecraft.core.player.inventory.container.Container;
+import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class TileEntityComputer extends TileEntity  {
+public class TileEntityComputer extends TileComputerBase  {
     public TileEntityComputer() {
+        super(ComputerFamily.NORMAL);
     }
 
     /*
@@ -72,48 +76,83 @@ public class TileEntityComputer extends TileEntity  {
     }
      */
 
-    public void tick() {
-    }
-
     public boolean canBeCarried(World world, Entity potentialHolder) {
         return false;
     }
 
-    public ServerComputer createServerComputer()
-    {
-        int instanceID= 0;
 
-        boolean changed = false;
-        if( instanceID < 0 )
-        {
-            instanceID = ComputerCraft.serverComputerRegistry.getUnusedInstanceID();
-            changed = true;
-        }
-        if( !ComputerCraft.serverComputerRegistry.contains( instanceID ) )
-        {
-            ServerComputer computer = createComputer( instanceID, 1 );
-            ComputerCraft.serverComputerRegistry.add( instanceID, computer );
-            //fresh = true;
-            changed = true;
-        }
-        if( changed )
-        {
-            //updateBlock();
-            //updateInput();
-        }
-        return ComputerCraft.serverComputerRegistry.get( instanceID );
+//    public boolean isUsableByPlayer( Player player )
+//    {
+//        return isUsable( player, false );
+//    }
+
+    @Override
+    protected void updateBlockState( ComputerState newState )
+    {
+//        BlockState existing = getCachedState();
+//        if( existing.get( BlockComputer.STATE ) != newState )
+//        {
+//            getWorld().setBlockState( getPos(), existing.with( BlockComputer.STATE, newState ), 3 );
+//        }
     }
 
+    @Override
+    public Direction getDirection()
+    {
+        return BlockLogicComputer.getDirectionFromMeta(getBlockMeta());
+    }
+
+    @Override
+    protected ComputerSide remapLocalSide( ComputerSide localSide )
+    {
+        // For legacy reasons, computers invert the meaning of "left" and "right". A computer's front is facing
+        // towards you, but a turtle's front is facing the other way.
+        if( localSide == ComputerSide.RIGHT )
+        {
+            return ComputerSide.LEFT;
+        }
+        if( localSide == ComputerSide.LEFT )
+        {
+            return ComputerSide.RIGHT;
+        }
+        return localSide;
+    }
+
+    @Override
     protected ServerComputer createComputer( int instanceID, int id )
     {
-        ComputerFamily family = ComputerFamily.NORMAL;
+        ComputerFamily family = getFamily();
         ServerComputer computer = new ServerComputer( worldObj,
-            id, "label",
+            id, label,
             instanceID,
             family,
             ComputerCraft.computerTermWidth,
             ComputerCraft.computerTermHeight );
-        computer.setPosition(new BlockPos(x,y,z));
+        computer.setPosition( new BlockPos(x, y, z) );
         return computer;
     }
+
+//    @Override
+//    public ComputerProxy createProxy()
+//    {
+//        if( proxy == null )
+//        {
+//            proxy = new ComputerProxy( () -> this )
+//            {
+//                @Override
+//                protected TileComputerBase getTile()
+//                {
+//                    return TileComputer.this;
+//                }
+//            };
+//        }
+//        return proxy;
+//    }
+
+//    @Nullable
+//    @Override
+//    public ScreenHandler createMenu( int id, @Nonnull PlayerInventory inventory, @Nonnull PlayerEntity player )
+//    {
+//        return new ContainerComputer( id, this );
+//    }
 }

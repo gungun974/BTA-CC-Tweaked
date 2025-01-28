@@ -45,7 +45,7 @@ public class BlockLogicComputer extends BlockLogicRotatable {
     public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
         if (!world.isClientSide) {
             TileEntityComputer tileEntityComputer = (TileEntityComputer)world.getTileEntity(x, y, z);
-            ServerComputer server = tileEntityComputer.createServerComputer();
+            ServerComputer server = tileEntityComputer.getServerComputer();
 
             ClientComputer client = new ClientComputer(server.getInstanceID());
 

@@ -174,6 +174,15 @@ if settings.get("shell.allow_disk_startup") then
         end
     end
 end
+
+a = 0;
+while true do
+    print(a)
+    os.sleep(1)
+    a = a + 1
+    end
+
+
 if tUserStartups then
     for _, v in pairs(tUserStartups) do
         shell.run(v)
