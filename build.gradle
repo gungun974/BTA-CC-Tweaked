@@ -102,7 +102,7 @@ dependencies {
     implementation "org.slf4j:slf4j-api:1.8.0-beta4"
     implementation "org.apache.logging.log4j:log4j-slf4j18-impl:2.16.0"
 
-    implementation 'com.google.guava:guava:33.0.0-jre'
+    shade 'com.google.guava:guava:33.0.0-jre'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
     var log4jVersion = "2.20.0"
     implementation("org.apache.logging.log4j:log4j-core:${log4jVersion}")
@@ -130,7 +130,7 @@ dependencies {
     shade 'org.squiddev:Cobalt:0.5.2-SNAPSHOT'
 
     implementation 'io.netty:netty-all:4.1.95.Final'
-    implementation 'it.unimi.dsi:fastutil:8.5.12'
+    shade 'it.unimi.dsi:fastutil:8.5.12'
 
     implementation 'com.electronwill.night-config:core:3.6.5'
     implementation 'com.electronwill.night-config:toml:3.6.5'
@@ -149,15 +149,17 @@ tasks.withType(JavaCompile).configureEach {
     options.release.set 8
 }
 
+configurations.configureEach {
+    // Removes LWJGL2 dependencies
+    exclude group: "org.lwjgl.lwjgl"
+}
+
 jar {
     from("LICENSE") {
         rename { "${it}_${archivesBaseName}" }
     }
-}
 
-configurations.configureEach {
-    // Removes LWJGL2 dependencies
-    exclude group: "org.lwjgl.lwjgl"
+    from configurations.shade.collect { it.isDirectory() ? it : zipTree(it) }
 }
 
 processResources {

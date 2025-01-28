@@ -5,10 +5,7 @@ import net.minecraft.client.Minecraft;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ResourceManager {
 
@@ -31,7 +28,12 @@ public class ResourceManager {
             }
 
             Files.list(dirPath).forEach(found -> {
-                identifiers.add(new Identifier(namespace, found.toString().replaceFirst("/assets/" + namespace + "/", "")));
+                final Identifier identifier = new Identifier(namespace, found.toString().replaceFirst("/assets/" + namespace + "/", ""));
+
+                identifiers.add(identifier);
+
+                final Identifier[] newIdentifiers = findResources(namespace, identifier.subPath);
+                identifiers.addAll(Arrays.asList(newIdentifiers));
             });
         } catch (Exception e) {
         }

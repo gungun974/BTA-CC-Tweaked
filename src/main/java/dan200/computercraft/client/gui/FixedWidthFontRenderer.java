@@ -42,10 +42,6 @@ public final class FixedWidthFontRenderer
     {
         bindFont();
 
-        Tessellator tessellator = Tessellator.instance;
-
-        tessellator.startDrawingQuads();
-
         drawString(
             x,
             y,
@@ -56,14 +52,13 @@ public final class FixedWidthFontRenderer
             greyscale,
             leftMarginSize,
             rightMarginSize );
-
-        tessellator.draw();
     }
 
     private static void bindFont()
     {
         Minecraft.getMinecraft().textureManager.loadTexture("/assets/computercraft/textures/gui/term_font.png").bind();
         //TODO: RenderSystem.texParameter( GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP );
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
     }
 
     public static void drawString2( float x, float y, @Nonnull TextBuffer text,
@@ -75,7 +70,7 @@ public final class FixedWidthFontRenderer
             drawBackground( x, y, backgroundColour, palette, greyscale, leftMarginSize, rightMarginSize, FONT_HEIGHT );
         }
 
-        ComputerCraft.log.info(text.toString());
+        //ComputerCraft.log.info(text.toString());
 
         for( int i = 0; i < text.length(); i++ )
         {
@@ -209,6 +204,8 @@ public final class FixedWidthFontRenderer
 //            .next();
 
 
+        tessellator.startDrawing(8);
+
         tessellator.setColorRGBA_F(r,g,b, 1f);
         tessellator.addVertexWithUV(x, y, 0, xStart / WIDTH, yStart / WIDTH);
 
@@ -222,6 +219,8 @@ public final class FixedWidthFontRenderer
         tessellator.addVertexWithUV(x, y + FONT_HEIGHT, 0f, xStart / WIDTH, (yStart + FONT_HEIGHT) / WIDTH );
 
         tessellator.addVertexWithUV(x + FONT_WIDTH, y + FONT_HEIGHT, 0f, (xStart + FONT_WIDTH) / WIDTH, (yStart + FONT_HEIGHT) / WIDTH );
+
+        tessellator.draw();
 
     }
 
@@ -274,6 +273,8 @@ public final class FixedWidthFontRenderer
 //            .texture( BACKGROUND_END, BACKGROUND_END )
 //            .next();
 
+        tessellator.startDrawing(8);
+
         tessellator.setColorRGBA_F(r,g,b, 1f);
         tessellator.addVertexWithUV(x, y, 0, BACKGROUND_START, BACKGROUND_START);
         tessellator.addVertexWithUV(x, y + height, 0, BACKGROUND_START, BACKGROUND_END);
@@ -281,6 +282,8 @@ public final class FixedWidthFontRenderer
         tessellator.addVertexWithUV(x + width, y, 0, BACKGROUND_END, BACKGROUND_START);
         tessellator.addVertexWithUV(x, y + height, 0, BACKGROUND_START, BACKGROUND_END);
         tessellator.addVertexWithUV(x + width, y + height, 0, BACKGROUND_END, BACKGROUND_END);
+
+        tessellator.draw();
     }
 
     public static void drawTerminalWithoutCursor( float x, float y,
@@ -360,14 +363,8 @@ public final class FixedWidthFontRenderer
     {
         bindFont();
 
-        Tessellator tessellator = Tessellator.instance;
-
-        tessellator.startDrawingQuads();
-
         drawTerminalWithoutCursor(  x, y, terminal, greyscale, topMarginSize, bottomMarginSize, leftMarginSize, rightMarginSize );
         drawCursor( x, y, terminal, greyscale );
-
-        tessellator.draw();
     }
 
     public static void drawEmptyTerminal( float x, float y, float width, float height )
@@ -376,11 +373,7 @@ public final class FixedWidthFontRenderer
 
         Colour colour = Colour.BLACK;
 
-        Tessellator tessellator = Tessellator.instance;
-
-        tessellator.startDrawingQuads();
         drawQuad(x, y, width, height, colour.getR(), colour.getG(), colour.getB() );
-        tessellator.draw();
 
         //renderer.draw();
     }
