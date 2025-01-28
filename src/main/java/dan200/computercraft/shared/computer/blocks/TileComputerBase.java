@@ -5,6 +5,7 @@
  */
 package dan200.computercraft.shared.computer.blocks;
 
+import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.peripheral.IPeripheral;
@@ -308,21 +309,19 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     protected abstract void updateBlockState( ComputerState newState );
 
-    /*
     @Override
-    public void fromTag( @Nonnull BlockState state, @Nonnull CompoundTag nbt )
+    public void readFromNBT( CompoundTag nbt )
     {
-        super.fromTag( state, nbt );
+        super.readFromNBT( nbt );
 
         // Load ID, label and power state
-        computerID = nbt.contains( NBT_ID ) ? nbt.getInt( NBT_ID ) : -1;
-        label = nbt.contains( NBT_LABEL ) ? nbt.getString( NBT_LABEL ) : null;
+        computerID = nbt.containsKey( NBT_ID ) ? nbt.getInteger( NBT_ID ) : -1;
+        label = nbt.containsKey( NBT_LABEL ) ? nbt.getString( NBT_LABEL ) : null;
         on = startOn = nbt.getBoolean( NBT_ON );
     }
 
-    @Nonnull
     @Override
-    public CompoundTag toTag( @Nonnull CompoundTag nbt )
+    public void writeToNBT( CompoundTag nbt )
     {
         // Save ID, label and power state
         if( computerID >= 0 )
@@ -335,9 +334,8 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         }
         nbt.putBoolean( NBT_ON, on );
 
-        return super.toTag( nbt );
+        super.writeToNBT( nbt );
     }
-     */
 
     /*
     @Override

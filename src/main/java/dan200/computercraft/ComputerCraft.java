@@ -39,6 +39,7 @@ import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.data.tag.Tag;
 import net.minecraft.core.sound.BlockSounds;
+import net.minecraft.core.util.collection.NamespaceID;
 import net.minecraft.core.util.helper.Side;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import net.fabricmc.api.ModInitializer;
 import turniplabs.halplibe.helper.BlockBuilder;
+import turniplabs.halplibe.helper.EntityHelper;
 
 import static net.minecraft.core.block.Blocks.COBBLE_STONE;
 
@@ -117,6 +119,8 @@ public final class ComputerCraft implements ModInitializer
     @Override
     public void onInitialize()
     {
+        EntityHelper.createTileEntity(TileEntityComputer.class, new NamespaceID(MOD_ID, "computer"));
+
         new BlockBuilder(MOD_ID)
             .setTextures("computercraft:block/computer_normal_side")
             .setTopTexture("computercraft:block/computer_normal_top")

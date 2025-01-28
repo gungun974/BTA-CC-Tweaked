@@ -177,8 +177,12 @@ end
 
 a = 0;
 while true do
+    term.setBackgroundColor(colours.black)
+    term.clear()
+    term.setCursorPos(1,1)
     print(a)
-    os.sleep(1)
+    print(os.getComputerID())
+    os.sleep(0.5)
     a = a + 1
     end
 
