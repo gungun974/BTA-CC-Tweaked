@@ -43,26 +43,6 @@ public class BlockLogicComputer extends BlockLogicRotatable {
     }
 
     public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
-        if (!world.isClientSide) {
-            TileEntityComputer tileEntityComputer = (TileEntityComputer)world.getTileEntity(x, y, z);
-            ServerComputer server = tileEntityComputer.getServerComputer();
-
-            ClientComputer client = new ClientComputer(server.getInstanceID());
-
-
-            Thread thread2 = new Thread(() -> {
-                while (true) {
-                    client.read(server.write());
-                }
-            });
-
-            thread2.start();
-
-server.turnOn();
-
-            Minecraft.getMinecraft().displayScreen(new GuiComputer(client, server.getTerminal().getWidth(), server.getTerminal().getHeight()));
-        }
-
-        return true;
+        return ((TileEntityComputer)world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
     }
 }

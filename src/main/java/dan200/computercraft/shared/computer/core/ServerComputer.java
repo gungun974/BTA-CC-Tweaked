@@ -19,6 +19,10 @@ import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.core.computer.IComputerEnvironment;
 import dan200.computercraft.shared.common.ServerTerminal;
+import dan200.computercraft.shared.network.NetworkHandler;
+import dan200.computercraft.shared.network.NetworkMessage;
+import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
+import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
@@ -184,11 +188,14 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
     {
         return getContainer( player ) != null;
     }
+    */
 
     protected NetworkMessage createTerminalPacket()
     {
         return new ComputerTerminalClientMessage( getInstanceID(), write() );
     }
+
+    /*
 
     @Nullable
     public IContainerComputer getContainer( PlayerEntity player )
@@ -265,12 +272,14 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         // Send state to client
         NetworkHandler.sendToPlayer( player, createComputerPacket() );
     }
+    */
 
-    public void sendTerminalState( PlayerEntity player )
+    public void sendTerminalState( Player player )
     {
         // Send terminal state to client
         NetworkHandler.sendToPlayer( player, createTerminalPacket() );
     }
+    /*
 
     public void broadcastDelete()
     {

@@ -5,8 +5,10 @@
  */
 package dan200.computercraft.shared.network.client;
 
-import net.fabricmc.fabric.api.network.PacketContext;
-import net.minecraft.network.PacketByteBuf;
+import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.PacketByteBuf;
+import dan200.computercraft.client.gui.GuiComputer;
+import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nonnull;
 
@@ -39,8 +41,10 @@ public class ComputerTerminalClientMessage extends ComputerClientMessage
     }
 
     @Override
-    public void handle( PacketContext context )
+    public void handle()
     {
         getComputer().read( state );
+
+        Minecraft.getMinecraft().displayScreen(new GuiComputer(getComputer(), state.width, state.height));
     }
 }

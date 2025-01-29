@@ -5,8 +5,7 @@
  */
 package dan200.computercraft.shared.network;
 
-import net.fabricmc.fabric.api.network.PacketContext;
-import net.minecraft.network.PacketByteBuf;
+import dan200.computercraft.PacketByteBuf;
 
 import javax.annotation.Nonnull;
 
@@ -38,8 +37,6 @@ public interface NetworkMessage
 
     /**
      * Handle this {@link NetworkMessage}.
-     *
-     * @param context The context with which to handle this message
      */
-    void handle( PacketContext context );
+    void handle();
 }

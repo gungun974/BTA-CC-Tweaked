@@ -1,5 +1,6 @@
 package dan200.computercraft;
 
+import dan200.computercraft.shared.network.NetworkHandler;
 import net.minecraft.core.net.handler.PacketHandler;
 import net.minecraft.core.net.packet.Packet;
 
@@ -9,8 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-
-import net.minecraft.core.net.handler.PacketHandler;
 
 public class PacketByteBuf extends Packet {
     private byte[] buffer;
@@ -24,7 +23,9 @@ public class PacketByteBuf extends Packet {
     }
 
     public void read(DataInputStream dis) throws IOException {
-        dis.read(buffer);
+        final byte[] buff = new byte[dis.available()];
+        dis.read(buff);
+        writeBytes(buff);
     }
 
     public void write(DataOutputStream dos) throws IOException {
@@ -34,7 +35,7 @@ public class PacketByteBuf extends Packet {
     }
 
     public void handlePacket(PacketHandler packetHandler) {
-
+        NetworkHandler.receive(this);
     }
 
     public int getEstimatedSize() {

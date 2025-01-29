@@ -49,8 +49,7 @@ public class ClientTerminal implements ITerminal
         if( state.hasTerminal() )
         {
             resizeTerminal( state.width, state.height );
-//            state.apply( terminal );
-            this.terminal = state.terminal;
+            state.apply( terminal );
         }
         else
         {

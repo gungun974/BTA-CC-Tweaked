@@ -10,7 +10,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import dan200.computercraft.ComputerCraft;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.world.Dimension;
 import net.minecraft.core.world.World;
+import net.minecraft.server.MinecraftServer;
 
 import java.io.File;
 import java.io.Reader;
@@ -112,11 +114,16 @@ public final class IDAssigner
 
     public static File getDir()
     {
+        if (MinecraftServer.getInstance() != null) {
+            return getWorldDir(MinecraftServer.getInstance().getDimensionWorld(Dimension.OVERWORLD.id));
+        }
         return getWorldDir(Minecraft.getMinecraft().currentWorld);
     }
 
     public static File getWorldDir(World world) {
-        Minecraft mc = Minecraft.getMinecraft();
-        return new File(mc.getMinecraftDir(), "saves/" + world.getLevelData().getWorldName());
+        if (MinecraftServer.getInstance() != null) {
+            return new File(MinecraftServer.getInstance().getMinecraftDir(), "saves/" + world.getLevelData().getWorldName());
+        }
+        return new File(Minecraft.getMinecraft().getMinecraftDir(), "saves/" + world.getLevelData().getWorldName());
     }
 }

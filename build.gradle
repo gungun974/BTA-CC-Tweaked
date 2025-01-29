@@ -130,6 +130,7 @@ dependencies {
     shade 'org.squiddev:Cobalt:0.5.2-SNAPSHOT'
 
     implementation 'io.netty:netty-all:4.1.95.Final'
+    shade 'io.netty:netty-buffer:4.1.95.Final'
     shade 'it.unimi.dsi:fastutil:8.5.12'
 
     implementation 'com.electronwill.night-config:core:3.6.5'
@@ -158,6 +159,8 @@ jar {
     from("LICENSE") {
         rename { "${it}_${archivesBaseName}" }
     }
+
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
     from configurations.shade.collect { it.isDirectory() ? it : zipTree(it) }
 }

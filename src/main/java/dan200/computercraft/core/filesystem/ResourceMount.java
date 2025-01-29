@@ -96,8 +96,6 @@ public final class ResourceMount implements IMount
 
             if( !file.getNamespace().equals( namespace ) ) continue;
 
-            ComputerCraft.log.info(file.getPath());
-
             String localPath = FileSystem.toLocal( file.getPath(), subPath );
             create( newRoot, localPath );
             hasAny = true;

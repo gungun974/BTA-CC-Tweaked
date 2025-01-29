@@ -18,6 +18,8 @@ import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.util.DirectionUtil;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.util.helper.Side;
+import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 
@@ -67,38 +69,35 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             instanceID = -1;
         }
     }
-    /*
-    @Nonnull
-    @Override
-    public ActionResult onActivate(Player player, Hand hand, HitResult hit )
-    {
-        ItemStack currentItem = player.getStackInHand( hand );
-        if( !currentItem.isEmpty() && currentItem.getItem() == Items.NAME_TAG && canNameWithTag( player ) && currentItem.hasCustomName() )
-        {
-            // Label to rename computer
-            if( !getWorld().isClient )
-            {
-                setLabel( currentItem.getName()
-                    .getString() );
-                currentItem.decrement( 1 );
-            }
-            return ActionResult.SUCCESS;
-        }
-        else if( !player.isInSneakingPose() )
-        {
+
+    public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
+//        ItemStack currentItem = player.getStackInHand( hand );
+//        if( !currentItem.isEmpty() && currentItem.getItem() == Items.NAME_TAG && canNameWithTag( player ) && currentItem.hasCustomName() )
+//        {
+//            // Label to rename computer
+//            if( !getWorld().isClient )
+//            {
+//                setLabel( currentItem.getName()
+//                    .getString() );
+//                currentItem.decrement( 1 );
+//            }
+//            return ActionResult.SUCCESS;
+//        }
+//        else if( !player.isInSneakingPose() )
+//        {
             // Regular right click to activate computer
-            if( !getWorld().isClient && isUsable( player, false ) )
+            if( !worldObj.isClientSide && isUsable( player, false ) )
             {
                 createServerComputer().turnOn();
                 createServerComputer().sendTerminalState( player );
-                new ComputerContainerData( createServerComputer() ).open( player, this );
+               // new ComputerContainerData( createServerComputer() ).open( player, this );
             }
-            return ActionResult.SUCCESS;
-        }
-        return ActionResult.PASS;
-    }
 
-     */
+            return true;
+//            return ActionResult.SUCCESS;
+//        }
+//        return ActionResult.PASS;
+    }
 
     protected boolean canNameWithTag( Player player )
     {

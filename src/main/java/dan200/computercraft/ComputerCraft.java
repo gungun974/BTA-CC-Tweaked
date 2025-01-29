@@ -26,7 +26,9 @@ import java.util.function.Function;
 
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
+import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
 import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
+import dan200.computercraft.shared.network.NetworkHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.block.color.BlockColor;
 import net.minecraft.client.render.block.color.BlockColorDispatcher;
@@ -108,7 +110,7 @@ public final class ComputerCraft implements ModInitializer
     public static int monitorHeight = 6;
 
     // Registries
-    //public static final ClientComputerRegistry clientComputerRegistry = new ClientComputerRegistry();
+    public static final ClientComputerRegistry clientComputerRegistry = new ClientComputerRegistry();
     public static final ServerComputerRegistry serverComputerRegistry = new ServerComputerRegistry();
 
     // Logging
@@ -122,14 +124,17 @@ public final class ComputerCraft implements ModInitializer
         EntityHelper.createTileEntity(TileEntityComputer.class, new NamespaceID(MOD_ID, "computer"));
 
         new BlockBuilder(MOD_ID)
+            /*
             .setTextures("computercraft:block/computer_normal_side")
             .setTopTexture("computercraft:block/computer_normal_top")
             .setBottomTexture("computercraft:block/computer_normal_top")
             .setNorthTexture("computercraft:block/computer_normal_front")
+             */
             .setHardness(1f)
             .setTileEntity(TileEntityComputer::new)
             .build("computer_normal", 10000, b -> new BlockLogicComputer(b));
 
+        NetworkHandler.setup();
         /*
         ComputerCraftProxyCommon.init();
         Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "colour" ), ColourableRecipe.SERIALIZER );
