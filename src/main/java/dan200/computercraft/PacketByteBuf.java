@@ -23,19 +23,18 @@ public class PacketByteBuf extends Packet {
     }
 
     public void read(DataInputStream dis) throws IOException {
-        final byte[] buff = new byte[dis.available()];
-        dis.read(buff);
-        writeBytes(buff);
+        final int length = dis.readInt();
+        buffer = new byte[length];
+        dis.read(buffer, 0, length);
+        writeIndex = length - 1;
     }
 
     public void write(DataOutputStream dos) throws IOException {
-        if (this.buffer != null) {
-            dos.write(this.buffer);
-        }
+        dos.writeInt(this.buffer.length);
+        dos.write(this.buffer);
     }
 
     public void handlePacket(PacketHandler packetHandler) {
-        ComputerCraft.log.info("Recieve packet size : {}", buffer.length);
         NetworkHandler.receive(packetHandler, this);
 
     }
