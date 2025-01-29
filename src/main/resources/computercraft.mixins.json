@@ -8,6 +8,7 @@
     "client": [
     ],
     "server": [
+        "PacketHandlerServerAccessor"
     ],
     "injectors": {
         "defaultRequire": 1

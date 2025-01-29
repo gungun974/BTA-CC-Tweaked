@@ -6,6 +6,7 @@
 package dan200.computercraft.shared.network;
 
 import dan200.computercraft.PacketByteBuf;
+import net.minecraft.core.net.handler.PacketHandler;
 
 import javax.annotation.Nonnull;
 
@@ -38,5 +39,5 @@ public interface NetworkMessage
     /**
      * Handle this {@link NetworkMessage}.
      */
-    void handle();
+    void handle(PacketHandler packetHandler);
 }

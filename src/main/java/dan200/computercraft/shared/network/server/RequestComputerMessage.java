@@ -6,10 +6,13 @@
 package dan200.computercraft.shared.network.server;
 
 import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.PacketByteBuf;
+import dan200.computercraft.fabric.mixin.PacketHandlerServerAccessor;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.network.NetworkMessage;
-import net.fabricmc.fabric.api.network.PacketContext;
-import net.minecraft.network.PacketByteBuf;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.net.handler.PacketHandler;
 
 import javax.annotation.Nonnull;
 
@@ -29,22 +32,23 @@ public class RequestComputerMessage implements NetworkMessage
     @Override
     public void toBytes( @Nonnull PacketByteBuf buf )
     {
-        buf.writeVarInt( instance );
+        buf.writeInt( instance );
     }
 
     @Override
     public void fromBytes( @Nonnull PacketByteBuf buf )
     {
-        instance = buf.readVarInt();
+        instance = buf.readInt();
     }
 
     @Override
-    public void handle( PacketContext context )
+    @Environment(EnvType.SERVER)
+    public void handle(PacketHandler packetHandler)
     {
         ServerComputer computer = ComputerCraft.serverComputerRegistry.get( instance );
         if( computer != null )
         {
-            computer.sendComputerState( context.getPlayer() );
+            computer.sendComputerState( ((PacketHandlerServerAccessor) packetHandler).getPlayerEntity() );
         }
     }
 }

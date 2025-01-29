@@ -21,6 +21,7 @@ import dan200.computercraft.core.computer.IComputerEnvironment;
 import dan200.computercraft.shared.common.ServerTerminal;
 import dan200.computercraft.shared.network.NetworkHandler;
 import dan200.computercraft.shared.network.NetworkMessage;
+import dan200.computercraft.shared.network.client.ComputerDataClientMessage;
 import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.world.World;
@@ -178,12 +179,12 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         return changedLastFrame;
     }
 
-    /*
     private NetworkMessage createComputerPacket()
     {
         return new ComputerDataClientMessage( this );
     }
 
+    /*
     protected boolean isInteracting( PlayerEntity player )
     {
         return getContainer( player ) != null;
@@ -266,13 +267,11 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         return computer.isOn() && computer.isBlinking();
     }
 
-    /*
-    public void sendComputerState( PlayerEntity player )
+    public void sendComputerState( Player player )
     {
         // Send state to client
         NetworkHandler.sendToPlayer( player, createComputerPacket() );
     }
-    */
 
     public void sendTerminalState( Player player )
     {

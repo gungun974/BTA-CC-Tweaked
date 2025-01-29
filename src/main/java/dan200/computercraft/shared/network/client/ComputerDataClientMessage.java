@@ -5,11 +5,12 @@
  */
 package dan200.computercraft.shared.network.client;
 
+import com.mojang.nbt.tags.CompoundTag;
+import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.PacketByteBuf;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
-import net.fabricmc.fabric.api.network.PacketContext;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.core.net.handler.PacketHandler;
 
 import javax.annotation.Nonnull;
 
@@ -49,7 +50,7 @@ public class ComputerDataClientMessage extends ComputerClientMessage
     }
 
     @Override
-    public void handle( PacketContext context )
+    public void handle(PacketHandler packetHandler)
     {
         getComputer().setState( state, userData );
     }

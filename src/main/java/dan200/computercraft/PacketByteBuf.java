@@ -1,13 +1,13 @@
 package dan200.computercraft;
 
+import com.mojang.nbt.NbtIo;
+import com.mojang.nbt.tags.CompoundTag;
+import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.network.NetworkHandler;
 import net.minecraft.core.net.handler.PacketHandler;
 import net.minecraft.core.net.packet.Packet;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -35,11 +35,12 @@ public class PacketByteBuf extends Packet {
     }
 
     public void handlePacket(PacketHandler packetHandler) {
-        NetworkHandler.receive(this);
+        NetworkHandler.receive(packetHandler, this);
+
     }
 
     public int getEstimatedSize() {
-        return 2048;
+        return buffer.length;
     }
 
     public void writeByte(byte value) {
@@ -94,6 +95,18 @@ public class PacketByteBuf extends Packet {
             ((buffer[readIndex++] & 0xFF) << 8) |
             (buffer[readIndex++] & 0xFF);
         return value;
+    }
+
+    public void writeShort(short value) {
+        ensureCapacity(2);
+        buffer[writeIndex++] = (byte) (value >> 8);
+        buffer[writeIndex++] = (byte) value;
+    }
+
+    public short readShort() {
+        ensureReadable(2);
+        return (short) (((buffer[readIndex++] & 0xFF) << 8) |
+                    (buffer[readIndex++] & 0xFF));
     }
 
     public void writeString(String value) {
@@ -186,6 +199,44 @@ public class PacketByteBuf extends Packet {
                 return toRead;
             }
         };
+    }
+
+    public void writeEnumConstant(Enum<?> instance) {
+        int ordinal = instance.ordinal();
+        this.writeByte(ordinal);
+    }
+
+    public <T extends Enum<T>> T readEnumConstant(Class<T> enumClass) {
+        int ordinal = this.readByte();
+        T[] enumConstants = enumClass.getEnumConstants();
+        return enumConstants[ordinal];
+    }
+
+    public void writeCompoundTag(CompoundTag tag) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            NbtIo.writeCompressed(tag, baos);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        byte[] buffer = baos.toByteArray();
+        writeShort((short)buffer.length);
+        writeBytes(buffer);
+    }
+
+    public CompoundTag readCompoundTag() {
+        int length = Short.toUnsignedInt(readShort());
+        if (length == 0) {
+            return null;
+        } else {
+            byte[] data = new byte[length];
+            readBytes(data, length);
+            try {
+                return NbtIo.readCompressed(new ByteArrayInputStream(data));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
 

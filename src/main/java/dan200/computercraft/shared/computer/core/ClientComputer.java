@@ -7,6 +7,8 @@ package dan200.computercraft.shared.computer.core;
 
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.shared.common.ClientTerminal;
+import dan200.computercraft.shared.network.NetworkHandler;
+import dan200.computercraft.shared.network.server.RequestComputerMessage;
 
 public class ClientComputer extends ClientTerminal implements IComputer
 {
@@ -31,7 +33,7 @@ public class ClientComputer extends ClientTerminal implements IComputer
     public void requestState()
     {
         // Request state from server
-        //NetworkHandler.sendToServer( new RequestComputerMessage( getInstanceID() ) );
+        NetworkHandler.sendToServer( new RequestComputerMessage( getInstanceID() ) );
     }
 
     // IComputer
