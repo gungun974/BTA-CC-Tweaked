@@ -270,10 +270,10 @@ public class GuiComputer extends Screen
 //        client.keyboard.setRepeatEvents( false );
 //    }
 //
-//    @Override
-//    public void tick()
-//    {
-//        super.tick();
-//        terminal.update();
-//    }
+    @Override
+    public void tick()
+    {
+        super.tick();
+        terminal.update();
+    }
 }

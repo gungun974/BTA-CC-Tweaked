@@ -28,7 +28,7 @@ public class ServerComputerRegistry extends ComputerRegistry<ServerComputer>
                 computer.update();
                 if( computer.hasTerminalChanged() || computer.hasOutputChanged() )
                 {
-                    //computer.broadcastState( false );
+                    computer.broadcastState( false );
                 }
             }
         }

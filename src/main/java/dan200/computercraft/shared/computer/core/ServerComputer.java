@@ -26,6 +26,7 @@ import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
 import dan200.computercraft.shared.network.client.OpenComputerGuiClientMessage;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.world.World;
+import net.minecraft.server.MinecraftServer;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;
@@ -137,29 +138,23 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         changed = true;
     }
 
-    /*
     public void broadcastState( boolean force )
     {
         if( hasOutputChanged() || force )
         {
             // Send computer state to all clients
-            MinecraftServer server = GameInstanceUtils.getServer();
-            if( server != null )
-            {
-                NetworkHandler.sendToAllPlayers( server, createComputerPacket() );
-            }
+            NetworkHandler.sendToAllPlayers( createComputerPacket() );
         }
 
         if( hasTerminalChanged() || force )
         {
-            MinecraftServer server = GameInstanceUtils.getServer();
+            MinecraftServer server = MinecraftServer.getInstance();
             if( server != null )
             {
                 // Send terminal state to clients who are currently interacting with the computer.
 
                 NetworkMessage packet = null;
-                for( PlayerEntity player : server.getPlayerManager()
-                    .getPlayerList() )
+                for( Player player : server.playerList.playerEntities )
                 {
                     if( isInteracting( player ) )
                     {
@@ -173,7 +168,6 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
             }
         }
     }
-     */
 
     public boolean hasOutputChanged()
     {
@@ -185,12 +179,11 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         return new ComputerDataClientMessage( this );
     }
 
-    /*
-    protected boolean isInteracting( PlayerEntity player )
+    protected boolean isInteracting( Player player )
     {
-        return getContainer( player ) != null;
+        return true;
+        //return getContainer( player ) != null;
     }
-    */
 
     protected NetworkMessage createTerminalPacket()
     {

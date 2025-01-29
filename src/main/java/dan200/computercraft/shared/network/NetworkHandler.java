@@ -130,10 +130,9 @@ public final class NetworkHandler
         return buf;
     }
 
-    public static void sendToAllPlayers( MinecraftServer server, NetworkMessage packet )
+    public static void sendToAllPlayers( NetworkMessage packet )
     {
-//        server.getPlayerManager()
-//            .sendToAll( new CustomPayloadS2CPacket( ID, encode( packet ) ) );
+        MinecraftServer.getInstance().playerList.sendPacketToAllPlayers(encode(packet));
     }
 
     @Environment( EnvType.CLIENT )

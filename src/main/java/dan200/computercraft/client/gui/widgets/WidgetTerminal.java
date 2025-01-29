@@ -386,41 +386,41 @@ public class WidgetTerminal extends Gui implements GuiElement
 //        }
 //    }
 //
-//    public void update()
-//    {
-//        if( terminateTimer >= 0 && terminateTimer < TERMINATE_TIME && (terminateTimer += 0.05f) > TERMINATE_TIME )
-//        {
-//            queueEvent( "terminate" );
-//        }
-//
-//        if( shutdownTimer >= 0 && shutdownTimer < TERMINATE_TIME && (shutdownTimer += 0.05f) > TERMINATE_TIME )
-//        {
-//            ClientComputer computer = this.computer.get();
-//            if( computer != null )
-//            {
-//                computer.shutdown();
-//            }
-//        }
-//
-//        if( rebootTimer >= 0 && rebootTimer < TERMINATE_TIME && (rebootTimer += 0.05f) > TERMINATE_TIME )
-//        {
-//            ClientComputer computer = this.computer.get();
-//            if( computer != null )
-//            {
-//                computer.reboot();
-//            }
-//        }
-//    }
-//
-//    private void queueEvent( String event )
-//    {
-//        ClientComputer computer = this.computer.get();
-//        if( computer != null )
-//        {
-//            computer.queueEvent( event );
-//        }
-//    }
-//
+    public void update()
+    {
+        if( terminateTimer >= 0 && terminateTimer < TERMINATE_TIME && (terminateTimer += 0.05f) > TERMINATE_TIME )
+        {
+            queueEvent( "terminate" );
+        }
+
+        if( shutdownTimer >= 0 && shutdownTimer < TERMINATE_TIME && (shutdownTimer += 0.05f) > TERMINATE_TIME )
+        {
+            ClientComputer computer = this.computer.get();
+            if( computer != null )
+            {
+                computer.shutdown();
+            }
+        }
+
+        if( rebootTimer >= 0 && rebootTimer < TERMINATE_TIME && (rebootTimer += 0.05f) > TERMINATE_TIME )
+        {
+            ClientComputer computer = this.computer.get();
+            if( computer != null )
+            {
+                computer.reboot();
+            }
+        }
+    }
+
+    private void queueEvent( String event )
+    {
+        ClientComputer computer = this.computer.get();
+        if( computer != null )
+        {
+            computer.queueEvent( event );
+        }
+    }
+
     public void draw( int originX, int originY )
     {
         synchronized( computer )

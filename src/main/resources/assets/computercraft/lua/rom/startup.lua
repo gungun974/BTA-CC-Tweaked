@@ -182,7 +182,7 @@ while true do
     term.setCursorPos(1,1)
     print(a)
     print(os.getComputerID())
-    os.sleep(0.5)
+    os.sleep(1)
     a = a + 1
     end
 
