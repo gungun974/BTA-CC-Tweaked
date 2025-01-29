@@ -35,6 +35,7 @@ public class PacketByteBuf extends Packet {
     }
 
     public void handlePacket(PacketHandler packetHandler) {
+        ComputerCraft.log.info("Recieve packet size : {}", buffer.length);
         NetworkHandler.receive(packetHandler, this);
 
     }

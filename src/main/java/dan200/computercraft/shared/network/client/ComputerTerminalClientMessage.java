@@ -5,17 +5,14 @@
  */
 package dan200.computercraft.shared.network.client;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.PacketByteBuf;
-import dan200.computercraft.client.gui.GuiComputer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.net.handler.PacketHandler;
 
 import javax.annotation.Nonnull;
 
 public class ComputerTerminalClientMessage extends ComputerClientMessage
 {
-    private TerminalState state;
+    protected TerminalState state;
 
     public ComputerTerminalClientMessage( int instanceId, TerminalState state )
     {
@@ -45,6 +42,5 @@ public class ComputerTerminalClientMessage extends ComputerClientMessage
     public void handle(PacketHandler packetHandler)
     {
         getComputer().read( state );
-        //Minecraft.getMinecraft().displayScreen(new GuiComputer(getComputer(), state.width, state.height));
     }
 }

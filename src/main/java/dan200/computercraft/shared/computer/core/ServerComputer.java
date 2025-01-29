@@ -23,6 +23,7 @@ import dan200.computercraft.shared.network.NetworkHandler;
 import dan200.computercraft.shared.network.NetworkMessage;
 import dan200.computercraft.shared.network.client.ComputerDataClientMessage;
 import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
+import dan200.computercraft.shared.network.client.OpenComputerGuiClientMessage;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.world.World;
 
@@ -196,6 +197,11 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         return new ComputerTerminalClientMessage( getInstanceID(), write() );
     }
 
+    protected NetworkMessage createOpenComputerGuiPacket()
+    {
+        return new OpenComputerGuiClientMessage( getInstanceID(), write() );
+    }
+
     /*
 
     @Nullable
@@ -278,6 +284,12 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         // Send terminal state to client
         NetworkHandler.sendToPlayer( player, createTerminalPacket() );
     }
+
+    public void sendOpenComputerGui( Player player )
+    {
+        NetworkHandler.sendToPlayer( player, createOpenComputerGuiPacket() );
+    }
+
     /*
 
     public void broadcastDelete()

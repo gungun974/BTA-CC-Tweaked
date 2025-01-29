@@ -90,7 +90,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             {
                 createServerComputer().turnOn();
                 createServerComputer().sendTerminalState( player );
-               // new ComputerContainerData( createServerComputer() ).open( player, this );
+                createServerComputer().sendOpenComputerGui( player );
             }
 
             return true;
