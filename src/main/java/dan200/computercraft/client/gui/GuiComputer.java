@@ -9,6 +9,7 @@ import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.client.gui.widgets.WidgetTerminal;
 import dan200.computercraft.client.gui.widgets.WidgetWrapper;
 import dan200.computercraft.client.render.ComputerBorderRenderer;
+import dan200.computercraft.fabric.GLFWKeyboardManager;
 import dan200.computercraft.shared.computer.core.ClientComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
@@ -22,6 +23,8 @@ import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.client.util.debug.DebugRender;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWKeyCallbackI;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -189,10 +192,52 @@ public class GuiComputer<T extends ContainerComputerBase> extends Screen
         //setFocused( terminalWrapper );
     }
 
+    private class KeyCallback extends GLFWKeyCallback {
+        private GuiComputer windowInstance;
+
+        public KeyCallback(GuiComputer windowInstance) {
+            this.windowInstance = windowInstance;
+        }
+
+        @Override
+        public void invoke(long window, int key, int scancode, int action, int mods) {
+            windowInstance.glfwKeyboardCallback(window, key, scancode, action, mods);
+        }
+    }
+
+    final KeyCallback keyCallback = new KeyCallback(this);
+
     @Override
     public void init()
     {
         initTerminal( BORDER, 0, 0 );
+
+        GLFWKeyboardManager.getInstance().addObserver(keyCallback);
+    }
+
+    @Override
+    public void removed() {
+        GLFWKeyboardManager.getInstance().removeObserver(keyCallback);
+    }
+
+
+    public void glfwKeyboardCallback(long window, int key, int scancode, int action, int mods) {
+        ComputerCraft.log.info(String.valueOf((char)key));
+
+        if (action == 0) {
+            terminal.keyReleased(key, scancode, mods);
+            return;
+        }
+
+        terminal.keyPressed(key, scancode, mods);
+
+        char ch = Character.toLowerCase((char) key);
+
+        if ((mods & GLFW.GLFW_MOD_SHIFT) != 0) {
+            ch = Character.toUpperCase((char) key);
+        }
+
+        terminal.charTyped(ch, mods);
     }
 //
 //    @Override
@@ -264,48 +309,9 @@ public class GuiComputer<T extends ContainerComputerBase> extends Screen
     }
 
     @Override
-    public void updateEvents() {
-        int mouseX = Mouse.getEventX() * this.width / this.mc.resolution.getWidthScreenCoords();
-        int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.resolution.getHeightScreenCoords() - 1;
-
-        while(Mouse.next() && this.mc.inputType != InputType.CONTROLLER) {
-            if (Mouse.getEventButtonState()) {
-                this.mouseClicked(mouseX, mouseY, Mouse.getEventButton());
-            } else {
-                this.mouseReleased(mouseX, mouseY, Mouse.getEventButton());
-            }
-        }
-
-        while(Keyboard.next()) {
-            int eventKey = Keyboard.getEventKey();
-            char eventChar = Keyboard.getEventCharacter();
-            boolean keyState = Keyboard.getEventKeyState();
-
-            if (!keyState) {
-                this.keyReleased(eventChar, eventKey, mouseX, mouseY);
-            } else {
-                if (eventKey == Keyboard.KEY_F11) {
-                    this.mc.gameWindow.toggleFullscreen();
-                } else {
-                    this.keyPressed(eventChar, eventKey, mouseX, mouseY);
-                }
-            }
-        }
-    }
-
-
-    @Override
     public void keyPressed(char eventCharacter, int eventKey, int mx, int my) {
-        if (eventKey == -1){
-            return;
+        if (eventKey == Keyboard.KEY_ESCAPE) {
+            this.mc.displayScreen((Screen)null);
         }
-        super.keyPressed(eventCharacter, eventKey, mx, my);
-        terminal.keyPressed(eventKey, 0, 0);
-        terminal.charTyped(Keyboard.getKeyName(eventKey).charAt(0), 0);
-
-    }
-
-    public void keyReleased(char eventCharacter, int eventKey, int mx, int my) {
-        terminal.keyReleased(eventKey, 0, 0);
     }
 }

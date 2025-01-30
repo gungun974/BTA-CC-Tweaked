@@ -219,47 +219,62 @@ public class WidgetTerminal extends Gui implements GuiElement
         }
         if( (modifiers & GLFW.GLFW_MOD_CONTROL) != 0 )
         {
-            if (key == Keyboard.KEY_T) {
-                if (terminateTimer < 0) {
-                    terminateTimer = 0;
-                }
-                return true;
-            } else if (key == Keyboard.KEY_S) {
-                if (shutdownTimer < 0) {
-                    shutdownTimer = 0;
-                }
-                return true;
-            } else if (key == Keyboard.KEY_R) {
-                if (rebootTimer < 0) {
-                    rebootTimer = 0;
-                }
-                return true;
-            } else if (key == Keyboard.KEY_V) {// Ctrl+V for paste
-                String clipboard = client.readFromClipboard();
-                if (clipboard != null) {
-                    // Clip to the first occurrence of \r or \n
-                    int newLineIndex1 = clipboard.indexOf("\r");
-                    int newLineIndex2 = clipboard.indexOf("\n");
-                    if (newLineIndex1 >= 0 && newLineIndex2 >= 0) {
-                        clipboard = clipboard.substring(0, Math.min(newLineIndex1, newLineIndex2));
-                    } else if (newLineIndex1 >= 0) {
-                        clipboard = clipboard.substring(0, newLineIndex1);
-                    } else if (newLineIndex2 >= 0) {
-                        clipboard = clipboard.substring(0, newLineIndex2);
+            switch( key )
+            {
+                case GLFW.GLFW_KEY_T:
+                    if( terminateTimer < 0 )
+                    {
+                        terminateTimer = 0;
                     }
-
-                    // Filter the string
-                    //clipboard = SharedConstants.stripInvalidChars( clipboard );
-                    if (!clipboard.isEmpty()) {
-                        // Clip to 512 characters and queue the event
-                        if (clipboard.length() > 512) {
-                            clipboard = clipboard.substring(0, 512);
-                        }
-                        queueEvent("paste", clipboard);
-                    }
-
                     return true;
-                }
+                case GLFW.GLFW_KEY_S:
+                    if( shutdownTimer < 0 )
+                    {
+                        shutdownTimer = 0;
+                    }
+                    return true;
+                case GLFW.GLFW_KEY_R:
+                    if( rebootTimer < 0 )
+                    {
+                        rebootTimer = 0;
+                    }
+                    return true;
+
+                case GLFW.GLFW_KEY_V:
+                    // Ctrl+V for paste
+                    String clipboard = client.readFromClipboard();
+                    if( clipboard != null )
+                    {
+                        // Clip to the first occurrence of \r or \n
+                        int newLineIndex1 = clipboard.indexOf( "\r" );
+                        int newLineIndex2 = clipboard.indexOf( "\n" );
+                        if( newLineIndex1 >= 0 && newLineIndex2 >= 0 )
+                        {
+                            clipboard = clipboard.substring( 0, Math.min( newLineIndex1, newLineIndex2 ) );
+                        }
+                        else if( newLineIndex1 >= 0 )
+                        {
+                            clipboard = clipboard.substring( 0, newLineIndex1 );
+                        }
+                        else if( newLineIndex2 >= 0 )
+                        {
+                            clipboard = clipboard.substring( 0, newLineIndex2 );
+                        }
+
+                        // Filter the string
+                        //clipboard = SharedConstants.stripInvalidChars( clipboard );
+                        if( !clipboard.isEmpty() )
+                        {
+                            // Clip to 512 characters and queue the event
+                            if( clipboard.length() > 512 )
+                            {
+                                clipboard = clipboard.substring( 0, 512 );
+                            }
+                            queueEvent( "paste", clipboard );
+                        }
+
+                        return true;
+                    }
             }
         }
 
@@ -271,7 +286,7 @@ public class WidgetTerminal extends Gui implements GuiElement
             IComputer computer = this.computer.get();
             if( computer != null )
             {
-                computer.keyDown( Keyboard.getKeyName(key).charAt(0), repeat );
+                computer.keyDown( key, repeat );
             }
         }
 
@@ -287,18 +302,25 @@ public class WidgetTerminal extends Gui implements GuiElement
             IComputer computer = this.computer.get();
             if( computer != null )
             {
-                computer.keyUp( Keyboard.getKeyName(key).charAt(0) );
+                computer.keyUp( key );
             }
         }
 
-        if (key == Keyboard.KEY_T) {
-            terminateTimer = -1;
-        } else if (key == Keyboard.KEY_R) {
-            rebootTimer = -1;
-        } else if (key == Keyboard.KEY_S) {
-            shutdownTimer = -1;
-        } else if (key == Keyboard.KEY_LCONTROL || key == Keyboard.KEY_RCONTROL) {
-            terminateTimer = rebootTimer = shutdownTimer = -1;
+        switch( key )
+        {
+            case GLFW.GLFW_KEY_T:
+                terminateTimer = -1;
+                break;
+            case GLFW.GLFW_KEY_R:
+                rebootTimer = -1;
+                break;
+            case GLFW.GLFW_KEY_S:
+                shutdownTimer = -1;
+                break;
+            case GLFW.GLFW_KEY_LEFT_CONTROL:
+            case GLFW.GLFW_KEY_RIGHT_CONTROL:
+                terminateTimer = rebootTimer = shutdownTimer = -1;
+                break;
         }
 
         return true;

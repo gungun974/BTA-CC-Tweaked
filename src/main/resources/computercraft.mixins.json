@@ -6,7 +6,8 @@
         "PlayerMixin"
     ],
     "client": [
-        "WorldClientMixin"
+        "WorldClientMixin",
+        "GLFWKeyboardImplementationMixin"
     ],
     "server": [
         "MinecraftServerMixin",
