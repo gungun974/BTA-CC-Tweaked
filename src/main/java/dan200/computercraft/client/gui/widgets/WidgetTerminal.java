@@ -15,6 +15,7 @@ import net.minecraft.client.gui.ButtonElement;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiElement;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.input.Keyboard;
 
 import java.util.BitSet;
 import java.util.function.Supplier;
@@ -210,134 +211,109 @@ public class WidgetTerminal extends Gui implements GuiElement
 //        return true;
 //    }
 //
-//    @Override
-//    public boolean keyPressed( int key, int scancode, int modifiers )
-//    {
-//        if( key == GLFW.GLFW_KEY_ESCAPE )
-//        {
-//            return false;
-//        }
-//        if( (modifiers & GLFW.GLFW_MOD_CONTROL) != 0 )
-//        {
-//            switch( key )
-//            {
-//                case GLFW.GLFW_KEY_T:
-//                    if( terminateTimer < 0 )
-//                    {
-//                        terminateTimer = 0;
-//                    }
-//                    return true;
-//                case GLFW.GLFW_KEY_S:
-//                    if( shutdownTimer < 0 )
-//                    {
-//                        shutdownTimer = 0;
-//                    }
-//                    return true;
-//                case GLFW.GLFW_KEY_R:
-//                    if( rebootTimer < 0 )
-//                    {
-//                        rebootTimer = 0;
-//                    }
-//                    return true;
-//
-//                case GLFW.GLFW_KEY_V:
-//                    // Ctrl+V for paste
-//                    String clipboard = client.keyboard.getClipboard();
-//                    if( clipboard != null )
-//                    {
-//                        // Clip to the first occurrence of \r or \n
-//                        int newLineIndex1 = clipboard.indexOf( "\r" );
-//                        int newLineIndex2 = clipboard.indexOf( "\n" );
-//                        if( newLineIndex1 >= 0 && newLineIndex2 >= 0 )
-//                        {
-//                            clipboard = clipboard.substring( 0, Math.min( newLineIndex1, newLineIndex2 ) );
-//                        }
-//                        else if( newLineIndex1 >= 0 )
-//                        {
-//                            clipboard = clipboard.substring( 0, newLineIndex1 );
-//                        }
-//                        else if( newLineIndex2 >= 0 )
-//                        {
-//                            clipboard = clipboard.substring( 0, newLineIndex2 );
-//                        }
-//
-//                        // Filter the string
-//                        clipboard = SharedConstants.stripInvalidChars( clipboard );
-//                        if( !clipboard.isEmpty() )
-//                        {
-//                            // Clip to 512 characters and queue the event
-//                            if( clipboard.length() > 512 )
-//                            {
-//                                clipboard = clipboard.substring( 0, 512 );
-//                            }
-//                            queueEvent( "paste", clipboard );
-//                        }
-//
-//                        return true;
-//                    }
-//            }
-//        }
-//
-//        if( key >= 0 && terminateTimer < 0 && rebootTimer < 0 && shutdownTimer < 0 )
-//        {
-//            // Queue the "key" event and add to the down set
-//            boolean repeat = keysDown.get( key );
-//            keysDown.set( key );
-//            IComputer computer = this.computer.get();
-//            if( computer != null )
-//            {
-//                computer.keyDown( key, repeat );
-//            }
-//        }
-//
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean keyReleased( int key, int scancode, int modifiers )
-//    {
-//        // Queue the "key_up" event and remove from the down set
-//        if( key >= 0 && keysDown.get( key ) )
-//        {
-//            keysDown.set( key, false );
-//            IComputer computer = this.computer.get();
-//            if( computer != null )
-//            {
-//                computer.keyUp( key );
-//            }
-//        }
-//
-//        switch( key )
-//        {
-//            case GLFW.GLFW_KEY_T:
-//                terminateTimer = -1;
-//                break;
-//            case GLFW.GLFW_KEY_R:
-//                rebootTimer = -1;
-//                break;
-//            case GLFW.GLFW_KEY_S:
-//                shutdownTimer = -1;
-//                break;
-//            case GLFW.GLFW_KEY_LEFT_CONTROL:
-//            case GLFW.GLFW_KEY_RIGHT_CONTROL:
-//                terminateTimer = rebootTimer = shutdownTimer = -1;
-//                break;
-//        }
-//
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean charTyped( char ch, int modifiers )
-//    {
-//        if( ch >= 32 && ch <= 126 || ch >= 160 && ch <= 255 ) // printable chars in byte range
-//        {
-//            // Queue the "char" event
-//            queueEvent( "char", Character.toString( ch ) );
-//        }
-//
-//        return true;
-//    }
+    public boolean keyPressed( int key, int scancode, int modifiers )
+    {
+        if( key == Keyboard.KEY_ESCAPE)
+        {
+            return false;
+        }
+        if( (modifiers & GLFW.GLFW_MOD_CONTROL) != 0 )
+        {
+            if (key == Keyboard.KEY_T) {
+                if (terminateTimer < 0) {
+                    terminateTimer = 0;
+                }
+                return true;
+            } else if (key == Keyboard.KEY_S) {
+                if (shutdownTimer < 0) {
+                    shutdownTimer = 0;
+                }
+                return true;
+            } else if (key == Keyboard.KEY_R) {
+                if (rebootTimer < 0) {
+                    rebootTimer = 0;
+                }
+                return true;
+            } else if (key == Keyboard.KEY_V) {// Ctrl+V for paste
+                String clipboard = client.readFromClipboard();
+                if (clipboard != null) {
+                    // Clip to the first occurrence of \r or \n
+                    int newLineIndex1 = clipboard.indexOf("\r");
+                    int newLineIndex2 = clipboard.indexOf("\n");
+                    if (newLineIndex1 >= 0 && newLineIndex2 >= 0) {
+                        clipboard = clipboard.substring(0, Math.min(newLineIndex1, newLineIndex2));
+                    } else if (newLineIndex1 >= 0) {
+                        clipboard = clipboard.substring(0, newLineIndex1);
+                    } else if (newLineIndex2 >= 0) {
+                        clipboard = clipboard.substring(0, newLineIndex2);
+                    }
+
+                    // Filter the string
+                    //clipboard = SharedConstants.stripInvalidChars( clipboard );
+                    if (!clipboard.isEmpty()) {
+                        // Clip to 512 characters and queue the event
+                        if (clipboard.length() > 512) {
+                            clipboard = clipboard.substring(0, 512);
+                        }
+                        queueEvent("paste", clipboard);
+                    }
+
+                    return true;
+                }
+            }
+        }
+
+        if( key >= 0 && terminateTimer < 0 && rebootTimer < 0 && shutdownTimer < 0 )
+        {
+            // Queue the "key" event and add to the down set
+            boolean repeat = keysDown.get( key );
+            keysDown.set( key );
+            IComputer computer = this.computer.get();
+            if( computer != null )
+            {
+                computer.keyDown( Keyboard.getKeyName(key).charAt(0), repeat );
+            }
+        }
+
+        return true;
+    }
+
+    public boolean keyReleased( int key, int scancode, int modifiers )
+    {
+        // Queue the "key_up" event and remove from the down set
+        if( key >= 0 && keysDown.get( key ) )
+        {
+            keysDown.set( key, false );
+            IComputer computer = this.computer.get();
+            if( computer != null )
+            {
+                computer.keyUp( Keyboard.getKeyName(key).charAt(0) );
+            }
+        }
+
+        if (key == Keyboard.KEY_T) {
+            terminateTimer = -1;
+        } else if (key == Keyboard.KEY_R) {
+            rebootTimer = -1;
+        } else if (key == Keyboard.KEY_S) {
+            shutdownTimer = -1;
+        } else if (key == Keyboard.KEY_LCONTROL || key == Keyboard.KEY_RCONTROL) {
+            terminateTimer = rebootTimer = shutdownTimer = -1;
+        }
+
+        return true;
+    }
+
+    public boolean charTyped( char ch, int modifiers )
+    {
+        if( ch >= 32 && ch <= 126 || ch >= 160 && ch <= 255 ) // printable chars in byte range
+        {
+            // Queue the "char" event
+            queueEvent( "char", Character.toString( ch ) );
+        }
+
+        return true;
+    }
 //
 //    @Override
 //    public boolean changeFocus( boolean reversed )
@@ -377,15 +353,15 @@ public class WidgetTerminal extends Gui implements GuiElement
 //        return true;
 //    }
 //
-//    private void queueEvent( String event, Object... args )
-//    {
-//        ClientComputer computer = this.computer.get();
-//        if( computer != null )
-//        {
-//            computer.queueEvent( event, args );
-//        }
-//    }
-//
+    private void queueEvent( String event, Object... args )
+    {
+        ClientComputer computer = this.computer.get();
+        if( computer != null )
+        {
+            computer.queueEvent( event, args );
+        }
+    }
+
     public void update()
     {
         if( terminateTimer >= 0 && terminateTimer < TERMINATE_TIME && (terminateTimer += 0.05f) > TERMINATE_TIME )

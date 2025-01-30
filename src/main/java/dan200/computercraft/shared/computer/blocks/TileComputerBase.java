@@ -8,18 +8,17 @@ package dan200.computercraft.shared.computer.blocks;
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.core.computer.ComputerSide;
+import dan200.computercraft.fabric.IComputerPlayer;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
+import dan200.computercraft.shared.computer.inventory.ContainerComputer;
 import dan200.computercraft.shared.util.DirectionUtil;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
-import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 
@@ -90,6 +89,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             {
                 createServerComputer().turnOn();
                 createServerComputer().sendTerminalState( player );
+                ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this));
                 createServerComputer().sendOpenComputerGui( player );
             }
 

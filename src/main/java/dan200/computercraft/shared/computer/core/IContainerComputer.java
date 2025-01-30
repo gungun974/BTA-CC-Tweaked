@@ -11,7 +11,6 @@ import javax.annotation.Nullable;
 /**
  * An instance of {@link Container} which provides a computer. You should implement this if you provide custom computers/GUIs to interact with them.
  */
-@FunctionalInterface
 public interface IContainerComputer
 {
     /**
@@ -23,6 +22,12 @@ public interface IContainerComputer
      */
     @Nullable
     IComputer getComputer();
+
+    @Nullable
+    ClientComputer getClientComputer();
+
+    @Nullable
+    ServerComputer getServerComputer();
 
     /**
      * Get the input controller for this container.

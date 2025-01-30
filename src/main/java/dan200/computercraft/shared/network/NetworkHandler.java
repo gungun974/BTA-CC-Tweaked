@@ -11,7 +11,7 @@ import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.network.client.ComputerDataClientMessage;
 import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
 import dan200.computercraft.shared.network.client.OpenComputerGuiClientMessage;
-import dan200.computercraft.shared.network.server.RequestComputerMessage;
+import dan200.computercraft.shared.network.server.*;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -55,11 +55,11 @@ public final class NetworkHandler
 //        }
 
 //        // Server messages
-//        registerMainThread( 0, ComputerActionServerMessage::new );
-//        registerMainThread( 1, QueueEventServerMessage::new );
+        registerMainThread( 0, ComputerActionServerMessage::new );
+        registerMainThread( 1, QueueEventServerMessage::new );
         registerMainThread( 2, RequestComputerMessage::new );
-//        registerMainThread( 3, KeyEventServerMessage::new );
-//        registerMainThread( 4, MouseEventServerMessage::new );
+        registerMainThread( 3, KeyEventServerMessage::new );
+        registerMainThread( 4, MouseEventServerMessage::new );
 
         // Client messages
         registerMainThread( 9, OpenComputerGuiClientMessage::new );
@@ -159,7 +159,7 @@ public final class NetworkHandler
     @Environment( EnvType.CLIENT )
     public static void sendToServer( NetworkMessage packet )
     {
-        if (!Helper.isServerEnvironment()){
+        if (Helper.isSinglePlayer()){
             sendToPlayerLocal(packet);
             return;
         }

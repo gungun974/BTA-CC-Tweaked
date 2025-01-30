@@ -37,54 +37,15 @@ public class TileEntityComputer extends TileComputerBase  {
         super(ComputerFamily.NORMAL);
     }
 
-    /*
-    public void readFromNBT(CompoundTag nbttagcompound) {
-        super.readFromNBT(nbttagcompound);
-        ListTag nbttaglist = nbttagcompound.getList("Items");
-        this.furnaceItemStacks = new ItemStack[this.getContainerSize()];
-
-        for(int i = 0; i < nbttaglist.tagCount(); ++i) {
-            CompoundTag nbttagcompound1 = (CompoundTag)nbttaglist.tagAt(i);
-            byte byte0 = nbttagcompound1.getByte("Slot");
-            if (byte0 >= 0 && byte0 < this.furnaceItemStacks.length) {
-                this.furnaceItemStacks[byte0] = ItemStack.readItemStackFromNbt(nbttagcompound1);
-            }
-        }
-
-        this.currentBurnTime = nbttagcompound.getShort("BurnTime");
-        this.currentCookTime = nbttagcompound.getShort("CookTime");
-        this.maxBurnTime = nbttagcompound.getShort("MaxBurnTime");
-    }
-
-    public void writeToNBT(CompoundTag nbttagcompound) {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.putShort("BurnTime", (short)this.currentBurnTime);
-        nbttagcompound.putShort("CookTime", (short)this.currentCookTime);
-        nbttagcompound.putShort("MaxBurnTime", (short)this.maxBurnTime);
-        ListTag nbttaglist = new ListTag();
-
-        for(int i = 0; i < this.furnaceItemStacks.length; ++i) {
-            if (this.furnaceItemStacks[i] != null) {
-                CompoundTag nbttagcompound1 = new CompoundTag();
-                nbttagcompound1.putByte("Slot", (byte)i);
-                this.furnaceItemStacks[i].writeToNBT(nbttagcompound1);
-                nbttaglist.addTag(nbttagcompound1);
-            }
-        }
-
-        nbttagcompound.put("Items", nbttaglist);
-    }
-     */
-
     public boolean canBeCarried(World world, Entity potentialHolder) {
         return false;
     }
 
 
-//    public boolean isUsableByPlayer( Player player )
-//    {
-//        return isUsable( player, false );
-//    }
+    public boolean isUsableByPlayer( Player player )
+    {
+        return isUsable( player, false );
+    }
 
     @Override
     protected void updateBlockState( ComputerState newState )

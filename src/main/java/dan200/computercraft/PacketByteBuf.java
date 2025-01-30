@@ -139,14 +139,14 @@ public class PacketByteBuf extends Packet {
 
     public void writeString(String value) {
         byte[] stringBytes = value.getBytes(StandardCharsets.UTF_8);
-        writeInt(stringBytes.length); // Écrit la longueur de la chaîne
+        writeInt(stringBytes.length);
         ensureCapacity(stringBytes.length);
         System.arraycopy(stringBytes, 0, buffer, writeIndex, stringBytes.length);
         writeIndex += stringBytes.length;
     }
 
     public String readString() {
-        int length = readInt(); // Lit la longueur de la chaîne
+        int length = readInt();
         ensureReadable(length);
         String value = new String(buffer, readIndex, length, StandardCharsets.UTF_8);
         readIndex += length;

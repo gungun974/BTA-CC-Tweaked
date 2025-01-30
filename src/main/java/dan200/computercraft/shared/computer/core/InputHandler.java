@@ -5,6 +5,8 @@
  */
 package dan200.computercraft.shared.computer.core;
 
+import dan200.computercraft.ComputerCraft;
+
 /**
  * Receives some input and forwards it to a computer.
  *

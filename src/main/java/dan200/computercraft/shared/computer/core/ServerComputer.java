@@ -19,18 +19,21 @@ import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.core.computer.IComputerEnvironment;
 import dan200.computercraft.fabric.Helper;
+import dan200.computercraft.fabric.IComputerPlayer;
 import dan200.computercraft.shared.common.ServerTerminal;
 import dan200.computercraft.shared.network.NetworkHandler;
 import dan200.computercraft.shared.network.NetworkMessage;
 import dan200.computercraft.shared.network.client.ComputerDataClientMessage;
 import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
 import dan200.computercraft.shared.network.client.OpenComputerGuiClientMessage;
+import dan200.computercraft.shared.network.client.TerminalState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.world.World;
 import net.minecraft.server.MinecraftServer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.InputStream;
 
 public class ServerComputer extends ServerTerminal implements IComputer, IComputerEnvironment
@@ -189,8 +192,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
 
     protected boolean isInteracting( Player player )
     {
-        return true;
-        //return getContainer( player ) != null;
+        return getContainer( player ) != null;
     }
 
     protected NetworkMessage createTerminalPacket()
@@ -200,29 +202,27 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
 
     protected NetworkMessage createOpenComputerGuiPacket()
     {
-        return new OpenComputerGuiClientMessage( getInstanceID(), write() );
+        final TerminalState state = write();
+        return new OpenComputerGuiClientMessage( getInstanceID(), getFamily(), state.width, state.height );
     }
 
-    /*
-
     @Nullable
-    public IContainerComputer getContainer( PlayerEntity player )
+    public IContainerComputer getContainer( Player player )
     {
         if( player == null )
         {
             return null;
         }
 
-        ScreenHandler container = player.currentScreenHandler;
-        if( !(container instanceof IContainerComputer) )
+        final IContainerComputer computerContainer = ((IComputerPlayer)player).getCurrentContainerComputer();
+
+        if(computerContainer == null)
         {
             return null;
         }
 
-        IContainerComputer computerContainer = (IContainerComputer) container;
-        return computerContainer.getComputer() != this ? null : computerContainer;
+        return computerContainer;
     }
-     */
 
     @Override
     public int getInstanceID()
@@ -253,14 +253,19 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         computer.reboot();
     }
 
-    /*
+    @Override
+    public void queueEvent( String event  )
+    {
+        // Queue event
+        computer.queueEvent( event, null );
+    }
+
     @Override
     public void queueEvent( String event, Object[] arguments )
     {
         // Queue event
         computer.queueEvent( event, arguments );
     }
-     */
 
     @Override
     public boolean isOn()

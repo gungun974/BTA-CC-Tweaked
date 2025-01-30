@@ -3,6 +3,7 @@
     "package": "dan200.computercraft.fabric.mixin",
     "compatibilityLevel": "JAVA_8",
     "mixins": [
+        "PlayerMixin"
     ],
     "client": [
         "WorldClientMixin"

@@ -5,30 +5,35 @@
  */
 package dan200.computercraft.shared.network.server;
 
+import dan200.computercraft.PacketByteBuf;
 import dan200.computercraft.shared.computer.core.IContainerComputer;
 import dan200.computercraft.shared.computer.core.InputState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
-import net.minecraft.network.PacketByteBuf;
 
 import javax.annotation.Nonnull;
 
-public class KeyEventServerMessage extends ComputerServerMessage
+public class MouseEventServerMessage extends ComputerServerMessage
 {
-    public static final int TYPE_DOWN = 0;
-    public static final int TYPE_REPEAT = 1;
+    public static final int TYPE_CLICK = 0;
+    public static final int TYPE_DRAG = 1;
     public static final int TYPE_UP = 2;
+    public static final int TYPE_SCROLL = 3;
 
     private int type;
-    private int key;
+    private int x;
+    private int y;
+    private int arg;
 
-    public KeyEventServerMessage( int instanceId, int type, int key )
+    public MouseEventServerMessage( int instanceId, int type, int arg, int x, int y )
     {
         super( instanceId );
         this.type = type;
-        this.key = key;
+        this.arg = arg;
+        this.x = x;
+        this.y = y;
     }
 
-    public KeyEventServerMessage()
+    public MouseEventServerMessage()
     {
     }
 
@@ -37,7 +42,9 @@ public class KeyEventServerMessage extends ComputerServerMessage
     {
         super.toBytes( buf );
         buf.writeByte( type );
-        buf.writeVarInt( key );
+        buf.writeInt( arg );
+        buf.writeInt( x );
+        buf.writeInt( y );
     }
 
     @Override
@@ -45,20 +52,29 @@ public class KeyEventServerMessage extends ComputerServerMessage
     {
         super.fromBytes( buf );
         type = buf.readByte();
-        key = buf.readVarInt();
+        arg = buf.readInt();
+        x = buf.readInt();
+        y = buf.readInt();
     }
 
     @Override
     protected void handle( @Nonnull ServerComputer computer, @Nonnull IContainerComputer container )
     {
         InputState input = container.getInput();
-        if( type == TYPE_UP )
+        switch( type )
         {
-            input.keyUp( key );
-        }
-        else
-        {
-            input.keyDown( key, type == TYPE_REPEAT );
+            case TYPE_CLICK:
+                input.mouseClick( arg, x, y );
+                break;
+            case TYPE_DRAG:
+                input.mouseDrag( arg, x, y );
+                break;
+            case TYPE_UP:
+                input.mouseUp( arg, x, y );
+                break;
+            case TYPE_SCROLL:
+                input.mouseScroll( arg, x, y );
+                break;
         }
     }
 }

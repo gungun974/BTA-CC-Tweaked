@@ -11,22 +11,30 @@ import dan200.computercraft.client.gui.widgets.WidgetWrapper;
 import dan200.computercraft.client.render.ComputerBorderRenderer;
 import dan200.computercraft.shared.computer.core.ClientComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
+import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ButtonElement;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.container.ScreenTrommel;
+import net.minecraft.client.input.InputType;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
+import net.minecraft.client.util.debug.DebugRender;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 //import static dan200.computercraft.client.render.ComputerBorderRenderer.BORDER;
 //import static dan200.computercraft.client.render.ComputerBorderRenderer.MARGIN;
 
-public class GuiComputer extends Screen
+public class GuiComputer<T extends ContainerComputerBase> extends Screen
 {
+    protected final ComputerFamily family;
     private int border;
 
     public boolean isPauseScreen() {
@@ -34,26 +42,14 @@ public class GuiComputer extends Screen
     }
 
 
-    public IconCoordinate termTexture;
-    public IconCoordinate cornersTexture;
-
-    public GuiComputer(ClientComputer computer, int termWidth, int termHeight )
+    public GuiComputer( T container, int termWidth, int termHeight )
     {
         super();
-        this.setDefaultTextures();
-        //this.family = container.getFamily();
-        //this.computer = (ClientComputer) container.getComputer();
-        this.computer = computer;
+        this.family = container.getFamily();
+        this.computer = container.getClientComputer();
         this.termWidth = termWidth;
         this.termHeight = termHeight;
         this.terminal = null;
-    }
-
-    protected void setDefaultTextures() {
-        this.termTexture = TextureRegistry.getTexture("computercraft:gui/term_background");
-        //this.cornersTexture = TextureRegistry.getTexture("minecraft:gui/widgets/button/button");
-        this.cornersTexture = TextureRegistry.getTexture("computercraft:gui/corners_normal");
-        ComputerCraft.log.info(String.valueOf(this.cornersTexture.width));
     }
 
         /**
@@ -265,5 +261,51 @@ public class GuiComputer extends Screen
     {
         super.tick();
         terminal.update();
+    }
+
+    @Override
+    public void updateEvents() {
+        int mouseX = Mouse.getEventX() * this.width / this.mc.resolution.getWidthScreenCoords();
+        int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.resolution.getHeightScreenCoords() - 1;
+
+        while(Mouse.next() && this.mc.inputType != InputType.CONTROLLER) {
+            if (Mouse.getEventButtonState()) {
+                this.mouseClicked(mouseX, mouseY, Mouse.getEventButton());
+            } else {
+                this.mouseReleased(mouseX, mouseY, Mouse.getEventButton());
+            }
+        }
+
+        while(Keyboard.next()) {
+            int eventKey = Keyboard.getEventKey();
+            char eventChar = Keyboard.getEventCharacter();
+            boolean keyState = Keyboard.getEventKeyState();
+
+            if (!keyState) {
+                this.keyReleased(eventChar, eventKey, mouseX, mouseY);
+            } else {
+                if (eventKey == Keyboard.KEY_F11) {
+                    this.mc.gameWindow.toggleFullscreen();
+                } else {
+                    this.keyPressed(eventChar, eventKey, mouseX, mouseY);
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void keyPressed(char eventCharacter, int eventKey, int mx, int my) {
+        if (eventKey == -1){
+            return;
+        }
+        super.keyPressed(eventCharacter, eventKey, mx, my);
+        terminal.keyPressed(eventKey, 0, 0);
+        terminal.charTyped(Keyboard.getKeyName(eventKey).charAt(0), 0);
+
+    }
+
+    public void keyReleased(char eventCharacter, int eventKey, int mx, int my) {
+        terminal.keyReleased(eventKey, 0, 0);
     }
 }
