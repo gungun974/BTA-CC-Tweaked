@@ -3,11 +3,12 @@
     "package": "dan200.computercraft.fabric.mixin",
     "compatibilityLevel": "JAVA_8",
     "mixins": [
-        "WorldMixin"
     ],
     "client": [
+        "WorldClientMixin"
     ],
     "server": [
+        "MinecraftServerMixin",
         "PacketHandlerServerAccessor"
     ],
     "injectors": {

@@ -41,7 +41,6 @@ public class TerminalState
     public TerminalState( boolean colour, @Nullable Terminal terminal )
     {
         this( colour, terminal, true );
-
     }
 
     public TerminalState( boolean colour, @Nullable Terminal terminal, boolean compress )
@@ -171,6 +170,8 @@ public class TerminalState
             buf.writeBytes(byteArray);
 
             buf.writeBytes(sendBuffer.readerIndex(), sendBuffer.readableBytes() );
+            sendBuffer.release();
+            compressed = null;
         }
     }
 
