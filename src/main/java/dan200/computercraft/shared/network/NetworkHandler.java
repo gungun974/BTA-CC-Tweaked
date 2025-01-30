@@ -7,6 +7,7 @@ package dan200.computercraft.shared.network;
 
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.PacketByteBuf;
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.network.client.ComputerDataClientMessage;
 import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
 import dan200.computercraft.shared.network.client.OpenComputerGuiClientMessage;
@@ -33,7 +34,7 @@ import java.util.function.Supplier;
 
 public final class NetworkHandler
 {
-    private static final Int2ObjectMap<BiConsumer<PacketHandler, PacketByteBuf>> packetReaders = new Int2ObjectOpenHashMap<>();
+    private static final Int2ObjectMap<BiConsumer<NetworkMessage.NetworkContext, PacketByteBuf>> packetReaders = new Int2ObjectOpenHashMap<>();
     private static final Object2IntMap<Class<?>> packetIds = new Object2IntOpenHashMap<>();
 
     //private static final Identifier ID = new Identifier( ComputerCraft.MOD_ID, "main" );
@@ -70,11 +71,11 @@ public final class NetworkHandler
 //        registerMainThread( 15, TerminalDimensionsClientMessage.class, TerminalDimensionsClientMessage::new );
     }
 
-    public static void receive(PacketHandler packetHandler, PacketByteBuf buffer )
+    public static void receive(NetworkMessage.NetworkContext context, PacketByteBuf buffer )
     {
         int type = buffer.readByte();
         packetReaders.get( type )
-            .accept( packetHandler, buffer );
+            .accept( context, buffer );
     }
 
     /**
@@ -104,9 +105,9 @@ public final class NetworkHandler
     private static <T extends NetworkMessage> void registerMainThread( int id, Class<T> type, Function<PacketByteBuf, T> decoder )
     {
         packetIds.put( type, id );
-        packetReaders.put( id, ( packetHandler, buf ) -> {
+        packetReaders.put( id, ( context, buf ) -> {
             T result = decoder.apply( buf );
-                 result.handle(packetHandler);
+                 result.handle(context);
         } );
     }
 
@@ -117,11 +118,6 @@ public final class NetworkHandler
             .getClass();
     }
 
-    public static void sendToPlayer(Player player, NetworkMessage packet )
-    {
-        ((PlayerServer)player).playerNetServerHandler.sendPacket(encode(packet));
-    }
-
     private static PacketByteBuf encode(NetworkMessage message )
     {
         PacketByteBuf buf = new PacketByteBuf();
@@ -130,14 +126,43 @@ public final class NetworkHandler
         return buf;
     }
 
+    @Environment(EnvType.CLIENT)
+    public static void sendToPlayerLocal(NetworkMessage packet)
+    {
+        packet.handle(new NetworkMessage.NetworkContext(Minecraft.getMinecraft().thePlayer));
+    }
+
+    @Environment(EnvType.SERVER)
+    public static void sendToPlayerServer(Player player, NetworkMessage packet )
+    {
+        ((PlayerServer)player).playerNetServerHandler.sendPacket(encode(packet));
+    }
+
+    public static void sendToPlayer(Player player, NetworkMessage packet )
+    {
+        if (!Helper.isServerEnvironment()){
+            sendToPlayerLocal(packet);
+            return;
+        }
+        sendToPlayerServer(player, packet);
+    }
+
     public static void sendToAllPlayers( NetworkMessage packet )
     {
+        if (!Helper.isServerEnvironment()){
+            sendToPlayerLocal(packet);
+            return;
+        }
         MinecraftServer.getInstance().playerList.sendPacketToAllPlayers(encode(packet));
     }
 
     @Environment( EnvType.CLIENT )
     public static void sendToServer( NetworkMessage packet )
     {
+        if (!Helper.isServerEnvironment()){
+            sendToPlayerLocal(packet);
+            return;
+        }
         Minecraft.getMinecraft().getSendQueue().addToSendQueue(encode(packet));
     }
 

@@ -2,8 +2,15 @@ package dan200.computercraft;
 
 import com.mojang.nbt.NbtIo;
 import com.mojang.nbt.tags.CompoundTag;
+import dan200.computercraft.fabric.Helper;
+import dan200.computercraft.fabric.mixin.PacketHandlerServerAccessor;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.network.NetworkHandler;
+import dan200.computercraft.shared.network.NetworkMessage;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.net.handler.PacketHandlerClient;
 import net.minecraft.core.net.handler.PacketHandler;
 import net.minecraft.core.net.packet.Packet;
 
@@ -35,8 +42,25 @@ public class PacketByteBuf extends Packet {
     }
 
     public void handlePacket(PacketHandler packetHandler) {
-        NetworkHandler.receive(packetHandler, this);
+        if (Helper.isServerEnvironment()) {
+            handlePacketServer(packetHandler);
+            return;
+        }
+        handlePacketClient(packetHandler);
+    }
 
+    @Environment(EnvType.SERVER)
+    private void handlePacketServer(PacketHandler packetHandler) {
+        NetworkHandler.receive(new NetworkMessage.NetworkContext((
+            (PacketHandlerServerAccessor)packetHandler).getPlayerEntity()
+        ), this);
+    }
+
+    @Environment(EnvType.CLIENT)
+   private void handlePacketClient(PacketHandler packetHandler) {
+        NetworkHandler.receive(new NetworkMessage.NetworkContext(
+            Minecraft.getMinecraft().thePlayer
+        ), this);
     }
 
     public int getEstimatedSize() {

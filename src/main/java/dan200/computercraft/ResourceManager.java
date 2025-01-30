@@ -1,5 +1,6 @@
 package dan200.computercraft;
 
+import dan200.computercraft.fabric.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 
@@ -18,7 +19,7 @@ public class ResourceManager {
 
         try {
             URI uri;
-            if (MinecraftServer.getInstance() != null) {
+            if (Helper.isServerEnvironment()){
                 uri = MinecraftServer.getInstance().getClass().getResource(path).toURI();
             } else {
                 uri = Minecraft.getMinecraft().getClass().getResource(path).toURI();
@@ -78,7 +79,7 @@ public class ResourceManager {
         }
 
         public InputStream getInputStream() {
-            if (MinecraftServer.getInstance() != null) {
+            if (Helper.isServerEnvironment()){
                 return MinecraftServer.getInstance().getClass().getResourceAsStream( "/assets/" + identifier.namespace + "/" + identifier.subPath);
             }
             return Minecraft.getMinecraft().getClass().getResourceAsStream( "/assets/" + identifier.namespace + "/" + identifier.subPath);

@@ -9,6 +9,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.fabric.Helper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.world.Dimension;
 import net.minecraft.core.world.World;
@@ -114,14 +117,26 @@ public final class IDAssigner
 
     public static File getDir()
     {
-        if (MinecraftServer.getInstance() != null) {
-            return getWorldDir(MinecraftServer.getInstance().getDimensionWorld(Dimension.OVERWORLD.id));
+        if (Helper.isServerEnvironment()){
+            return getServerDir();
         }
+        return getClientDir();
+    }
+
+    @Environment(EnvType.SERVER)
+    private static File getServerDir()
+    {
+        return getWorldDir(MinecraftServer.getInstance().getDimensionWorld(Dimension.OVERWORLD.id));
+    }
+
+    @Environment(EnvType.CLIENT)
+    private static File getClientDir()
+    {
         return getWorldDir(Minecraft.getMinecraft().currentWorld);
     }
 
     public static File getWorldDir(World world) {
-        if (MinecraftServer.getInstance() != null) {
+        if (Helper.isServerEnvironment()){
             return new File(MinecraftServer.getInstance().getMinecraftDir(), "saves/" + world.getLevelData().getWorldName());
         }
         return new File(Minecraft.getMinecraft().getMinecraftDir(), "saves/" + world.getLevelData().getWorldName());

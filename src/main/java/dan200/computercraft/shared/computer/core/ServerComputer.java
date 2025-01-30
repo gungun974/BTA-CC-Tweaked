@@ -18,12 +18,14 @@ import dan200.computercraft.core.apis.IAPIEnvironment;
 import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.core.computer.IComputerEnvironment;
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.common.ServerTerminal;
 import dan200.computercraft.shared.network.NetworkHandler;
 import dan200.computercraft.shared.network.NetworkMessage;
 import dan200.computercraft.shared.network.client.ComputerDataClientMessage;
 import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
 import dan200.computercraft.shared.network.client.OpenComputerGuiClientMessage;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.world.World;
 import net.minecraft.server.MinecraftServer;
@@ -148,9 +150,9 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
 
         if( hasTerminalChanged() || force )
         {
-            MinecraftServer server = MinecraftServer.getInstance();
-            if( server != null )
+            if(!Helper.isSinglePlayer())
             {
+                MinecraftServer server = MinecraftServer.getInstance();
                 // Send terminal state to clients who are currently interacting with the computer.
 
                 NetworkMessage packet = null;
@@ -164,6 +166,12 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
                         }
                         NetworkHandler.sendToPlayer( player, packet );
                     }
+                }
+            } else {
+                final Player player = Minecraft.getMinecraft().thePlayer;
+                if( isInteracting( player ) )
+                {
+                    NetworkHandler.sendToPlayer( player, createTerminalPacket() );
                 }
             }
         }

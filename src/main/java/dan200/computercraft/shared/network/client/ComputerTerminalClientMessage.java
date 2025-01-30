@@ -39,7 +39,7 @@ public class ComputerTerminalClientMessage extends ComputerClientMessage
     }
 
     @Override
-    public void handle(PacketHandler packetHandler)
+    public void handle(NetworkContext context)
     {
         getComputer().read( state );
     }

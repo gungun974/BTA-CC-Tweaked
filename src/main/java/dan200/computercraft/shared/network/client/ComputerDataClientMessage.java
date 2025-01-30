@@ -50,7 +50,7 @@ public class ComputerDataClientMessage extends ComputerClientMessage
     }
 
     @Override
-    public void handle(PacketHandler packetHandler)
+    public void handle(NetworkContext context)
     {
         getComputer().setState( state, userData );
     }

@@ -42,13 +42,12 @@ public class RequestComputerMessage implements NetworkMessage
     }
 
     @Override
-    @Environment(EnvType.SERVER)
-    public void handle(PacketHandler packetHandler)
+    public void handle(NetworkContext context)
     {
         ServerComputer computer = ComputerCraft.serverComputerRegistry.get( instance );
         if( computer != null )
         {
-            computer.sendComputerState( ((PacketHandlerServerAccessor) packetHandler).getPlayerEntity() );
+            computer.sendComputerState( context.player );
         }
     }
 }

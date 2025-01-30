@@ -6,6 +6,8 @@
 package dan200.computercraft.shared.network;
 
 import dan200.computercraft.PacketByteBuf;
+import net.minecraft.client.entity.player.PlayerLocal;
+import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.handler.PacketHandler;
 
 import javax.annotation.Nonnull;
@@ -39,5 +41,16 @@ public interface NetworkMessage
     /**
      * Handle this {@link NetworkMessage}.
      */
-    void handle(PacketHandler packetHandler);
+    void handle(NetworkContext context);
+
+    class NetworkContext {
+        /**
+         * The player that send the NetworkPacket to the handle
+         */
+        public Player player;
+
+        public NetworkContext(Player player) {
+            this.player = player;
+        }
+    }
 }

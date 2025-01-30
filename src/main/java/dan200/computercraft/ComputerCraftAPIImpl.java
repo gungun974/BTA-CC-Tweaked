@@ -91,7 +91,11 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI
     {
         try
         {
-            return new FileMount( new File( IDAssigner.getDir(), subPath ), capacity );
+            return new FileMount(
+                new File(
+                    IDAssigner.getDir(), subPath
+                ), capacity
+            );
         }
         catch( Exception e )
         {

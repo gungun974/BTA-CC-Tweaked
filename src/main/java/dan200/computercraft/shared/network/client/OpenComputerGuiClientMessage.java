@@ -17,9 +17,9 @@ public class OpenComputerGuiClientMessage extends ComputerTerminalClientMessage
     }
 
     @Override
-    public void handle(PacketHandler packetHandler)
+    public void handle(NetworkContext context)
     {
-        super.handle(packetHandler);
+        super.handle(context);
         Minecraft.getMinecraft().displayScreen(new GuiComputer(getComputer(), state.width, state.height));
     }
 }
