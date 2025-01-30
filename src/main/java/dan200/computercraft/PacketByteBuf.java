@@ -4,13 +4,11 @@ import com.mojang.nbt.NbtIo;
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.mixin.PacketHandlerServerAccessor;
-import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.network.NetworkHandler;
 import dan200.computercraft.shared.network.NetworkMessage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.net.handler.PacketHandlerClient;
 import net.minecraft.core.net.handler.PacketHandler;
 import net.minecraft.core.net.packet.Packet;
 
@@ -29,6 +27,7 @@ public class PacketByteBuf extends Packet {
         this.readIndex = 0;
     }
 
+    @Deprecated
     public void read(DataInputStream dis) throws IOException {
         final int length = dis.readInt();
         buffer = new byte[length];
@@ -36,8 +35,13 @@ public class PacketByteBuf extends Packet {
         writeIndex = length - 1;
     }
 
+    @Deprecated
     public void write(DataOutputStream dos) throws IOException {
         dos.writeInt(this.buffer.length);
+        dos.write(this.buffer);
+    }
+
+    public void rawWrite(DataOutputStream dos) throws IOException {
         dos.write(this.buffer);
     }
 
@@ -57,7 +61,7 @@ public class PacketByteBuf extends Packet {
     }
 
     @Environment(EnvType.CLIENT)
-   private void handlePacketClient(PacketHandler packetHandler) {
+    private void handlePacketClient(PacketHandler packetHandler) {
         NetworkHandler.receive(new NetworkMessage.NetworkContext(
             Minecraft.getMinecraft().thePlayer
         ), this);
@@ -130,7 +134,7 @@ public class PacketByteBuf extends Packet {
     public short readShort() {
         ensureReadable(2);
         return (short) (((buffer[readIndex++] & 0xFF) << 8) |
-                    (buffer[readIndex++] & 0xFF));
+            (buffer[readIndex++] & 0xFF));
     }
 
     public void writeString(String value) {

@@ -68,7 +68,7 @@ public class TerminalState
 
             try {
                 try {
-                    packet.write(dos);
+                    packet.rawWrite(dos);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
