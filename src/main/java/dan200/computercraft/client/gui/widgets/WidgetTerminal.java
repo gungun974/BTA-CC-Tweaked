@@ -91,12 +91,12 @@ public class WidgetTerminal extends Gui implements GuiElement
 
     @Override
     public int getWidth() {
-        return 0;
+        return termWidth * FONT_WIDTH;
     }
 
     @Override
     public int getHeight() {
-        return 0;
+        return termHeight * FONT_HEIGHT;
     }
 
 //    @Override

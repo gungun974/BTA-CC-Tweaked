@@ -124,12 +124,10 @@ public final class ComputerCraft implements ModInitializer
         EntityHelper.createTileEntity(TileEntityComputer.class, new NamespaceID(MOD_ID, "computer"));
 
         new BlockBuilder(MOD_ID)
-            /*
             .setTextures("computercraft:block/computer_normal_side")
             .setTopTexture("computercraft:block/computer_normal_top")
             .setBottomTexture("computercraft:block/computer_normal_top")
             .setNorthTexture("computercraft:block/computer_normal_front")
-             */
             .setHardness(1f)
             .setTileEntity(TileEntityComputer::new)
             .build("computer_normal", 10000, b -> new BlockLogicComputer(b));

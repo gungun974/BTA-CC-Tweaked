@@ -27,6 +27,8 @@ import javax.annotation.Nonnull;
 
 public class GuiComputer extends Screen
 {
+    private int border;
+
     public boolean isPauseScreen() {
         return false;
     }
@@ -74,35 +76,31 @@ public class GuiComputer extends Screen
     private static final float TEX_SCALE = 1 / 256.0f;
 
     public void render(int mx, int my, float partialTick) {
-            boolean tblink = true; //terminal.getCursorBlink();
-            int tw = 50; //terminal.getWidth();
-            int th = 30; //terminal.getHeight();
-            int tx = 10; //terminal.getCursorX();
-            int ty = 10; //terminal.getCursorY();
-            //String[] tlines = terminal.getLines();
-            renderBackground();
-            int termWidth = 4 + tw * 10;//Computers.fixedWidthFontRenderer.FONT_WIDTH;
-            int termHeight = 4 + th * 10;//Computers.fixedWidthFontRenderer.FONT_HEIGHT;
+        super.init();
 
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            int startX = (this.width - termWidth) / 2;
-            int startY = (this.height - termHeight) / 2;
-            int endX = startX + termWidth;
-            int endY = startY + termHeight;
+        renderBackground();
 
+        final int termPxWidth = terminal.getWidth();
+        final int termPxHeight = terminal.getHeight();
 
+        final int wrapperX = (width - termPxWidth) / 2;
+        final int wrapperY = (height - termPxHeight) / 2;
 
-        //drawIconTextureDouble(0, 0, 256, 256, 0, 0, 256, 256, cornersTexture);
+        if (terminal != null){
+            terminal.draw( wrapperX, wrapperY );
+        }
 
-        //drawTexturedModalRect(startX - 12, startY - 12, 12, 28, 12, 12); //top left corner
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         this.mc.textureManager.loadTexture("/assets/computercraft/textures/gui/corners_normal.png").bind();
 
-        doRender(  50, 50, 100, 100, false );
-
-        if (terminal != null){
-            terminal.draw(0, 0);
-        }
+        doRender(
+            wrapperX - MARGIN,
+            wrapperY - MARGIN,
+            termPxWidth + MARGIN * 2,
+            termPxHeight + MARGIN * 2,
+            false
+        );
     }
 
     public void doRender( int x, int y, int width, int height, boolean withLight )
@@ -164,7 +162,7 @@ public class GuiComputer extends Screen
     private final int termHeight;
 //
    protected WidgetTerminal terminal;
-//    protected WidgetWrapper terminalWrapper;
+    protected WidgetWrapper terminalWrapper;
 
 
 //    public static GuiComputer<ContainerComputer> create( ContainerComputer container, PlayerInventory inventory, Text component )
@@ -184,20 +182,12 @@ public class GuiComputer extends Screen
 //
     protected void initTerminal( int border, int widthExtra, int heightExtra )
     {
+        this.border = border;
         //client.keyboard.setRepeatEvents( true );
-
-        /*
-        int termPxWidth = termWidth * FixedWidthFontRenderer.FONT_WIDTH;
-        int termPxHeight = termHeight * FixedWidthFontRenderer.FONT_HEIGHT;
-
-        backgroundWidth = termPxWidth + MARGIN * 2 + border * 2 + widthExtra;
-        backgroundHeight = termPxHeight + MARGIN * 2 + border * 2 + heightExtra;
-         */
 
         super.init();
 
         terminal = new WidgetTerminal( mc, () -> computer, termWidth, termHeight, MARGIN, MARGIN, MARGIN, MARGIN );
-        //terminalWrapper = new WidgetWrapper( terminal, MARGIN + border + x, MARGIN + border + y, termPxWidth, termPxHeight );
 
         //children.add( terminalWrapper );
         //setFocused( terminalWrapper );

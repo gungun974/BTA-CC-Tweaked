@@ -5,83 +5,96 @@
  */
 package dan200.computercraft.client.gui.widgets;
 
-//import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.GuiElement;
 
-public class WidgetWrapper// implements Element
+public class WidgetWrapper implements GuiElement
 {
-    /*
-    private final Element listener;
     private final int x;
     private final int y;
     private final int width;
     private final int height;
 
-    public WidgetWrapper( Element listener, int x, int y, int width, int height )
+    public WidgetWrapper( int x, int y, int width, int height )
     {
-        this.listener = listener;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
     }
 
+//    @Override
+//    public boolean mouseClicked( double x, double y, int button )
+//    {
+//        double dx = x - this.x, dy = y - this.y;
+//        return dx >= 0 && dx < width && dy >= 0 && dy < height && listener.mouseClicked( dx, dy, button );
+//    }
+//
+//    @Override
+//    public boolean mouseReleased( double x, double y, int button )
+//    {
+//        double dx = x - this.x, dy = y - this.y;
+//        return dx >= 0 && dx < width && dy >= 0 && dy < height && listener.mouseReleased( dx, dy, button );
+//    }
+//
+//    @Override
+//    public boolean mouseDragged( double x, double y, int button, double deltaX, double deltaY )
+//    {
+//        double dx = x - this.x, dy = y - this.y;
+//        return dx >= 0 && dx < width && dy >= 0 && dy < height && listener.mouseDragged( dx, dy, button, deltaX, deltaY );
+//    }
+//
+//    @Override
+//    public boolean mouseScrolled( double x, double y, double delta )
+//    {
+//        double dx = x - this.x, dy = y - this.y;
+//        return dx >= 0 && dx < width && dy >= 0 && dy < height && listener.mouseScrolled( dx, dy, delta );
+//    }
+//
+//    @Override
+//    public boolean keyPressed( int key, int scancode, int modifiers )
+//    {
+//        return listener.keyPressed( key, scancode, modifiers );
+//    }
+//
+//    @Override
+//    public boolean keyReleased( int key, int scancode, int modifiers )
+//    {
+//        return listener.keyReleased( key, scancode, modifiers );
+//    }
+//
+//    @Override
+//    public boolean charTyped( char character, int modifiers )
+//    {
+//        return listener.charTyped( character, modifiers );
+//    }
+//
+//    @Override
+//    public boolean changeFocus( boolean b )
+//    {
+//        return listener.changeFocus( b );
+//    }
+//
+//    @Override
+//    public boolean isMouseOver( double x, double y )
+//    {
+//        double dx = x - this.x, dy = y - this.y;
+//        return dx >= 0 && dx < width && dy >= 0 && dy < height;
+//    }
+
     @Override
-    public boolean mouseClicked( double x, double y, int button )
-    {
-        double dx = x - this.x, dy = y - this.y;
-        return dx >= 0 && dx < width && dy >= 0 && dy < height && listener.mouseClicked( dx, dy, button );
+    public void setX(int i) {
     }
 
     @Override
-    public boolean mouseReleased( double x, double y, int button )
-    {
-        double dx = x - this.x, dy = y - this.y;
-        return dx >= 0 && dx < width && dy >= 0 && dy < height && listener.mouseReleased( dx, dy, button );
+    public void setY(int i) {
     }
 
     @Override
-    public boolean mouseDragged( double x, double y, int button, double deltaX, double deltaY )
-    {
-        double dx = x - this.x, dy = y - this.y;
-        return dx >= 0 && dx < width && dy >= 0 && dy < height && listener.mouseDragged( dx, dy, button, deltaX, deltaY );
+    public void setWidth(int i) {
     }
 
     @Override
-    public boolean mouseScrolled( double x, double y, double delta )
-    {
-        double dx = x - this.x, dy = y - this.y;
-        return dx >= 0 && dx < width && dy >= 0 && dy < height && listener.mouseScrolled( dx, dy, delta );
-    }
-
-    @Override
-    public boolean keyPressed( int key, int scancode, int modifiers )
-    {
-        return listener.keyPressed( key, scancode, modifiers );
-    }
-
-    @Override
-    public boolean keyReleased( int key, int scancode, int modifiers )
-    {
-        return listener.keyReleased( key, scancode, modifiers );
-    }
-
-    @Override
-    public boolean charTyped( char character, int modifiers )
-    {
-        return listener.charTyped( character, modifiers );
-    }
-
-    @Override
-    public boolean changeFocus( boolean b )
-    {
-        return listener.changeFocus( b );
-    }
-
-    @Override
-    public boolean isMouseOver( double x, double y )
-    {
-        double dx = x - this.x, dy = y - this.y;
-        return dx >= 0 && dx < width && dy >= 0 && dy < height;
+    public void setHeight(int i) {
     }
 
     public int getX()
@@ -103,5 +116,4 @@ public class WidgetWrapper// implements Element
     {
         return height;
     }
-     */
 }

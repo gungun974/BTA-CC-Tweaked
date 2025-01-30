@@ -175,18 +175,6 @@ if settings.get("shell.allow_disk_startup") then
     end
 end
 
-a = 0;
-while true do
-    term.setBackgroundColor(colours.black)
-    term.clear()
-    term.setCursorPos(1,1)
-    print(a)
-    print(os.getComputerID())
-    os.sleep(1)
-    a = a + 1
-    end
-
-
 if tUserStartups then
     for _, v in pairs(tUserStartups) do
         shell.run(v)
