@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.nio.ByteBuffer;
 
 import static com.github.zarzelcow.legacylwjgl3.implementation.glfw.GLFWKeyboardImplementation.translateKeyFromGLFW;
+import static org.lwjgl.glfw.GLFW.glfwGetKeyName;
 
 @Mixin(value = GLFWKeyboardImplementation.class, remap = false)
 public class GLFWKeyboardImplementationMixin {
@@ -48,13 +49,15 @@ public class GLFWKeyboardImplementationMixin {
                 this.key_down_buffer[key] = 0;
             }
             putKeyboardEvent(key, this.key_down_buffer[key], 0, System.nanoTime(), action == GLFW.GLFW_REPEAT);
-            GLFWKeyboardManager.getInstance().notifyObservers(window, glfwKey, scancode, action, mods);
+            GLFWKeyboardManager.getInstance().notifyKeyObservers(window, glfwKey, scancode, action, mods);
         });
 
-        this.charCallback = GLFWCharCallback.create((window, codepoint) ->
-            // if the keycode is 0 minecraft instead uses the character code as the key pressed, not sure why
-            // but a keycode of -1 is used instead to fix this issue
-            putKeyboardEvent(-1, (byte) 1, codepoint, System.nanoTime(), false)
+        this.charCallback = GLFWCharCallback.create((window, codepoint) -> {
+                // if the keycode is 0 minecraft instead uses the character code as the key pressed, not sure why
+                // but a keycode of -1 is used instead to fix this issue
+                putKeyboardEvent(-1, (byte) 1, codepoint, System.nanoTime(), false);
+            GLFWKeyboardManager.getInstance().notifyCharObservers(window, codepoint);
+            }
         );
 
         this.windowHandle = Display.getHandle();

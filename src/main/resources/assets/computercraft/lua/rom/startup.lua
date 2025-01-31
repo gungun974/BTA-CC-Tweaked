@@ -175,16 +175,6 @@ if settings.get("shell.allow_disk_startup") then
     end
 end
 
-
-
-while true do
-  local event, key, is_held = os.pullEvent("key")
-  print(("%s held=%s"):format(keys.getName(key), is_held))
-  if keys.getName(key) == 't' then
-      break
-      end
-end
-
 if tUserStartups then
     for _, v in pairs(tUserStartups) do
         shell.run(v)

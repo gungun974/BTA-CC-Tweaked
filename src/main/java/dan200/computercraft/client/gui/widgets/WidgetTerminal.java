@@ -326,7 +326,7 @@ public class WidgetTerminal extends Gui implements GuiElement
         return true;
     }
 
-    public boolean charTyped( char ch, int modifiers )
+    public boolean charTyped( char ch )
     {
         if( ch >= 32 && ch <= 126 || ch >= 160 && ch <= 255 ) // printable chars in byte range
         {

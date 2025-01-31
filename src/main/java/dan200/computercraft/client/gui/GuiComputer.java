@@ -31,6 +31,9 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.UUID;
+
+import static org.lwjgl.glfw.GLFW.glfwGetKeyName;
 
 //import static dan200.computercraft.client.render.ComputerBorderRenderer.BORDER;
 //import static dan200.computercraft.client.render.ComputerBorderRenderer.MARGIN;
@@ -192,53 +195,44 @@ public class GuiComputer<T extends ContainerComputerBase> extends Screen
         //setFocused( terminalWrapper );
     }
 
-    private class KeyCallback extends GLFWKeyCallback {
-        private GuiComputer windowInstance;
-
-        public KeyCallback(GuiComputer windowInstance) {
-            this.windowInstance = windowInstance;
-        }
-
-        @Override
-        public void invoke(long window, int key, int scancode, int action, int mods) {
-            windowInstance.glfwKeyboardCallback(window, key, scancode, action, mods);
-        }
-    }
-
-    final KeyCallback keyCallback = new KeyCallback(this);
+    UUID glfwKeyCallbackId;
+    UUID glfwCharCallbackId;
 
     @Override
     public void init()
     {
         initTerminal( BORDER, 0, 0 );
 
-        GLFWKeyboardManager.getInstance().addObserver(keyCallback);
+        GLFWKeyboardManager.getInstance().removeKeyObserver(glfwKeyCallbackId);
+        glfwKeyCallbackId = GLFWKeyboardManager.getInstance().addKeyObserver(
+            this::glfwKeyCallback
+        );
+
+        GLFWKeyboardManager.getInstance().removeCharObserver(glfwCharCallbackId);
+        glfwCharCallbackId = GLFWKeyboardManager.getInstance().addCharObserver(
+            this::glfwCharCallback
+        );
     }
 
     @Override
     public void removed() {
-        GLFWKeyboardManager.getInstance().removeObserver(keyCallback);
+        GLFWKeyboardManager.getInstance().removeKeyObserver(glfwKeyCallbackId);
+        GLFWKeyboardManager.getInstance().removeCharObserver(glfwCharCallbackId);
     }
 
-
-    public void glfwKeyboardCallback(long window, int key, int scancode, int action, int mods) {
-        ComputerCraft.log.info(String.valueOf((char)key));
-
+    public void glfwKeyCallback(long window, int key, int scancode, int action, int mods) {
         if (action == 0) {
             terminal.keyReleased(key, scancode, mods);
             return;
         }
 
         terminal.keyPressed(key, scancode, mods);
-
-        char ch = Character.toLowerCase((char) key);
-
-        if ((mods & GLFW.GLFW_MOD_SHIFT) != 0) {
-            ch = Character.toUpperCase((char) key);
-        }
-
-        terminal.charTyped(ch, mods);
     }
+
+    public void glfwCharCallback(long window, int codepoint) {
+            terminal.charTyped((char) codepoint);
+    }
+
 //
 //    @Override
 //    public void render( @Nonnull MatrixStack stack, int mouseX, int mouseY, float partialTicks )
