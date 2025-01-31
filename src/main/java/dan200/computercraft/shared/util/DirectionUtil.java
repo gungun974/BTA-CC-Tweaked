@@ -11,12 +11,23 @@ import net.minecraft.core.util.helper.Direction;
 
 public final class DirectionUtil
 {
-    public static final Direction[] FACINGS = Direction.values();
+    public static final Direction[] FACINGS = {
+        Direction.NORTH,
+        Direction.EAST,
+        Direction.SOUTH,
+        Direction.WEST,
+        Direction.UP,
+        Direction.DOWN,
+    };
 
     private DirectionUtil() {}
 
     public static ComputerSide toLocal( Direction front, Direction dir )
     {
+       if (dir == Direction.NONE) {
+           throw new RuntimeException("Direction should not be none in Computer World");
+       }
+
         if( front.getAxis() == Axis.Y )
         {
             front = Direction.NORTH;

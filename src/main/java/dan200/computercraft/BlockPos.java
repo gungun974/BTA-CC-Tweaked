@@ -1,5 +1,7 @@
 package dan200.computercraft;
 
+import net.minecraft.core.util.helper.Direction;
+
 public class BlockPos {
     public int x;
     public int y;
@@ -21,5 +23,9 @@ public class BlockPos {
 
     public double getZ() {
         return z;
+    }
+
+    public BlockPos offset(Direction dir) {
+        return new BlockPos(x + dir.getOffsetX(), y + dir.getOffsetY(), z + dir.getOffsetZ());
     }
 }

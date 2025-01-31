@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Random;
 
 public class BlockLogicComputer extends BlockLogicRotatable implements IBundledRedstoneBlock {
+    private static final Logger log = LoggerFactory.getLogger(BlockLogicComputer.class);
+
     public BlockLogicComputer(Block<?> block) {
         super(block, Material.stone);
         block.withEntity(TileEntityComputer::new);
@@ -52,28 +54,6 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
     public boolean isSignalSource() {
         return true;
     }
-
-//    public void onBlockPlacedByWorld(World world, int x, int y, int z) {
-//        Side[] var5 = Side.sides;
-//        int var6 = var5.length;
-//
-//        for(int var7 = 0; var7 < var6; ++var7) {
-//            Side s = var5[var7];
-//            world.notifyBlocksOfNeighborChange(x + s.getOffsetX(), y + s.getOffsetY(), z + s.getOffsetZ(), this.id());
-//        }
-//
-//    }
-//
-//    public void onBlockRemoved(World world, int x, int y, int z, int data) {
-//        Side[] var6 = Side.sides;
-//        int var7 = var6.length;
-//
-//        for(int var8 = 0; var8 < var7; ++var8) {
-//            Side s = var6[var8];
-//            world.notifyBlocksOfNeighborChange(x + s.getOffsetX(), y + s.getOffsetY(), z + s.getOffsetZ(), this.id());
-//        }
-//
-//    }
 
     public boolean getDirectSignal(World world, int x, int y, int z, Side side) {
         return this.getSignal(world, x, y, z, side);
@@ -126,5 +106,18 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
 
     public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
         return ((TileEntityComputer)world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
+    }
+
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, int blockId) {
+        TileEntity entity = (world.getTileEntity(x, y, z));
+        if( !(entity instanceof TileComputerBase) )
+        {
+            return;
+        }
+
+        TileComputerBase computerEntity = (TileComputerBase) entity;
+
+        computerEntity.onNeighbourChange(new BlockPos(x, y, z));
     }
 }

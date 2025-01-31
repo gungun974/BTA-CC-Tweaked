@@ -46,14 +46,6 @@ public abstract class TileGeneric extends TileEntity// implements BlockEntityCli
     }
      */
 
-    public void onNeighbourChange( @Nonnull BlockPos neighbour )
-    {
-    }
-
-    public void onNeighbourTileEntityChange( @Nonnull BlockPos neighbour )
-    {
-    }
-
     protected void blockTick()
     {
     }
