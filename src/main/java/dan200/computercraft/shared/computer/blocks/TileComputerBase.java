@@ -9,6 +9,7 @@ import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.core.computer.ComputerSide;
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.IComputerPlayer;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
@@ -16,7 +17,11 @@ import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.computer.inventory.ContainerComputer;
 import dan200.computercraft.shared.util.DirectionUtil;
+import dan200.computercraft.shared.util.RedstoneUtil;
+import net.minecraft.core.block.Block;
+import net.minecraft.core.block.Blocks;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.net.packet.PacketCustomPayload;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 
@@ -127,7 +132,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         }
         if( changed )
         {
-            //updateBlock();
+            updateBlock();
             //updateInput();
         }
         return ComputerCraft.serverComputerRegistry.get( instanceID );
@@ -299,11 +304,17 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     public void updateOutput()
     {
         // Update redstone
-        //updateBlock();
+        updateBlock();
         for( Direction dir : DirectionUtil.FACINGS )
         {
-            //RedstoneUtil.propagateRedstoneOutput( getWorld(), getPos(), dir );
+            RedstoneUtil.propagateRedstoneOutput( worldObj, new BlockPos(x, y, z), dir );
         }
+    }
+
+    private void updateBlock() {
+        int blockId = Helper.getBlockLogic(worldObj, this.x, this.y, this.z, BlockLogicComputer.class).id();
+
+        worldObj.notifyBlockChange(this.x, this.y, this.z, blockId);
     }
 
     protected abstract void updateBlockState( ComputerState newState );

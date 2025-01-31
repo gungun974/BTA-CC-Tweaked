@@ -21,9 +21,11 @@ import dan200.computercraft.core.apis.ApiFactories;
 import dan200.computercraft.core.asm.GenericMethod;
 import dan200.computercraft.core.filesystem.FileMount;
 import dan200.computercraft.core.filesystem.ResourceMount;
+import dan200.computercraft.shared.BundledRedstone;
 import dan200.computercraft.shared.util.IDAssigner;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
 import net.minecraft.server.MinecraftServer;
 
@@ -127,17 +129,17 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI
 //        TurtleUpgrades.register( upgrade );
 //    }
 
-//    @Override
-//    public void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider )
-//    {
-//        BundledRedstone.register( provider );
-//    }
+    @Override
+    public void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider )
+    {
+        BundledRedstone.register( provider );
+    }
 
-//    @Override
-//    public int getBundledRedstoneOutput( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
-//    {
-//        return BundledRedstone.getDefaultOutput( world, pos, side );
-//    }
+    @Override
+    public int getBundledRedstoneOutput( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
+    {
+        return BundledRedstone.getDefaultOutput( world, pos, side );
+    }
 //
 //    @Override
 //    public void registerMediaProvider( @Nonnull IMediaProvider provider )

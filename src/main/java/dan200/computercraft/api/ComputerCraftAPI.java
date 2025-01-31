@@ -172,31 +172,31 @@ public final class ComputerCraftAPI
     }
      */
 
-//    /**
-//     * Registers a bundled redstone provider to provide bundled redstone output for blocks.
-//     *
-//     * @param provider The bundled redstone provider to register.
-//     * @see IBundledRedstoneProvider
-//     */
-//    public static void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider )
-//    {
-//        getInstance().registerBundledRedstoneProvider( provider );
-//    }
+    /**
+     * Registers a bundled redstone provider to provide bundled redstone output for blocks.
+     *
+     * @param provider The bundled redstone provider to register.
+     * @see IBundledRedstoneProvider
+     */
+    public static void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider )
+    {
+        getInstance().registerBundledRedstoneProvider( provider );
+    }
 
-//    /**
-//     * If there is a Computer or Turtle at a certain position in the world, get it's bundled redstone output.
-//     *
-//     * @param world The world this block is in.
-//     * @param pos   The position this block is at.
-//     * @param side  The side to extract the bundled redstone output from.
-//     * @return If there is a block capable of emitting bundled redstone at the location, it's signal (0-65535) will be returned. If there is no block
-//     * capable of emitting bundled redstone at the location, -1 will be returned.
-//     * @see IBundledRedstoneProvider
-//     */
-//    public static int getBundledRedstoneOutput( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
-//    {
-//        return getInstance().getBundledRedstoneOutput( world, pos, side );
-//    }
+    /**
+     * If there is a Computer or Turtle at a certain position in the world, get it's bundled redstone output.
+     *
+     * @param world The world this block is in.
+     * @param pos   The position this block is at.
+     * @param side  The side to extract the bundled redstone output from.
+     * @return If there is a block capable of emitting bundled redstone at the location, it's signal (0-65535) will be returned. If there is no block
+     * capable of emitting bundled redstone at the location, -1 will be returned.
+     * @see IBundledRedstoneProvider
+     */
+    public static int getBundledRedstoneOutput( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
+    {
+        return getInstance().getBundledRedstoneOutput( world, pos, side );
+    }
 
 //    /**
 //     * Registers a media provider to provide {@link IMedia} implementations for Items.
@@ -275,10 +275,10 @@ public final class ComputerCraftAPI
         void registerGenericSource( @Nonnull GenericSource source );
 
         //void registerTurtleUpgrade( @Nonnull ITurtleUpgrade upgrade );
-//
-//        void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider );
-//
-//        int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side );
+
+        void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider );
+
+        int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side );
 
 //        void registerMediaProvider( @Nonnull IMediaProvider provider );
 //

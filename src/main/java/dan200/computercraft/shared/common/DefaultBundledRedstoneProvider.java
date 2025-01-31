@@ -5,26 +5,26 @@
  */
 package dan200.computercraft.shared.common;
 
+import dan200.computercraft.BlockPos;
 import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
-import net.minecraft.block.Block;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import dan200.computercraft.fabric.Helper;
+import net.minecraft.core.block.BlockLogic;
+import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 
 public class DefaultBundledRedstoneProvider implements IBundledRedstoneProvider
 {
     @Override
-    public int getBundledRedstoneOutput( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
+    public int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
     {
         return getDefaultBundledRedstoneOutput( world, pos, side );
     }
 
     public static int getDefaultBundledRedstoneOutput( World world, BlockPos pos, Direction side )
     {
-        Block block = world.getBlockState( pos )
-            .getBlock();
+        BlockLogic block = Helper.getBlockLogic(world, pos.x, pos.y, pos.z);
         if( block instanceof IBundledRedstoneBlock )
         {
             IBundledRedstoneBlock generic = (IBundledRedstoneBlock) block;

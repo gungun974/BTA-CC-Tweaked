@@ -13,13 +13,8 @@ import dan200.computercraft.core.apis.http.options.AddressRule;
 //import dan200.computercraft.shared.peripheral.monitor.MonitorRenderer;
 //import org.apache.logging.log4j.LogManager;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 //import static dan200.computercraft.shared.ComputerCraftRegistry.ModBlocks;
 //import static dan200.computercraft.shared.ComputerCraftRegistry.init;
@@ -29,30 +24,13 @@ import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
 import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
 import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
 import dan200.computercraft.shared.network.NetworkHandler;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.block.color.BlockColor;
-import net.minecraft.client.render.block.color.BlockColorDispatcher;
-import net.minecraft.client.render.block.model.BlockModel;
-import net.minecraft.client.render.block.model.BlockModelDispatcher;
-import net.minecraft.client.render.block.model.BlockModelStandard;
-import net.minecraft.core.block.*;
-import net.minecraft.core.block.entity.TileEntityFurnace;
-import net.minecraft.core.block.material.Material;
-import net.minecraft.core.block.tag.BlockTags;
-import net.minecraft.core.data.tag.Tag;
-import net.minecraft.core.sound.BlockSounds;
 import net.minecraft.core.util.collection.NamespaceID;
-import net.minecraft.core.util.helper.Side;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.fabricmc.api.ModInitializer;
 import turniplabs.halplibe.helper.BlockBuilder;
 import turniplabs.halplibe.helper.EntityHelper;
-
-import static net.minecraft.core.block.Blocks.COBBLE_STONE;
 
 public final class ComputerCraft implements ModInitializer
 {

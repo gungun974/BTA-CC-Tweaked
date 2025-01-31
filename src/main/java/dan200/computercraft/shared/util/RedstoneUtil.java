@@ -6,20 +6,32 @@
 package dan200.computercraft.shared.util;
 
 import dan200.computercraft.BlockPos;
+import dan200.computercraft.fabric.Helper;
+import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
+import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
 public final class RedstoneUtil
 {
     public static void propagateRedstoneOutput(World world, BlockPos pos, Direction side )
     {
-        //TODO: Redstone output
-        /*
+        BlockLogic block = Helper.getBlockLogic(world, pos.x, pos.y, pos.z);
+
+        if (block == null) {
+            return;
+        }
+
+        int blockId = block.id();
+
         // Propagate ordinary output. See BlockRedstoneDiode.notifyNeighbors
-        BlockState block = world.getBlockState( pos );
-        BlockPos neighbourPos = pos.offset( side );
-        world.updateNeighbor( neighbourPos, block.getBlock(), pos );
-        world.updateNeighborsExcept( neighbourPos, block.getBlock(), side.getOpposite() );
-         */
+        for (Side s : Side.sides) {
+            if (s.getDirection() == side.getOpposite()) {
+                continue;
+            }
+            world.notifyBlocksOfNeighborChange(pos.x + s.getOffsetX(), pos.y + s.getOffsetY(), pos.z + s.getOffsetZ(), blockId);
+        }
+
     }
 }

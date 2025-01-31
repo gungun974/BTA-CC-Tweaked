@@ -5,12 +5,12 @@
  */
 package dan200.computercraft.shared;
 
+import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
 import dan200.computercraft.shared.common.DefaultBundledRedstoneProvider;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedHashSet;
@@ -29,9 +29,9 @@ public final class BundledRedstone
         providers.add( provider );
     }
 
-    public static int getDefaultOutput( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
+    public static int getDefaultOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
     {
-        return World.isInBuildLimit( pos ) ? DefaultBundledRedstoneProvider.getDefaultBundledRedstoneOutput( world, pos, side ) : -1;
+        return World.HEIGHT_BLOCKS < pos.y ? DefaultBundledRedstoneProvider.getDefaultBundledRedstoneOutput( world, pos, side ) : -1;
     }
 
     public static int getOutput( World world, BlockPos pos, Direction side )
@@ -42,7 +42,7 @@ public final class BundledRedstone
 
     private static int getUnmaskedOutput( World world, BlockPos pos, Direction side )
     {
-        if( !World.isInBuildLimit( pos ) )
+        if( World.HEIGHT_BLOCKS >= pos.y )
         {
             return -1;
         }
