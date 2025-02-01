@@ -27,6 +27,8 @@ import net.minecraft.core.util.helper.Side;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public abstract class TileComputerBase extends TileGeneric implements IComputerTile//, IPeripheralTile
 {
@@ -133,7 +135,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         if( changed )
         {
             updateBlock();
-            updateInput();
+            updateRedstoneInput();
         }
         return ComputerCraft.serverComputerRegistry.get( instanceID );
     }
@@ -145,7 +147,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     protected abstract ServerComputer createComputer( int instanceID, int id );
 
-    public void updateInput()
+    public void updateRedstoneInput()
     {
         if( worldObj == null || (!Helper.isServerEnvironment() && !Helper.isSinglePlayer()) )
         {
@@ -162,17 +164,45 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         BlockPos pos = computer.getPosition();
         for( Direction dir : DirectionUtil.FACINGS )
         {
-            updateSideInput( computer, dir, pos.offset( dir ) );
+            updateRedstoneSideInput( computer, dir, pos.offset( dir ) );
         }
     }
 
-    private void updateSideInput( ServerComputer computer, Direction dir, BlockPos offset )
+    public void updatePeripheral()
+    {
+        if( worldObj == null || (!Helper.isServerEnvironment() && !Helper.isSinglePlayer()) )
+        {
+            return;
+        }
+
+        // Update all sides
+        ServerComputer computer = getServerComputer();
+        if( computer == null )
+        {
+            return;
+        }
+
+        BlockPos pos = computer.getPosition();
+        for( Direction dir : DirectionUtil.FACINGS )
+        {
+            updatePeripheralSide( computer, dir, pos.offset( dir ) );
+        }
+    }
+
+    private void updateRedstoneSideInput(ServerComputer computer, Direction dir, BlockPos offset )
     {
         Direction offsetSide = dir.getOpposite();
         ComputerSide localDir = remapToLocalSide( dir );
 
         computer.setRedstoneInput( localDir, getRedstoneInput( offset, dir ) );
         computer.setBundledRedstoneInput( localDir, BundledRedstone.getOutput( worldObj, offset, offsetSide ) );
+    }
+
+    private void updatePeripheralSide( ServerComputer computer, Direction dir, BlockPos offset )
+    {
+        Direction offsetSide = dir.getOpposite();
+        ComputerSide localDir = remapToLocalSide( dir );
+
         if( !isPeripheralBlockedOnSide( localDir ) )
         {
             IPeripheral peripheral = Peripherals.getPeripheral( worldObj, offset, offsetSide );
@@ -222,14 +252,23 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     protected abstract Direction getDirection();
 
+    BlockingQueue<BlockPos> updateNeighbourPeripheralQueue = new LinkedBlockingQueue<>();
+
     public void onNeighbourChange( @Nonnull BlockPos neighbour )
     {
-        updateInput( neighbour );
+        updateRedstoneInput( neighbour );
+        updateNeighbourPeripheralQueue.add(neighbour);
     }
 
-    public void onNeighbourTileEntityChange( @Nonnull BlockPos neighbour )
+    public void handleNeighbourTileEntityChanges()
     {
-       updateInput( neighbour );
+        while (!updateNeighbourPeripheralQueue.isEmpty()) {
+            BlockPos block = updateNeighbourPeripheralQueue.poll();
+            if (block == null) {
+                return;
+            }
+            updatePeripheral( block );
+        }
     }
 
     public void readDescription( @Nonnull CompoundTag nbt )
@@ -250,11 +289,19 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         }
     }
 
+    boolean shouldNextTickUpdatePeripherals = false;
+
     @Override
     public void tick()
     {
         if( Helper.isServerEnvironment() || Helper.isSinglePlayer() )
         {
+           if (shouldNextTickUpdatePeripherals) {
+               updatePeripheral();
+               shouldNextTickUpdatePeripherals = false;
+           }
+
+            handleNeighbourTileEntityChanges();
             ServerComputer computer = createServerComputer();
             if( computer == null )
             {
@@ -277,7 +324,8 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
             if( computer.hasOutputChanged() )
             {
-                updateOutput();
+                updateRedstoneOutput();
+                shouldNextTickUpdatePeripherals = true;
             }
 
             // Update the block state if needed. We don't fire a block update intentionally,
@@ -286,12 +334,13 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
             if( computer.hasOutputChanged() )
             {
-                updateOutput();
+                updateRedstoneOutput();
+                shouldNextTickUpdatePeripherals = true;
             }
         }
     }
 
-    public void updateOutput()
+    public void updateRedstoneOutput()
     {
         // Update redstone
         updateBlock();
@@ -346,7 +395,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
      */
 
-    private void updateInput( BlockPos neighbour )
+    private void updateRedstoneInput(BlockPos neighbour )
     {
         if( worldObj == null || (!Helper.isServerEnvironment() && !Helper.isSinglePlayer()) )
         {
@@ -364,16 +413,16 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             BlockPos offset = new BlockPos(x ,y ,z).offset( dir );
             if( offset.equals( neighbour ) )
             {
-                updateSideInput( computer, dir, offset );
+                updateRedstoneSideInput( computer, dir, offset );
                 return;
             }
         }
 
         // If the position is not any adjacent one, update all inputs.
-        updateInput();
+        updateRedstoneInput();
     }
 
-    private void updateInput( Direction dir )
+    private void updatePeripheral( BlockPos neighbour )
     {
         if( worldObj == null || (!Helper.isServerEnvironment() && !Helper.isSinglePlayer()) )
         {
@@ -386,7 +435,34 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             return;
         }
 
-        updateSideInput( computer, dir, new BlockPos(x, y, z).offset( dir ) );
+        for( Direction dir : DirectionUtil.FACINGS )
+        {
+            BlockPos offset = new BlockPos(x ,y ,z).offset( dir );
+            if( offset.equals( neighbour ) )
+            {
+                updatePeripheralSide( computer, dir, offset );
+                return;
+            }
+        }
+
+        // If the position is not any adjacent one, update all inputs.
+        updatePeripheral();
+    }
+
+    private void updateRedstoneInput(Direction dir )
+    {
+        if( worldObj == null || (!Helper.isServerEnvironment() && !Helper.isSinglePlayer()) )
+        {
+            return;
+        }
+
+        ServerComputer computer = getServerComputer();
+        if( computer == null )
+        {
+            return;
+        }
+
+        updateRedstoneSideInput( computer, dir, new BlockPos(x, y, z).offset( dir ) );
     }
 
     @Override
