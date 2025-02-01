@@ -166,7 +166,7 @@ public interface ItemStorage
                 {
                     if( !simulate )
                     {
-                        stack.stackSize += stack.stackSize;
+                        existing.stackSize += stack.stackSize;
                         setAndDirty( slot, existing );
                     }
                     return null;
