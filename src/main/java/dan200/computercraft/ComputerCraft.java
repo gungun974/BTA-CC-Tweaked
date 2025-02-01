@@ -20,10 +20,13 @@ import java.util.concurrent.TimeUnit;
 //import static dan200.computercraft.shared.ComputerCraftRegistry.init;
 
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
+import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
 import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
 import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
 import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
 import dan200.computercraft.shared.network.NetworkHandler;
+import net.minecraft.client.render.block.model.BlockModelFurnace;
+import net.minecraft.core.block.Blocks;
 import net.minecraft.core.util.collection.NamespaceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,6 +105,7 @@ public final class ComputerCraft implements ModInitializer
         EntityHelper.createTileEntity(TileEntityComputer.class, new NamespaceID(MOD_ID, "computer"));
 
         new BlockBuilder(MOD_ID)
+            .setBlockModel(BlockModelComputer::new)
             .setTextures("computercraft:block/computer_normal_side")
             .setTopTexture("computercraft:block/computer_normal_top")
             .setBottomTexture("computercraft:block/computer_normal_top")
