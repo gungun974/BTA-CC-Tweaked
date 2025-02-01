@@ -135,17 +135,17 @@ public final class ComputerCraftAPI
         return getInstance().createResourceMount( domain, subPath );
     }
 
-//    /**
-//     * Registers a peripheral provider to convert blocks into {@link IPeripheral} implementations.
-//     *
-//     * @param provider The peripheral provider to register.
-//     * @see IPeripheral
-//     * @see IPeripheralProvider
-//     */
-//    public static void registerPeripheralProvider( @Nonnull IPeripheralProvider provider )
-//    {
-//        getInstance().registerPeripheralProvider( provider );
-//    }
+    /**
+     * Registers a peripheral provider to convert blocks into {@link IPeripheral} implementations.
+     *
+     * @param provider The peripheral provider to register.
+     * @see IPeripheral
+     * @see IPeripheralProvider
+     */
+    public static void registerPeripheralProvider( @Nonnull IPeripheralProvider provider )
+    {
+        getInstance().registerPeripheralProvider( provider );
+    }
 
     /**
      * Registers a method source for generic peripherals.
@@ -270,7 +270,7 @@ public final class ComputerCraftAPI
         @Nullable
         IMount createResourceMount( @Nonnull String domain, @Nonnull String subPath );
 
-//        void registerPeripheralProvider( @Nonnull IPeripheralProvider provider );
+        void registerPeripheralProvider( @Nonnull IPeripheralProvider provider );
 
         void registerGenericSource( @Nonnull GenericSource source );
 

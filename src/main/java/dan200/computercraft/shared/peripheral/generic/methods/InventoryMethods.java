@@ -6,6 +6,7 @@
 package dan200.computercraft.shared.peripheral.generic.methods;
 
 import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.lua.GenericSource;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
@@ -14,11 +15,9 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.shared.peripheral.generic.data.ItemData;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.ItemStorage;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Nameable;
+import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.player.inventory.container.Container;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,9 +36,9 @@ public class InventoryMethods implements GenericSource
 {
     @Nonnull
     @Override
-    public Identifier id()
+    public String id()
     {
-        return new Identifier( ComputerCraft.MOD_ID, "inventory" );
+        return  ComputerCraft.MOD_ID + ":inventory";
     }
 
     /**
@@ -49,7 +48,7 @@ public class InventoryMethods implements GenericSource
      * @return The number of slots in this inventory.
      */
     @LuaFunction( mainThread = true )
-    public static int size( Inventory inventory )
+    public static int size( Container inventory )
     {
         return extractHandler( inventory ).size();
     }
@@ -61,14 +60,9 @@ public class InventoryMethods implements GenericSource
      * @return The name of this inventory, or {@code nil} if not present.
      */
     @LuaFunction( mainThread = true )
-    public static String name( Inventory inventory )
+    public static String name( Container inventory )
     {
-        if( inventory instanceof Nameable )
-        {
-            Nameable i = (Nameable) inventory;
-            return i.hasCustomName() ? i.getName().asString() : null;
-        }
-        return null;
+        return inventory.getNameTranslationKey();
     }
 
     /**
@@ -95,7 +89,7 @@ public class InventoryMethods implements GenericSource
      * }</pre>
      */
     @LuaFunction( mainThread = true )
-    public static Map<Integer, Map<String, ?>> list( Inventory inventory )
+    public static Map<Integer, Map<String, ?>> list( Container inventory )
     {
         ItemStorage itemStorage = extractHandler( inventory );
 
@@ -104,7 +98,7 @@ public class InventoryMethods implements GenericSource
         for( int i = 0; i < size; i++ )
         {
             ItemStack stack = itemStorage.getStack( i );
-            if( !stack.isEmpty() ) result.put( i + 1, ItemData.fillBasic( new HashMap<>( 4 ), stack ) );
+            if( stack != null ) result.put( i + 1, ItemData.fillBasic( new HashMap<>( 4 ), stack ) );
         }
 
         return result;
@@ -142,14 +136,14 @@ public class InventoryMethods implements GenericSource
      */
     @Nullable
     @LuaFunction( mainThread = true )
-    public static Map<String, ?> getItemDetail( Inventory inventory, int slot ) throws LuaException
+    public static Map<String, ?> getItemDetail( Container inventory, int slot ) throws LuaException
     {
         ItemStorage itemStorage = extractHandler( inventory );
 
         assertBetween( slot, 1, itemStorage.size(), "Slot out of range (%s)" );
 
         ItemStack stack = itemStorage.getStack( slot - 1 );
-        return stack.isEmpty() ? null : ItemData.fill( new HashMap<>(), stack );
+        return stack == null ? null : ItemData.fill( new HashMap<>(), stack );
     }
 
     /**
@@ -173,10 +167,10 @@ public class InventoryMethods implements GenericSource
      * }</pre>
      */
     @LuaFunction( mainThread = true )
-    public static int getItemLimit( Inventory inventory, int slot ) throws LuaException
+    public static int getItemLimit( Container inventory, int slot ) throws LuaException
     {
-        assertBetween( slot, 1, inventory.size(), "Slot out of range (%s)" );
-        return inventory.getMaxCountPerStack();
+        assertBetween( slot, 1, inventory.getContainerSize(), "Slot out of range (%s)" );
+        return inventory.getMaxStackSize();
     }
 
     /**
@@ -206,7 +200,7 @@ public class InventoryMethods implements GenericSource
      */
     @LuaFunction( mainThread = true )
     public static int pushItems(
-        Inventory from, IComputerAccess computer,
+        Container from, IComputerAccess computer,
         String toName, int fromSlot, Optional<Integer> limit, Optional<Integer> toSlot
     ) throws LuaException
     {
@@ -255,7 +249,7 @@ public class InventoryMethods implements GenericSource
      */
     @LuaFunction( mainThread = true )
     public static int pullItems(
-        Inventory to, IComputerAccess computer,
+        Container to, IComputerAccess computer,
         String fromName, int fromSlot, Optional<Integer> limit, Optional<Integer> toSlot
     ) throws LuaException
     {
@@ -282,17 +276,17 @@ public class InventoryMethods implements GenericSource
     @Nullable
     private static ItemStorage extractHandler( @Nullable Object object )
     {
-        if( object instanceof BlockEntity )
+        if( object instanceof TileEntity)
         {
-            Inventory inventory = InventoryUtil.getInventory( (BlockEntity) object );
+            Container inventory = InventoryUtil.getInventory( (TileEntity) object );
             if( inventory != null )
             {
                 return ItemStorage.wrap( inventory );
             }
         }
-        else if ( object instanceof Inventory )
+        else if ( object instanceof Container )
         {
-            return ItemStorage.wrap( (Inventory) object );
+            return ItemStorage.wrap( (Container) object );
         }
 
         return null;
@@ -308,41 +302,37 @@ public class InventoryMethods implements GenericSource
      * @param limit    The max number to move. {@link Integer#MAX_VALUE} for no limit.
      * @return The number of items moved.
      */
-    private static int moveItem( ItemStorage from, int fromSlot, ItemStorage to, int toSlot, final int limit )
-    {
+    private static int moveItem( ItemStorage from, int fromSlot, ItemStorage to, int toSlot, final int limit ) {
         // Moving nothing is easy
-        if( limit == 0 )
-        {
+        if (limit == 0) {
             return 0;
         }
 
         // Get stack to move
-        ItemStack stack = InventoryUtil.takeItems( limit, from, fromSlot, 1, fromSlot );
-        if( stack.isEmpty() )
-        {
+        ItemStack stack = InventoryUtil.takeItems(limit, from, fromSlot, 1, fromSlot);
+        if (stack == null) {
             return 0;
         }
-        int stackCount = stack.getCount();
+        int stackCount = stack.stackSize;
 
         // Move items in
         ItemStack remainder;
-        if( toSlot < 0 )
-        {
-            remainder = InventoryUtil.storeItems( stack, to );
+        if (toSlot < 0) {
+            remainder = InventoryUtil.storeItems(stack, to);
+        } else {
+            remainder = InventoryUtil.storeItems(stack, to, toSlot, 1, toSlot);
         }
-        else
-        {
-            remainder = InventoryUtil.storeItems( stack, to, toSlot, 1, toSlot );
+
+
+        if (remainder == null) {
+            return stackCount;
         }
 
         // Calculate items moved
-        int count = stackCount - remainder.getCount();
+        int count = stackCount - remainder.stackSize;
 
-        if( !remainder.isEmpty() )
-        {
-            // Put the remainder back
-            InventoryUtil.storeItems( remainder, from, fromSlot, 1, fromSlot );
-        }
+        // Put the remainder back
+        InventoryUtil.storeItems( remainder, from, fromSlot, 1, fromSlot );
 
         return count;
     }

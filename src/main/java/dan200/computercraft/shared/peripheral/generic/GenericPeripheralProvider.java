@@ -5,13 +5,14 @@
  */
 package dan200.computercraft.shared.peripheral.generic;
 
+import dan200.computercraft.BlockPos;
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.asm.NamedMethod;
 import dan200.computercraft.core.asm.PeripheralMethod;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,14 +22,15 @@ import java.util.List;
 public class GenericPeripheralProvider
 {
     @Nullable
-    public static IPeripheral getPeripheral( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
+    public static IPeripheral getPeripheral(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
     {
-        BlockEntity tile = world.getBlockEntity( pos );
+        TileEntity tile = world.getTileEntity( pos.x, pos.y, pos.z );
         if( tile == null ) return null;
 
         ArrayList<SaturatedMethod> saturated = new ArrayList<>( 0 );
 
         List<NamedMethod<PeripheralMethod>> tileMethods = PeripheralMethod.GENERATOR.getMethods( tile.getClass() );
+
         if( !tileMethods.isEmpty() ) addSaturated( saturated, tile, tileMethods );
 
         return saturated.isEmpty() ? null : new GenericPeripheral( tile, saturated );

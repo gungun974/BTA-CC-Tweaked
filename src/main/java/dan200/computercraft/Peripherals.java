@@ -3,15 +3,14 @@
  * Copyright Daniel Ratcliffe, 2011-2022. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
  */
-package dan200.computercraft.shared;
+package dan200.computercraft;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.peripheral.generic.GenericPeripheralProvider;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,9 +31,9 @@ public final class Peripherals
     }
 
     @Nullable
-    public static IPeripheral getPeripheral( World world, BlockPos pos, Direction side )
+    public static IPeripheral getPeripheral(World world, BlockPos pos, Direction side )
     {
-        return World.isInBuildLimit( pos ) && !world.isClient ? getPeripheralAt( world, pos, side ) : null;
+        return pos.y < World.HEIGHT_BLOCKS && (Helper.isServerEnvironment() || Helper.isSinglePlayer()) ? getPeripheralAt( world, pos, side ) : null;
     }
 
     @Nullable

@@ -53,5 +53,5 @@ public interface GenericSource
      * @return This source's identifier.
      */
     @Nonnull
-    int id();
+    String id();
 }

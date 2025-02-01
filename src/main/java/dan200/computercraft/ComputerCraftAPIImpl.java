@@ -117,11 +117,11 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI
         }
     }
 
-//    @Override
-//    public void registerPeripheralProvider( @Nonnull IPeripheralProvider provider )
-//    {
-//        Peripherals.register( provider );
-//    }
+    @Override
+    public void registerPeripheralProvider( @Nonnull IPeripheralProvider provider )
+    {
+        Peripherals.register( provider );
+    }
 
 //    @Override
 //    public void registerTurtleUpgrade( @Nonnull ITurtleUpgrade upgrade )

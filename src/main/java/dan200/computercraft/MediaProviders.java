@@ -3,12 +3,11 @@
  * Copyright Daniel Ratcliffe, 2011-2022. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
  */
-package dan200.computercraft.shared;
+package dan200.computercraft;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.media.IMediaProvider;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedHashSet;
@@ -27,9 +26,9 @@ public final class MediaProviders
         providers.add( provider );
     }
 
-    public static IMedia get( @Nonnull ItemStack stack )
+    public static IMedia get( ItemStack stack )
     {
-        if( stack.isEmpty() )
+        if( stack == null )
         {
             return null;
         }

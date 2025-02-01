@@ -8,6 +8,8 @@ package dan200.computercraft.shared.computer.blocks;
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.Peripherals;
+import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.IComputerPlayer;
@@ -171,11 +173,11 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
         computer.setRedstoneInput( localDir, getRedstoneInput( offset, dir ) );
         computer.setBundledRedstoneInput( localDir, BundledRedstone.getOutput( worldObj, offset, offsetSide ) );
-//        if( !isPeripheralBlockedOnSide( localDir ) )
-//        {
-//            IPeripheral peripheral = Peripherals.getPeripheral( getWorld(), offset, offsetSide );
-//            computer.setPeripheral( localDir, peripheral );
-//        }
+        if( !isPeripheralBlockedOnSide( localDir ) )
+        {
+            IPeripheral peripheral = Peripherals.getPeripheral( worldObj, offset, offsetSide );
+            computer.setPeripheral( localDir, peripheral );
+        }
     }
 
     protected ComputerSide remapToLocalSide( Direction globalSide )

@@ -6,6 +6,7 @@
 package dan200.computercraft;
 
 //import dan200.computercraft.api.turtle.event.TurtleAction;
+import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.core.apis.http.options.Action;
 import dan200.computercraft.core.apis.http.options.AddressRule;
 //import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
@@ -28,6 +29,7 @@ import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
 import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
 import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
 import dan200.computercraft.shared.network.NetworkHandler;
+import dan200.computercraft.shared.peripheral.generic.methods.InventoryMethods;
 import net.minecraft.client.render.block.model.BlockModelFurnace;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
@@ -110,6 +112,8 @@ public final class ComputerCraft implements ModInitializer
        new ComputerCraftBlocks();
 
         NetworkHandler.setup();
+
+        ComputerCraftAPI.registerGenericSource( new InventoryMethods() );
         /*
         ComputerCraftProxyCommon.init();
         Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "colour" ), ColourableRecipe.SERIALIZER );
