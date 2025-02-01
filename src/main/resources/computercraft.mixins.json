@@ -8,6 +8,7 @@
     ],
     "client": [
         "WorldClientMixin",
+        "WorldClientMPMixin",
         "GLFWKeyboardImplementationMixin"
     ],
     "server": [

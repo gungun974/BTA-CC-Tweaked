@@ -138,7 +138,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     public ServerComputer getServerComputer()
     {
-        return false && worldObj.isClientSide ? null : ComputerCraft.serverComputerRegistry.get( instanceID );
+        return (!Helper.isServerEnvironment() && !Helper.isSinglePlayer()) ? null : ComputerCraft.serverComputerRegistry.get( instanceID );
     }
 
     protected abstract ServerComputer createComputer( int instanceID, int id );

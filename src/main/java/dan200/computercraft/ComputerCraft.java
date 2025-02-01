@@ -13,6 +13,8 @@ import dan200.computercraft.core.apis.http.options.AddressRule;
 //import dan200.computercraft.shared.peripheral.monitor.MonitorRenderer;
 //import org.apache.logging.log4j.LogManager;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -26,6 +28,8 @@ import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
 import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
 import dan200.computercraft.shared.network.NetworkHandler;
 import net.minecraft.client.render.block.model.BlockModelFurnace;
+import net.minecraft.client.render.texture.stitcher.IconCoordinate;
+import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.util.collection.NamespaceID;
 import org.slf4j.Logger;
@@ -102,6 +106,14 @@ public final class ComputerCraft implements ModInitializer
     @Override
     public void onInitialize()
     {
+        final IconCoordinate a = TextureRegistry.getTexture("computercraft:block/computer_normal_front");
+
+        try {
+            TextureRegistry.initializeAllFiles("computercraft", a.parentAtlas, false);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
         EntityHelper.createTileEntity(TileEntityComputer.class, new NamespaceID(MOD_ID, "computer"));
 
         new BlockBuilder(MOD_ID)

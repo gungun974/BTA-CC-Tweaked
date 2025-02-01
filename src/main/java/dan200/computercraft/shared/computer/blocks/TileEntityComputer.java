@@ -8,6 +8,7 @@ import java.util.Random;
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.core.computer.ComputerSide;
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
@@ -50,11 +51,18 @@ public class TileEntityComputer extends TileComputerBase  {
     @Override
     protected void updateBlockState( ComputerState newState )
     {
-//        BlockState existing = getCachedState();
-//        if( existing.get( BlockComputer.STATE ) != newState )
-//        {
-//            getWorld().setBlockState( getPos(), existing.with( BlockComputer.STATE, newState ), 3 );
-//        }
+        final int currentMetadata = getBlockMeta();
+
+        final ComputerState currentState = ComputerState.class.getEnumConstants()[(currentMetadata >> 3) & 0b11];
+
+        if( currentState != newState )
+        {
+            final int newMetadata = (currentMetadata & ~0b11000) | (newState.ordinal() << 3);
+
+            if (worldObj != null) {
+                worldObj.setBlockMetadataWithNotify(this.x, this.y, this.z, newMetadata);
+            }
+        }
     }
 
     @Override

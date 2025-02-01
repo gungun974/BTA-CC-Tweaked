@@ -6,6 +6,7 @@
 package dan200.computercraft.client.gui;
 
 import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.client.FrameInfo;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.core.terminal.TextBuffer;
 import dan200.computercraft.shared.util.Colour;
@@ -352,7 +353,7 @@ public final class FixedWidthFontRenderer
 
         int cursorX = terminal.getCursorX();
         int cursorY = terminal.getCursorY();
-        if( terminal.getCursorBlink() && cursorX >= 0 && cursorX < width && cursorY >= 0 && cursorY < height && /*FrameInfo.getGlobalCursorBlink()*/ true )
+        if( terminal.getCursorBlink() && cursorX >= 0 && cursorX < width && cursorY >= 0 && cursorY < height && FrameInfo.getGlobalCursorBlink() )
         {
             double[] colour = palette.getColour( 15 - terminal.getTextColour() );
             float r, g, b;
