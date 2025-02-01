@@ -1,6 +1,7 @@
 package dan200.computercraft.fabric.mixin;
 
 import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import net.minecraft.client.world.WorldClient;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
@@ -23,7 +24,7 @@ public abstract class WorldMixin {
     @Inject(method = "getSignal(IIILnet/minecraft/core/util/helper/Side;)Z", at = @At("HEAD"), cancellable = true)
     public void computerSignal(int x, int y, int z, Side side, CallbackInfoReturnable<Boolean> cir) {
         Block<?> block = this.getBlock(x, y, z);
-        if (block == Blocks.blocksList[10000]) {
+        if (block == Blocks.blocksList[ComputerCraftBlocks.COMPUTER_NORMAL.id()]) {
             if (block != null) {
                 cir.setReturnValue(block.getSignal((World) (Object) this, x, y, z, side));
             }

@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 //import static dan200.computercraft.shared.ComputerCraftRegistry.ModBlocks;
 //import static dan200.computercraft.shared.ComputerCraftRegistry.init;
 
+import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
 import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
@@ -106,25 +107,7 @@ public final class ComputerCraft implements ModInitializer
     @Override
     public void onInitialize()
     {
-        final IconCoordinate a = TextureRegistry.getTexture("computercraft:block/computer_normal_front");
-
-        try {
-            TextureRegistry.initializeAllFiles("computercraft", a.parentAtlas, false);
-        } catch (Exception e){
-            throw new RuntimeException(e);
-        }
-
-        EntityHelper.createTileEntity(TileEntityComputer.class, new NamespaceID(MOD_ID, "computer"));
-
-        new BlockBuilder(MOD_ID)
-            .setBlockModel(BlockModelComputer::new)
-            .setTextures("computercraft:block/computer_normal_side")
-            .setTopTexture("computercraft:block/computer_normal_top")
-            .setBottomTexture("computercraft:block/computer_normal_top")
-            .setNorthTexture("computercraft:block/computer_normal_front")
-            .setHardness(1f)
-            .setTileEntity(TileEntityComputer::new)
-            .build("computer_normal", 10000, b -> new BlockLogicComputer(b));
+       new ComputerCraftBlocks();
 
         NetworkHandler.setup();
         /*

@@ -22,10 +22,6 @@ public abstract class TileGeneric extends TileEntity// implements BlockEntityCli
     }
      */
 
-    public void destroy()
-    {
-    }
-
     public void onChunkUnloaded()
     {
     }

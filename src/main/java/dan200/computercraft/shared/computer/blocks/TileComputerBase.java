@@ -24,6 +24,7 @@ import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public abstract class TileComputerBase extends TileGeneric implements IComputerTile//, IPeripheralTile
 {
@@ -44,7 +45,6 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         this.family = family;
     }
 
-    @Override
     public void destroy()
     {
         unload();
@@ -230,19 +230,14 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
        updateInput( neighbour );
     }
 
-    /*
-    @Override
-    protected void readDescription( @Nonnull CompoundTag nbt )
+    public void readDescription( @Nonnull CompoundTag nbt )
     {
-        super.readDescription( nbt );
-        label = nbt.contains( NBT_LABEL ) ? nbt.getString( NBT_LABEL ) : null;
-        computerID = nbt.contains( NBT_ID ) ? nbt.getInt( NBT_ID ) : -1;
+        label = nbt.containsKey( NBT_LABEL ) ? nbt.getString( NBT_LABEL ) : null;
+        computerID = nbt.containsKey( NBT_ID ) ? nbt.getInteger( NBT_ID ) : -1;
     }
 
-    @Override
-    protected void writeDescription( @Nonnull CompoundTag nbt )
+    public void writeDescription( @Nonnull CompoundTag nbt )
     {
-        super.writeDescription( nbt );
         if( label != null )
         {
             nbt.putString( NBT_LABEL, label );
@@ -252,8 +247,6 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             nbt.putInt( NBT_ID, computerID );
         }
     }
-
-     */
 
     @Override
     public void tick()
@@ -428,10 +421,10 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     @Override
     public final void setLabel( String label )
     {
-//        if( getWorld().isClient || Objects.equals( this.label, label ) )
-//        {
-//            return;
-//        }
+        if( (!Helper.isSinglePlayer() && !Helper.isServerEnvironment()) || Objects.equals( this.label, label ) )
+        {
+            return;
+        }
 
         this.label = label;
         ServerComputer computer = getServerComputer();

@@ -1,12 +1,15 @@
 package dan200.computercraft.shared.computer.blocks;
 
 import com.mojang.logging.LogUtils;
+import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.client.gui.GuiComputer;
 import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.core.computer.ComputerSide;
+import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.common.IBundledRedstoneBlock;
+import dan200.computercraft.shared.common.ITerminal;
 import dan200.computercraft.shared.computer.core.ClientComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerComputer;
@@ -18,13 +21,18 @@ import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.entity.TileEntityFurnace;
 import net.minecraft.core.block.material.Material;
+import net.minecraft.core.entity.Mob;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.enums.EnumDropCause;
+import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.player.gamemode.Gamemode;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 import net.minecraft.core.world.WorldSource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,17 +46,58 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
         block.withEntity(TileEntityComputer::new);
     }
 
-    public ItemStack[] getBreakResult(World world, EnumDropCause dropCause, int meta, TileEntity tileEntity) {
+    @Nullable
+    private ItemStack getItemStack(TileEntity entity) {
+        if( !(entity instanceof TileComputerBase) )
+        {
+            return null;
+        }
+
+        final TileComputerBase computerEntity = (TileComputerBase) entity;
+
+        final CompoundTag tags = new CompoundTag();
+
+        computerEntity.writeDescription(tags);
+
+        final ItemStack item = new ItemStack(ComputerCraftBlocks.COMPUTER_NORMAL, 1 ,0, tags);
+
+        if (computerEntity.getLabel() != null) {
+            item.setCustomName(computerEntity.getLabel());
+        }
+
+        return item;
+
+    }
+
+    public ItemStack[] getBreakResult(World world, EnumDropCause dropCause, int meta, TileEntity entity) {
         switch (dropCause) {
             case PICK_BLOCK:
             case EXPLOSION:
             case PROPER_TOOL:
             case SILK_TOUCH:
             case PISTON_CRUSH:
-                return new ItemStack[]{new ItemStack(Blocks.FURNACE_STONE_IDLE)};
+                final ItemStack item = getItemStack(entity);
+                if (item == null) {
+                    return null;
+                }
+
+                return new ItemStack[]{item};
             default:
                 return null;
         }
+    }
+
+    @Override
+    public void onBlockRemoved(World world, int x, int y, int z, int data) {
+        TileEntity entity = (world.getTileEntity(x, y, z));
+        if( !(entity instanceof TileComputerBase) )
+        {
+            return;
+        }
+
+        TileComputerBase computerEntity = (TileComputerBase) entity;
+
+        computerEntity.destroy();
     }
 
     public boolean isSignalSource() {
