@@ -13,8 +13,8 @@ import dan200.computercraft.api.network.IPacketSender;
 import dan200.computercraft.api.network.Packet;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.util.phys.Vec3;
+import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
@@ -217,7 +217,7 @@ public abstract class ModemPeripheral implements IPeripheral, IPacketSender, IPa
         parseChannel( replyChannel );
 
         World world = getWorld();
-        Vec3d position = getPosition();
+        Vec3 position = getPosition();
         IPacketNetwork network = this.network;
 
         if( world == null || position == null || network == null )

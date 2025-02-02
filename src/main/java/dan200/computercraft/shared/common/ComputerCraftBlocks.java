@@ -4,9 +4,15 @@ import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
 import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
 import dan200.computercraft.shared.computer.items.ItemBlockComputer;
+import dan200.computercraft.shared.peripheral.modem.wireless.BlockModelWirelessModem;
+import dan200.computercraft.shared.peripheral.modem.wireless.BlockWirelessModem;
+import dan200.computercraft.shared.peripheral.modem.wireless.TileWirelessModem;
 import dan200.computercraft.shared.peripheral.speaker.BlockSpeaker;
 import dan200.computercraft.shared.peripheral.speaker.SpeakerPeripheral;
 import dan200.computercraft.shared.peripheral.speaker.TileSpeaker;
+import net.minecraft.client.render.block.model.BlockModelFullyRotatable;
+import net.minecraft.client.render.block.model.BlockModelRotatable;
+import net.minecraft.client.render.block.model.BlockModelWireRedstone;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
@@ -20,6 +26,8 @@ import static dan200.computercraft.ComputerCraft.MOD_ID;
 public class ComputerCraftBlocks {
     public static final Block<?> COMPUTER_NORMAL;
     public static final Block<?> SPEAKER;
+
+    public static final Block<?> WIRELESS_MODEM_NORMAL;
 
     public ComputerCraftBlocks() {
 
@@ -52,6 +60,7 @@ public class ComputerCraftBlocks {
         EntityHelper.createTileEntity(TileSpeaker.class, new NamespaceID(MOD_ID, "speaker"));
 
         SPEAKER = new BlockBuilder(MOD_ID)
+            .setBlockModel(BlockModelRotatable::new)
             .setTextures("computercraft:block/speaker_side")
             .setTopTexture("computercraft:block/speaker_top")
             .setBottomTexture("computercraft:block/speaker_top")
@@ -61,5 +70,19 @@ public class ComputerCraftBlocks {
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileSpeaker::new)
             .build("speaker", 10001, b -> new BlockSpeaker(b));
+
+        EntityHelper.createTileEntity(TileWirelessModem.class, new NamespaceID(MOD_ID, "wireless_modem_normal"));
+
+        WIRELESS_MODEM_NORMAL = new BlockBuilder(MOD_ID)
+            .setBlockModel(BlockModelWirelessModem::new)
+            .setTopTexture("computercraft:block/wireless_modem_normal_face")
+            .setEastWestTextures("computercraft:block/wireless_modem_normal_face")
+            .setNorthSouthTextures("computercraft:block/wireless_modem_normal_face")
+            .setBottomTexture("computercraft:block/modem_back")
+            .setHardness(1.5f)
+            .setResistance(10f)
+            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTileEntity(() -> new TileWirelessModem(false))
+            .build("wireless_modem_normal", 10002, b -> new BlockWirelessModem(b, false));
     }
 }

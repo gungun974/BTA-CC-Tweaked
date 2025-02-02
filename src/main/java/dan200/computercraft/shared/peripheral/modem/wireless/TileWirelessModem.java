@@ -11,12 +11,9 @@ import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.peripheral.modem.ModemPeripheral;
 import dan200.computercraft.shared.peripheral.modem.ModemState;
 import dan200.computercraft.shared.util.TickScheduler;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.util.phys.Vec3;
+import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 
@@ -28,42 +25,45 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile
     private Direction modemDirection = Direction.DOWN;
     private boolean destroyed = false;
 
-    public TileWirelessModem( BlockEntityType<? extends TileWirelessModem> type, boolean advanced )
+    public TileWirelessModem() {
+        this(false);
+    }
+
+    public TileWirelessModem( boolean advanced )
     {
-        super( type );
         this.advanced = advanced;
         modem = new Peripheral( this );
     }
 
-    @Override
-    public void cancelRemoval()
-    {
-        super.cancelRemoval();
-        TickScheduler.schedule( this );
-    }
+//    @Override
+//    public void cancelRemoval()
+//    {
+//        super.cancelRemoval();
+//        TickScheduler.schedule( this );
+//    }
+//
+//    @Override
+//    public void resetBlock()
+//    {
+//        super.resetBlock();
+//        hasModemDirection = false;
+//        world.getBlockTickScheduler()
+//            .schedule( getPos(),
+//                getCachedState().getBlock(), 0 );
+//    }
+//
+//    @Override
+//    public void destroy()
+//    {
+//        if( !destroyed )
+//        {
+//            modem.destroy();
+//            destroyed = true;
+//        }
+//    }
 
     @Override
-    public void resetBlock()
-    {
-        super.resetBlock();
-        hasModemDirection = false;
-        world.getBlockTickScheduler()
-            .schedule( getPos(),
-                getCachedState().getBlock(), 0 );
-    }
-
-    @Override
-    public void destroy()
-    {
-        if( !destroyed )
-        {
-            modem.destroy();
-            destroyed = true;
-        }
-    }
-
-    @Override
-    public void blockTick()
+    public void tick()
     {
         Direction currentDirection = modemDirection;
         refreshDirection();
@@ -85,17 +85,25 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile
         }
 
         hasModemDirection = true;
-        modemDirection = getCachedState().get( BlockWirelessModem.FACING );
+        modemDirection = BlockWirelessModem.metaToDirection(worldObj.getBlockMetadata(x, y , z)).getOpposite();
     }
 
     private void updateBlockState()
     {
-        boolean on = modem.getModemState()
+        final boolean on = modem.getModemState()
             .isOpen();
-        BlockState state = getCachedState();
-        if( state.get( BlockWirelessModem.ON ) != on )
+
+        final int currentMetadata = getBlockMeta();
+
+        final boolean isOn = ((currentMetadata >> 3) & 0b1) == 1;
+
+        if( isOn != on )
         {
-            getWorld().setBlockState( getPos(), state.with( BlockWirelessModem.ON, on ) );
+            final int newMetadata = (currentMetadata & ~0b1000) | ((on ? 1 : 0) << 3);
+
+            if (worldObj != null) {
+                worldObj.setBlockMetadataWithNotify(this.x, this.y, this.z, newMetadata);
+            }
         }
     }
 
@@ -121,16 +129,18 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile
         @Override
         public World getWorld()
         {
-            return entity.getWorld();
+            return entity.worldObj;
         }
 
         @Nonnull
         @Override
-        public Vec3d getPosition()
+        public Vec3 getPosition()
         {
-            BlockPos pos = entity.getPos()
-                .offset( entity.modemDirection );
-            return new Vec3d( pos.getX(), pos.getY(), pos.getZ() );
+            return Vec3.getPermanentVec3(
+                entity.x + entity.modemDirection.getOffsetX(),
+                entity.y + entity.modemDirection.getOffsetY(),
+                entity.z + entity.modemDirection.getOffsetZ()
+            );
         }
 
         @Nonnull
