@@ -7,6 +7,7 @@ package dan200.computercraft;
 
 //import dan200.computercraft.api.turtle.event.TurtleAction;
 import dan200.computercraft.api.ComputerCraftAPI;
+import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.core.apis.http.options.Action;
 import dan200.computercraft.core.apis.http.options.AddressRule;
 //import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 //import static dan200.computercraft.shared.ComputerCraftRegistry.init;
 
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
+import dan200.computercraft.shared.common.DefaultBundledRedstoneProvider;
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
 import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
@@ -34,6 +36,7 @@ import net.minecraft.client.render.block.model.BlockModelFurnace;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Blocks;
+import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.util.collection.NamespaceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,6 +115,34 @@ public final class ComputerCraft implements ModInitializer
        new ComputerCraftBlocks();
 
         NetworkHandler.setup();
+
+        ComputerCraftAPI.registerPeripheralProvider( ( world, pos, side ) -> {
+            TileEntity tile = world.getTileEntity( pos.x, pos.y, pos.z );
+            return tile instanceof IPeripheralTile ? ((IPeripheralTile) tile).getPeripheral( side ) : null;
+        } );
+
+//        ComputerCraftAPI.registerPeripheralProvider( ( world, pos, side ) -> {
+//            BlockEntity tile = world.getBlockEntity( pos );
+//            return ComputerCraft.enableCommandBlock && tile instanceof CommandBlockBlockEntity ?
+//                new CommandBlockPeripheral( (CommandBlockBlockEntity) tile ) : null;
+//        } );
+
+        // Register bundled power providers
+        ComputerCraftAPI.registerBundledRedstoneProvider( new DefaultBundledRedstoneProvider() );
+
+        // Register media providers
+//        ComputerCraftAPI.registerMediaProvider( stack -> {
+//            Item item = stack.getItem();
+//            if( item instanceof IMedia )
+//            {
+//                return (IMedia) item;
+//            }
+//            if( item instanceof MusicDiscItem )
+//            {
+//                return RecordMedia.INSTANCE;
+//            }
+//            return null;
+//        } );
 
         ComputerCraftAPI.registerGenericSource( new InventoryMethods() );
         /*

@@ -10,15 +10,11 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.fabric.mixin.SoundEventAccess;
-import net.minecraft.block.enums.Instrument;
-import net.minecraft.network.packet.s2c.play.PlaySoundIdS2CPacket;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.InvalidIdentifierException;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import dan200.computercraft.fabric.Helper;
+import net.minecraft.core.block.BlockLogicNote;
+import net.minecraft.core.sound.SoundCategory;
+import net.minecraft.core.util.phys.Vec3;
+import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -74,20 +70,10 @@ public abstract class SpeakerPeripheral implements IPeripheral
         float volume = (float) checkFinite( 1, volumeA.orElse( 1.0 ) );
         float pitch = (float) checkFinite( 2, pitchA.orElse( 1.0 ) );
 
-        Identifier identifier;
-        try
-        {
-            identifier = new Identifier( name );
-        }
-        catch( InvalidIdentifierException e )
-        {
-            throw new LuaException( "Malformed sound name '" + name + "' " );
-        }
-
-        return playSound( context, identifier, volume, pitch, false );
+        return playSound( context, name, volume, pitch, false );
     }
 
-    private synchronized boolean playSound( ILuaContext context, Identifier name, float volume, float pitch, boolean isNote ) throws LuaException
+    private synchronized boolean playSound( ILuaContext context, String name, float volume, float pitch, boolean isNote ) throws LuaException
     {
         if( clock - lastPlayTime < TileSpeaker.MIN_TICKS_BETWEEN_SOUNDS && (!isNote || clock - lastPlayTime != 0 || notesThisTick.get() >= ComputerCraft.maxNotesPerTick) )
         {
@@ -97,24 +83,15 @@ public abstract class SpeakerPeripheral implements IPeripheral
         }
 
         World world = getWorld();
-        Vec3d pos = getPosition();
+        Vec3 pos = getPosition();
 
         context.issueMainThreadTask( () -> {
-            MinecraftServer server = world.getServer();
-            if( server == null )
-            {
+            if (!Helper.isServerEnvironment() && !Helper.isSinglePlayer()) {
                 return null;
             }
 
-            float adjVolume = Math.min( volume, 3.0f );
-            server.getPlayerManager()
-                .sendToAround( null,
-                    pos.x,
-                    pos.y,
-                    pos.z,
-                    adjVolume > 1.0f ? 16 * adjVolume : 16.0,
-                    world.getRegistryKey(),
-                    new PlaySoundIdS2CPacket( name, SoundCategory.RECORDS, pos, adjVolume, pitch ) );
+            world.playSoundEffect(null, SoundCategory.WORLD_SOUNDS, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, name, Math.min( volume, 3.0f ), pitch);
+
             return null;
         } );
 
@@ -124,7 +101,7 @@ public abstract class SpeakerPeripheral implements IPeripheral
 
     public abstract World getWorld();
 
-    public abstract Vec3d getPosition();
+    public abstract Vec3 getPosition();
 
     /**
      * Plays a note block note through the speaker.
@@ -147,10 +124,10 @@ public abstract class SpeakerPeripheral implements IPeripheral
         float volume = (float) checkFinite( 1, volumeA.orElse( 1.0 ) );
         float pitch = (float) checkFinite( 2, pitchA.orElse( 1.0 ) );
 
-        Instrument instrument = null;
-        for( Instrument testInstrument : Instrument.values() )
+        BlockLogicNote.Instrument instrument = null;
+        for( BlockLogicNote.Instrument testInstrument : BlockLogicNote.Instrument.instrumentMap.values() )
         {
-            if( testInstrument.asString()
+            if( testInstrument.soundKey
                 .equalsIgnoreCase( name ) )
             {
                 instrument = testInstrument;
@@ -166,7 +143,7 @@ public abstract class SpeakerPeripheral implements IPeripheral
 
         // If the resource location for note block notes changes, this method call will need to be updated
         boolean success = playSound( context,
-            ((SoundEventAccess) instrument.getSound()).getId(),
+            "note." + BlockLogicNote.Instrument.getInstrumentFromIndex(instrument.index).soundKey,
             volume,
             (float) Math.pow( 2.0, (pitch - 12.0) / 12.0 ),
             true );

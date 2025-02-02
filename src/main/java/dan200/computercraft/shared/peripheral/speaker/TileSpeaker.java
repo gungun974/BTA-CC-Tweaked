@@ -5,28 +5,26 @@
  */
 package dan200.computercraft.shared.peripheral.speaker;
 
+import com.mojang.nbt.tags.CompoundTag;
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.shared.common.TileGeneric;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.Tickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.util.phys.Vec3;
+import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileSpeaker extends TileGeneric implements Tickable, IPeripheralTile
+public class TileSpeaker extends TileGeneric implements IPeripheralTile
 {
     public static final int MIN_TICKS_BETWEEN_SOUNDS = 1;
 
     private final SpeakerPeripheral peripheral;
 
-    public TileSpeaker( BlockEntityType<TileSpeaker> type )
+    public TileSpeaker()
     {
-        super( type );
         peripheral = new Peripheral( this );
     }
 
@@ -55,14 +53,13 @@ public class TileSpeaker extends TileGeneric implements Tickable, IPeripheralTil
         @Override
         public World getWorld()
         {
-            return speaker.getWorld();
+            return speaker.worldObj;
         }
 
         @Override
-        public Vec3d getPosition()
+        public Vec3 getPosition()
         {
-            BlockPos pos = speaker.getPos();
-            return new Vec3d( pos.getX(), pos.getY(), pos.getZ() );
+            return Vec3.getPermanentVec3( speaker.x, speaker.y, speaker.z );
         }
 
         @Override
