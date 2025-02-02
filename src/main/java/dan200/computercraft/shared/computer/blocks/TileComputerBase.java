@@ -9,6 +9,7 @@ import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.Peripherals;
+import dan200.computercraft.PortableTickScheduler;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.fabric.Helper;
@@ -42,6 +43,8 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     private int computerID = -1;
     private boolean on = false;
     private boolean fresh = false;
+
+    private PortableTickScheduler portableTickScheduler = new PortableTickScheduler();
 
     public TileComputerBase( ComputerFamily family )
     {
@@ -252,22 +255,10 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     protected abstract Direction getDirection();
 
-    BlockingQueue<BlockPos> updateNeighbourPeripheralQueue = new LinkedBlockingQueue<>();
-
-    public void onNeighbourChange( @Nonnull BlockPos neighbour )
-    {
-        updateRedstoneInput( neighbour );
-        updateNeighbourPeripheralQueue.add(neighbour);
-    }
-
-    public void handleNeighbourTileEntityChanges()
-    {
-        while (!updateNeighbourPeripheralQueue.isEmpty()) {
-            BlockPos block = updateNeighbourPeripheralQueue.poll();
-            if (block == null) {
-                return;
-            }
-            updatePeripheral( block );
+    public void onNeighbourChange( @Nonnull BlockPos neighbour ) {
+        updateRedstoneInput(neighbour);
+        if (Helper.isServerEnvironment() || Helper.isSinglePlayer()) {
+            portableTickScheduler.scheduleOnNextStartTick(() -> updatePeripheral(neighbour));
         }
     }
 
@@ -289,22 +280,16 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         }
     }
 
-    boolean shouldNextTickUpdatePeripherals = false;
-
     @Override
     public void tick()
     {
+        portableTickScheduler.tickAtStart();
         if( Helper.isServerEnvironment() || Helper.isSinglePlayer() )
         {
-           if (shouldNextTickUpdatePeripherals) {
-               updatePeripheral();
-               shouldNextTickUpdatePeripherals = false;
-           }
-
-            handleNeighbourTileEntityChanges();
             ServerComputer computer = createServerComputer();
             if( computer == null )
             {
+                portableTickScheduler.tickAtEnd();
                 return;
             }
 
@@ -325,7 +310,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             if( computer.hasOutputChanged() )
             {
                 updateRedstoneOutput();
-                shouldNextTickUpdatePeripherals = true;
+                portableTickScheduler.scheduleOnNextStartTick(this::updatePeripheral);
             }
 
             // Update the block state if needed. We don't fire a block update intentionally,
@@ -335,9 +320,10 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             if( computer.hasOutputChanged() )
             {
                 updateRedstoneOutput();
-                shouldNextTickUpdatePeripherals = true;
+                portableTickScheduler.scheduleOnNextStartTick(this::updatePeripheral);
             }
         }
+        portableTickScheduler.tickAtEnd();
     }
 
     public void updateRedstoneOutput()
