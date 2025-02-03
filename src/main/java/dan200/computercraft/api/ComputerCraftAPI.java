@@ -6,20 +6,16 @@
 package dan200.computercraft.api;
 
 import dan200.computercraft.BlockPos;
-import dan200.computercraft.BlockView;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
 import dan200.computercraft.api.lua.GenericSource;
 import dan200.computercraft.api.lua.ILuaAPIFactory;
-import dan200.computercraft.api.media.IMedia;
-import dan200.computercraft.api.media.IMediaProvider;
 import dan200.computercraft.api.network.IPacketNetwork;
 import dan200.computercraft.api.network.wired.IWiredElement;
 import dan200.computercraft.api.network.wired.IWiredNode;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
-import dan200.computercraft.api.pocket.IPocketUpgrade;
 import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
 //import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import net.minecraft.core.util.helper.Direction;
@@ -214,48 +210,48 @@ public final class ComputerCraftAPI
 //        getInstance().registerPocketUpgrade( upgrade );
 //    }
 
-//    /**
-//     * Attempt to get the game-wide wireless network.
-//     *
-//     * @return The global wireless network, or {@code null} if it could not be fetched.
-//     */
-//    public static IPacketNetwork getWirelessNetwork()
-//    {
-//        return getInstance().getWirelessNetwork();
-//    }
+    /**
+     * Attempt to get the game-wide wireless network.
+     *
+     * @return The global wireless network, or {@code null} if it could not be fetched.
+     */
+    public static IPacketNetwork getWirelessNetwork()
+    {
+        return getInstance().getWirelessNetwork();
+    }
 
     public static void registerAPIFactory( @Nonnull ILuaAPIFactory factory )
     {
         getInstance().registerAPIFactory( factory );
     }
 
-//    /**
-//     * Construct a new wired node for a given wired element.
-//     *
-//     * @param element The element to construct it for
-//     * @return The element's node
-//     * @see IWiredElement#getNode()
-//     */
-//    @Nonnull
-//    public static IWiredNode createWiredNodeForElement( @Nonnull IWiredElement element )
-//    {
-//        return getInstance().createWiredNodeForElement( element );
-//    }
+    /**
+     * Construct a new wired node for a given wired element.
+     *
+     * @param element The element to construct it for
+     * @return The element's node
+     * @see IWiredElement#getNode()
+     */
+    @Nonnull
+    public static IWiredNode createWiredNodeForElement( @Nonnull IWiredElement element )
+    {
+        return getInstance().createWiredNodeForElement( element );
+    }
 
-//    /**
-//     * Get the wired network element for a block in world.
-//     *
-//     * @param world The world the block exists in
-//     * @param pos   The position the block exists in
-//     * @param side  The side to extract the network element from
-//     * @return The element's node
-//     * @see IWiredElement#getNode()
-//     */
-//    @Nullable
-//    public static IWiredElement getWiredElementAt( @Nonnull BlockView world, @Nonnull BlockPos pos, @Nonnull Direction side )
-//    {
-//        return getInstance().getWiredElementAt( world, pos, side );
-//    }
+    /**
+     * Get the wired network element for a block in world.
+     *
+     * @param world The world the block exists in
+     * @param pos   The position the block exists in
+     * @param side  The side to extract the network element from
+     * @return The element's node
+     * @see IWiredElement#getNode()
+     */
+    @Nullable
+    public static IWiredElement getWiredElementAt( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
+    {
+        return getInstance().getWiredElementAt( world, pos, side );
+    }
 
     public interface IComputerCraftAPI
     {
@@ -284,15 +280,15 @@ public final class ComputerCraftAPI
 //
 //        void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade );
 //
-//        @Nonnull
-//        IPacketNetwork getWirelessNetwork();
+        @Nonnull
+        IPacketNetwork getWirelessNetwork();
 
         void registerAPIFactory( @Nonnull ILuaAPIFactory factory );
 
-//        @Nonnull
-//        IWiredNode createWiredNodeForElement( @Nonnull IWiredElement element );
-//
-//        @Nullable
-//        IWiredElement getWiredElementAt(@Nonnull BlockView world, @Nonnull BlockPos pos, @Nonnull Direction side );
+        @Nonnull
+        IWiredNode createWiredNodeForElement( @Nonnull IWiredElement element );
+
+        @Nullable
+        IWiredElement getWiredElementAt(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side );
     }
 }

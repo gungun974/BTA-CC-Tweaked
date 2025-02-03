@@ -19,7 +19,7 @@ import dan200.computercraft.core.apis.PeripheralAPI;
 import dan200.computercraft.core.asm.PeripheralMethod;
 import dan200.computercraft.shared.peripheral.modem.ModemPeripheral;
 import dan200.computercraft.shared.peripheral.modem.ModemState;
-import net.minecraft.world.World;
+import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

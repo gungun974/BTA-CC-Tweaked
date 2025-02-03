@@ -22,9 +22,14 @@ import dan200.computercraft.core.asm.GenericMethod;
 import dan200.computercraft.core.filesystem.FileMount;
 import dan200.computercraft.core.filesystem.ResourceMount;
 import dan200.computercraft.shared.BundledRedstone;
+import dan200.computercraft.shared.peripheral.modem.wired.TileCable;
+import dan200.computercraft.shared.peripheral.modem.wired.TileWiredModemFull;
+import dan200.computercraft.shared.peripheral.modem.wireless.WirelessNetwork;
 import dan200.computercraft.shared.util.IDAssigner;
+import dan200.computercraft.shared.wired.WiredNode;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
 import net.minecraft.server.MinecraftServer;
@@ -159,12 +164,12 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI
         GenericMethod.register( source );
     }
 
-//    @Nonnull
-//    @Override
-//    public IPacketNetwork getWirelessNetwork()
-//    {
-//        return WirelessNetwork.getUniversal();
-//    }
+    @Nonnull
+    @Override
+    public IPacketNetwork getWirelessNetwork()
+    {
+        return WirelessNetwork.getUniversal();
+    }
 
     @Override
     public void registerAPIFactory( @Nonnull ILuaAPIFactory factory )
@@ -172,26 +177,26 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI
         ApiFactories.register( factory );
     }
 
-//    @Nonnull
-//    @Override
-//    public IWiredNode createWiredNodeForElement( @Nonnull IWiredElement element )
-//    {
-//        return new WiredNode( element );
-//    }
+    @Nonnull
+    @Override
+    public IWiredNode createWiredNodeForElement( @Nonnull IWiredElement element )
+    {
+        return new WiredNode( element );
+    }
 
-//    @Nullable
-//    @Override
-//    public IWiredElement getWiredElementAt( @Nonnull BlockView world, @Nonnull BlockPos pos, @Nonnull Direction side )
-//    {
-//        BlockEntity tile = world.getBlockEntity( pos );
-//        if( tile instanceof TileCable )
-//        {
-//            return ((TileCable) tile).getElement( side );
-//        }
-//        else if( tile instanceof TileWiredModemFull )
-//        {
-//            return ((TileWiredModemFull) tile).getElement();
-//        }
-//        return null;
-//    }
+    @Nullable
+    @Override
+    public IWiredElement getWiredElementAt( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
+    {
+        TileEntity tile = world.getTileEntity( pos.x, pos.y, pos.z );
+        if( tile instanceof TileCable)
+        {
+            return ((TileCable) tile).getElement( side );
+        }
+        else if( tile instanceof TileWiredModemFull)
+        {
+            return ((TileWiredModemFull) tile).getElement();
+        }
+        return null;
+    }
 }

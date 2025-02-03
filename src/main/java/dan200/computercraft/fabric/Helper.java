@@ -21,6 +21,10 @@ public class Helper {
         return !Minecraft.getMinecraft().isMultiplayerWorld();
     }
 
+    public static boolean isClientWorld() {
+        return !isSinglePlayer() && !isServerEnvironment();
+    }
+
     public static @Nullable BlockLogic getBlockLogic(final World world, final int x, final int y, final int z) {
         final Block<?> block = world.getBlock(x, y, z);
         if (block == null) return null;

@@ -5,13 +5,12 @@
  */
 package dan200.computercraft.shared.peripheral.modem.wired;
 
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.util.helper.Direction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public enum CableModemVariant implements StringIdentifiable
+public enum CableModemVariant
 {
     None( "none", null ),
     DownOff( "down_off", Direction.DOWN ),
@@ -64,7 +63,6 @@ public enum CableModemVariant implements StringIdentifiable
     }
 
     @Nonnull
-    @Override
     public String asString()
     {
         return name;

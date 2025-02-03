@@ -4,6 +4,10 @@ import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
 import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
 import dan200.computercraft.shared.computer.items.ItemBlockComputer;
+import dan200.computercraft.shared.peripheral.modem.wired.BlockCable;
+import dan200.computercraft.shared.peripheral.modem.wired.BlockWiredModemFull;
+import dan200.computercraft.shared.peripheral.modem.wired.TileCable;
+import dan200.computercraft.shared.peripheral.modem.wired.TileWiredModemFull;
 import dan200.computercraft.shared.peripheral.modem.wireless.BlockModelWirelessModem;
 import dan200.computercraft.shared.peripheral.modem.wireless.BlockWirelessModem;
 import dan200.computercraft.shared.peripheral.modem.wireless.TileWirelessModem;
@@ -16,6 +20,7 @@ import net.minecraft.client.render.block.model.BlockModelWireRedstone;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.util.collection.NamespaceID;
 import turniplabs.halplibe.helper.BlockBuilder;
@@ -28,6 +33,9 @@ public class ComputerCraftBlocks {
     public static final Block<?> SPEAKER;
 
     public static final Block<?> WIRELESS_MODEM_NORMAL;
+
+    public static final Block<?> WIRED_MODEM_FULL;
+    public static final Block<?> CABLE;
 
     public ComputerCraftBlocks() {
 
@@ -84,5 +92,25 @@ public class ComputerCraftBlocks {
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileWirelessModem(false))
             .build("wireless_modem_normal", 10002, b -> new BlockWirelessModem(b, false));
+
+        EntityHelper.createTileEntity(TileWiredModemFull.class, new NamespaceID(MOD_ID, "wired_modem_full"));
+
+        WIRED_MODEM_FULL = new BlockBuilder(MOD_ID)
+            .setTextures("computercraft:block/wired_modem_face")
+            .setHardness(1.5f)
+            .setResistance(10f)
+            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTileEntity(TileWiredModemFull::new)
+            .build("wired_modem_full", 10003, b -> new BlockWiredModemFull(b, Material.stone));
+
+        EntityHelper.createTileEntity(TileCable.class, new NamespaceID(MOD_ID, "cable"));
+
+        CABLE = new BlockBuilder(MOD_ID)
+            .setTextures("computercraft:block/cable_core")
+            .setHardness(1.5f)
+            .setResistance(10f)
+            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTileEntity(TileCable::new)
+            .build("cable", 10004, b -> new BlockCable(b, Material.stone));
     }
 }
