@@ -25,7 +25,7 @@ public class BlockModelWirelessModem<T extends BlockLogic> extends BlockModelFul
             final boolean isOn = ((currentMetadata >> 3) & 0b1) == 1;
 
             if (isOn) {
-                return TextureRegistry.getTexture(originalFront.namespaceId.namespace + ":block/" + originalFront.namespaceId.value + "_on");
+                return TextureRegistry.getTexture(originalFront.namespaceId.namespace() + ":block/" + originalFront.namespaceId.value() + "_on");
             }
 
             return originalFront;

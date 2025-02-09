@@ -50,7 +50,7 @@ public class ComputerCraftBlocks {
             throw new RuntimeException(e);
         }
 
-        EntityHelper.createTileEntity(TileEntityComputer.class, new NamespaceID(MOD_ID, "computer"));
+        EntityHelper.createTileEntity(TileEntityComputer.class, NamespaceID.getPermanent(MOD_ID, "computer"));
 
         COMPUTER_NORMAL = new BlockBuilder(MOD_ID)
             .setBlockModel(BlockModelComputer::new)
@@ -65,7 +65,7 @@ public class ComputerCraftBlocks {
             .setBlockItem(ItemBlockComputer::new)
             .build("computer_normal", 10000, b -> new BlockLogicComputer(b));
 
-        EntityHelper.createTileEntity(TileSpeaker.class, new NamespaceID(MOD_ID, "speaker"));
+        EntityHelper.createTileEntity(TileSpeaker.class, NamespaceID.getPermanent(MOD_ID, "speaker"));
 
         SPEAKER = new BlockBuilder(MOD_ID)
             .setBlockModel(BlockModelRotatable::new)
@@ -79,7 +79,7 @@ public class ComputerCraftBlocks {
             .setTileEntity(TileSpeaker::new)
             .build("speaker", 10001, b -> new BlockSpeaker(b));
 
-        EntityHelper.createTileEntity(TileWirelessModem.class, new NamespaceID(MOD_ID, "wireless_modem_normal"));
+        EntityHelper.createTileEntity(TileWirelessModem.class, NamespaceID.getPermanent(MOD_ID, "wireless_modem_normal"));
 
         WIRELESS_MODEM_NORMAL = new BlockBuilder(MOD_ID)
             .setBlockModel(BlockModelWirelessModem::new)
@@ -93,7 +93,7 @@ public class ComputerCraftBlocks {
             .setTileEntity(() -> new TileWirelessModem(false))
             .build("wireless_modem_normal", 10002, b -> new BlockWirelessModem(b, false));
 
-        EntityHelper.createTileEntity(TileWiredModemFull.class, new NamespaceID(MOD_ID, "wired_modem_full"));
+        EntityHelper.createTileEntity(TileWiredModemFull.class, NamespaceID.getPermanent(MOD_ID, "wired_modem_full"));
 
         WIRED_MODEM_FULL = new BlockBuilder(MOD_ID)
             .setTextures("computercraft:block/wired_modem_face")
@@ -103,7 +103,7 @@ public class ComputerCraftBlocks {
             .setTileEntity(TileWiredModemFull::new)
             .build("wired_modem_full", 10003, b -> new BlockWiredModemFull(b, Material.stone));
 
-        EntityHelper.createTileEntity(TileCable.class, new NamespaceID(MOD_ID, "cable"));
+        EntityHelper.createTileEntity(TileCable.class, NamespaceID.getPermanent(MOD_ID, "cable"));
 
         CABLE = new BlockBuilder(MOD_ID)
             .setTextures("computercraft:block/cable_core")

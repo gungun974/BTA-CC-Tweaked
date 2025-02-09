@@ -28,9 +28,9 @@ public class BlockModelComputer<T extends BlockLogic> extends BlockModelHorizont
 
             switch (currentState){
                 case ON:
-                    return TextureRegistry.getTexture(originalFront.namespaceId.namespace + ":block/" + originalFront.namespaceId.value + "_on");
+                    return TextureRegistry.getTexture(originalFront.namespaceId.namespace() + ":block/" + originalFront.namespaceId.value() + "_on");
                 case BLINKING:
-                    return TextureRegistry.getTexture(originalFront.namespaceId.namespace + ":block/" + originalFront.namespaceId.value + "_blink");
+                    return TextureRegistry.getTexture(originalFront.namespaceId.namespace() + ":block/" + originalFront.namespaceId.value() + "_blink");
                 case OFF:
                 default:
                     return originalFront;
