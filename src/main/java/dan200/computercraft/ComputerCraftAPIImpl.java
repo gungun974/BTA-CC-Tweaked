@@ -22,6 +22,7 @@ import dan200.computercraft.core.asm.GenericMethod;
 import dan200.computercraft.core.filesystem.FileMount;
 import dan200.computercraft.core.filesystem.ResourceMount;
 import dan200.computercraft.shared.BundledRedstone;
+import dan200.computercraft.shared.MediaProviders;
 import dan200.computercraft.shared.peripheral.modem.wired.TileCable;
 import dan200.computercraft.shared.peripheral.modem.wired.TileWiredModemFull;
 import dan200.computercraft.shared.peripheral.modem.wireless.WirelessNetwork;
@@ -145,12 +146,12 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI
     {
         return BundledRedstone.getDefaultOutput( world, pos, side );
     }
-//
-//    @Override
-//    public void registerMediaProvider( @Nonnull IMediaProvider provider )
-//    {
-//        MediaProviders.register( provider );
-//    }
+
+    @Override
+    public void registerMediaProvider( @Nonnull IMediaProvider provider )
+    {
+        MediaProviders.register( provider );
+    }
 //
 //    @Override
 //    public void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade )

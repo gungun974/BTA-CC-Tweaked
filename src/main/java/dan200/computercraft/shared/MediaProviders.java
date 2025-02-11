@@ -3,8 +3,9 @@
  * Copyright Daniel Ratcliffe, 2011-2022. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
  */
-package dan200.computercraft;
+package dan200.computercraft.shared;
 
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.media.IMediaProvider;
 import net.minecraft.core.item.ItemStack;

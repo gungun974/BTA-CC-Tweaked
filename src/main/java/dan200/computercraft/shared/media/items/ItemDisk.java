@@ -10,23 +10,42 @@ import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.media.IMedia;
-import dan200.computercraft.shared.ComputerCraftRegistry;
-import dan200.computercraft.shared.common.IColouredItem;
-import dan200.computercraft.shared.util.Colour;
+import dan200.computercraft.fabric.Helper;
+import dan200.computercraft.shared.common.ComputerCraftBlocks;
+import dan200.computercraft.shared.peripheral.diskdrive.TileDiskDrive;
+import net.minecraft.core.block.Blocks;
+import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.collection.NamespaceID;
+import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemDisk extends Item implements IMedia, IColouredItem
+public class ItemDisk extends Item implements IMedia//, IColouredItem
 {
     private static final String NBT_ID = "DiskId";
 
     public ItemDisk(NamespaceID namespaceId, int id )
     {
         super(namespaceId, id);
+    }
+
+
+    @Override
+    public boolean onUseItemOnBlock(
+        ItemStack itemstack, Player player, World world, int x, int y, int z, Side side, double xPlaced, double yPlaced
+    ) {
+        if (world.getBlockId(x, y, z) == ComputerCraftBlocks.DISK_DRIVE.id()) {
+            if (!Helper.isClientWorld()) {
+                return ((TileDiskDrive)world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
 //    @Override
@@ -55,15 +74,15 @@ public class ItemDisk extends Item implements IMedia, IColouredItem
 //        }
 //    }
 
-    @Nonnull
-    public static ItemStack createFromIDAndColour( int id, String label, int colour )
-    {
-        ItemStack stack = new ItemStack( ComputerCraftRegistry.ModItems.DISK );
-        setDiskID( stack, id );
-        ComputerCraftRegistry.ModItems.DISK.setLabel( stack, label );
-        IColouredItem.setColourBasic( stack, colour );
-        return stack;
-    }
+//    @Nonnull
+//    public static ItemStack createFromIDAndColour( int id, String label, int colour )
+//    {
+//        ItemStack stack = new ItemStack( ComputerCraftRegistry.ModItems.DISK );
+//        setDiskID( stack, id );
+//        ComputerCraftRegistry.ModItems.DISK.setLabel( stack, label );
+//        IColouredItem.setColourBasic( stack, colour );
+//        return stack;
+//    }
 
     private static void setDiskID( @Nonnull ItemStack stack, int id )
     {
@@ -112,10 +131,10 @@ public class ItemDisk extends Item implements IMedia, IColouredItem
         return ComputerCraftAPI.createSaveDirMount( world, "disk/" + diskID, ComputerCraft.floppySpaceLimit );
     }
 
-    @Override
-    public int getColour( @Nonnull ItemStack stack )
-    {
-        int colour = IColouredItem.getColourBasic( stack );
-        return colour == -1 ? Colour.WHITE.getHex() : colour;
-    }
+//    @Override
+//    public int getColour( @Nonnull ItemStack stack )
+//    {
+//        int colour = IColouredItem.getColourBasic( stack );
+//        return colour == -1 ? Colour.WHITE.getHex() : colour;
+//    }
 }

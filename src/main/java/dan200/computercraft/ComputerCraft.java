@@ -7,6 +7,7 @@ package dan200.computercraft;
 
 //import dan200.computercraft.api.turtle.event.TurtleAction;
 import dan200.computercraft.api.ComputerCraftAPI;
+import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.core.apis.http.options.Action;
 import dan200.computercraft.core.apis.http.options.AddressRule;
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 //import static dan200.computercraft.shared.ComputerCraftRegistry.init;
 
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
+import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.common.DefaultBundledRedstoneProvider;
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
@@ -37,6 +39,8 @@ import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.item.Item;
+import net.minecraft.core.item.ItemDiscMusic;
 import net.minecraft.core.util.collection.NamespaceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,6 +117,7 @@ public final class ComputerCraft implements ModInitializer
     public void onInitialize()
     {
        new ComputerCraftBlocks();
+        new ComputerCraftItems();
 
         NetworkHandler.setup();
 
@@ -131,18 +136,18 @@ public final class ComputerCraft implements ModInitializer
         ComputerCraftAPI.registerBundledRedstoneProvider( new DefaultBundledRedstoneProvider() );
 
         // Register media providers
-//        ComputerCraftAPI.registerMediaProvider( stack -> {
-//            Item item = stack.getItem();
-//            if( item instanceof IMedia )
-//            {
-//                return (IMedia) item;
-//            }
-//            if( item instanceof MusicDiscItem )
+        ComputerCraftAPI.registerMediaProvider( stack -> {
+            Item item = stack.getItem();
+            if( item instanceof IMedia)
+            {
+                return (IMedia) item;
+            }
+//            if( item instanceof ItemDiscMusic)
 //            {
 //                return RecordMedia.INSTANCE;
 //            }
-//            return null;
-//        } );
+            return null;
+        } );
 
         ComputerCraftAPI.registerGenericSource( new InventoryMethods() );
         /*

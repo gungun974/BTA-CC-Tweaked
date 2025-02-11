@@ -11,6 +11,7 @@ import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.network.client.ComputerDataClientMessage;
 import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
 import dan200.computercraft.shared.network.client.OpenComputerGuiClientMessage;
+import dan200.computercraft.shared.network.client.OpenGuiContainerMessage;
 import dan200.computercraft.shared.network.server.*;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -62,6 +63,7 @@ public final class NetworkHandler
         registerMainThread( 4, MouseEventServerMessage::new );
 
         // Client messages
+        registerMainThread( 8, OpenGuiContainerMessage::new );
         registerMainThread( 9, OpenComputerGuiClientMessage::new );
 //        registerMainThread( 10, ChatTableClientMessage::new );
         registerMainThread( 11, ComputerDataClientMessage::new );

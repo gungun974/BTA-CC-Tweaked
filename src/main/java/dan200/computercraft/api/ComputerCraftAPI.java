@@ -10,6 +10,7 @@ import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
 import dan200.computercraft.api.lua.GenericSource;
 import dan200.computercraft.api.lua.ILuaAPIFactory;
+import dan200.computercraft.api.media.IMediaProvider;
 import dan200.computercraft.api.network.IPacketNetwork;
 import dan200.computercraft.api.network.wired.IWiredElement;
 import dan200.computercraft.api.network.wired.IWiredNode;
@@ -194,16 +195,16 @@ public final class ComputerCraftAPI
         return getInstance().getBundledRedstoneOutput( world, pos, side );
     }
 
-//    /**
-//     * Registers a media provider to provide {@link IMedia} implementations for Items.
-//     *
-//     * @param provider The media provider to register.
-//     * @see IMediaProvider
-//     */
-//    public static void registerMediaProvider( @Nonnull IMediaProvider provider )
-//    {
-//        getInstance().registerMediaProvider( provider );
-//    }
+    /**
+     * Registers a media provider to provide {@link IMedia} implementations for Items.
+     *
+     * @param provider The media provider to register.
+     * @see IMediaProvider
+     */
+    public static void registerMediaProvider( @Nonnull IMediaProvider provider )
+    {
+        getInstance().registerMediaProvider( provider );
+    }
 //
 //    public static void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade )
 //    {
@@ -276,8 +277,8 @@ public final class ComputerCraftAPI
 
         int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side );
 
-//        void registerMediaProvider( @Nonnull IMediaProvider provider );
-//
+        void registerMediaProvider( @Nonnull IMediaProvider provider );
+
 //        void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade );
 //
         @Nonnull

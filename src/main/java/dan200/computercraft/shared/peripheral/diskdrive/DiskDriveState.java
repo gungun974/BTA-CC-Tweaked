@@ -5,11 +5,9 @@
  */
 package dan200.computercraft.shared.peripheral.diskdrive;
 
-import net.minecraft.util.StringIdentifiable;
-
 import javax.annotation.Nonnull;
 
-public enum DiskDriveState implements StringIdentifiable
+public enum DiskDriveState
 {
     EMPTY( "empty" ), FULL( "full" ), INVALID( "invalid" );
 
@@ -20,7 +18,6 @@ public enum DiskDriveState implements StringIdentifiable
         this.name = name;
     }
 
-    @Override
     @Nonnull
     public String asString()
     {

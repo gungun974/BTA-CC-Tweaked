@@ -13,7 +13,8 @@
     ],
     "server": [
         "MinecraftServerMixin",
-        "PacketHandlerServerAccessor"
+        "PacketHandlerServerAccessor",
+        "PlayerServerAccessor"
     ],
     "injectors": {
         "defaultRequire": 1

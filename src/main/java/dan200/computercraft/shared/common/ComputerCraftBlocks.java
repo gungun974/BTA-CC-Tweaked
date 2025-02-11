@@ -4,6 +4,8 @@ import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
 import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
 import dan200.computercraft.shared.computer.items.ItemBlockComputer;
+import dan200.computercraft.shared.peripheral.diskdrive.BlockDiskDrive;
+import dan200.computercraft.shared.peripheral.diskdrive.TileDiskDrive;
 import dan200.computercraft.shared.peripheral.modem.wired.BlockCable;
 import dan200.computercraft.shared.peripheral.modem.wired.BlockWiredModemFull;
 import dan200.computercraft.shared.peripheral.modem.wired.TileCable;
@@ -25,6 +27,7 @@ import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.util.collection.NamespaceID;
 import turniplabs.halplibe.helper.BlockBuilder;
 import turniplabs.halplibe.helper.EntityHelper;
+import turniplabs.halplibe.helper.ModelHelper;
 
 import static dan200.computercraft.ComputerCraft.MOD_ID;
 
@@ -36,6 +39,8 @@ public class ComputerCraftBlocks {
 
     public static final Block<?> WIRED_MODEM_FULL;
     public static final Block<?> CABLE;
+
+    public static final Block<?> DISK_DRIVE;
 
     public ComputerCraftBlocks() {
 
@@ -53,11 +58,10 @@ public class ComputerCraftBlocks {
         EntityHelper.createTileEntity(TileEntityComputer.class, NamespaceID.getPermanent(MOD_ID, "computer"));
 
         COMPUTER_NORMAL = new BlockBuilder(MOD_ID)
-            .setBlockModel(BlockModelComputer::new)
-            .setTextures("computercraft:block/computer_normal_side")
-            .setTopTexture("computercraft:block/computer_normal_top")
-            .setBottomTexture("computercraft:block/computer_normal_top")
-            .setNorthTexture("computercraft:block/computer_normal_front")
+//            .setTextures("computercraft:block/computer_normal_side")
+//            .setTopTexture("computercraft:block/computer_normal_top")
+//            .setBottomTexture("computercraft:block/computer_normal_top")
+//            .setNorthTexture("computercraft:block/computer_normal_front")
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
@@ -65,38 +69,42 @@ public class ComputerCraftBlocks {
             .setBlockItem(ItemBlockComputer::new)
             .build("computer_normal", 10000, b -> new BlockLogicComputer(b));
 
+        //ModelHelper.setBlockModel(COMPUTER_NORMAL, () -> new BlockModelComputer(COMPUTER_NORMAL));
+
         EntityHelper.createTileEntity(TileSpeaker.class, NamespaceID.getPermanent(MOD_ID, "speaker"));
 
         SPEAKER = new BlockBuilder(MOD_ID)
-            .setBlockModel(BlockModelRotatable::new)
-            .setTextures("computercraft:block/speaker_side")
-            .setTopTexture("computercraft:block/speaker_top")
-            .setBottomTexture("computercraft:block/speaker_top")
-            .setNorthTexture("computercraft:block/speaker_front")
+//            .setTextures("computercraft:block/speaker_side")
+//            .setTopTexture("computercraft:block/speaker_top")
+//            .setBottomTexture("computercraft:block/speaker_top")
+//            .setNorthTexture("computercraft:block/speaker_front")
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileSpeaker::new)
             .build("speaker", 10001, b -> new BlockSpeaker(b));
 
+        //ModelHelper.setBlockModel(SPEAKER, () -> new BlockModelRotatable(SPEAKER));
+
         EntityHelper.createTileEntity(TileWirelessModem.class, NamespaceID.getPermanent(MOD_ID, "wireless_modem_normal"));
 
         WIRELESS_MODEM_NORMAL = new BlockBuilder(MOD_ID)
-            .setBlockModel(BlockModelWirelessModem::new)
-            .setTopTexture("computercraft:block/wireless_modem_normal_face")
-            .setEastWestTextures("computercraft:block/wireless_modem_normal_face")
-            .setNorthSouthTextures("computercraft:block/wireless_modem_normal_face")
-            .setBottomTexture("computercraft:block/modem_back")
+//            .setTopTexture("computercraft:block/wireless_modem_normal_face")
+//            .setEastWestTextures("computercraft:block/wireless_modem_normal_face")
+//            .setNorthSouthTextures("computercraft:block/wireless_modem_normal_face")
+//            .setBottomTexture("computercraft:block/modem_back")
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileWirelessModem(false))
             .build("wireless_modem_normal", 10002, b -> new BlockWirelessModem(b, false));
 
+        //ModelHelper.setBlockModel(WIRELESS_MODEM_NORMAL, () -> new BlockModelWirelessModem(WIRELESS_MODEM_NORMAL));
+
         EntityHelper.createTileEntity(TileWiredModemFull.class, NamespaceID.getPermanent(MOD_ID, "wired_modem_full"));
 
         WIRED_MODEM_FULL = new BlockBuilder(MOD_ID)
-            .setTextures("computercraft:block/wired_modem_face")
+//            .setTextures("computercraft:block/wired_modem_face")
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
@@ -106,11 +114,26 @@ public class ComputerCraftBlocks {
         EntityHelper.createTileEntity(TileCable.class, NamespaceID.getPermanent(MOD_ID, "cable"));
 
         CABLE = new BlockBuilder(MOD_ID)
-            .setTextures("computercraft:block/cable_core")
+//            .setTextures("computercraft:block/cable_core")
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileCable::new)
             .build("cable", 10004, b -> new BlockCable(b, Material.stone));
+
+        EntityHelper.createTileEntity(TileDiskDrive.class, NamespaceID.getPermanent(MOD_ID, "disk_drive"));
+
+        DISK_DRIVE = new BlockBuilder(MOD_ID)
+//            .setTextures("computercraft:block/computer_normal_side")
+//            .setTopTexture("computercraft:block/computer_normal_top")
+//            .setBottomTexture("computercraft:block/computer_normal_top")
+//            .setNorthTexture("computercraft:block/computer_normal_front")
+            .setHardness(1.5f)
+            .setResistance(10f)
+            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTileEntity(TileDiskDrive::new)
+            .build("disk_drive", 10005, b -> new BlockDiskDrive(b));
+
+        //ModelHelper.setBlockModel(DISK_DRIVE, () -> new BlockModelComputer(DISK_DRIVE));
     }
 }

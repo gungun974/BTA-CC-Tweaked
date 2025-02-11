@@ -14,14 +14,21 @@ import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class InventoryUtil
 {
     private InventoryUtil() {}
     // Methods for comparing things:
 
-    public static boolean areItemsStackable(@Nonnull ItemStack a, @Nonnull ItemStack b )
+    public static boolean areItemsStackable(@Nullable ItemStack a, @Nullable ItemStack b)
     {
+        if (a == null) {
+            return false;
+        }
+        if (b == null) {
+            return false;
+        }
         return a == b || (a.getItem().equals(b.getItem()) && a.getData().equals(b.getData()));
     }
 

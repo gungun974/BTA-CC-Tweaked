@@ -13,7 +13,7 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.shared.MediaProviders;
 import dan200.computercraft.shared.media.items.ItemDisk;
 import dan200.computercraft.shared.util.StringUtil;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -80,8 +80,7 @@ public class DiskDrivePeripheral implements IPeripheral
     @LuaFunction
     public final boolean isDiskPresent()
     {
-        return !diskDrive.getDiskStack()
-            .isEmpty();
+        return diskDrive.getDiskStack() != null;
     }
 
     /**
