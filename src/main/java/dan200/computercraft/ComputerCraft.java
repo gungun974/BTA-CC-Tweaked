@@ -32,7 +32,11 @@ import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
 import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
 import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
 import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
-import dan200.computercraft.shared.network.NetworkHandler;
+import dan200.computercraft.shared.network.client.ComputerDataClientMessage;
+import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
+import dan200.computercraft.shared.network.client.OpenComputerGuiClientMessage;
+import dan200.computercraft.shared.network.client.OpenGuiContainerMessage;
+import dan200.computercraft.shared.network.server.*;
 import dan200.computercraft.shared.peripheral.generic.methods.InventoryMethods;
 import net.minecraft.client.render.block.model.BlockModelFurnace;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
@@ -48,6 +52,7 @@ import org.slf4j.LoggerFactory;
 import net.fabricmc.api.ModInitializer;
 import turniplabs.halplibe.helper.BlockBuilder;
 import turniplabs.halplibe.helper.EntityHelper;
+import turniplabs.halplibe.helper.network.NetworkHandler;
 
 public final class ComputerCraft implements ModInitializer
 {
@@ -119,7 +124,23 @@ public final class ComputerCraft implements ModInitializer
        new ComputerCraftBlocks();
         new ComputerCraftItems();
 
-        NetworkHandler.setup();
+
+        NetworkHandler.registerNetworkMessage(  ComputerActionServerMessage::new );
+        NetworkHandler.registerNetworkMessage(  QueueEventServerMessage::new );
+        NetworkHandler.registerNetworkMessage(  RequestComputerMessage::new );
+        NetworkHandler.registerNetworkMessage(  KeyEventServerMessage::new );
+        NetworkHandler.registerNetworkMessage(  MouseEventServerMessage::new );
+
+        // Client messages
+        NetworkHandler.registerNetworkMessage(  OpenGuiContainerMessage::new );
+        NetworkHandler.registerNetworkMessage(  OpenComputerGuiClientMessage::new );
+//        NetworkHandler.registerNetworkMessage(  ChatTableClientMessage::new );
+        NetworkHandler.registerNetworkMessage(  ComputerDataClientMessage::new );
+//        NetworkHandler.registerNetworkMessage( ComputerDeletedClientMessage::new );
+        NetworkHandler.registerNetworkMessage(  ComputerTerminalClientMessage::new );
+//        NetworkHandler.registerNetworkMessage(  PlayRecordClientMessage.class, PlayRecordClientMessage::new );
+//        NetworkHandler.registerNetworkMessage(  TerminalDimensionsClientMessage.class, TerminalDimensionsClientMessage::new );
+
 
         ComputerCraftAPI.registerPeripheralProvider( ( world, pos, side ) -> {
             TileEntity tile = world.getTileEntity( pos.x, pos.y, pos.z );

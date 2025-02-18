@@ -5,13 +5,12 @@
  */
 package dan200.computercraft.shared.network.client;
 
-import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.PacketByteBuf;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.shared.util.IoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
+import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -58,7 +57,7 @@ public class TerminalState
             width = terminal.getWidth();
             height = terminal.getHeight();
 
-            PacketByteBuf packet = new PacketByteBuf();
+            UniversalPacket packet = new UniversalPacket();
             terminal.write( packet );
 
             buffer = Unpooled.buffer();
@@ -91,7 +90,7 @@ public class TerminalState
         }
     }
 
-    public TerminalState( PacketByteBuf buf )
+    public TerminalState( UniversalPacket buf )
     {
         colour = buf.readBoolean();
         compress = buf.readBoolean();
@@ -111,7 +110,7 @@ public class TerminalState
         }
     }
 
-    private static ByteBuf readCompressed(PacketByteBuf buf, int length, boolean compress )
+    private static ByteBuf readCompressed(UniversalPacket buf, int length, boolean compress )
     {
         if( compress )
         {
@@ -149,7 +148,7 @@ public class TerminalState
         }
     }
 
-    public void write( PacketByteBuf buf )
+    public void write( UniversalPacket buf )
     {
         buf.writeBoolean( colour );
         buf.writeBoolean( compress );
@@ -225,7 +224,7 @@ public class TerminalState
         {
             throw new NullPointerException( "buffer" );
         }
-        PacketByteBuf packet = new PacketByteBuf();
+        UniversalPacket packet = new UniversalPacket();
 
         byte[] byteArray = new byte[buffer.readableBytes()];
         buffer.readBytes(byteArray);

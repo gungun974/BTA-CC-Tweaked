@@ -6,9 +6,9 @@
 package dan200.computercraft.core.terminal;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.PacketByteBuf;
 import dan200.computercraft.shared.util.Colour;
 import dan200.computercraft.shared.util.Palette;
+import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 
@@ -311,7 +311,7 @@ public class Terminal
     }
 
 
-    public synchronized void write( PacketByteBuf buffer )
+    public synchronized void write( UniversalPacket buffer )
     {
         buffer.writeInt( cursorX );
         buffer.writeInt( cursorY );
@@ -337,7 +337,7 @@ public class Terminal
         palette.write( buffer );
     }
 
-    public synchronized void read( PacketByteBuf buffer )
+    public synchronized void read( UniversalPacket buffer )
     {
         cursorX = buffer.readInt();
         cursorY = buffer.readInt();

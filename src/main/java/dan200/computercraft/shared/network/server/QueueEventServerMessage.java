@@ -6,11 +6,10 @@
 package dan200.computercraft.shared.network.server;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.PacketByteBuf;
 import dan200.computercraft.shared.computer.core.IContainerComputer;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.util.NBTUtil;
+import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,17 +37,17 @@ public class QueueEventServerMessage extends ComputerServerMessage
     }
 
     @Override
-    public void toBytes( @Nonnull PacketByteBuf buf )
+    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
     {
-        super.toBytes( buf );
+        super.encodeToUniversalPacket( buf );
         buf.writeString( event );
         buf.writeCompoundTag( args == null ? null : NBTUtil.encodeObjects( args ) );
     }
 
     @Override
-    public void fromBytes( @Nonnull PacketByteBuf buf )
+    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf )
     {
-        super.fromBytes( buf );
+        super.decodeFromUniversalPacket( buf );
         event = buf.readString();
 
         CompoundTag args = buf.readCompoundTag();

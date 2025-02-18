@@ -7,8 +7,8 @@ package dan200.computercraft.shared.computer.core;
 
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.shared.common.ClientTerminal;
-import dan200.computercraft.shared.network.NetworkHandler;
 import dan200.computercraft.shared.network.server.*;
+import turniplabs.halplibe.helper.network.NetworkHandler;
 
 public class ClientComputer extends ClientTerminal implements IComputer
 {

@@ -5,9 +5,9 @@
  */
 package dan200.computercraft.shared.network.server;
 
-import dan200.computercraft.PacketByteBuf;
 import dan200.computercraft.shared.computer.core.IContainerComputer;
 import dan200.computercraft.shared.computer.core.ServerComputer;
+import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 
@@ -26,16 +26,16 @@ public class ComputerActionServerMessage extends ComputerServerMessage
     }
 
     @Override
-    public void toBytes( @Nonnull PacketByteBuf buf )
+    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
     {
-        super.toBytes( buf );
+        super.encodeToUniversalPacket( buf );
         buf.writeEnumConstant( action );
     }
 
     @Override
-    public void fromBytes( @Nonnull PacketByteBuf buf )
+    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf )
     {
-        super.fromBytes( buf );
+        super.decodeFromUniversalPacket( buf );
         action = buf.readEnumConstant( Action.class );
     }
 

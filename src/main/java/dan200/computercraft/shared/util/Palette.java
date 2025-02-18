@@ -6,7 +6,7 @@
 package dan200.computercraft.shared.util;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.PacketByteBuf;
+import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import java.util.Arrays;
 
@@ -62,7 +62,7 @@ public class Palette
         return null;
     }
 
-    public void write( PacketByteBuf buffer )
+    public void write( UniversalPacket buffer )
     {
         for( double[] colour : colours )
         {
@@ -73,7 +73,7 @@ public class Palette
         }
     }
 
-    public void read( PacketByteBuf buffer )
+    public void read( UniversalPacket buffer )
     {
         for( double[] colour : colours )
         {

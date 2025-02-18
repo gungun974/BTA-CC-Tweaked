@@ -5,8 +5,7 @@
  */
 package dan200.computercraft.shared.network.client;
 
-import dan200.computercraft.PacketByteBuf;
-import net.minecraft.core.net.handler.PacketHandler;
+import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 
@@ -25,16 +24,16 @@ public class ComputerTerminalClientMessage extends ComputerClientMessage
     }
 
     @Override
-    public void toBytes( @Nonnull PacketByteBuf buf )
+    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
     {
-        super.toBytes( buf );
+        super.encodeToUniversalPacket( buf );
         state.write( buf );
     }
 
     @Override
-    public void fromBytes( @Nonnull PacketByteBuf buf )
+    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf )
     {
-        super.fromBytes( buf );
+        super.decodeFromUniversalPacket( buf );
         state = new TerminalState( buf );
     }
 

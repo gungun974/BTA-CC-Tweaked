@@ -1,10 +1,7 @@
 package dan200.computercraft.shared.network.client;
 
-import dan200.computercraft.PacketByteBuf;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.mixin.PlayerServerAccessor;
-import dan200.computercraft.shared.network.NetworkHandler;
-import dan200.computercraft.shared.network.NetworkMessage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -16,6 +13,9 @@ import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.player.inventory.container.ContainerInventory;
 import net.minecraft.core.player.inventory.menu.MenuAbstract;
 import net.minecraft.server.entity.player.PlayerServer;
+import turniplabs.halplibe.helper.network.NetworkHandler;
+import turniplabs.halplibe.helper.network.NetworkMessage;
+import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
@@ -71,7 +71,7 @@ public class OpenGuiContainerMessage<A extends TileEntity> implements NetworkMes
     }
 
     @Override
-    public void toBytes(@Nonnull PacketByteBuf buf) {
+    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
         buf.writeInt(windowId);
         buf.writeString(tileEntity.getClass().getName());
         buf.writeString(screen.getName());
@@ -79,7 +79,7 @@ public class OpenGuiContainerMessage<A extends TileEntity> implements NetworkMes
 
     @SuppressWarnings("unchecked")
     @Override
-    public void fromBytes(@Nonnull PacketByteBuf buf) {
+    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
         windowId = buf.readInt();
         try {
             Class<?> tileEntityKlass = Class.forName(buf.readString());

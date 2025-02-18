@@ -6,11 +6,9 @@
 package dan200.computercraft.shared.network.client;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.PacketByteBuf;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
-import net.minecraft.core.net.handler.PacketHandler;
+import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 
@@ -34,17 +32,17 @@ public class ComputerDataClientMessage extends ComputerClientMessage
     }
 
     @Override
-    public void toBytes( @Nonnull PacketByteBuf buf )
+    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
     {
-        super.toBytes( buf );
+        super.encodeToUniversalPacket( buf );
         buf.writeEnumConstant( state );
         buf.writeCompoundTag( userData );
     }
 
     @Override
-    public void fromBytes( @Nonnull PacketByteBuf buf )
+    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf )
     {
-        super.fromBytes( buf );
+        super.decodeFromUniversalPacket( buf );
         state = buf.readEnumConstant( ComputerState.class );
         userData = buf.readCompoundTag();
     }

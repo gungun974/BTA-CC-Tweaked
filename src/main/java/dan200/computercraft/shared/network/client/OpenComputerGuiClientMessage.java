@@ -1,12 +1,11 @@
 package dan200.computercraft.shared.network.client;
 
-import dan200.computercraft.PacketByteBuf;
 import dan200.computercraft.client.gui.GuiComputer;
-import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
-import dan200.computercraft.shared.network.NetworkMessage;
 import net.minecraft.client.Minecraft;
+import turniplabs.halplibe.helper.network.NetworkMessage;
+import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 
@@ -30,7 +29,7 @@ public class OpenComputerGuiClientMessage implements NetworkMessage
     }
 
     @Override
-    public void toBytes( @Nonnull PacketByteBuf buf )
+    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
     {
         buf.writeInt( instanceId );
         buf.writeEnumConstant(family);
@@ -39,7 +38,7 @@ public class OpenComputerGuiClientMessage implements NetworkMessage
     }
 
     @Override
-    public void fromBytes( @Nonnull PacketByteBuf buf ) {
+    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf ) {
         instanceId = buf.readInt();
         family = buf.readEnumConstant(ComputerFamily.class);
         width = buf.readInt();
@@ -51,6 +50,6 @@ public class OpenComputerGuiClientMessage implements NetworkMessage
     {
         ContainerComputerBase container = new ContainerComputerBase(instanceId, family);
 
-        Minecraft.getMinecraft().displayScreen(new GuiComputer(container, width, height));
+        Minecraft.getMinecraft().displayScreen(new GuiComputer<>(container, width, height));
     }
 }

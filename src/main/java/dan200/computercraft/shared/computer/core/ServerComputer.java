@@ -21,8 +21,6 @@ import dan200.computercraft.core.computer.IComputerEnvironment;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.IComputerPlayer;
 import dan200.computercraft.shared.common.ServerTerminal;
-import dan200.computercraft.shared.network.NetworkHandler;
-import dan200.computercraft.shared.network.NetworkMessage;
 import dan200.computercraft.shared.network.client.ComputerDataClientMessage;
 import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
 import dan200.computercraft.shared.network.client.OpenComputerGuiClientMessage;
@@ -31,6 +29,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.world.World;
 import net.minecraft.server.MinecraftServer;
+import turniplabs.halplibe.helper.network.NetworkHandler;
+import turniplabs.halplibe.helper.network.NetworkMessage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

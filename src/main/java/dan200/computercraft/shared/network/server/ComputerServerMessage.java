@@ -6,10 +6,10 @@
 package dan200.computercraft.shared.network.server;
 
 import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.PacketByteBuf;
 import dan200.computercraft.shared.computer.core.IContainerComputer;
 import dan200.computercraft.shared.computer.core.ServerComputer;
-import dan200.computercraft.shared.network.NetworkMessage;
+import turniplabs.halplibe.helper.network.NetworkMessage;
+import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 
@@ -32,13 +32,13 @@ public abstract class ComputerServerMessage implements NetworkMessage
     }
 
     @Override
-    public void toBytes( @Nonnull PacketByteBuf buf )
+    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
     {
         buf.writeInt( instanceId );
     }
 
     @Override
-    public void fromBytes( @Nonnull PacketByteBuf buf )
+    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf )
     {
         instanceId = buf.readInt();
     }

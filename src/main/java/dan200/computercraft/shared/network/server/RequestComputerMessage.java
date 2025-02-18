@@ -6,13 +6,9 @@
 package dan200.computercraft.shared.network.server;
 
 import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.PacketByteBuf;
-import dan200.computercraft.fabric.mixin.PacketHandlerServerAccessor;
 import dan200.computercraft.shared.computer.core.ServerComputer;
-import dan200.computercraft.shared.network.NetworkMessage;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.core.net.handler.PacketHandler;
+import turniplabs.halplibe.helper.network.NetworkMessage;
+import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 
@@ -30,13 +26,13 @@ public class RequestComputerMessage implements NetworkMessage
     }
 
     @Override
-    public void toBytes( @Nonnull PacketByteBuf buf )
+    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
     {
         buf.writeInt( instance );
     }
 
     @Override
-    public void fromBytes( @Nonnull PacketByteBuf buf )
+    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf )
     {
         instance = buf.readInt();
     }

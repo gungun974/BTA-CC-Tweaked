@@ -6,10 +6,11 @@
 package dan200.computercraft.shared.network.client;
 
 import dan200.computercraft.BlockPos;
-import dan200.computercraft.PacketByteBuf;
-import dan200.computercraft.shared.network.NetworkMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.sound.SoundEvent;
+import org.jetbrains.annotations.NotNull;
+import turniplabs.halplibe.helper.network.NetworkMessage;
+import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 
@@ -22,9 +23,9 @@ import javax.annotation.Nonnull;
  */
 public class PlayRecordClientMessage implements NetworkMessage
 {
-    private final BlockPos pos;
-    private final String name;
-    private final SoundEvent soundEvent;
+    private BlockPos pos;
+    private String name;
+    private SoundEvent soundEvent;
 
     public PlayRecordClientMessage( BlockPos pos, SoundEvent event, String name )
     {
@@ -40,26 +41,8 @@ public class PlayRecordClientMessage implements NetworkMessage
         soundEvent = null;
     }
 
-    public PlayRecordClientMessage( PacketByteBuf buf )
-    {
-        final int x = buf.readInt();
-        final int y = buf.readInt();
-        final int z = buf.readInt();
-        pos = new BlockPos(x, y, z);
-        if( buf.readBoolean() )
-        {
-            name = buf.readString();
-            soundEvent = null;
-        }
-        else
-        {
-            name = null;
-            soundEvent = null;
-        }
-    }
-
     @Override
-    public void toBytes( @Nonnull PacketByteBuf buf )
+    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
     {
         buf.writeInt( pos.x );
         buf.writeInt( pos.y );
@@ -73,6 +56,24 @@ public class PlayRecordClientMessage implements NetworkMessage
             buf.writeBoolean( true );
             buf.writeString( name );
             buf.writeString( soundEvent.getEventID() );
+        }
+    }
+
+    @Override
+    public void decodeFromUniversalPacket(@NotNull UniversalPacket buf) {
+        final int x = buf.readInt();
+        final int y = buf.readInt();
+        final int z = buf.readInt();
+        pos = new BlockPos(x, y, z);
+        if( buf.readBoolean() )
+        {
+            name = buf.readString();
+            soundEvent = null;
+        }
+        else
+        {
+            name = null;
+            soundEvent = null;
         }
     }
 
