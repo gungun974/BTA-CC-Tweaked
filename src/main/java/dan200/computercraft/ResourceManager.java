@@ -19,11 +19,7 @@ public class ResourceManager {
 
         try {
             URI uri;
-            if (Helper.isServerEnvironment()){
-                uri = MinecraftServer.getInstance().getClass().getResource(path).toURI();
-            } else {
-                uri = Minecraft.getMinecraft().getClass().getResource(path).toURI();
-            }
+            uri = ComputerCraft.class.getResource(path).toURI();
 
             Path dirPath;
 
@@ -79,10 +75,7 @@ public class ResourceManager {
         }
 
         public InputStream getInputStream() {
-            if (Helper.isServerEnvironment()){
-                return MinecraftServer.getInstance().getClass().getResourceAsStream( "/assets/" + identifier.namespace + "/" + identifier.subPath);
-            }
-            return Minecraft.getMinecraft().getClass().getResourceAsStream( "/assets/" + identifier.namespace + "/" + identifier.subPath);
+                return ComputerCraft.class.getResourceAsStream( "/assets/" + identifier.namespace + "/" + identifier.subPath);
         }
     }
 }
