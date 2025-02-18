@@ -38,6 +38,9 @@
         "client": [
         ],
         "modmenu": [
+        ],
+        "initModels": [
+            "dan200.computercraft.shared.common.ComputerCraftModels"
         ]
     },
     "mixins": [

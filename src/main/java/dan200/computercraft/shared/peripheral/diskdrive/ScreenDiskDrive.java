@@ -19,14 +19,14 @@ public class ScreenDiskDrive extends ScreenContainerAbstract {
 
     @Override
     protected void drawGuiContainerForegroundLayer() {
-        this.font.drawString(I18n.getInstance().translateKey("gui.dispenser.label.dispenser"), 60, 6, 4210752);
+        this.font.drawString(I18n.getInstance().translateKey("gui.dispenser.label.dispenser"), 8, 6, 4210752);
         this.font.drawString(I18n.getInstance().translateKey("gui.dispenser.label.inventory"), 8, this.ySize - 96 + 2, 4210752);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float f) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.textureManager.loadTexture("/assets/minecraft/textures/gui/container/dispenser.png").bind();
+        this.mc.textureManager.loadTexture("/assets/computercraft/textures/gui/disk_drive.png").bind();
         int j = (this.width - this.xSize) / 2;
         int k = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(j, k, 0, 0, this.xSize, this.ySize);

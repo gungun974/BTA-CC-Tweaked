@@ -123,15 +123,13 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
         super.writeToNBT(nbt);
     }
 
-//    @Override
-//    public void markDirty()
-//    {
-//        if( !world.isClient )
-//        {
-//            updateBlockState();
-//        }
-//        super.markDirty();
-//    }
+    public void markDirty()
+    {
+        if( !Helper.isClientWorld() )
+        {
+            updateBlockState();
+        }
+    }
 
     @Override
     public void tick()
@@ -209,7 +207,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
         {
             diskStack = stack;
             diskMount = null;
-            //markDirty();
+            markDirty();
             return;
         }
 
@@ -243,7 +241,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
             // Swap disk over
             diskStack = stack;
             diskMount = null;
-            //markDirty();
+            markDirty();
 
             // Mount new disk
             if( diskStack != null )
