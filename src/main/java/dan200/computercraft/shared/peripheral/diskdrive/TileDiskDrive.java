@@ -83,8 +83,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
             // Open the GUI
             if( !Helper.isClientWorld() )
             {
-                //player.openHandledScreen( this );
-                NetworkHandler.sendToPlayer(player, new OpenGuiContainerMessage(player, 0, this));
+                OpenGuiContainerMessage.SendToPlayer(player, this, ScreenDiskDrive.class, MenuDiskDrive::new);
             }
             return true;
         }
@@ -271,7 +270,8 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
 
     @Override
     public boolean stillValid(Player player) {
-        return isUsable( player, false );
+        return true;
+        //return isUsable( player, false );
     }
 
     @Override

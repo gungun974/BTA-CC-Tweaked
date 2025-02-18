@@ -1,90 +1,130 @@
 package dan200.computercraft.shared.network.client;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.PacketByteBuf;
-import dan200.computercraft.client.gui.GuiComputer;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.mixin.PlayerServerAccessor;
-import dan200.computercraft.shared.computer.core.ComputerFamily;
-import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
+import dan200.computercraft.shared.network.NetworkHandler;
 import dan200.computercraft.shared.network.NetworkMessage;
-import dan200.computercraft.shared.peripheral.diskdrive.MenuDiskDrive;
-import dan200.computercraft.shared.peripheral.diskdrive.ScreenDiskDrive;
-import dan200.computercraft.shared.peripheral.diskdrive.TileDiskDrive;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.block.BlockLogicFurnace;
-import net.minecraft.core.block.entity.TileEntityTrommel;
+import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.container.ScreenContainerAbstract;
+import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
-import net.minecraft.core.player.inventory.menu.MenuTrommel;
+import net.minecraft.core.player.inventory.container.Container;
+import net.minecraft.core.player.inventory.container.ContainerInventory;
+import net.minecraft.core.player.inventory.menu.MenuAbstract;
 import net.minecraft.server.entity.player.PlayerServer;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.InvocationTargetException;
 
-public class OpenGuiContainerMessage implements NetworkMessage
-{
+public class OpenGuiContainerMessage<A extends TileEntity> implements NetworkMessage {
     private int windowId = 0;
-    private int inventoryType;
 
-    private TileDiskDrive menu;
+    private A tileEntity;
+    private Class<?> screen;
+    private MenuAbstractSupplier<MenuAbstract, A> menu;
 
-    public OpenGuiContainerMessage(Player player, int inventoryType, TileDiskDrive menu)
-    {
+    @FunctionalInterface
+    public interface MenuAbstractSupplier<T extends MenuAbstract, B extends TileEntity> {
+        T get(Container inventory, B tileEntity);
+    }
+
+    public OpenGuiContainerMessage(Player player, A tileEntity, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, A> menu) {
+        this.tileEntity = tileEntity;
+        this.screen = screen;
         this.menu = menu;
         if (Helper.isServerEnvironment()) {
             serverSetWindow(player);
         }
+    }
 
-       this.inventoryType = inventoryType;
+    public static <C extends TileEntity> void SendToPlayer(Player player, C tileEntity, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, C> menu) {
+        OpenGuiContainerMessage<C> message = new OpenGuiContainerMessage<>(player, tileEntity, screen, menu);
+        NetworkHandler.sendToPlayer(player, message);
+        if (Helper.isServerEnvironment()) {
+            message.serverSetWindow2(player);
+        }
     }
 
     @Environment(EnvType.SERVER)
     private void serverSetWindow(Player player) {
         if (player instanceof PlayerServer) {
-            ((PlayerServerAccessor)player).invokeGetNextWindowId();
-            this.windowId = ((PlayerServerAccessor)player).getCurrentWindowId();
+            ((PlayerServerAccessor) player).invokeGetNextWindowId();
+            this.windowId = ((PlayerServerAccessor) player).getCurrentWindowId();
+        }
+    }
 
+    @Environment(EnvType.SERVER)
+    private void serverSetWindow2(Player player) {
+        if (player instanceof PlayerServer) {
             player.craftingInventory.onCraftGuiClosed(player);
-            player.craftingInventory = new MenuDiskDrive(player.inventory, menu);
+            player.craftingInventory = menu.get(player.inventory, tileEntity);
             player.craftingInventory.containerId = this.windowId;
             player.craftingInventory.addSlotListener((PlayerServer) player);
         }
     }
 
-    public OpenGuiContainerMessage()
-    {
+    public OpenGuiContainerMessage() {
     }
 
     @Override
-    public void toBytes( @Nonnull PacketByteBuf buf )
-    {
-        buf.writeInt( windowId );
-        buf.writeInt(inventoryType);
+    public void toBytes(@Nonnull PacketByteBuf buf) {
+        buf.writeInt(windowId);
+        buf.writeString(tileEntity.getClass().getName());
+        buf.writeString(screen.getName());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void fromBytes( @Nonnull PacketByteBuf buf ) {
+    public void fromBytes(@Nonnull PacketByteBuf buf) {
         windowId = buf.readInt();
-        inventoryType = buf.readInt();
+        try {
+            Class<?> tileEntityKlass = Class.forName(buf.readString());
+
+            tileEntity = (A) tileEntityKlass.getDeclaredConstructor().newInstance();
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
+                 InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            screen = Class.forName(buf.readString());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Screen getScreenInstance(ContainerInventory inventory) {
+        try {
+            return (Screen) screen.getConstructor(ContainerInventory.class, tileEntity.getClass()).newInstance(inventory, tileEntity);
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                 InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void handle(NetworkContext context)
-    {
-        if (!Helper.isServerEnvironment()) {
+    public void handle(NetworkContext context) {
+        if (Helper.isSinglePlayer()) {
+            doSinglePlayer();
+            return;
+        }
+        if (Helper.isClientWorld()) {
             doClient();
         }
     }
 
     @Environment(EnvType.CLIENT)
     private void doClient() {
-        ComputerCraft.log.info("Packet open {}, {}", windowId, inventoryType);
-        //TileDiskDrive tileDiskDrive = (TileDiskDrive) Minecraft.getMinecraft().currentWorld.getTileEntity(x, y ,z);
-        TileDiskDrive tileDiskDrive = new TileDiskDrive();
-        Minecraft.getMinecraft().displayScreen(new ScreenDiskDrive(Minecraft.getMinecraft().thePlayer.inventory, tileDiskDrive));
-        if (Helper.isClientWorld()) {
-            Minecraft.getMinecraft().thePlayer.craftingInventory.containerId = windowId;
-        }
+        Minecraft.getMinecraft().displayScreen(getScreenInstance(Minecraft.getMinecraft().thePlayer.inventory));
+        Minecraft.getMinecraft().thePlayer.craftingInventory.containerId = windowId;
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void doSinglePlayer() {
+        Minecraft.getMinecraft().displayScreen(getScreenInstance(Minecraft.getMinecraft().thePlayer.inventory));
     }
 }

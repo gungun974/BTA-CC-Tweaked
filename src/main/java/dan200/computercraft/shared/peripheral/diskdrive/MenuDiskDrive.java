@@ -1,8 +1,10 @@
 package dan200.computercraft.shared.peripheral.diskdrive;
 
 import net.minecraft.core.InventoryAction;
+import net.minecraft.core.block.entity.TileEntityDispenser;
 import net.minecraft.core.crafting.ContainerListener;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.player.inventory.container.ContainerInventory;
 import net.minecraft.core.player.inventory.menu.MenuAbstract;
 import net.minecraft.core.player.inventory.menu.MenuContainer;
@@ -11,53 +13,63 @@ import net.minecraft.core.player.inventory.slot.Slot;
 import java.util.List;
 
 public class MenuDiskDrive extends MenuAbstract {
-	public TileDiskDrive furnace;
+    public TileDiskDrive trap;
+    private int dispenserSlotsStart;
+    private int inventorySlotsStart;
+    private int hotbarSlotsStart;
 
-	public MenuDiskDrive(ContainerInventory inventory, TileDiskDrive tileEntity) {
-		this.furnace = tileEntity;
-		this.addSlot(new Slot(tileEntity, 0, 56, 17));
+    public MenuDiskDrive(Container container, TileDiskDrive trap) {
+        this.trap = trap;
 
-		for (int i = 0; i < 3; i++) {
-			for (int k = 0; k < 9; k++) {
-				this.addSlot(new Slot(inventory, k + i * 9 + 9, 8 + k * 18, 84 + i * 18));
-			}
-		}
+        for (int i = 0; i < 1; i++) {
+            for (int l = 0; l < 1; l++) {
+                this.addSlot(new Slot(trap, l + i * 3, 62 + l * 18, 17 + i * 18));
+            }
+        }
 
-		for (int j = 0; j < 9; j++) {
-			this.addSlot(new Slot(inventory, j, 8 + j * 18, 142));
-		}
-	}
+        for (int j = 0; j < 3; j++) {
+            for (int i1 = 0; i1 < 9; i1++) {
+                this.addSlot(new Slot(container, i1 + j * 9 + 9, 8 + i1 * 18, 84 + j * 18));
+            }
+        }
+
+        for (int k = 0; k < 9; k++) {
+            this.addSlot(new Slot(container, k, 8 + k * 18, 142));
+        }
+
+        this.dispenserSlotsStart = 0;
+        this.inventorySlotsStart = 9;
+        this.hotbarSlotsStart = 36;
+    }
 
     @Override
     public boolean stillValid(Player entityplayer) {
-        return this.furnace.stillValid(entityplayer);
+        return this.trap.stillValid(entityplayer);
     }
 
     @Override
     public List<Integer> getMoveSlots(InventoryAction action, Slot slot, int target, Player player) {
-        int chestSize = 1;
-        if (slot.index >= 0 && slot.index < chestSize) {
-            return this.getSlots(0, chestSize, false);
+        if (slot.index >= this.dispenserSlotsStart && slot.index < this.inventorySlotsStart) {
+            return this.getSlots(this.dispenserSlotsStart, 1, false);
         } else {
             if (action == InventoryAction.MOVE_ALL) {
-                if (slot.index >= chestSize && slot.index < chestSize + 27) {
-                    return this.getSlots(chestSize, 27, false);
+                if (slot.index >= this.inventorySlotsStart && slot.index < this.hotbarSlotsStart) {
+                    return this.getSlots(this.inventorySlotsStart, 27, false);
                 }
 
-                if (slot.index >= chestSize + 27 && slot.index < chestSize + 36) {
-                    return this.getSlots(chestSize + 27, 9, false);
+                if (slot.index >= this.hotbarSlotsStart) {
+                    return this.getSlots(this.hotbarSlotsStart, 9, false);
                 }
-            } else if (slot.index >= chestSize && slot.index < chestSize + 36) {
-                return this.getSlots(chestSize, 36, false);
             }
 
-            return null;
+            return action == InventoryAction.MOVE_SIMILAR && slot.index >= this.inventorySlotsStart ? this.getSlots(this.inventorySlotsStart, 36, false) : null;
         }
     }
 
     @Override
     public List<Integer> getTargetSlots(InventoryAction action, Slot slot, int target, Player player) {
-        int chestSize = 1;
-        return slot.index < chestSize ? this.getSlots(chestSize, 36, true) : this.getSlots(0, chestSize, false);
+        return slot.index >= this.dispenserSlotsStart && slot.index < this.inventorySlotsStart
+            ? this.getSlots(this.inventorySlotsStart, 36, false)
+            : this.getSlots(this.dispenserSlotsStart, 1, false);
     }
 }

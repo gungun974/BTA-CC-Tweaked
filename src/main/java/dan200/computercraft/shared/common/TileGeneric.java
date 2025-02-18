@@ -48,7 +48,7 @@ public abstract class TileGeneric extends TileEntity// implements BlockEntityCli
 
     public boolean isUsable( Player player, boolean ignoreRange )
     {
-        if( player == null || !player.isAlive() || worldObj.getTileEntity( x, y ,z ) != this )
+        if( player == null || !player.isAlive() || worldObj == null || worldObj.getTileEntity( x, y ,z ) != this )
         {
             return false;
         }
