@@ -34,6 +34,8 @@ import net.minecraft.core.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class TileEntityComputer extends TileComputerBase  {
+    private ComputerProxy proxy;
+
     public TileEntityComputer() {
         super(ComputerFamily.NORMAL);
     }
@@ -101,22 +103,22 @@ public class TileEntityComputer extends TileComputerBase  {
         return computer;
     }
 
-//    @Override
-//    public ComputerProxy createProxy()
-//    {
-//        if( proxy == null )
-//        {
-//            proxy = new ComputerProxy( () -> this )
-//            {
-//                @Override
-//                protected TileComputerBase getTile()
-//                {
-//                    return TileComputer.this;
-//                }
-//            };
-//        }
-//        return proxy;
-//    }
+    @Override
+    public ComputerProxy createProxy()
+    {
+        if( proxy == null )
+        {
+            proxy = new ComputerProxy( () -> this )
+            {
+                @Override
+                protected TileComputerBase getTile()
+                {
+                    return TileEntityComputer.this;
+                }
+            };
+        }
+        return proxy;
+    }
 
 //    @Nullable
 //    @Override

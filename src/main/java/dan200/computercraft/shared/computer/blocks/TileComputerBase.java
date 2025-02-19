@@ -11,6 +11,7 @@ import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.Peripherals;
 import dan200.computercraft.PortableTickScheduler;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.IComputerPlayer;
@@ -31,7 +32,7 @@ import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public abstract class TileComputerBase extends TileGeneric implements IComputerTile//, IPeripheralTile
+public abstract class TileComputerBase extends TileGeneric implements IComputerTile, IPeripheralTile
 {
     private static final String NBT_ID = "ComputerId";
     private static final String NBT_LABEL = "Label";
@@ -44,7 +45,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     private boolean on = false;
     private boolean fresh = false;
 
-    private PortableTickScheduler portableTickScheduler = new PortableTickScheduler();
+    protected PortableTickScheduler portableTickScheduler = new PortableTickScheduler();
 
     public TileComputerBase( ComputerFamily family )
     {
@@ -522,7 +523,6 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
      */
 
-    /*
     @Nonnull
     @Override
     public IPeripheral getPeripheral( Direction side )
@@ -531,7 +531,6 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     public abstract ComputerProxy createProxy();
-     */
 
     /*
     @Nonnull

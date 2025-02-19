@@ -69,14 +69,14 @@ public final class DirectionUtil
         }
     }
 
-    private static Direction rotateYClockwise(Direction direction) {
+    public static Direction rotateYClockwise(Direction direction) {
         if (direction == Direction.UP || direction == Direction.DOWN || direction == Direction.NONE) {
             return direction;
         }
         return Direction.horizontalDirections[(direction.getHorizontalIndex() + 1) % 4];
     }
 
-    private static Direction rotateYCounterclockwise(Direction direction) {
+    public static Direction rotateYCounterclockwise(Direction direction) {
         if (direction == Direction.UP || direction == Direction.DOWN || direction == Direction.NONE) {
             return direction;
         }

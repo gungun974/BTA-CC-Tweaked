@@ -5,8 +5,11 @@
  */
 package dan200.computercraft.shared.util;
 
+import com.sun.tools.javac.util.Pair;
 import dan200.computercraft.BlockPos;
+import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.entity.Entity;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Direction;
@@ -34,49 +37,48 @@ public final class InventoryUtil
 
     // Methods for finding inventories:
 
-//    public static Container getInventory(World world, BlockPos pos, Direction side )
-//    {
-//        // Look for tile with inventory
-//        int y = (int) pos.getY();
-//        if( y >= 0 && y < World.HEIGHT_BLOCKS )
-//        {
-//            // Check if block is InventoryProvider
-//            BlockState blockState = world.getBlockState( pos );
-//            Block block = blockState.getBlock();
+    public static Container getInventory(World world, BlockPos pos, Direction side )
+    {
+        // Look for tile with inventory
+        int y = (int) pos.getY();
+        if( y >= 0 && y < World.HEIGHT_BLOCKS )
+        {
+            // Check if block is InventoryProvider
 //            if( block instanceof InventoryProvider )
 //            {
 //                return ((InventoryProvider) block).getInventory( blockState, world, pos );
 //            }
-//            // Check if block is BlockEntity w/ Inventory
+            // Check if block is BlockEntity w/ Inventory
 //            if( block.hasBlockEntity() )
 //            {
-//                BlockEntity tileEntity = world.getBlockEntity( pos );
-//
-//                Inventory inventory = getInventory( tileEntity );
-//                if( inventory != null )
-//                {
-//                    return inventory;
-//                }
+                TileEntity tileEntity = world.getTileEntity( pos.x, pos.y, pos.z );
+
+                Container inventory = getInventory( tileEntity );
+                if( inventory != null )
+                {
+                    return inventory;
+                }
 //            }
-//        }
-//
+        }
+
+        //TODO: RAYCAST
 //        // Look for entity with inventory
 //        Vec3 vecStart = Vec3.getPermanentVec3( pos.getX() + 0.5 + 0.6 * side.getOffsetX(),
 //            pos.getY() + 0.5 + 0.6 * side.getOffsetY(),
 //            pos.getZ() + 0.5 + 0.6 * side.getOffsetZ() );
 //        Direction dir = side.getOpposite();
 //        Vec3 vecDir = Vec3.getPermanentVec3( dir.getOffsetX(), dir.getOffsetY(), dir.getOffsetZ() );
-//        Pair<Entity, Vec3d> hit = WorldUtil.rayTraceEntities( world, vecStart, vecDir, 1.1 );
+//        Pair<Entity, Vec3> hit = WorldUtil.rayTraceEntities( world, vecStart, vecDir, 1.1 );
 //        if( hit != null )
 //        {
 //            Entity entity = hit.getKey();
-//            if( entity instanceof Inventory )
+//            if( entity instanceof Container )
 //            {
-//                return (Inventory) entity;
+//                return (Container) entity;
 //            }
 //        }
-//        return null;
-//    }
+        return null;
+    }
 
     public static Container getInventory( TileEntity tileEntity )
     {
@@ -98,7 +100,6 @@ public final class InventoryUtil
         return null;
     }
 
-    @Nonnull
     public static ItemStack storeItems( @Nonnull ItemStack itemstack, ItemStorage inventory, int begin )
     {
         return storeItems( itemstack, inventory, 0, inventory.size(), begin );

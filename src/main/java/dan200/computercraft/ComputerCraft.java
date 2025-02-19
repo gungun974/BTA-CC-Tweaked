@@ -9,6 +9,7 @@ package dan200.computercraft;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
+import dan200.computercraft.api.turtle.event.TurtleAction;
 import dan200.computercraft.core.apis.http.options.Action;
 import dan200.computercraft.core.apis.http.options.AddressRule;
 //import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
@@ -96,7 +97,7 @@ public final class ComputerCraft implements ModInitializer
     public static int advancedTurtleFuelLimit = 100000;
     public static boolean turtlesObeyBlockProtection = true;
     public static boolean turtlesCanPush = true;
-    //public static EnumSet<TurtleAction> turtleDisabledActions = EnumSet.noneOf( TurtleAction.class );
+    public static EnumSet<TurtleAction> turtleDisabledActions = EnumSet.noneOf( TurtleAction.class );
 
     public static int computerTermWidth = 51;
     public static int computerTermHeight = 19;

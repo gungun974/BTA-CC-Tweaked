@@ -1,0 +1,80 @@
+/*
+ * This file is part of ComputerCraft - http://www.computercraft.info
+ * Copyright Daniel Ratcliffe, 2011-2022. Do not distribute without permission.
+ * Send enquiries to dratcliffe@gmail.com
+ */
+package dan200.computercraft.shared.turtle.core;
+
+import dan200.computercraft.BlockPos;
+import dan200.computercraft.api.turtle.ITurtleAccess;
+import dan200.computercraft.api.turtle.ITurtleCommand;
+import dan200.computercraft.api.turtle.TurtleCommandResult;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.world.World;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+
+public class TurtleCompareCommand implements ITurtleCommand
+{
+    private final InteractDirection direction;
+
+    public TurtleCompareCommand( InteractDirection direction )
+    {
+        this.direction = direction;
+    }
+
+    @Nonnull
+    @Override
+    public TurtleCommandResult execute( @Nonnull ITurtleAccess turtle )
+    {
+        // Get world direction from direction
+        Direction direction = this.direction.toWorldDir( turtle );
+
+        // Get currently selected stack
+        ItemStack selectedStack = turtle.getInventory()
+            .getItem( turtle.getSelectedSlot() );
+
+        // Get stack representing thing in front
+        World world = turtle.getWorld();
+        BlockPos oldPosition = turtle.getPosition();
+        BlockPos newPosition = oldPosition.offset( direction );
+
+        ItemStack lookAtStack = null;
+        if( !world.isAir( newPosition ) )
+        {
+            BlockState lookAtState = world.getBlockState( newPosition );
+            Block lookAtBlock = lookAtState.getBlock();
+            if( !lookAtState.isAir() )
+            {
+                // See if the block drops anything with the same ID as itself
+                // (try 5 times to try and beat random number generators)
+                for( int i = 0; i < 5 && lookAtStack.isEmpty(); i++ )
+                {
+                    List<ItemStack> drops = Block.getDroppedStacks( lookAtState, (ServerWorld) world, newPosition, world.getBlockEntity( newPosition ) );
+                    if( !drops.isEmpty() )
+                    {
+                        for( ItemStack drop : drops )
+                        {
+                            if( drop.getItem() == lookAtBlock.asItem() )
+                            {
+                                lookAtStack = drop;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Last resort: roll our own (which will probably be wrong)
+                if( lookAtStack.isEmpty() )
+                {
+                    lookAtStack = new ItemStack( lookAtBlock );
+                }
+            }
+        }
+
+        // Compare them
+        return selectedStack.getItem() == lookAtStack.getItem() ? TurtleCommandResult.success() : TurtleCommandResult.failure();
+    }
+}

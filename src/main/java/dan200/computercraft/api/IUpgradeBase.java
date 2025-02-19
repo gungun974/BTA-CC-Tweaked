@@ -50,7 +50,6 @@ public interface IUpgradeBase
      *
      * @return The item stack to craft with, or {@link ItemStack#EMPTY} if it cannot be crafted.
      */
-    @Nonnull
     ItemStack getCraftingItem();
 
     /**
