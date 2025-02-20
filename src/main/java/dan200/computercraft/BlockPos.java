@@ -28,4 +28,8 @@ public class BlockPos {
     public BlockPos offset(Direction dir) {
         return new BlockPos(x + dir.getOffsetX(), y + dir.getOffsetY(), z + dir.getOffsetZ());
     }
+
+    public BlockPos down() {
+        return new BlockPos(x, y - 1, z);
+    }
 }

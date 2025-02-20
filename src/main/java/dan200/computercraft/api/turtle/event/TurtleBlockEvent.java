@@ -70,11 +70,11 @@ public abstract class TurtleBlockEvent extends TurtlePlayerEvent
      */
     public static class Dig extends TurtleBlockEvent
     {
-        private final BlockState block;
+        private final int block;
         private final ITurtleUpgrade upgrade;
         private final TurtleSide side;
 
-        public Dig( @Nonnull ITurtleAccess turtle, @Nonnull FakePlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState block,
+        public Dig( @Nonnull ITurtleAccess turtle, @Nonnull FakePlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull int block,
                     @Nonnull ITurtleUpgrade upgrade, @Nonnull TurtleSide side )
         {
             super( turtle, TurtleAction.DIG, player, world, pos );
@@ -93,7 +93,7 @@ public abstract class TurtleBlockEvent extends TurtlePlayerEvent
          * @return The block which is going to be broken.
          */
         @Nonnull
-        public BlockState getBlock()
+        public int getBlock()
         {
             return block;
         }
@@ -172,10 +172,10 @@ public abstract class TurtleBlockEvent extends TurtlePlayerEvent
      */
     public static class Inspect extends TurtleBlockEvent
     {
-        private final BlockState state;
+        private final int state;
         private final Map<String, Object> data;
 
-        public Inspect( @Nonnull ITurtleAccess turtle, @Nonnull FakePlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState state,
+        public Inspect( @Nonnull ITurtleAccess turtle, @Nonnull FakePlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull int state,
                         @Nonnull Map<String, Object> data )
         {
             super( turtle, TurtleAction.INSPECT, player, world, pos );
@@ -192,7 +192,7 @@ public abstract class TurtleBlockEvent extends TurtlePlayerEvent
          * @return The inspected block state.
          */
         @Nonnull
-        public BlockState getState()
+        public int getState()
         {
             return state;
         }

@@ -46,18 +46,18 @@ public class TurtleAPI implements ILuaAPI
         return new String[] { "turtle" };
     }
 
-    /**
-     * Move the turtle forward one block.
-     *
-     * @return The turtle command result.
-     * @cc.treturn boolean Whether the turtle could successfully move.
-     * @cc.treturn string|nil The reason the turtle could not move.
-     */
-    @LuaFunction
-    public final MethodResult forward()
-    {
-        return trackCommand( new TurtleMoveCommand( MoveDirection.FORWARD ) );
-    }
+//    /**
+//     * Move the turtle forward one block.
+//     *
+//     * @return The turtle command result.
+//     * @cc.treturn boolean Whether the turtle could successfully move.
+//     * @cc.treturn string|nil The reason the turtle could not move.
+//     */
+//    @LuaFunction
+//    public final MethodResult forward()
+//    {
+//        return trackCommand( new TurtleMoveCommand( MoveDirection.FORWARD ) );
+//    }
 
     private MethodResult trackCommand( ITurtleCommand command )
     {
@@ -65,44 +65,44 @@ public class TurtleAPI implements ILuaAPI
         return turtle.executeCommand( command );
     }
 
-    /**
-     * Move the turtle backwards one block.
-     *
-     * @return The turtle command result.
-     * @cc.treturn boolean Whether the turtle could successfully move.
-     * @cc.treturn string|nil The reason the turtle could not move.
-     */
-    @LuaFunction
-    public final MethodResult back()
-    {
-        return trackCommand( new TurtleMoveCommand( MoveDirection.BACK ) );
-    }
+//    /**
+//     * Move the turtle backwards one block.
+//     *
+//     * @return The turtle command result.
+//     * @cc.treturn boolean Whether the turtle could successfully move.
+//     * @cc.treturn string|nil The reason the turtle could not move.
+//     */
+//    @LuaFunction
+//    public final MethodResult back()
+//    {
+//        return trackCommand( new TurtleMoveCommand( MoveDirection.BACK ) );
+//    }
 
-    /**
-     * Move the turtle up one block.
-     *
-     * @return The turtle command result.
-     * @cc.treturn boolean Whether the turtle could successfully move.
-     * @cc.treturn string|nil The reason the turtle could not move.
-     */
-    @LuaFunction
-    public final MethodResult up()
-    {
-        return trackCommand( new TurtleMoveCommand( MoveDirection.UP ) );
-    }
+//    /**
+//     * Move the turtle up one block.
+//     *
+//     * @return The turtle command result.
+//     * @cc.treturn boolean Whether the turtle could successfully move.
+//     * @cc.treturn string|nil The reason the turtle could not move.
+//     */
+//    @LuaFunction
+//    public final MethodResult up()
+//    {
+//        return trackCommand( new TurtleMoveCommand( MoveDirection.UP ) );
+//    }
 
-    /**
-     * Move the turtle down one block.
-     *
-     * @return The turtle command result.
-     * @cc.treturn boolean Whether the turtle could successfully move.
-     * @cc.treturn string|nil The reason the turtle could not move.
-     */
-    @LuaFunction
-    public final MethodResult down()
-    {
-        return trackCommand( new TurtleMoveCommand( MoveDirection.DOWN ) );
-    }
+//    /**
+//     * Move the turtle down one block.
+//     *
+//     * @return The turtle command result.
+//     * @cc.treturn boolean Whether the turtle could successfully move.
+//     * @cc.treturn string|nil The reason the turtle could not move.
+//     */
+//    @LuaFunction
+//    public final MethodResult down()
+//    {
+//        return trackCommand( new TurtleMoveCommand( MoveDirection.DOWN ) );
+//    }
 
     /**
      * Rotate the turtle 90 degress to the left.
@@ -178,72 +178,72 @@ public class TurtleAPI implements ILuaAPI
         return trackCommand( TurtleToolCommand.dig( InteractDirection.DOWN, side.orElse( null ) ) );
     }
 
-    /**
-     * Place a block or item into the world in front of the turtle.
-     *
-     * "Placing" an item allows it to interact with blocks and entities in front of the turtle. For instance, buckets
-     * can pick up and place down fluids, and wheat can be used to breed cows. However, you cannot use {@link #place} to
-     * perform arbitrary block interactions, such as clicking buttons or flipping levers.
-     *
-     * @param args Arguments to place.
-     * @return The turtle command result.
-     * @cc.tparam [opt] string text When placing a sign, set its contents to this text.
-     * @cc.treturn boolean Whether the block could be placed.
-     * @cc.treturn string|nil The reason the block was not placed.
-     */
-    @LuaFunction
-    public final MethodResult place( IArguments args )
-    {
-        return trackCommand( new TurtlePlaceCommand( InteractDirection.FORWARD, args.getAll() ) );
-    }
+//    /**
+//     * Place a block or item into the world in front of the turtle.
+//     *
+//     * "Placing" an item allows it to interact with blocks and entities in front of the turtle. For instance, buckets
+//     * can pick up and place down fluids, and wheat can be used to breed cows. However, you cannot use {@link #place} to
+//     * perform arbitrary block interactions, such as clicking buttons or flipping levers.
+//     *
+//     * @param args Arguments to place.
+//     * @return The turtle command result.
+//     * @cc.tparam [opt] string text When placing a sign, set its contents to this text.
+//     * @cc.treturn boolean Whether the block could be placed.
+//     * @cc.treturn string|nil The reason the block was not placed.
+//     */
+//    @LuaFunction
+//    public final MethodResult place( IArguments args )
+//    {
+//        return trackCommand( new TurtlePlaceCommand( InteractDirection.FORWARD, args.getAll() ) );
+//    }
 
-    /**
-     * Place a block or item into the world above the turtle.
-     *
-     * @param args Arguments to place.
-     * @return The turtle command result.
-     * @cc.tparam [opt] string text When placing a sign, set its contents to this text.
-     * @cc.treturn boolean Whether the block could be placed.
-     * @cc.treturn string|nil The reason the block was not placed.
-     * @see #place For more information about placing items.
-     */
-    @LuaFunction
-    public final MethodResult placeUp( IArguments args )
-    {
-        return trackCommand( new TurtlePlaceCommand( InteractDirection.UP, args.getAll() ) );
-    }
+//    /**
+//     * Place a block or item into the world above the turtle.
+//     *
+//     * @param args Arguments to place.
+//     * @return The turtle command result.
+//     * @cc.tparam [opt] string text When placing a sign, set its contents to this text.
+//     * @cc.treturn boolean Whether the block could be placed.
+//     * @cc.treturn string|nil The reason the block was not placed.
+//     * @see #place For more information about placing items.
+//     */
+//    @LuaFunction
+//    public final MethodResult placeUp( IArguments args )
+//    {
+//        return trackCommand( new TurtlePlaceCommand( InteractDirection.UP, args.getAll() ) );
+//    }
 
-    /**
-     * Place a block or item into the world below the turtle.
-     *
-     * @param args Arguments to place.
-     * @return The turtle command result.
-     * @cc.tparam [opt] string text When placing a sign, set its contents to this text.
-     * @cc.treturn boolean Whether the block could be placed.
-     * @cc.treturn string|nil The reason the block was not placed.
-     * @see #place For more information about placing items.
-     */
-    @LuaFunction
-    public final MethodResult placeDown( IArguments args )
-    {
-        return trackCommand( new TurtlePlaceCommand( InteractDirection.DOWN, args.getAll() ) );
-    }
+//    /**
+//     * Place a block or item into the world below the turtle.
+//     *
+//     * @param args Arguments to place.
+//     * @return The turtle command result.
+//     * @cc.tparam [opt] string text When placing a sign, set its contents to this text.
+//     * @cc.treturn boolean Whether the block could be placed.
+//     * @cc.treturn string|nil The reason the block was not placed.
+//     * @see #place For more information about placing items.
+//     */
+//    @LuaFunction
+//    public final MethodResult placeDown( IArguments args )
+//    {
+//        return trackCommand( new TurtlePlaceCommand( InteractDirection.DOWN, args.getAll() ) );
+//    }
 
-    /**
-     * Drop the currently selected stack into the inventory in front of the turtle, or as an item into the world if there is no inventory.
-     *
-     * @param count The number of items to drop. If not given, the entire stack will be dropped.
-     * @return The turtle command result.
-     * @throws LuaException If dropping an invalid number of items.
-     * @cc.treturn boolean Whether items were dropped.
-     * @cc.treturn string|nil The reason the no items were dropped.
-     * @see #select
-     */
-    @LuaFunction
-    public final MethodResult drop( Optional<Integer> count ) throws LuaException
-    {
-        return trackCommand( new TurtleDropCommand( InteractDirection.FORWARD, checkCount( count ) ) );
-    }
+//    /**
+//     * Drop the currently selected stack into the inventory in front of the turtle, or as an item into the world if there is no inventory.
+//     *
+//     * @param count The number of items to drop. If not given, the entire stack will be dropped.
+//     * @return The turtle command result.
+//     * @throws LuaException If dropping an invalid number of items.
+//     * @cc.treturn boolean Whether items were dropped.
+//     * @cc.treturn string|nil The reason the no items were dropped.
+//     * @see #select
+//     */
+//    @LuaFunction
+//    public final MethodResult drop( Optional<Integer> count ) throws LuaException
+//    {
+//        return trackCommand( new TurtleDropCommand( InteractDirection.FORWARD, checkCount( count ) ) );
+//    }
 
     private static int checkCount( Optional<Integer> countArg ) throws LuaException
     {
@@ -255,37 +255,37 @@ public class TurtleAPI implements ILuaAPI
         return count;
     }
 
-    /**
-     * Drop the currently selected stack into the inventory above the turtle, or as an item into the world if there is no inventory.
-     *
-     * @param count The number of items to drop. If not given, the entire stack will be dropped.
-     * @return The turtle command result.
-     * @throws LuaException If dropping an invalid number of items.
-     * @cc.treturn boolean Whether items were dropped.
-     * @cc.treturn string|nil The reason the no items were dropped.
-     * @see #select
-     */
-    @LuaFunction
-    public final MethodResult dropUp( Optional<Integer> count ) throws LuaException
-    {
-        return trackCommand( new TurtleDropCommand( InteractDirection.UP, checkCount( count ) ) );
-    }
+//    /**
+//     * Drop the currently selected stack into the inventory above the turtle, or as an item into the world if there is no inventory.
+//     *
+//     * @param count The number of items to drop. If not given, the entire stack will be dropped.
+//     * @return The turtle command result.
+//     * @throws LuaException If dropping an invalid number of items.
+//     * @cc.treturn boolean Whether items were dropped.
+//     * @cc.treturn string|nil The reason the no items were dropped.
+//     * @see #select
+//     */
+//    @LuaFunction
+//    public final MethodResult dropUp( Optional<Integer> count ) throws LuaException
+//    {
+//        return trackCommand( new TurtleDropCommand( InteractDirection.UP, checkCount( count ) ) );
+//    }
 
-    /**
-     * Drop the currently selected stack into the inventory in front of the turtle, or as an item into the world if there is no inventory.
-     *
-     * @param count The number of items to drop. If not given, the entire stack will be dropped.
-     * @return The turtle command result.
-     * @throws LuaException If dropping an invalid number of items.
-     * @cc.treturn boolean Whether items were dropped.
-     * @cc.treturn string|nil The reason the no items were dropped.
-     * @see #select
-     */
-    @LuaFunction
-    public final MethodResult dropDown( Optional<Integer> count ) throws LuaException
-    {
-        return trackCommand( new TurtleDropCommand( InteractDirection.DOWN, checkCount( count ) ) );
-    }
+//    /**
+//     * Drop the currently selected stack into the inventory in front of the turtle, or as an item into the world if there is no inventory.
+//     *
+//     * @param count The number of items to drop. If not given, the entire stack will be dropped.
+//     * @return The turtle command result.
+//     * @throws LuaException If dropping an invalid number of items.
+//     * @cc.treturn boolean Whether items were dropped.
+//     * @cc.treturn string|nil The reason the no items were dropped.
+//     * @see #select
+//     */
+//    @LuaFunction
+//    public final MethodResult dropDown( Optional<Integer> count ) throws LuaException
+//    {
+//        return trackCommand( new TurtleDropCommand( InteractDirection.DOWN, checkCount( count ) ) );
+//    }
 
     /**
      * Change the currently selected slot.
@@ -393,41 +393,41 @@ public class TurtleAPI implements ILuaAPI
         return trackCommand( new TurtleDetectCommand( InteractDirection.DOWN ) );
     }
 
-    /**
-     * Check if the block in front of the turtle is equal to the item in the currently selected slot.
-     *
-     * @return If the block and item are equal.
-     * @cc.treturn boolean If the block and item are equal.
-     */
-    @LuaFunction
-    public final MethodResult compare()
-    {
-        return trackCommand( new TurtleCompareCommand( InteractDirection.FORWARD ) );
-    }
+//    /**
+//     * Check if the block in front of the turtle is equal to the item in the currently selected slot.
+//     *
+//     * @return If the block and item are equal.
+//     * @cc.treturn boolean If the block and item are equal.
+//     */
+//    @LuaFunction
+//    public final MethodResult compare()
+//    {
+//        return trackCommand( new TurtleCompareCommand( InteractDirection.FORWARD ) );
+//    }
 
-    /**
-     * Check if the block above the turtle is equal to the item in the currently selected slot.
-     *
-     * @return If the block and item are equal.
-     * @cc.treturn boolean If the block and item are equal.
-     */
-    @LuaFunction
-    public final MethodResult compareUp()
-    {
-        return trackCommand( new TurtleCompareCommand( InteractDirection.UP ) );
-    }
+//    /**
+//     * Check if the block above the turtle is equal to the item in the currently selected slot.
+//     *
+//     * @return If the block and item are equal.
+//     * @cc.treturn boolean If the block and item are equal.
+//     */
+//    @LuaFunction
+//    public final MethodResult compareUp()
+//    {
+//        return trackCommand( new TurtleCompareCommand( InteractDirection.UP ) );
+//    }
 
-    /**
-     * Check if the block below the turtle is equal to the item in the currently selected slot.
-     *
-     * @return If the block and item are equal.
-     * @cc.treturn boolean If the block and item are equal.
-     */
-    @LuaFunction
-    public final MethodResult compareDown()
-    {
-        return trackCommand( new TurtleCompareCommand( InteractDirection.DOWN ) );
-    }
+//    /**
+//     * Check if the block below the turtle is equal to the item in the currently selected slot.
+//     *
+//     * @return If the block and item are equal.
+//     * @cc.treturn boolean If the block and item are equal.
+//     */
+//    @LuaFunction
+//    public final MethodResult compareDown()
+//    {
+//        return trackCommand( new TurtleCompareCommand( InteractDirection.DOWN ) );
+//    }
 
     /**
      * Attack the entity in front of the turtle.
@@ -471,52 +471,52 @@ public class TurtleAPI implements ILuaAPI
         return trackCommand( TurtleToolCommand.attack( InteractDirection.DOWN, side.orElse( null ) ) );
     }
 
-    /**
-     * Suck an item from the inventory in front of the turtle, or from an item floating in the world.
-     *
-     * This will pull items into the first acceptable slot, starting at the {@link #select currently selected} one.
-     *
-     * @param count The number of items to suck. If not given, up to a stack of items will be picked up.
-     * @return The turtle command result.
-     * @throws LuaException If given an invalid number of items.
-     * @cc.treturn boolean Whether items were picked up.
-     * @cc.treturn string|nil The reason the no items were picked up.
-     */
-    @LuaFunction
-    public final MethodResult suck( Optional<Integer> count ) throws LuaException
-    {
-        return trackCommand( new TurtleSuckCommand( InteractDirection.FORWARD, checkCount( count ) ) );
-    }
+//    /**
+//     * Suck an item from the inventory in front of the turtle, or from an item floating in the world.
+//     *
+//     * This will pull items into the first acceptable slot, starting at the {@link #select currently selected} one.
+//     *
+//     * @param count The number of items to suck. If not given, up to a stack of items will be picked up.
+//     * @return The turtle command result.
+//     * @throws LuaException If given an invalid number of items.
+//     * @cc.treturn boolean Whether items were picked up.
+//     * @cc.treturn string|nil The reason the no items were picked up.
+//     */
+//    @LuaFunction
+//    public final MethodResult suck( Optional<Integer> count ) throws LuaException
+//    {
+//        return trackCommand( new TurtleSuckCommand( InteractDirection.FORWARD, checkCount( count ) ) );
+//    }
 
-    /**
-     * Suck an item from the inventory above the turtle, or from an item floating in the world.
-     *
-     * @param count The number of items to suck. If not given, up to a stack of items will be picked up.
-     * @return The turtle command result.
-     * @throws LuaException If given an invalid number of items.
-     * @cc.treturn boolean Whether items were picked up.
-     * @cc.treturn string|nil The reason the no items were picked up.
-     */
-    @LuaFunction
-    public final MethodResult suckUp( Optional<Integer> count ) throws LuaException
-    {
-        return trackCommand( new TurtleSuckCommand( InteractDirection.UP, checkCount( count ) ) );
-    }
+//    /**
+//     * Suck an item from the inventory above the turtle, or from an item floating in the world.
+//     *
+//     * @param count The number of items to suck. If not given, up to a stack of items will be picked up.
+//     * @return The turtle command result.
+//     * @throws LuaException If given an invalid number of items.
+//     * @cc.treturn boolean Whether items were picked up.
+//     * @cc.treturn string|nil The reason the no items were picked up.
+//     */
+//    @LuaFunction
+//    public final MethodResult suckUp( Optional<Integer> count ) throws LuaException
+//    {
+//        return trackCommand( new TurtleSuckCommand( InteractDirection.UP, checkCount( count ) ) );
+//    }
 
-    /**
-     * Suck an item from the inventory below the turtle, or from an item floating in the world.
-     *
-     * @param count The number of items to suck. If not given, up to a stack of items will be picked up.
-     * @return The turtle command result.
-     * @throws LuaException If given an invalid number of items.
-     * @cc.treturn boolean Whether items were picked up.
-     * @cc.treturn string|nil The reason the no items were picked up.
-     */
-    @LuaFunction
-    public final MethodResult suckDown( Optional<Integer> count ) throws LuaException
-    {
-        return trackCommand( new TurtleSuckCommand( InteractDirection.DOWN, checkCount( count ) ) );
-    }
+//    /**
+//     * Suck an item from the inventory below the turtle, or from an item floating in the world.
+//     *
+//     * @param count The number of items to suck. If not given, up to a stack of items will be picked up.
+//     * @return The turtle command result.
+//     * @throws LuaException If given an invalid number of items.
+//     * @cc.treturn boolean Whether items were picked up.
+//     * @cc.treturn string|nil The reason the no items were picked up.
+//     */
+//    @LuaFunction
+//    public final MethodResult suckDown( Optional<Integer> count ) throws LuaException
+//    {
+//        return trackCommand( new TurtleSuckCommand( InteractDirection.DOWN, checkCount( count ) ) );
+//    }
 
     /**
      * Get the maximum amount of fuel this turtle currently holds.
@@ -679,56 +679,56 @@ public class TurtleAPI implements ILuaAPI
         return trackCommand( new TurtleEquipCommand( TurtleSide.RIGHT ) );
     }
 
-    /**
-     * Get information about the block in front of the turtle.
-     *
-     * @return The turtle command result.
-     * @cc.treturn boolean Whether there is a block in front of the turtle.
-     * @cc.treturn table|string Information about the block in front, or a message explaining that there is no block.
-     * @cc.usage <pre>{@code
-     * local has_block, data = turtle.inspect()
-     * if has_block then
-     *   print(textutils.serialize(data))
-     *   -- {
-     *   --   name = "minecraft:oak_log",
-     *   --   state = { axis = "x" },
-     *   --   tags = { ["minecraft:logs"] = true, ... },
-     *   -- }
-     * else
-     *   print("No block in front of the turtle")
-     * end}</pre>
-     */
-    @LuaFunction
-    public final MethodResult inspect()
-    {
-        return trackCommand( new TurtleInspectCommand( InteractDirection.FORWARD ) );
-    }
+//    /**
+//     * Get information about the block in front of the turtle.
+//     *
+//     * @return The turtle command result.
+//     * @cc.treturn boolean Whether there is a block in front of the turtle.
+//     * @cc.treturn table|string Information about the block in front, or a message explaining that there is no block.
+//     * @cc.usage <pre>{@code
+//     * local has_block, data = turtle.inspect()
+//     * if has_block then
+//     *   print(textutils.serialize(data))
+//     *   -- {
+//     *   --   name = "minecraft:oak_log",
+//     *   --   state = { axis = "x" },
+//     *   --   tags = { ["minecraft:logs"] = true, ... },
+//     *   -- }
+//     * else
+//     *   print("No block in front of the turtle")
+//     * end}</pre>
+//     */
+//    @LuaFunction
+//    public final MethodResult inspect()
+//    {
+//        return trackCommand( new TurtleInspectCommand( InteractDirection.FORWARD ) );
+//    }
 
-    /**
-     * Get information about the block above the turtle.
-     *
-     * @return The turtle command result.
-     * @cc.treturn boolean Whether there is a block above the turtle.
-     * @cc.treturn table|string Information about the above below, or a message explaining that there is no block.
-     */
-    @LuaFunction
-    public final MethodResult inspectUp()
-    {
-        return trackCommand( new TurtleInspectCommand( InteractDirection.UP ) );
-    }
+//    /**
+//     * Get information about the block above the turtle.
+//     *
+//     * @return The turtle command result.
+//     * @cc.treturn boolean Whether there is a block above the turtle.
+//     * @cc.treturn table|string Information about the above below, or a message explaining that there is no block.
+//     */
+//    @LuaFunction
+//    public final MethodResult inspectUp()
+//    {
+//        return trackCommand( new TurtleInspectCommand( InteractDirection.UP ) );
+//    }
 
-    /**
-     * Get information about the block below the turtle.
-     *
-     * @return The turtle command result.
-     * @cc.treturn boolean Whether there is a block below the turtle.
-     * @cc.treturn table|string Information about the block below, or a message explaining that there is no block.
-     */
-    @LuaFunction
-    public final MethodResult inspectDown()
-    {
-        return trackCommand( new TurtleInspectCommand( InteractDirection.DOWN ) );
-    }
+//    /**
+//     * Get information about the block below the turtle.
+//     *
+//     * @return The turtle command result.
+//     * @cc.treturn boolean Whether there is a block below the turtle.
+//     * @cc.treturn table|string Information about the block below, or a message explaining that there is no block.
+//     */
+//    @LuaFunction
+//    public final MethodResult inspectDown()
+//    {
+//        return trackCommand( new TurtleInspectCommand( InteractDirection.DOWN ) );
+//    }
 
     /**
      * Get detailed information about the items in the given slot.

@@ -56,6 +56,12 @@ public class ComputerCraftModels implements ModelEntrypoint {
             .setTex(0, "computercraft:block/disk_drive_front", Side.NORTH)
         );
 
+        ModelHelper.setBlockModel(ComputerCraftBlocks.TURTLE, () -> new BlockModelComputer<>(ComputerCraftBlocks.TURTLE)
+            .setTex(0, "computercraft:block/computer_normal_side", Side.SOUTH, Side.EAST, Side.WEST)
+            .setTex(0, "computercraft:block/computer_normal_top", Side.TOP, Side.BOTTOM)
+            .setTex(0, "computercraft:block/computer_normal_front", Side.NORTH)
+        );
+
         ComputerCraft.log.info("Block Models initialized.");
     }
 

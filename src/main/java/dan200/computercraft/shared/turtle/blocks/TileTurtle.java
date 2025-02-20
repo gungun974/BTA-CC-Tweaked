@@ -47,7 +47,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     public static final int INVENTORY_SIZE = 16;
     public static final int INVENTORY_WIDTH = 4;
     public static final int INVENTORY_HEIGHT = 4;
-    private final List<ItemStack> inventory = new ArrayList<>(Collections.nCopies(INVENTORY_SIZE, null));
+    public final List<ItemStack> inventory = new ArrayList<>(Collections.nCopies(INVENTORY_SIZE, null));
     private final List<ItemStack> previousInventory = new ArrayList<>(Collections.nCopies(INVENTORY_SIZE, null));
     private boolean inventoryChanged = false;
     private TurtleBrain brain = new TurtleBrain( this );
@@ -103,7 +103,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
         }
     }
 
-    private BlockPos getPos() {
+    public BlockPos getPos() {
         return new BlockPos(x, y, z);
     }
 

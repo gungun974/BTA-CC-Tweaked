@@ -5,26 +5,29 @@
  */
 package dan200.computercraft.shared.turtle.upgrades;
 
+import net.minecraft.core.item.Item;
+import net.minecraft.core.item.ItemStack;
+
 public class TurtleAxe extends TurtleTool
 {
-    public TurtleAxe( int id, String adjective, Item item )
-    {
-        super( id, adjective, item );
-    }
-
-    public TurtleAxe( Identifier id, Item item )
-    {
-        super( id, item );
-    }
-
-    public TurtleAxe( Identifier id, ItemStack craftItem, ItemStack toolItem )
-    {
-        super( id, craftItem, toolItem );
-    }
-
-    @Override
-    protected float getDamageMultiplier()
-    {
-        return 6.0f;
-    }
+//    public TurtleAxe( int id, String adjective, Item item )
+//    {
+//        super( id, adjective, item );
+//    }
+//
+//    public TurtleAxe( int id, Item item )
+//    {
+//        super( id, item );
+//    }
+//
+//    public TurtleAxe(int id, ItemStack craftItem, ItemStack toolItem )
+//    {
+//        super( id, craftItem, toolItem );
+//    }
+//
+//    @Override
+//    protected float getDamageMultiplier()
+//    {
+//        return 6.0f;
+//    }
 }

@@ -5,15 +5,11 @@
  */
 package dan200.computercraft.shared.util;
 
-import com.sun.tools.javac.util.Pair;
 import dan200.computercraft.BlockPos;
-import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.entity.Entity;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;

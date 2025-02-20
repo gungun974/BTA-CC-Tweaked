@@ -5,6 +5,7 @@
  */
 package dan200.computercraft.shared.turtle.core;
 
+import dan200.computercraft.BlockPos;
 import dan200.computercraft.api.turtle.*;
 import dan200.computercraft.api.turtle.event.TurtleAction;
 import dan200.computercraft.api.turtle.event.TurtleActionEvent;
@@ -13,9 +14,8 @@ import dan200.computercraft.shared.TurtleUpgrades;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.ItemStorage;
 import dan200.computercraft.shared.util.WorldUtil;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.player.inventory.container.Container;
 
 import javax.annotation.Nonnull;
 
@@ -35,9 +35,9 @@ public class TurtleEquipCommand implements ITurtleCommand
         // Determine the upgrade to equipLeft
         ITurtleUpgrade newUpgrade;
         ItemStack newUpgradeStack;
-        Inventory inventory = turtle.getInventory();
-        ItemStack selectedStack = inventory.getStack( turtle.getSelectedSlot() );
-        if( !selectedStack.isEmpty() )
+        Container inventory = turtle.getInventory();
+        ItemStack selectedStack = inventory.getItem( turtle.getSelectedSlot() );
+        if( selectedStack != null )
         {
             newUpgradeStack = selectedStack.copy();
             newUpgrade = TurtleUpgrades.get( newUpgradeStack );
@@ -58,7 +58,7 @@ public class TurtleEquipCommand implements ITurtleCommand
         if( oldUpgrade != null )
         {
             ItemStack craftingItem = oldUpgrade.getCraftingItem();
-            oldUpgradeStack = !craftingItem.isEmpty() ? craftingItem.copy() : null;
+            oldUpgradeStack = craftingItem != null ? craftingItem.copy() : null;
         }
         else
         {
@@ -81,7 +81,7 @@ public class TurtleEquipCommand implements ITurtleCommand
         {
             // Store old upgrades item
             ItemStack remainder = InventoryUtil.storeItems( oldUpgradeStack, ItemStorage.wrap( inventory ), turtle.getSelectedSlot() );
-            if( !remainder.isEmpty() )
+            if( remainder != null )
             {
                 // If there's no room for the items, drop them
                 BlockPos position = turtle.getPosition();

@@ -337,7 +337,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         }
     }
 
-    private void updateBlock() {
+    public void updateBlock() {
         int blockId = Helper.getBlockLogic(worldObj, this.x, this.y, this.z, BlockLogicComputer.class).id();
 
         worldObj.notifyBlockChange(this.x, this.y, this.z, blockId);

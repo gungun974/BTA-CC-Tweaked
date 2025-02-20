@@ -8,20 +8,15 @@ package dan200.computercraft.shared.turtle.items;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
-import dan200.computercraft.shared.ComputerCraftRegistry;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.turtle.blocks.ITurtleTile;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-
-import javax.annotation.Nonnull;
+import net.minecraft.core.item.ItemStack;
 
 public final class TurtleItemFactory
 {
     private TurtleItemFactory() {}
 
-    @Nonnull
-    public static ItemStack create( ITurtleTile turtle )
+    public static ItemStack create(ITurtleTile turtle )
     {
         ITurtleAccess access = turtle.getAccess();
 
@@ -35,18 +30,19 @@ public final class TurtleItemFactory
             turtle.getOverlay() );
     }
 
-    @Nonnull
     public static ItemStack create( int id, String label, int colour, ComputerFamily family, ITurtleUpgrade leftUpgrade, ITurtleUpgrade rightUpgrade,
-                                    int fuelLevel, Identifier overlay )
+                                    int fuelLevel, int overlay )
     {
         switch( family )
         {
             case NORMAL:
-                return ComputerCraftRegistry.ModItems.TURTLE_NORMAL.create( id, label, colour, leftUpgrade, rightUpgrade, fuelLevel, overlay );
+                //return ComputerCraftRegistry.ModItems.TURTLE_NORMAL.create( id, label, colour, leftUpgrade, rightUpgrade, fuelLevel, overlay );
+                return null;
             case ADVANCED:
-                return ComputerCraftRegistry.ModItems.TURTLE_ADVANCED.create( id, label, colour, leftUpgrade, rightUpgrade, fuelLevel, overlay );
+                //return ComputerCraftRegistry.ModItems.TURTLE_ADVANCED.create( id, label, colour, leftUpgrade, rightUpgrade, fuelLevel, overlay );
+                return null;
             default:
-                return ItemStack.EMPTY;
+                return null;
         }
     }
 }

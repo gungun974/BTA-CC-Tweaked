@@ -19,56 +19,56 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TurtleInspectCommand implements ITurtleCommand
+public class TurtleInspectCommand// implements ITurtleCommand
 {
-    private final InteractDirection direction;
-
-    public TurtleInspectCommand( InteractDirection direction )
-    {
-        this.direction = direction;
-    }
-
-    @Nonnull
-    @Override
-    public TurtleCommandResult execute( @Nonnull ITurtleAccess turtle )
-    {
-        // Get world direction from direction
-        Direction direction = this.direction.toWorldDir( turtle );
-
-        // Check if thing in front is air or not
-        World world = turtle.getWorld();
-        BlockPos oldPosition = turtle.getPosition();
-        BlockPos newPosition = oldPosition.offset( direction );
-
-        BlockState state = world.getBlockState( newPosition );
-        if( state.isAir() )
-        {
-            return TurtleCommandResult.failure( "No block to inspect" );
-        }
-
-        Map<String, Object> table = BlockData.fill( new HashMap<>(), state );
-
-        // Fire the event, exiting if it is cancelled
-        TurtlePlayer turtlePlayer = TurtlePlaceCommand.createPlayer( turtle, oldPosition, direction );
-        TurtleBlockEvent.Inspect event = new TurtleBlockEvent.Inspect( turtle, turtlePlayer, world, newPosition, state, table );
-        if( TurtleEvent.post( event ) )
-        {
-            return TurtleCommandResult.failure( event.getFailureMessage() );
-        }
-
-        return TurtleCommandResult.success( new Object[] { table } );
-    }
-
-    @SuppressWarnings( {
-        "unchecked",
-        "rawtypes"
-    } )
-    private static Object getPropertyValue( Property property, Comparable value )
-    {
-        if( value instanceof String || value instanceof Number || value instanceof Boolean )
-        {
-            return value;
-        }
-        return property.name( value );
-    }
+//    private final InteractDirection direction;
+//
+//    public TurtleInspectCommand( InteractDirection direction )
+//    {
+//        this.direction = direction;
+//    }
+//
+//    @Nonnull
+//    @Override
+//    public TurtleCommandResult execute( @Nonnull ITurtleAccess turtle )
+//    {
+//        // Get world direction from direction
+//        Direction direction = this.direction.toWorldDir( turtle );
+//
+//        // Check if thing in front is air or not
+//        World world = turtle.getWorld();
+//        BlockPos oldPosition = turtle.getPosition();
+//        BlockPos newPosition = oldPosition.offset( direction );
+//
+//        BlockState state = world.getBlockState( newPosition );
+//        if( state.isAir() )
+//        {
+//            return TurtleCommandResult.failure( "No block to inspect" );
+//        }
+//
+//        Map<String, Object> table = BlockData.fill( new HashMap<>(), state );
+//
+//        // Fire the event, exiting if it is cancelled
+//        TurtlePlayer turtlePlayer = TurtlePlaceCommand.createPlayer( turtle, oldPosition, direction );
+//        TurtleBlockEvent.Inspect event = new TurtleBlockEvent.Inspect( turtle, turtlePlayer, world, newPosition, state, table );
+//        if( TurtleEvent.post( event ) )
+//        {
+//            return TurtleCommandResult.failure( event.getFailureMessage() );
+//        }
+//
+//        return TurtleCommandResult.success( new Object[] { table } );
+//    }
+//
+//    @SuppressWarnings( {
+//        "unchecked",
+//        "rawtypes"
+//    } )
+//    private static Object getPropertyValue( Property property, Comparable value )
+//    {
+//        if( value instanceof String || value instanceof Number || value instanceof Boolean )
+//        {
+//            return value;
+//        }
+//        return property.name( value );
+//    }
 }

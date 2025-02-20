@@ -9,8 +9,7 @@ import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.shared.common.IColouredItem;
 import dan200.computercraft.shared.computer.items.IComputerItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,5 +22,5 @@ public interface ITurtleItem extends IComputerItem, IColouredItem
     int getFuelLevel( @Nonnull ItemStack stack );
 
     @Nullable
-    Identifier getOverlay( @Nonnull ItemStack stack );
+    int getOverlay( @Nonnull ItemStack stack );
 }

@@ -37,7 +37,7 @@ public class BlockTurtle extends BlockLogicComputer
 
     @Override
     public AABB getBlockBoundsFromState(WorldSource world, int x, int y, int z) {
-        return ModemShapes.getBounds( BlockWirelessModem.metaToDirection(world.getBlockMetadata(x, y, z)).getOpposite());
+        return AABB.getPermanentBB(0.125, 0.125, 0.125, 0.875, 0.875, 0.875);
     }
 
 

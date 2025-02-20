@@ -9,6 +9,8 @@ import dan200.computercraft.core.computer.ComputerSide;
 import net.minecraft.core.util.helper.Axis;
 import net.minecraft.core.util.helper.Direction;
 
+import java.util.Arrays;
+
 public final class DirectionUtil
 {
     public static final Direction[] FACINGS = {
@@ -82,4 +84,13 @@ public final class DirectionUtil
         }
         return Direction.horizontalDirections[(direction.getHorizontalIndex() + 3) % 4];
     }
+
+    public static float getRotationYaw(Direction direction) {
+        int index = Arrays.asList(Direction.horizontalDirections).indexOf(direction);
+        if (index == -1) {
+            throw new IllegalArgumentException("Invalid direction: " + direction);
+        }
+        return (index - 2 & 3) * 90.0f;
+    }
+
 }

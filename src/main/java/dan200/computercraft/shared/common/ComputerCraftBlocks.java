@@ -13,6 +13,8 @@ import dan200.computercraft.shared.peripheral.modem.wireless.BlockWirelessModem;
 import dan200.computercraft.shared.peripheral.modem.wireless.TileWirelessModem;
 import dan200.computercraft.shared.peripheral.speaker.BlockSpeaker;
 import dan200.computercraft.shared.peripheral.speaker.TileSpeaker;
+import dan200.computercraft.shared.turtle.blocks.BlockTurtle;
+import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
@@ -34,6 +36,8 @@ public class ComputerCraftBlocks {
     public static final Block<?> CABLE;
 
     public static final Block<?> DISK_DRIVE;
+
+    public static final Block<?> TURTLE;
 
     public ComputerCraftBlocks() {
 
@@ -102,5 +106,14 @@ public class ComputerCraftBlocks {
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileDiskDrive::new)
             .build("disk_drive", 10005, b -> new BlockDiskDrive(b));
+
+        EntityHelper.createTileEntity(TileTurtle.class, NamespaceID.getPermanent(MOD_ID, "turtle"));
+
+        TURTLE = new BlockBuilder(MOD_ID)
+            .setHardness(1.5f)
+            .setResistance(10f)
+            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTileEntity(TileTurtle::new)
+            .build("turtle", 10006, b -> new BlockTurtle(b));
     }
 }

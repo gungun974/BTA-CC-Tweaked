@@ -5,9 +5,9 @@
  */
 package dan200.computercraft.shared.computer.items;
 
+import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
@@ -17,14 +17,13 @@ public interface IComputerItem
 
     default int getComputerID( @Nonnull ItemStack stack )
     {
-        CompoundTag nbt = stack.getTag();
-        return nbt != null && nbt.contains( NBT_ID ) ? nbt.getInt( NBT_ID ) : -1;
+        CompoundTag nbt = stack.getData();
+        return nbt != null && nbt.containsKey( NBT_ID ) ? nbt.getInteger( NBT_ID ) : -1;
     }
 
     default String getLabel( @Nonnull ItemStack stack )
     {
-        return stack.hasCustomName() ? stack.getName()
-            .getString() : null;
+        return stack.hasCustomName() ? stack.getCustomName() : null;
     }
 
     ComputerFamily getFamily();
