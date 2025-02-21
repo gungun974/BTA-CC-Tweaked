@@ -23,8 +23,8 @@ import java.lang.reflect.InvocationTargetException;
 public class OpenGuiContainerMessage<A extends TileEntity> implements NetworkMessage {
     private int windowId = 0;
 
-    private A tileEntity;
-    private Class<?> screen;
+    protected A tileEntity;
+    protected Class<?> screen;
     private MenuAbstractSupplier<MenuAbstract, A> menu;
 
     @FunctionalInterface
@@ -58,7 +58,7 @@ public class OpenGuiContainerMessage<A extends TileEntity> implements NetworkMes
     }
 
     @Environment(EnvType.SERVER)
-    private void serverSetWindow2(Player player) {
+    protected void serverSetWindow2(Player player) {
         if (player instanceof PlayerServer) {
             player.craftingInventory.onCraftGuiClosed(player);
             player.craftingInventory = menu.get(player.inventory, tileEntity);
@@ -97,7 +97,7 @@ public class OpenGuiContainerMessage<A extends TileEntity> implements NetworkMes
         }
     }
 
-    private Screen getScreenInstance(ContainerInventory inventory) {
+    protected Screen getScreenInstance(ContainerInventory inventory) {
         try {
             return (Screen) screen.getConstructor(ContainerInventory.class, tileEntity.getClass()).newInstance(inventory, tileEntity);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |

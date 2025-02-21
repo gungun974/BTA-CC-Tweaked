@@ -21,12 +21,12 @@ import dan200.computercraft.core.computer.IComputerEnvironment;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.IComputerPlayer;
 import dan200.computercraft.shared.common.ServerTerminal;
-import dan200.computercraft.shared.network.client.ComputerDataClientMessage;
-import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
-import dan200.computercraft.shared.network.client.OpenComputerGuiClientMessage;
-import dan200.computercraft.shared.network.client.TerminalState;
+import dan200.computercraft.shared.network.client.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.container.ScreenContainerAbstract;
+import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.player.inventory.menu.MenuAbstract;
 import net.minecraft.core.world.World;
 import net.minecraft.server.MinecraftServer;
 import turniplabs.halplibe.helper.network.NetworkHandler;
@@ -294,6 +294,15 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
     public void sendOpenComputerGui( Player player )
     {
         NetworkHandler.sendToPlayer( player, createOpenComputerGuiPacket() );
+    }
+
+    public <C extends TileEntity> void  sendOpenContainerComputerGui(Player player, C tileEntity, Class<? extends ScreenContainerAbstract> screen, OpenGuiContainerMessage.MenuAbstractSupplier<MenuAbstract, C> menu )
+    {
+        final TerminalState state = write();
+        NetworkHandler.sendToPlayer(player, createOpenComputerGuiPacket());
+        OpenContainerComputerGuiClientMessage.SendToPlayer(player, tileEntity, screen, menu,
+            getInstanceID(), getFamily(), state.width, state.height
+        );
     }
 
     /*

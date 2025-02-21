@@ -14,16 +14,13 @@ import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.fabric.Helper;
-import dan200.computercraft.shared.MediaProviders;
-import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
+import dan200.computercraft.fabric.IComputerPlayer;
 import dan200.computercraft.shared.computer.blocks.ComputerProxy;
 import dan200.computercraft.shared.computer.blocks.TileComputerBase;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
-import dan200.computercraft.shared.network.client.OpenGuiContainerMessage;
-import dan200.computercraft.shared.peripheral.diskdrive.MenuDiskDrive;
-import dan200.computercraft.shared.peripheral.diskdrive.ScreenDiskDrive;
+import dan200.computercraft.shared.computer.inventory.ContainerComputer;
 import dan200.computercraft.shared.turtle.apis.TurtleAPI;
 import dan200.computercraft.shared.turtle.core.TurtleBrain;
 import dan200.computercraft.shared.turtle.inventory.MenuTurtle;
@@ -206,64 +203,63 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
 //        return true;
 //    }
 
-//    public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced)
-//    {
-//        // Apply dye
-//        ItemStack currentItem = player.getHeldItem();
-//        if( currentItem != null )
-//        {
-//            if( currentItem.getItem() instanceof ItemDye)
-//            {
-//                // Dye to change turtle colour
-//                if( !Helper.isClientWorld())
-//                {
-//                    DyeColor dye = DyeColor.colorFromItemMeta(currentItem.getMetadata());
-//                    if( brain.getDyeColour() != dye )
-//                    {
-//                        brain.setDyeColour( dye );
-//                        if( player.gamemode != Gamemode.creative )
-//                        {
-//                            currentItem.stackSize -= 1;
-//                            if (currentItem.stackSize == 0) {
-//                                player.setHeldObject(null);
-//                            }
-//                        }
-//                    }
-//                }
-//                return true;
-//            }
-//            else if(currentItem.getItem().equals(Items.BUCKET_WATER) && brain.getColour() != -1 )
-//            {
-//                // Water to remove turtle colour
-//                if( !Helper.isClientWorld() )
-//                {
-//                    if( brain.getColour() != -1 )
-//                    {
-//                        brain.setColour( -1 );
-//                        if( player.gamemode != Gamemode.creative )
-//                        {
-//                            //player.setHeldObject(new ItemStack( Items.BUCKET ));
-//                            //player.inventory.markDirty();
-//                        }
-//                    }
-//                }
-//                return true;
-//            }
-//        }
-//
-//        // Open GUI or whatever
-//        return super.onBlockRightClicked( player, side, xPlaced, yPlaced );
-//    }
-
-    public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
-        // Open the GUI
-        if( !Helper.isClientWorld() )
+    public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced)
+    {
+        // Apply dye
+        ItemStack currentItem = player.getHeldItem();
+        if( currentItem != null )
         {
-            OpenGuiContainerMessage.SendToPlayer(player, this, ScreenTurtle.class, MenuTurtle::new);
+            if( currentItem.getItem() instanceof ItemDye)
+            {
+                // Dye to change turtle colour
+                if( !Helper.isClientWorld())
+                {
+                    DyeColor dye = DyeColor.colorFromItemMeta(currentItem.getMetadata());
+                    if( brain.getDyeColour() != dye )
+                    {
+                        brain.setDyeColour( dye );
+                        if( player.gamemode != Gamemode.creative )
+                        {
+                            currentItem.stackSize -= 1;
+                            if (currentItem.stackSize == 0) {
+                                player.setHeldObject(null);
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+            else if(currentItem.getItem().equals(Items.BUCKET_WATER) && brain.getColour() != -1 )
+            {
+                // Water to remove turtle colour
+                if( !Helper.isClientWorld() )
+                {
+                    if( brain.getColour() != -1 )
+                    {
+                        brain.setColour( -1 );
+                        if( player.gamemode != Gamemode.creative )
+                        {
+                            //player.setHeldObject(new ItemStack( Items.BUCKET ));
+                            //player.inventory.markDirty();
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        // Open GUI or whatever
+        //return super.onBlockRightClicked( player, side, xPlaced, yPlaced );
+        // Open the GUI
+        if( !Helper.isClientWorld() && isUsable( player, false ) )
+        {
+            createServerComputer().turnOn();
+            createServerComputer().sendTerminalState( player );
+            ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this));
+            createServerComputer().sendOpenContainerComputerGui( player, this, ScreenTurtle.class, MenuTurtle::new );
         }
         return true;
     }
-
 
     @Override
     public void onNeighbourChange( @Nonnull BlockPos neighbour )

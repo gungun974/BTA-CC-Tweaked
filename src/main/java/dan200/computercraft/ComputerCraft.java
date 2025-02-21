@@ -17,8 +17,6 @@ import dan200.computercraft.core.apis.http.options.AddressRule;
 //import dan200.computercraft.shared.peripheral.monitor.MonitorRenderer;
 //import org.apache.logging.log4j.LogManager;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -28,31 +26,17 @@ import java.util.concurrent.TimeUnit;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.common.DefaultBundledRedstoneProvider;
-import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
-import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
-import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
 import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
 import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
-import dan200.computercraft.shared.network.client.ComputerDataClientMessage;
-import dan200.computercraft.shared.network.client.ComputerTerminalClientMessage;
-import dan200.computercraft.shared.network.client.OpenComputerGuiClientMessage;
-import dan200.computercraft.shared.network.client.OpenGuiContainerMessage;
+import dan200.computercraft.shared.network.client.*;
 import dan200.computercraft.shared.network.server.*;
 import dan200.computercraft.shared.peripheral.generic.methods.InventoryMethods;
-import net.minecraft.client.render.block.model.BlockModelFurnace;
-import net.minecraft.client.render.texture.stitcher.IconCoordinate;
-import net.minecraft.client.render.texture.stitcher.TextureRegistry;
-import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.item.Item;
-import net.minecraft.core.item.ItemDiscMusic;
-import net.minecraft.core.util.collection.NamespaceID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.fabricmc.api.ModInitializer;
-import turniplabs.halplibe.helper.BlockBuilder;
-import turniplabs.halplibe.helper.EntityHelper;
 import turniplabs.halplibe.helper.network.NetworkHandler;
 
 public final class ComputerCraft implements ModInitializer
@@ -134,6 +118,7 @@ public final class ComputerCraft implements ModInitializer
 
         // Client messages
         NetworkHandler.registerNetworkMessage(  OpenGuiContainerMessage::new );
+        NetworkHandler.registerNetworkMessage(  OpenContainerComputerGuiClientMessage::new );
         NetworkHandler.registerNetworkMessage(  OpenComputerGuiClientMessage::new );
 //        NetworkHandler.registerNetworkMessage(  ChatTableClientMessage::new );
         NetworkHandler.registerNetworkMessage(  ComputerDataClientMessage::new );
