@@ -22,7 +22,9 @@ import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import dan200.computercraft.shared.util.*;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.BlockLogicFurnace;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.block.entity.TileEntityFurnace;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Direction;
@@ -199,7 +201,6 @@ public class TurtleBrain implements ITurtleAccess
 
         // Cache info about the old turtle (so we don't access this after we delete ourselves)
         World oldWorld = getWorld();
-        TileTurtle oldOwner = owner;
         BlockPos oldPos = owner.getPos();
         //BlockState oldBlock = owner.getCachedState();
 
@@ -210,10 +211,10 @@ public class TurtleBrain implements ITurtleAccess
         }
 
         // Ensure the chunk is loaded
-        if( !world.isChunkLoaded( pos.x, pos.z ) )
-        {
-            return false;
-        }
+//TODO:        if( !world.isChunkLoaded( pos.x, pos.z ) )
+//        {
+//            return false;
+//        }
 
         // Ensure we're inside the world border
 //        if( !world.getWorldBorder()
@@ -222,32 +223,44 @@ public class TurtleBrain implements ITurtleAccess
 //            return false;
 //        }
 
-        oldOwner.notifyMoveStart();
+        owner.notifyMoveStart();
 
         try
         {
             // Create a new turtle
-            if( world.setBlock( pos.x, pos.y, pos.z, owner.getBlockId() ) )
+            if( world.setBlockAndMetadataRaw( pos.x, pos.y, pos.z, owner.getBlockId(), owner.getBlockMeta() ) )
             {
                 TileEntity newTile = world.getTileEntity( pos.x, pos.y, pos.z );
                 if( newTile instanceof TileTurtle )
                 {
-                    // Copy the old turtle state into the new turtle
-                    TileTurtle newTurtle = (TileTurtle) newTile;
-                    //newTurtle.setLocation( world, pos );
-                    newTurtle.transferStateFrom( oldOwner );
-                    newTurtle.createServerComputer()
-                        .setWorld( world );
-                    newTurtle.createServerComputer()
-                        .setPosition( pos );
+                    newTile.invalidate();
 
                     // Remove the old turtle
-                    oldWorld.setBlock(oldPos.x, oldPos.y, oldPos.z, 0);
+                    world.removeBlockTileEntity(oldPos.x, oldPos.y, oldPos.z);
+                    world.setBlockRaw(oldPos.x, oldPos.y, oldPos.z, 0);
+                    world.notifyBlockChange(oldPos.x, oldPos.y, oldPos.z, 0);
+
+                    // Copy the old turtle state into the new turtle
+                    owner.validate();
+                    owner.x = pos.x;
+                    owner.y = pos.y;
+                    owner.z = pos.z;
+
+                    world.removeBlockTileEntity(pos.x, pos.y, pos.z);
+                    world.setTileEntity(pos.x, pos.y, pos.z, owner);
+
+                    owner.transferStateFrom( owner );
+                    owner.createServerComputer()
+                        .setWorld( world );
+                    owner.createServerComputer()
+                        .setPosition( pos );
 
                     // Make sure everybody knows about it
-                    newTurtle.updateBlock();
-                    newTurtle.updateRedstoneInput();
-                    newTurtle.updateRedstoneOutput();
+                    owner.updateBlock();
+                    owner.updateRedstoneInput();
+                    owner.updateRedstoneOutput();
+
+                    owner.notifyMoveEnd();
                     return true;
                 }
 
@@ -258,7 +271,7 @@ public class TurtleBrain implements ITurtleAccess
         finally
         {
             // whatever happens, unblock old turtle in case it's still in world
-            oldOwner.notifyMoveEnd();
+            owner.notifyMoveEnd();
         }
 
         return false;

@@ -23,10 +23,10 @@ public abstract class TurtleInventoryEvent extends TurtleBlockEvent
 {
     private final Container handler;
 
-    protected TurtleInventoryEvent(@Nonnull ITurtleAccess turtle, @Nonnull TurtleAction action, @Nonnull FakePlayer player, @Nonnull World world,
+    protected TurtleInventoryEvent(@Nonnull ITurtleAccess turtle, @Nonnull TurtleAction action, @Nonnull World world,
                                    @Nonnull BlockPos pos, @Nullable Container handler )
     {
-        super( turtle, action, player, world, pos );
+        super( turtle, action, world, pos );
         this.handler = handler;
     }
 
@@ -48,9 +48,9 @@ public abstract class TurtleInventoryEvent extends TurtleBlockEvent
      */
     public static class Suck extends TurtleInventoryEvent
     {
-        public Suck( @Nonnull ITurtleAccess turtle, @Nonnull FakePlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nullable Container handler )
+        public Suck( @Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos, @Nullable Container handler )
         {
-            super( turtle, TurtleAction.SUCK, player, world, pos, handler );
+            super( turtle, TurtleAction.SUCK, world, pos, handler );
         }
     }
 
@@ -63,10 +63,10 @@ public abstract class TurtleInventoryEvent extends TurtleBlockEvent
     {
         private final ItemStack stack;
 
-        public Drop( @Nonnull ITurtleAccess turtle, @Nonnull FakePlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nullable Container handler,
+        public Drop( @Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos, @Nullable Container handler,
                      @Nonnull ItemStack stack )
         {
-            super( turtle, TurtleAction.DROP, player, world, pos, handler );
+            super( turtle, TurtleAction.DROP, world, pos, handler );
 
             Objects.requireNonNull( stack, "stack cannot be null" );
             this.stack = stack;

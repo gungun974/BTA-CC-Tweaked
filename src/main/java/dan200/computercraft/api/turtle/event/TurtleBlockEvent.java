@@ -7,7 +7,6 @@ package dan200.computercraft.api.turtle.event;
 
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.api.lua.MethodResult;
-import dan200.computercraft.api.turtle.FakePlayer;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
@@ -27,15 +26,15 @@ import java.util.Objects;
  *
  * Be aware that some events (such as {@link TurtleInventoryEvent}) do not necessarily interact with a block, simply objects within that block space.
  */
-public abstract class TurtleBlockEvent extends TurtlePlayerEvent
+public abstract class TurtleBlockEvent extends TurtleActionEvent
 {
     private final World world;
     private final BlockPos pos;
 
-    protected TurtleBlockEvent( @Nonnull ITurtleAccess turtle, @Nonnull TurtleAction action, @Nonnull FakePlayer player, @Nonnull World world,
+    protected TurtleBlockEvent( @Nonnull ITurtleAccess turtle, @Nonnull TurtleAction action, @Nonnull World world,
                                 @Nonnull BlockPos pos )
     {
-        super( turtle, action, player );
+        super( turtle, action );
 
         Objects.requireNonNull( world, "world cannot be null" );
         Objects.requireNonNull( pos, "pos cannot be null" );
@@ -74,10 +73,10 @@ public abstract class TurtleBlockEvent extends TurtlePlayerEvent
         private final ITurtleUpgrade upgrade;
         private final TurtleSide side;
 
-        public Dig( @Nonnull ITurtleAccess turtle, @Nonnull FakePlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull int block,
+        public Dig( @Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull int block,
                     @Nonnull ITurtleUpgrade upgrade, @Nonnull TurtleSide side )
         {
-            super( turtle, TurtleAction.DIG, player, world, pos );
+            super( turtle, TurtleAction.DIG, world, pos );
 
             Objects.requireNonNull( block, "block cannot be null" );
             Objects.requireNonNull( upgrade, "upgrade cannot be null" );
@@ -128,9 +127,9 @@ public abstract class TurtleBlockEvent extends TurtlePlayerEvent
      */
     public static class Move extends TurtleBlockEvent
     {
-        public Move( @Nonnull ITurtleAccess turtle, @Nonnull FakePlayer player, @Nonnull World world, @Nonnull BlockPos pos )
+        public Move( @Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos )
         {
-            super( turtle, TurtleAction.MOVE, player, world, pos );
+            super( turtle, TurtleAction.MOVE, world, pos );
         }
     }
 
@@ -143,9 +142,9 @@ public abstract class TurtleBlockEvent extends TurtlePlayerEvent
     {
         private final ItemStack stack;
 
-        public Place( @Nonnull ITurtleAccess turtle, @Nonnull FakePlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull ItemStack stack )
+        public Place( @Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull ItemStack stack )
         {
-            super( turtle, TurtleAction.PLACE, player, world, pos );
+            super( turtle, TurtleAction.PLACE, world, pos );
 
             Objects.requireNonNull( stack, "stack cannot be null" );
             this.stack = stack;
@@ -175,10 +174,10 @@ public abstract class TurtleBlockEvent extends TurtlePlayerEvent
         private final int state;
         private final Map<String, Object> data;
 
-        public Inspect( @Nonnull ITurtleAccess turtle, @Nonnull FakePlayer player, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull int state,
+        public Inspect( @Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull int state,
                         @Nonnull Map<String, Object> data )
         {
-            super( turtle, TurtleAction.INSPECT, player, world, pos );
+            super( turtle, TurtleAction.INSPECT, world, pos );
 
             Objects.requireNonNull( state, "state cannot be null" );
             Objects.requireNonNull( data, "data cannot be null" );

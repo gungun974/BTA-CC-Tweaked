@@ -46,18 +46,18 @@ public class TurtleAPI implements ILuaAPI
         return new String[] { "turtle" };
     }
 
-//    /**
-//     * Move the turtle forward one block.
-//     *
-//     * @return The turtle command result.
-//     * @cc.treturn boolean Whether the turtle could successfully move.
-//     * @cc.treturn string|nil The reason the turtle could not move.
-//     */
-//    @LuaFunction
-//    public final MethodResult forward()
-//    {
-//        return trackCommand( new TurtleMoveCommand( MoveDirection.FORWARD ) );
-//    }
+    /**
+     * Move the turtle forward one block.
+     *
+     * @return The turtle command result.
+     * @cc.treturn boolean Whether the turtle could successfully move.
+     * @cc.treturn string|nil The reason the turtle could not move.
+     */
+    @LuaFunction
+    public final MethodResult forward()
+    {
+        return trackCommand( new TurtleMoveCommand( MoveDirection.FORWARD ) );
+    }
 
     private MethodResult trackCommand( ITurtleCommand command )
     {
@@ -65,44 +65,44 @@ public class TurtleAPI implements ILuaAPI
         return turtle.executeCommand( command );
     }
 
-//    /**
-//     * Move the turtle backwards one block.
-//     *
-//     * @return The turtle command result.
-//     * @cc.treturn boolean Whether the turtle could successfully move.
-//     * @cc.treturn string|nil The reason the turtle could not move.
-//     */
-//    @LuaFunction
-//    public final MethodResult back()
-//    {
-//        return trackCommand( new TurtleMoveCommand( MoveDirection.BACK ) );
-//    }
+    /**
+     * Move the turtle backwards one block.
+     *
+     * @return The turtle command result.
+     * @cc.treturn boolean Whether the turtle could successfully move.
+     * @cc.treturn string|nil The reason the turtle could not move.
+     */
+    @LuaFunction
+    public final MethodResult back()
+    {
+        return trackCommand( new TurtleMoveCommand( MoveDirection.BACK ) );
+    }
 
-//    /**
-//     * Move the turtle up one block.
-//     *
-//     * @return The turtle command result.
-//     * @cc.treturn boolean Whether the turtle could successfully move.
-//     * @cc.treturn string|nil The reason the turtle could not move.
-//     */
-//    @LuaFunction
-//    public final MethodResult up()
-//    {
-//        return trackCommand( new TurtleMoveCommand( MoveDirection.UP ) );
-//    }
+    /**
+     * Move the turtle up one block.
+     *
+     * @return The turtle command result.
+     * @cc.treturn boolean Whether the turtle could successfully move.
+     * @cc.treturn string|nil The reason the turtle could not move.
+     */
+    @LuaFunction
+    public final MethodResult up()
+    {
+        return trackCommand( new TurtleMoveCommand( MoveDirection.UP ) );
+    }
 
-//    /**
-//     * Move the turtle down one block.
-//     *
-//     * @return The turtle command result.
-//     * @cc.treturn boolean Whether the turtle could successfully move.
-//     * @cc.treturn string|nil The reason the turtle could not move.
-//     */
-//    @LuaFunction
-//    public final MethodResult down()
-//    {
-//        return trackCommand( new TurtleMoveCommand( MoveDirection.DOWN ) );
-//    }
+    /**
+     * Move the turtle down one block.
+     *
+     * @return The turtle command result.
+     * @cc.treturn boolean Whether the turtle could successfully move.
+     * @cc.treturn string|nil The reason the turtle could not move.
+     */
+    @LuaFunction
+    public final MethodResult down()
+    {
+        return trackCommand( new TurtleMoveCommand( MoveDirection.DOWN ) );
+    }
 
     /**
      * Rotate the turtle 90 degress to the left.

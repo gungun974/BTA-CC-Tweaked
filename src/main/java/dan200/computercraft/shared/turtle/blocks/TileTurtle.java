@@ -316,9 +316,9 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
         super.readFromNBT(nbt);
 
         // Read inventory
-        ListTag nbttaglist = nbt.getList( "Items" );
-        inventory.clear();
-        previousInventory.clear();
+        ListTag nbttaglist = nbt.getList("Items");
+        inventory.replaceAll(ignored -> null);
+        previousInventory.replaceAll(ignored -> null);
         for( int i = 0; i < nbttaglist.tagCount(); i++ )
         {
             CompoundTag tag = (CompoundTag) nbttaglist.tagAt( i );
