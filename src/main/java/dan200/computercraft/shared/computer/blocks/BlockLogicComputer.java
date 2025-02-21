@@ -1,46 +1,25 @@
 package dan200.computercraft.shared.computer.blocks;
 
-import com.mojang.logging.LogUtils;
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.BlockPos;
-import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.client.gui.GuiComputer;
-import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.common.IBundledRedstoneBlock;
-import dan200.computercraft.shared.common.ITerminal;
-import dan200.computercraft.shared.computer.core.ClientComputer;
-import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerComputer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.container.ScreenFurnace;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogicRotatable;
-import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.block.entity.TileEntityFurnace;
 import net.minecraft.core.block.material.Material;
-import net.minecraft.core.entity.Mob;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.enums.EnumDropCause;
-import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.player.gamemode.Gamemode;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 import net.minecraft.core.world.WorldSource;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Random;
 
 public class BlockLogicComputer extends BlockLogicRotatable implements IBundledRedstoneBlock {
-    private static final Logger log = LoggerFactory.getLogger(BlockLogicComputer.class);
-
     public BlockLogicComputer(Block<?> block) {
         super(block, Material.stone);
         block.withEntity(TileEntityComputer::new);

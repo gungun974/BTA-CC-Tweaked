@@ -14,14 +14,20 @@ import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.fabric.Helper;
+import dan200.computercraft.shared.MediaProviders;
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import dan200.computercraft.shared.computer.blocks.ComputerProxy;
 import dan200.computercraft.shared.computer.blocks.TileComputerBase;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
+import dan200.computercraft.shared.network.client.OpenGuiContainerMessage;
+import dan200.computercraft.shared.peripheral.diskdrive.MenuDiskDrive;
+import dan200.computercraft.shared.peripheral.diskdrive.ScreenDiskDrive;
 import dan200.computercraft.shared.turtle.apis.TurtleAPI;
 import dan200.computercraft.shared.turtle.core.TurtleBrain;
+import dan200.computercraft.shared.turtle.inventory.MenuTurtle;
+import dan200.computercraft.shared.turtle.inventory.ScreenTurtle;
 import dan200.computercraft.shared.util.*;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemDye;
@@ -47,7 +53,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     public static final int INVENTORY_SIZE = 16;
     public static final int INVENTORY_WIDTH = 4;
     public static final int INVENTORY_HEIGHT = 4;
-    public final List<ItemStack> inventory = new ArrayList<>(Collections.nCopies(INVENTORY_SIZE, null));
+    public final List<@Nullable ItemStack> inventory = new ArrayList<>(Collections.nCopies(INVENTORY_SIZE, null));
     private final List<ItemStack> previousInventory = new ArrayList<>(Collections.nCopies(INVENTORY_SIZE, null));
     private boolean inventoryChanged = false;
     private TurtleBrain brain = new TurtleBrain( this );
@@ -162,7 +168,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
 
     @Override
     public int getMaxStackSize() {
-        return 0;
+        return 64;
     }
 
     @Override
@@ -200,54 +206,64 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
 //        return true;
 //    }
 
-    public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced)
-    {
-        // Apply dye
-        ItemStack currentItem = player.getHeldItem();
-        if( currentItem != null )
-        {
-            if( currentItem.getItem() instanceof ItemDye)
-            {
-                // Dye to change turtle colour
-                if( !Helper.isClientWorld())
-                {
-                    DyeColor dye = DyeColor.colorFromItemMeta(currentItem.getMetadata());
-                    if( brain.getDyeColour() != dye )
-                    {
-                        brain.setDyeColour( dye );
-                        if( player.gamemode != Gamemode.creative )
-                        {
-                            currentItem.stackSize -= 1;
-                            if (currentItem.stackSize == 0) {
-                                player.setHeldObject(null);
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-            else if(currentItem.getItem().equals(Items.BUCKET_WATER) && brain.getColour() != -1 )
-            {
-                // Water to remove turtle colour
-                if( !Helper.isClientWorld() )
-                {
-                    if( brain.getColour() != -1 )
-                    {
-                        brain.setColour( -1 );
-                        if( player.gamemode != Gamemode.creative )
-                        {
-                            //player.setHeldObject(new ItemStack( Items.BUCKET ));
-                            //player.inventory.markDirty();
-                        }
-                    }
-                }
-                return true;
-            }
-        }
+//    public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced)
+//    {
+//        // Apply dye
+//        ItemStack currentItem = player.getHeldItem();
+//        if( currentItem != null )
+//        {
+//            if( currentItem.getItem() instanceof ItemDye)
+//            {
+//                // Dye to change turtle colour
+//                if( !Helper.isClientWorld())
+//                {
+//                    DyeColor dye = DyeColor.colorFromItemMeta(currentItem.getMetadata());
+//                    if( brain.getDyeColour() != dye )
+//                    {
+//                        brain.setDyeColour( dye );
+//                        if( player.gamemode != Gamemode.creative )
+//                        {
+//                            currentItem.stackSize -= 1;
+//                            if (currentItem.stackSize == 0) {
+//                                player.setHeldObject(null);
+//                            }
+//                        }
+//                    }
+//                }
+//                return true;
+//            }
+//            else if(currentItem.getItem().equals(Items.BUCKET_WATER) && brain.getColour() != -1 )
+//            {
+//                // Water to remove turtle colour
+//                if( !Helper.isClientWorld() )
+//                {
+//                    if( brain.getColour() != -1 )
+//                    {
+//                        brain.setColour( -1 );
+//                        if( player.gamemode != Gamemode.creative )
+//                        {
+//                            //player.setHeldObject(new ItemStack( Items.BUCKET ));
+//                            //player.inventory.markDirty();
+//                        }
+//                    }
+//                }
+//                return true;
+//            }
+//        }
+//
+//        // Open GUI or whatever
+//        return super.onBlockRightClicked( player, side, xPlaced, yPlaced );
+//    }
 
-        // Open GUI or whatever
-        return super.onBlockRightClicked( player, side, xPlaced, yPlaced );
+    public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
+        // Open the GUI
+        if( !Helper.isClientWorld() )
+        {
+            OpenGuiContainerMessage.SendToPlayer(player, this, ScreenTurtle.class, MenuTurtle::new);
+        }
+        return true;
     }
+
 
     @Override
     public void onNeighbourChange( @Nonnull BlockPos neighbour )
@@ -274,8 +290,9 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
             inventoryChanged = false;
             for( int n = 0; n < inventory.size(); n++ )
             {
+                ItemStack item = getItem( n );
                 previousInventory.set( n,
-                    getItem( n ).copy() );
+                    item != null ? item.copy() : null );
             }
         }
     }
@@ -291,13 +308,15 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
         ListTag nbttaglist = new ListTag();
         for( int i = 0; i < INVENTORY_SIZE; i++ )
         {
-            if( inventory.get( i ) != null )
+            ItemStack item = inventory.get( i );
+            if( item != null )
             {
                 CompoundTag tag = new CompoundTag();
                 tag.putByte( "Slot", (byte) i );
-                inventory.get( i )
-                    .writeToNBT( tag );
+                item.writeToNBT( tag );
                 nbttaglist.addTag( tag );
+            } else {
+               inventory.set(i, null);
             }
         }
         nbt.put( "Items", nbttaglist );
@@ -326,8 +345,8 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
             if( slot < inventory.size() )
             {
                 inventory.set( slot, ItemStack.readItemStackFromNbt( tag ) );
-                previousInventory.set( slot, inventory.get( slot )
-                    .copy() );
+                ItemStack item = inventory.get( slot );
+                previousInventory.set( slot, item != null ? item.copy() : null );
             }
         }
 

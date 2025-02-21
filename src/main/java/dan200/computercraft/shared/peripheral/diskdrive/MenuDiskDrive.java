@@ -30,8 +30,8 @@ public class MenuDiskDrive extends MenuAbstract {
         }
 
         this.diskDriveSlotsStart = 0;
-        this.inventorySlotsStart = 9;
-        this.hotbarSlotsStart = 36;
+        this.inventorySlotsStart = 1;
+        this.hotbarSlotsStart = 28;
     }
 
     @Override
