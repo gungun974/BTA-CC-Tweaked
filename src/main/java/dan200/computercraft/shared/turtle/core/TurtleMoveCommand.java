@@ -82,7 +82,7 @@ public class TurtleMoveCommand implements ITurtleCommand
                 if (!entity.isAlive()) {
                    continue;
                 }
-                AABB pushedBB = entity.getBb()
+                AABB pushedBB = entity.bb.copy()
                     .move( -direction.getOffsetX() / 2.0, -direction.getOffsetY() / 2.0, -direction.getOffsetZ() / 2.0 )
                     .expand( direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ() );
                 if(!oldWorld.getEntitiesWithinAABB(Entity.class, pushedBB).isEmpty())
@@ -150,9 +150,9 @@ public class TurtleMoveCommand implements ITurtleCommand
             return TurtleCommandResult.failure( "Cannot enter protected area" );
         }
 
-        if( !world.isChunkLoaded( position.x, position.z ) )
+        if( !world.isChunkLoaded( Math.floorDiv(position.x, 16), Math.floorDiv(position.z, 16) ) )
         {
-            //TODO:return TurtleCommandResult.failure( "Cannot leave loaded world" );
+            return TurtleCommandResult.failure( "Cannot leave loaded world" );
         }
 //        if( !world.getWorldBorder()
 //            .contains( position ) )

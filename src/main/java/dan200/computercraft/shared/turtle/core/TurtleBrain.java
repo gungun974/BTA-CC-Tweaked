@@ -211,10 +211,10 @@ public class TurtleBrain implements ITurtleAccess
         }
 
         // Ensure the chunk is loaded
-//TODO:        if( !world.isChunkLoaded( pos.x, pos.z ) )
-//        {
-//            return false;
-//        }
+        if( !world.isChunkLoaded( Math.floorDiv(pos.x, 16), Math.floorDiv(pos.z, 16) ) )
+        {
+            return false;
+        }
 
         // Ensure we're inside the world border
 //        if( !world.getWorldBorder()
