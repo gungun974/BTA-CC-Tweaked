@@ -3,13 +3,15 @@
     "package": "dan200.computercraft.fabric.mixin",
     "compatibilityLevel": "JAVA_8",
     "mixins": [
+        "EntityMixin",
+        "LogicBlockMixin",
         "PlayerMixin",
         "WorldMixin"
     ],
     "client": [
+        "GLFWKeyboardImplementationMixin",
         "WorldClientMixin",
-        "WorldClientMPMixin",
-        "GLFWKeyboardImplementationMixin"
+        "WorldClientMPMixin"
     ],
     "server": [
         "MinecraftServerMixin",

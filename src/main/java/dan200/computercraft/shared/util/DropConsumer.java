@@ -6,9 +6,12 @@
 package dan200.computercraft.shared.util;
 
 import dan200.computercraft.BlockPos;
+import dan200.computercraft.ComputerCraft;
 import net.minecraft.core.entity.Entity;
+import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.phys.AABB;
+import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
 
 import java.lang.ref.WeakReference;
@@ -74,24 +77,22 @@ public final class DropConsumer
     private static void handleDrops( ItemStack stack )
     {
         ItemStack remaining = dropConsumer.apply( stack );
-        if( !(remaining.stackSize == 0) )
+        if( remaining != null && remaining.stackSize != 0)
         {
             remainingDrops.add( remaining );
         }
     }
 
-    /*
     public static boolean onEntitySpawn( Entity entity )
     {
         // Capture any nearby item spawns
-        if( dropWorld != null && dropWorld.get() == entity.getEntityWorld() && entity instanceof ItemEntity && dropBounds.contains( entity.getPos() ) )
+        if( dropWorld != null && dropWorld.get() == entity.world && entity instanceof EntityItem && dropBounds.contains(  Vec3.getPermanentVec3(entity.x, entity.y, entity.z)))
         {
-            handleDrops( ((ItemEntity) entity).getStack() );
+            handleDrops( ((EntityItem) entity).item );
             return true;
         }
         return false;
     }
-     */
 
     public static boolean onLivingDrops( Entity entity, ItemStack stack )
     {

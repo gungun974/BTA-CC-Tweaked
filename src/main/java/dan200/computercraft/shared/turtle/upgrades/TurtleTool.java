@@ -229,7 +229,7 @@ public class TurtleTool extends AbstractTurtleUpgrade
 
     private static Function<ItemStack, ItemStack> turtleDropConsumer( TileEntity turtleBlock, ITurtleAccess turtle )
     {
-        return drop -> !turtleBlock.isInvalid() ? drop : InventoryUtil.storeItems( drop, turtle.getItemHandler(), turtle.getSelectedSlot() );
+        return drop -> turtleBlock.isInvalid() ? drop : InventoryUtil.storeItems( drop, turtle.getItemHandler(), turtle.getSelectedSlot() );
     }
 
     protected int getDamageMultiplier()

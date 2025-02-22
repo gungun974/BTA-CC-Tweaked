@@ -1,10 +1,10 @@
 package dan200.computercraft.fabric.mixin;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
-import net.minecraft.client.world.WorldClient;
+import dan200.computercraft.shared.util.DropConsumer;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
+import net.minecraft.core.entity.Entity;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +28,18 @@ public abstract class WorldMixin {
             if (block != null) {
                 cir.setReturnValue(block.getSignal((World) (Object) this, x, y, z, side));
             }
+        }
+    }
+
+    @Inject(
+        method = "entityJoinedWorld",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    public void addEntity(Entity entity, CallbackInfoReturnable<Boolean> ci) {
+        if( DropConsumer.onEntitySpawn( entity ) )
+        {
+            ci.setReturnValue( false );
         }
     }
 }
