@@ -178,56 +178,56 @@ public class TurtleAPI implements ILuaAPI
         return trackCommand( TurtleToolCommand.dig( InteractDirection.DOWN, side.orElse( null ) ) );
     }
 
-//    /**
-//     * Place a block or item into the world in front of the turtle.
-//     *
-//     * "Placing" an item allows it to interact with blocks and entities in front of the turtle. For instance, buckets
-//     * can pick up and place down fluids, and wheat can be used to breed cows. However, you cannot use {@link #place} to
-//     * perform arbitrary block interactions, such as clicking buttons or flipping levers.
-//     *
-//     * @param args Arguments to place.
-//     * @return The turtle command result.
-//     * @cc.tparam [opt] string text When placing a sign, set its contents to this text.
-//     * @cc.treturn boolean Whether the block could be placed.
-//     * @cc.treturn string|nil The reason the block was not placed.
-//     */
-//    @LuaFunction
-//    public final MethodResult place( IArguments args )
-//    {
-//        return trackCommand( new TurtlePlaceCommand( InteractDirection.FORWARD, args.getAll() ) );
-//    }
+    /**
+     * Place a block or item into the world in front of the turtle.
+     *
+     * "Placing" an item allows it to interact with blocks and entities in front of the turtle. For instance, buckets
+     * can pick up and place down fluids, and wheat can be used to breed cows. However, you cannot use {@link #place} to
+     * perform arbitrary block interactions, such as clicking buttons or flipping levers.
+     *
+     * @param args Arguments to place.
+     * @return The turtle command result.
+     * @cc.tparam [opt] string text When placing a sign, set its contents to this text.
+     * @cc.treturn boolean Whether the block could be placed.
+     * @cc.treturn string|nil The reason the block was not placed.
+     */
+    @LuaFunction
+    public final MethodResult place( IArguments args )
+    {
+        return trackCommand( new TurtlePlaceCommand( InteractDirection.FORWARD, args.getAll() ) );
+    }
 
-//    /**
-//     * Place a block or item into the world above the turtle.
-//     *
-//     * @param args Arguments to place.
-//     * @return The turtle command result.
-//     * @cc.tparam [opt] string text When placing a sign, set its contents to this text.
-//     * @cc.treturn boolean Whether the block could be placed.
-//     * @cc.treturn string|nil The reason the block was not placed.
-//     * @see #place For more information about placing items.
-//     */
-//    @LuaFunction
-//    public final MethodResult placeUp( IArguments args )
-//    {
-//        return trackCommand( new TurtlePlaceCommand( InteractDirection.UP, args.getAll() ) );
-//    }
+    /**
+     * Place a block or item into the world above the turtle.
+     *
+     * @param args Arguments to place.
+     * @return The turtle command result.
+     * @cc.tparam [opt] string text When placing a sign, set its contents to this text.
+     * @cc.treturn boolean Whether the block could be placed.
+     * @cc.treturn string|nil The reason the block was not placed.
+     * @see #place For more information about placing items.
+     */
+    @LuaFunction
+    public final MethodResult placeUp( IArguments args )
+    {
+        return trackCommand( new TurtlePlaceCommand( InteractDirection.UP, args.getAll() ) );
+    }
 
-//    /**
-//     * Place a block or item into the world below the turtle.
-//     *
-//     * @param args Arguments to place.
-//     * @return The turtle command result.
-//     * @cc.tparam [opt] string text When placing a sign, set its contents to this text.
-//     * @cc.treturn boolean Whether the block could be placed.
-//     * @cc.treturn string|nil The reason the block was not placed.
-//     * @see #place For more information about placing items.
-//     */
-//    @LuaFunction
-//    public final MethodResult placeDown( IArguments args )
-//    {
-//        return trackCommand( new TurtlePlaceCommand( InteractDirection.DOWN, args.getAll() ) );
-//    }
+    /**
+     * Place a block or item into the world below the turtle.
+     *
+     * @param args Arguments to place.
+     * @return The turtle command result.
+     * @cc.tparam [opt] string text When placing a sign, set its contents to this text.
+     * @cc.treturn boolean Whether the block could be placed.
+     * @cc.treturn string|nil The reason the block was not placed.
+     * @see #place For more information about placing items.
+     */
+    @LuaFunction
+    public final MethodResult placeDown( IArguments args )
+    {
+        return trackCommand( new TurtlePlaceCommand( InteractDirection.DOWN, args.getAll() ) );
+    }
 
 //    /**
 //     * Drop the currently selected stack into the inventory in front of the turtle, or as an item into the world if there is no inventory.

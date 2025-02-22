@@ -9,18 +9,16 @@ import com.google.common.eventbus.Subscribe;
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.event.TurtleActionEvent;
-import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.world.World;
-import net.minecraft.server.MinecraftServer;
 
 public final class TurtlePermissions
 {
-    public static boolean isBlockEditable(World world, BlockPos pos, Player player )
+    public static boolean isBlockEditable(World world, BlockPos pos )
     {
-        return isBlockEnterable( world, pos, player );
+        return isBlockEnterable( world, pos );
     }
 
-    public static boolean isBlockEnterable( World world, BlockPos pos, Player player )
+    public static boolean isBlockEnterable( World world, BlockPos pos  )
     {
         //TODO: Make sure turtle respect spawn protection
         return true;

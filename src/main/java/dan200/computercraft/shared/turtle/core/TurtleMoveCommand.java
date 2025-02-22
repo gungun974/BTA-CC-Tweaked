@@ -145,7 +145,7 @@ public class TurtleMoveCommand implements ITurtleCommand
 //        }
 
         // Check spawn protection
-        if( ComputerCraft.turtlesObeyBlockProtection && !TurtlePermissions.isBlockEnterable( world, position, /*turtlePlayer*/ null ) )
+        if( ComputerCraft.turtlesObeyBlockProtection && !TurtlePermissions.isBlockEnterable( world, position ) )
         {
             return TurtleCommandResult.failure( "Cannot enter protected area" );
         }
