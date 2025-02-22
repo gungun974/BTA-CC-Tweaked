@@ -329,9 +329,14 @@ public class TurtleAPI implements ILuaAPI
     public final int getItemCount( Optional<Integer> slot ) throws LuaException
     {
         int actualSlot = checkSlot( slot ).orElse( turtle.getSelectedSlot() );
-        return turtle.getInventory()
-            .getItem( actualSlot )
-            .stackSize;
+        ItemStack item = turtle.getInventory()
+            .getItem( actualSlot );
+
+        if (item == null) {
+            return 0;
+        }
+
+        return item.stackSize;
     }
 
     private static Optional<Integer> checkSlot( Optional<Integer> slot ) throws LuaException

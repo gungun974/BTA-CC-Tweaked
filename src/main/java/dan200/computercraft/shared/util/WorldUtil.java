@@ -8,13 +8,16 @@ package dan200.computercraft.shared.util;
 import com.google.common.base.Predicate;
 import com.google.common.collect.MapMaker;
 import dan200.computercraft.BlockPos;
+import dan200.computercraft.ComputerCraft;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.entity.Mob;
+import net.minecraft.core.entity.animal.MobPig;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.phys.AABB;
+import net.minecraft.core.util.phys.HitResult;
 import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
 import org.apache.commons.lang3.tuple.Pair;
@@ -56,23 +59,16 @@ public final class WorldUtil
     }
      */
 
-    /*
     public static Pair<Entity, Vec3> rayTraceEntities( World world, Vec3 vecStart, Vec3 vecDir, double distance )
     {
+        vecStart = vecStart.add( 0.5, 0.5, 0.5 );
         Vec3 vecEnd = vecStart.add( vecDir.x * distance, vecDir.y * distance, vecDir.z * distance );
+        Vec3 vecStartBlock = vecStart.add( vecDir.x * 0.51, vecDir.y * 0.51, vecDir.z * 0.51 );
 
-        // Raycast for blocks
-        Entity collisionEntity = getEntity( world );
-        collisionEntity.updatePosition( vecStart.x, vecStart.y, vecStart.z );
-        RaycastContext context = new RaycastContext( vecStart,
-            vecEnd,
-            RaycastContext.ShapeType.COLLIDER,
-            RaycastContext.FluidHandling.NONE,
-            collisionEntity );
-        HitResult result = world.raycast( context );
-        if( result != null && result.getType() == HitResult.Type.BLOCK )
+        HitResult result = world.checkBlockCollisionBetweenPoints(vecStartBlock, vecEnd, true, true, true);
+        if( result != null && result.hitType == HitResult.HitType.TILE )
         {
-            distance = vecStart.distanceTo( result.getPos() );
+            distance = vecStart.distanceTo( result.location );
             vecEnd = vecStart.add( vecDir.x * distance, vecDir.y * distance, vecDir.z * distance );
         }
 
@@ -89,10 +85,10 @@ public final class WorldUtil
 
         Entity closest = null;
         double closestDist = 99.0;
-        List<Entity> list = world.getEntitiesByClass( Entity.class, bigBox, CAN_COLLIDE );
+        List<Entity> list = world.getEntitiesWithinAABB(Entity.class, bigBox);
         for( Entity entity : list )
         {
-            AABB littleBox = entity.getBb();
+            AABB littleBox = entity.bb;
             if( littleBox.contains( vecStart ) )
             {
                 closest = entity;
@@ -100,11 +96,10 @@ public final class WorldUtil
                 continue;
             }
 
-            Vec3 littleBoxResult = littleBox.raycast( vecStart, vecEnd )
-                .orElse( null );
+            HitResult littleBoxResult = littleBox.clip( vecStart, vecEnd );
             if( littleBoxResult != null )
             {
-                double dist = vecStart.distanceTo( littleBoxResult );
+                double dist = vecStart.distanceTo( littleBoxResult.location );
                 if( closest == null || dist <= closestDist )
                 {
                     closest = entity;
@@ -127,7 +122,6 @@ public final class WorldUtil
         }
         return null;
     }
-     */
 
     private static synchronized Entity getEntity( World world )
     {

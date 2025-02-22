@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.common.ComputerCraftItems;
+import dan200.computercraft.shared.common.ComputerCraftTurtleUpgrades;
 import dan200.computercraft.shared.common.DefaultBundledRedstoneProvider;
 import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
 import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
@@ -38,8 +39,9 @@ import org.slf4j.LoggerFactory;
 
 import net.fabricmc.api.ModInitializer;
 import turniplabs.halplibe.helper.network.NetworkHandler;
+import turniplabs.halplibe.util.GameStartEntrypoint;
 
-public final class ComputerCraft implements ModInitializer
+public final class ComputerCraft implements ModInitializer, GameStartEntrypoint
 {
     public static final String MOD_ID = "computercraft";
 
@@ -179,5 +181,16 @@ public final class ComputerCraft implements ModInitializer
             ResourceManagerHelper.registerBuiltinResourcePack( new Identifier( MOD_ID, "overhaul" ), modContainer, ResourcePackActivationType.NORMAL );
         } );
          */
+    }
+
+
+    @Override
+    public void beforeGameStart() {
+    }
+
+    @Override
+    public void afterGameStart() {
+        ComputerCraftTurtleUpgrades.registerTurtleUpgrades();
+
     }
 }

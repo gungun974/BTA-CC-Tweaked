@@ -41,6 +41,12 @@
         ],
         "initModels": [
             "dan200.computercraft.shared.common.ComputerCraftModels"
+        ],
+        "beforeGameStart": [
+            "dan200.computercraft.ComputerCraft"
+        ],
+        "afterGameStart": [
+            "dan200.computercraft.ComputerCraft"
         ]
     },
     "mixins": [

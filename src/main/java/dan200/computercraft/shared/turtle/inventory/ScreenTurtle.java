@@ -7,7 +7,6 @@ import dan200.computercraft.shared.computer.core.ClientComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
-import dan200.computercraft.shared.util.Colour;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.container.ScreenContainerAbstract;
 import net.minecraft.client.render.tessellator.Tessellator;
@@ -18,6 +17,9 @@ import org.lwjgl.opengl.GL11;
 import java.util.UUID;
 
 public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContainerAbstract {
+    public static final int PLAYER_START_Y = 134;
+    public static final int TURTLE_START_X = 175;
+
     protected final ComputerFamily family;
     protected final ClientComputer computer;
     private final int termWidth;
@@ -128,7 +130,7 @@ public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContain
             {
                 int slotX = slot % 4;
                 int slotY = slot / 4;
-                this.drawTexturedModalRect( j + ContainerTurtle.TURTLE_START_X - 2 + slotX * 18, k + ContainerTurtle.PLAYER_START_Y - 2 + slotY * 18,
+                this.drawTexturedModalRect( j + TURTLE_START_X - 2 + slotX * 18, k + PLAYER_START_Y - 2 + slotY * 18,
                     0,
                     217,
                     24,

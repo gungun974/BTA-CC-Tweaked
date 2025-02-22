@@ -19,16 +19,16 @@ import java.util.Objects;
  *
  * @see TurtleAction#ATTACK
  */
-public class TurtleAttackEvent extends TurtlePlayerEvent
+public class TurtleAttackEvent extends TurtleActionEvent
 {
     private final Entity target;
     private final ITurtleUpgrade upgrade;
     private final TurtleSide side;
 
-    public TurtleAttackEvent( @Nonnull ITurtleAccess turtle, @Nonnull FakePlayer player, @Nonnull Entity target, @Nonnull ITurtleUpgrade upgrade,
+    public TurtleAttackEvent( @Nonnull ITurtleAccess turtle, @Nonnull Entity target, @Nonnull ITurtleUpgrade upgrade,
                               @Nonnull TurtleSide side )
     {
-        super( turtle, TurtleAction.ATTACK, player );
+        super( turtle, TurtleAction.ATTACK );
         Objects.requireNonNull( target, "target cannot be null" );
         Objects.requireNonNull( upgrade, "upgrade cannot be null" );
         Objects.requireNonNull( side, "side cannot be null" );

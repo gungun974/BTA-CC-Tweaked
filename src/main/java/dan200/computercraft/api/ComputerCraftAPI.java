@@ -19,6 +19,7 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
 //import dan200.computercraft.api.turtle.ITurtleUpgrade;
+import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
 
@@ -162,12 +163,10 @@ public final class ComputerCraftAPI
      * @param upgrade The turtle upgrade to register.
      * @see ITurtleUpgrade
      */
-    /*
     public static void registerTurtleUpgrade( @Nonnull ITurtleUpgrade upgrade )
     {
         getInstance().registerTurtleUpgrade( upgrade );
     }
-     */
 
     /**
      * Registers a bundled redstone provider to provide bundled redstone output for blocks.
@@ -271,7 +270,7 @@ public final class ComputerCraftAPI
 
         void registerGenericSource( @Nonnull GenericSource source );
 
-        //void registerTurtleUpgrade( @Nonnull ITurtleUpgrade upgrade );
+        void registerTurtleUpgrade( @Nonnull ITurtleUpgrade upgrade );
 
         void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider );
 

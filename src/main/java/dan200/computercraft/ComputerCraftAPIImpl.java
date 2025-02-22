@@ -17,12 +17,14 @@ import dan200.computercraft.api.network.wired.IWiredNode;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import dan200.computercraft.api.pocket.IPocketUpgrade;
 import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
+import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.core.apis.ApiFactories;
 import dan200.computercraft.core.asm.GenericMethod;
 import dan200.computercraft.core.filesystem.FileMount;
 import dan200.computercraft.core.filesystem.ResourceMount;
 import dan200.computercraft.shared.BundledRedstone;
 import dan200.computercraft.shared.MediaProviders;
+import dan200.computercraft.shared.TurtleUpgrades;
 import dan200.computercraft.shared.peripheral.modem.wired.TileCable;
 import dan200.computercraft.shared.peripheral.modem.wired.TileWiredModemFull;
 import dan200.computercraft.shared.peripheral.modem.wireless.WirelessNetwork;
@@ -129,11 +131,11 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI
         Peripherals.register( provider );
     }
 
-//    @Override
-//    public void registerTurtleUpgrade( @Nonnull ITurtleUpgrade upgrade )
-//    {
-//        TurtleUpgrades.register( upgrade );
-//    }
+    @Override
+    public void registerTurtleUpgrade( @Nonnull ITurtleUpgrade upgrade )
+    {
+        TurtleUpgrades.register( upgrade );
+    }
 
     @Override
     public void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider )

@@ -10,15 +10,15 @@ import net.minecraft.core.item.ItemStack;
 
 public class TurtleAxe extends TurtleTool
 {
-//    public TurtleAxe( int id, String adjective, Item item )
-//    {
-//        super( id, adjective, item );
-//    }
-//
-//    public TurtleAxe( int id, Item item )
-//    {
-//        super( id, item );
-//    }
+    public TurtleAxe( int id, String adjective, Item item )
+    {
+        super( id, adjective, item );
+    }
+
+    public TurtleAxe( int id, Item item )
+    {
+        super( id, item );
+    }
 //
 //    public TurtleAxe(int id, ItemStack craftItem, ItemStack toolItem )
 //    {

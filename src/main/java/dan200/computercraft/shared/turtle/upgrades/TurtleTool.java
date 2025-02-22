@@ -14,17 +14,20 @@ import dan200.computercraft.api.turtle.event.TurtleAttackEvent;
 import dan200.computercraft.api.turtle.event.TurtleBlockEvent;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.shared.TurtlePermissions;
+import dan200.computercraft.shared.common.ComputerCraftTurtleUpgrades;
 import dan200.computercraft.shared.turtle.core.TurtleBrain;
 import dan200.computercraft.shared.turtle.core.TurtlePlaceCommand;
-import dan200.computercraft.shared.turtle.core.TurtlePlayer;
 import dan200.computercraft.shared.util.DropConsumer;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.WorldUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.entity.Entity;
+import net.minecraft.core.entity.animal.MobPig;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.util.helper.DamageType;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
@@ -34,58 +37,58 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Function;
 
-public class TurtleTool// extends AbstractTurtleUpgrade
+public class TurtleTool extends AbstractTurtleUpgrade
 {
-//    protected final ItemStack item;
-//
-//    private static final int TAG_LIST = 9;
-//    private static final int TAG_COMPOUND = 10;
-//
-//    public TurtleTool( int id, String adjective, Item item )
-//    {
-//        super( id, TurtleUpgradeType.TOOL, adjective, item );
-//        this.item = new ItemStack( item );
-//    }
-//
-//    public TurtleTool( int id, Item item )
-//    {
-//        super( id, TurtleUpgradeType.TOOL, item );
-//        this.item = new ItemStack( item );
-//    }
-//
-//    public TurtleTool( int id, ItemStack craftItem, ItemStack toolItem )
-//    {
-//        super( id, TurtleUpgradeType.TOOL, craftItem );
-//        item = toolItem;
-//    }
-//
-//    @Override
-//    public boolean isItemSuitable( @Nonnull ItemStack stack )
-//    {
-//        CompoundTag tag = stack.getData();
-//
-//        // Check we've not got anything vaguely interesting on the item. We allow other mods to add their
-//        // own NBT, with the understanding such details will be lost to the mist of time.
-//        if( stack.isItemDamaged() || stack.hasCustomName() ) return false;
-//        return !tag.containsKey( "AttributeModifiers" ) ||
-//            tag.getList( "AttributeModifiers" ) != null;
-//    }
-//
-//    @Nonnull
-//    @Override
-//    public TurtleCommandResult useTool( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction direction )
-//    {
-//        switch( verb )
-//        {
-//            case ATTACK:
-//                return attack( turtle, direction, side );
-//            case DIG:
-//                return dig( turtle, direction, side );
-//            default:
-//                return TurtleCommandResult.failure( "Unsupported action" );
-//        }
-//    }
-//
+    protected final ItemStack item;
+
+    private static final int TAG_LIST = 9;
+    private static final int TAG_COMPOUND = 10;
+
+    public TurtleTool( int id, String adjective, Item item )
+    {
+        super( id, TurtleUpgradeType.TOOL, adjective, item );
+        this.item = new ItemStack( item );
+    }
+
+    public TurtleTool( int id, Item item )
+    {
+        super( id, TurtleUpgradeType.TOOL, item );
+        this.item = new ItemStack( item );
+    }
+
+    public TurtleTool( int id, ItemStack craftItem, ItemStack toolItem )
+    {
+        super( id, TurtleUpgradeType.TOOL, craftItem );
+        item = toolItem;
+    }
+
+    @Override
+    public boolean isItemSuitable( @Nonnull ItemStack stack )
+    {
+        CompoundTag tag = stack.getData();
+
+        // Check we've not got anything vaguely interesting on the item. We allow other mods to add their
+        // own NBT, with the understanding such details will be lost to the mist of time.
+        if( stack.isItemDamaged() || stack.hasCustomName() ) return false;
+        return !tag.containsKey( "AttributeModifiers" ) ||
+            tag.getList( "AttributeModifiers" ) != null;
+    }
+
+    @Nonnull
+    @Override
+    public TurtleCommandResult useTool( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction direction )
+    {
+        switch( verb )
+        {
+            case ATTACK:
+                return attack( turtle, direction, side );
+            case DIG:
+                return dig( turtle, direction, side );
+            default:
+                return TurtleCommandResult.failure( "Unsupported action" );
+        }
+    }
+
 //    @Nonnull
 //    @Override
 //    @Environment( EnvType.CLIENT )
@@ -94,58 +97,46 @@ public class TurtleTool// extends AbstractTurtleUpgrade
 //        float xOffset = side == TurtleSide.LEFT ? -0.40625f : 0.40625f;
 //        return TransformedModel.of( getCraftingItem(), new AffineTransformation( new Vector3f( xOffset + 1, 0, 1 ), Vector3f.POSITIVE_Y.getDegreesQuaternion( 270 ), new Vector3f( 1, 1, 1 ), Vector3f.POSITIVE_Z.getDegreesQuaternion( 90 ) ) );
 //    }
-//
-//    private TurtleCommandResult attack( ITurtleAccess turtle, Direction direction, TurtleSide side )
-//    {
-//        // Create a fake player, and orient it appropriately
-//        World world = turtle.getWorld();
-//        BlockPos position = turtle.getPosition();
-//        TileEntity turtleBlock = turtle instanceof TurtleBrain ? ((TurtleBrain) turtle).getOwner() : world.getTileEntity( position.x, position.y, position.z );
-//        if( turtleBlock == null ) return TurtleCommandResult.failure( "Turtle has vanished from existence." );
-//
-//        final TurtlePlayer turtlePlayer = TurtlePlaceCommand.createPlayer( turtle, position, direction );
-//
-//        // See if there is an entity present
-//        Vec3 turtlePos = turtlePlayer.getPos();
-//        Vec3 rayDir = turtlePlayer.getRotationVec( 1.0f );
-//        Pair<Entity, Vec3d> hit = WorldUtil.rayTraceEntities( world, turtlePos, rayDir, 1.5 );
-//        if( hit != null )
-//        {
-//            // Load up the turtle's inventoryf
-//            ItemStack stackCopy = item.copy();
-//            turtlePlayer.loadInventory( stackCopy );
-//
-//            Entity hitEntity = hit.getKey();
-//
-//            // Fire several events to ensure we have permissions.
-//            if( AttackEntityCallback.EVENT.invoker()
-//                .interact( turtlePlayer,
-//                    world,
-//                    Hand.MAIN_HAND,
-//                    hitEntity,
-//                    null ) == ActionResult.FAIL || !hitEntity.isAttackable() )
-//            {
-//                return TurtleCommandResult.failure( "Nothing to attack here" );
-//            }
-//
-//            TurtleAttackEvent attackEvent = new TurtleAttackEvent( turtle, turtlePlayer, hitEntity, this, side );
-//            if( TurtleEvent.post( attackEvent ) )
-//            {
-//                return TurtleCommandResult.failure( attackEvent.getFailureMessage() );
-//            }
-//
-//            // Start claiming entity drops
-//            DropConsumer.set( hitEntity, turtleDropConsumer( turtleBlock, turtle ) );
-//
-//            // Attack the entity
-//            boolean attacked = false;
+
+    private TurtleCommandResult attack( ITurtleAccess turtle, Direction direction, TurtleSide side )
+    {
+        // Create a fake player, and orient it appropriately
+        World world = turtle.getWorld();
+        BlockPos position = turtle.getPosition();
+        TileEntity turtleBlock = turtle instanceof TurtleBrain ? ((TurtleBrain) turtle).getOwner() : world.getTileEntity( position.x, position.y, position.z );
+        if( turtleBlock == null ) return TurtleCommandResult.failure( "Turtle has vanished from existence." );
+
+        // See if there is an entity present
+        Vec3 turtlePos = Vec3.getPermanentVec3(position.x, position.y, position.z);
+        Vec3 rayDir = Vec3.getPermanentVec3(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ());
+        Pair<Entity, Vec3> hit = WorldUtil.rayTraceEntities( world, turtlePos, rayDir, 1.5 );
+        if( hit != null )
+        {
+            Entity hitEntity = hit.getKey();
+
+            // Fire several events to ensure we have permissions.
+            if( !hitEntity.isSelectable() )
+            {
+                return TurtleCommandResult.failure( "Nothing to attack here" );
+            }
+
+            TurtleAttackEvent attackEvent = new TurtleAttackEvent( turtle, hitEntity, this, side );
+            if( TurtleEvent.post( attackEvent ) )
+            {
+                return TurtleCommandResult.failure( attackEvent.getFailureMessage() );
+            }
+
+            // Start claiming entity drops
+            DropConsumer.set( hitEntity, turtleDropConsumer( turtleBlock, turtle ) );
+
+            // Attack the entity
+            boolean attacked = false;
 //            if( !hitEntity.handleAttack( turtlePlayer ) )
 //            {
-//                float damage = (float) turtlePlayer.getAttributeValue( EntityAttributes.GENERIC_ATTACK_DAMAGE );
-//                damage *= getDamageMultiplier();
-//                if( damage > 0.0f )
-//                {
-//                    DamageSource source = DamageSource.player( turtlePlayer );
+                int damage = 1;
+                damage *= getDamageMultiplier();
+                if( damage > 0.0f )
+                {
 //                    if( hitEntity instanceof ArmorStandEntity )
 //                    {
 //                        // Special case for armor stands: attack twice to guarantee destroy
@@ -157,31 +148,30 @@ public class TurtleTool// extends AbstractTurtleUpgrade
 //                        attacked = true;
 //                    }
 //                    else
-//                    {
-//                        if( hitEntity.damage( source, damage ) )
-//                        {
-//                            attacked = true;
-//                        }
-//                    }
-//                }
+                    {
+                        if( hitEntity.hurt( null, damage, DamageType.GENERIC) )
+                        {
+                            attacked = true;
+                        }
+                    }
+                }
 //            }
-//
-//            // Stop claiming drops
-//            stopConsuming( turtleBlock, turtle );
-//
-//            // Put everything we collected into the turtles inventory, then return
-//            if( attacked )
-//            {
-//                turtlePlayer.unloadInventory( turtle );
-//                return TurtleCommandResult.success();
-//            }
-//        }
-//
-//        return TurtleCommandResult.failure( "Nothing to attack here" );
-//    }
-//
-//    private TurtleCommandResult dig( ITurtleAccess turtle, Direction direction, TurtleSide side )
-//    {
+
+            // Stop claiming drops
+            stopConsuming( turtleBlock, turtle );
+
+            // Put everything we collected into the turtles inventory, then return
+            if( attacked )
+            {
+                return TurtleCommandResult.success();
+            }
+        }
+
+        return TurtleCommandResult.failure( "Nothing to attack here" );
+    }
+
+    private TurtleCommandResult dig( ITurtleAccess turtle, Direction direction, TurtleSide side )
+    {
 //        // Get ready to dig
 //        World world = turtle.getWorld();
 //        BlockPos turtlePosition = turtle.getPosition();
@@ -249,34 +239,34 @@ public class TurtleTool// extends AbstractTurtleUpgrade
 //
 //        stopConsuming( turtleBlock, turtle );
 //
-//        return TurtleCommandResult.success();
-//
-//    }
-//
-//    private static Function<ItemStack, ItemStack> turtleDropConsumer( BlockEntity turtleBlock, ITurtleAccess turtle )
-//    {
-//        return drop -> turtleBlock.isRemoved() ? drop : InventoryUtil.storeItems( drop, turtle.getItemHandler(), turtle.getSelectedSlot() );
-//    }
-//
-//    protected float getDamageMultiplier()
-//    {
-//        return 3.0f;
-//    }
-//
-//    private static void stopConsuming( BlockEntity turtleBlock, ITurtleAccess turtle )
-//    {
-//        Direction direction = turtleBlock.isRemoved() ? null : turtle.getDirection().getOpposite();
-//        List<ItemStack> extra = DropConsumer.clear();
-//        for( ItemStack remainder : extra )
-//        {
-//            WorldUtil.dropItemStack( remainder,
-//                turtle.getWorld(),
-//                turtle.getPosition(),
-//                direction );
-//        }
-//    }
-//
-//    protected boolean canBreakBlock( BlockState state, World world, BlockPos pos, TurtlePlayer player )
+        return TurtleCommandResult.success();
+
+    }
+
+    private static Function<ItemStack, ItemStack> turtleDropConsumer( TileEntity turtleBlock, ITurtleAccess turtle )
+    {
+        return drop -> !turtleBlock.isInvalid() ? drop : InventoryUtil.storeItems( drop, turtle.getItemHandler(), turtle.getSelectedSlot() );
+    }
+
+    protected int getDamageMultiplier()
+    {
+        return 3;
+    }
+
+    private static void stopConsuming( TileEntity turtleBlock, ITurtleAccess turtle )
+    {
+        Direction direction = !turtleBlock.isInvalid() ? null : turtle.getDirection().getOpposite();
+        List<ItemStack> extra = DropConsumer.clear();
+        for( ItemStack remainder : extra )
+        {
+            WorldUtil.dropItemStack( remainder,
+                turtle.getWorld(),
+                turtle.getPosition(),
+                direction );
+        }
+    }
+
+//    protected boolean canBreakBlock( TileEntity state, World world, BlockPos pos )
 //    {
 //        Block block = state.getBlock();
 //        return !state.isAir() && block != Blocks.BEDROCK && state.calcBlockBreakingDelta( player, world, pos ) > 0;
