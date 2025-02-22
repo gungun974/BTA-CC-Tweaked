@@ -123,8 +123,13 @@ public class TurtlePlaceCommand implements ITurtleCommand
         Item item = stack.getItem();
 
         // Check if there's something suitable to place onto
-        if( !(item instanceof ItemBucket || item instanceof ItemBoat || item instanceof ItemBucketEmpty) && !canDeployOnBlock( stack, turtle, position, direction, true, outErrorMessage ) )
-        {
+        if (!(
+            item instanceof ItemBucket ||
+                item instanceof ItemBoat ||
+                item instanceof ItemBucketEmpty ||
+                item instanceof ItemEgg ||
+                item instanceof ItemSnowball
+        ) && !canDeployOnBlock(stack, turtle, position, direction, true, outErrorMessage)) {
             return stack;
         }
 
