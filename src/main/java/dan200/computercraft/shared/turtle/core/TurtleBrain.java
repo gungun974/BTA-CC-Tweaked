@@ -824,8 +824,8 @@ public class TurtleBrain implements ITurtleAccess
         overlay = nbt.containsKey( NBT_OVERLAY ) ? ( nbt.getInteger( NBT_OVERLAY ) ) : -1;
 
         // Read upgrades
-        setUpgrade( TurtleSide.LEFT, nbt.containsKey( NBT_LEFT_UPGRADE ) ? TurtleUpgrades.get( nbt.getString( NBT_LEFT_UPGRADE ) ) : null );
-        setUpgrade( TurtleSide.RIGHT, nbt.containsKey( NBT_RIGHT_UPGRADE ) ? TurtleUpgrades.get( nbt.getString( NBT_RIGHT_UPGRADE ) ) : null );
+        setUpgrade( TurtleSide.LEFT, nbt.containsKey( NBT_LEFT_UPGRADE ) ? TurtleUpgrades.get( nbt.getInteger( NBT_LEFT_UPGRADE ) ) : null );
+        setUpgrade( TurtleSide.RIGHT, nbt.containsKey( NBT_RIGHT_UPGRADE ) ? TurtleUpgrades.get( nbt.getInteger( NBT_RIGHT_UPGRADE ) ) : null );
 
         // NBT
         upgradeNBTData.clear();

@@ -60,7 +60,7 @@ public final class TurtleUpgrades
     }
 
     @Nullable
-    public static ITurtleUpgrade get( String id )
+    public static ITurtleUpgrade get( int id )
     {
         rebuild();
         return upgrades.get( id );
