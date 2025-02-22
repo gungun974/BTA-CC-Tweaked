@@ -476,52 +476,52 @@ public class TurtleAPI implements ILuaAPI
         return trackCommand( TurtleToolCommand.attack( InteractDirection.DOWN, side.orElse( null ) ) );
     }
 
-//    /**
-//     * Suck an item from the inventory in front of the turtle, or from an item floating in the world.
-//     *
-//     * This will pull items into the first acceptable slot, starting at the {@link #select currently selected} one.
-//     *
-//     * @param count The number of items to suck. If not given, up to a stack of items will be picked up.
-//     * @return The turtle command result.
-//     * @throws LuaException If given an invalid number of items.
-//     * @cc.treturn boolean Whether items were picked up.
-//     * @cc.treturn string|nil The reason the no items were picked up.
-//     */
-//    @LuaFunction
-//    public final MethodResult suck( Optional<Integer> count ) throws LuaException
-//    {
-//        return trackCommand( new TurtleSuckCommand( InteractDirection.FORWARD, checkCount( count ) ) );
-//    }
+    /**
+     * Suck an item from the inventory in front of the turtle, or from an item floating in the world.
+     *
+     * This will pull items into the first acceptable slot, starting at the {@link #select currently selected} one.
+     *
+     * @param count The number of items to suck. If not given, up to a stack of items will be picked up.
+     * @return The turtle command result.
+     * @throws LuaException If given an invalid number of items.
+     * @cc.treturn boolean Whether items were picked up.
+     * @cc.treturn string|nil The reason the no items were picked up.
+     */
+    @LuaFunction
+    public final MethodResult suck( Optional<Integer> count ) throws LuaException
+    {
+        return trackCommand( new TurtleSuckCommand( InteractDirection.FORWARD, checkCount( count ) ) );
+    }
 
-//    /**
-//     * Suck an item from the inventory above the turtle, or from an item floating in the world.
-//     *
-//     * @param count The number of items to suck. If not given, up to a stack of items will be picked up.
-//     * @return The turtle command result.
-//     * @throws LuaException If given an invalid number of items.
-//     * @cc.treturn boolean Whether items were picked up.
-//     * @cc.treturn string|nil The reason the no items were picked up.
-//     */
-//    @LuaFunction
-//    public final MethodResult suckUp( Optional<Integer> count ) throws LuaException
-//    {
-//        return trackCommand( new TurtleSuckCommand( InteractDirection.UP, checkCount( count ) ) );
-//    }
+    /**
+     * Suck an item from the inventory above the turtle, or from an item floating in the world.
+     *
+     * @param count The number of items to suck. If not given, up to a stack of items will be picked up.
+     * @return The turtle command result.
+     * @throws LuaException If given an invalid number of items.
+     * @cc.treturn boolean Whether items were picked up.
+     * @cc.treturn string|nil The reason the no items were picked up.
+     */
+    @LuaFunction
+    public final MethodResult suckUp( Optional<Integer> count ) throws LuaException
+    {
+        return trackCommand( new TurtleSuckCommand( InteractDirection.UP, checkCount( count ) ) );
+    }
 
-//    /**
-//     * Suck an item from the inventory below the turtle, or from an item floating in the world.
-//     *
-//     * @param count The number of items to suck. If not given, up to a stack of items will be picked up.
-//     * @return The turtle command result.
-//     * @throws LuaException If given an invalid number of items.
-//     * @cc.treturn boolean Whether items were picked up.
-//     * @cc.treturn string|nil The reason the no items were picked up.
-//     */
-//    @LuaFunction
-//    public final MethodResult suckDown( Optional<Integer> count ) throws LuaException
-//    {
-//        return trackCommand( new TurtleSuckCommand( InteractDirection.DOWN, checkCount( count ) ) );
-//    }
+    /**
+     * Suck an item from the inventory below the turtle, or from an item floating in the world.
+     *
+     * @param count The number of items to suck. If not given, up to a stack of items will be picked up.
+     * @return The turtle command result.
+     * @throws LuaException If given an invalid number of items.
+     * @cc.treturn boolean Whether items were picked up.
+     * @cc.treturn string|nil The reason the no items were picked up.
+     */
+    @LuaFunction
+    public final MethodResult suckDown( Optional<Integer> count ) throws LuaException
+    {
+        return trackCommand( new TurtleSuckCommand( InteractDirection.DOWN, checkCount( count ) ) );
+    }
 
     /**
      * Get the maximum amount of fuel this turtle currently holds.

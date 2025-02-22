@@ -177,7 +177,6 @@ public final class InventoryUtil
         return partialStack;
     }
 
-    @Nonnull
     public static ItemStack takeItems( int count, ItemStorage inventory )
     {
         return takeItems( count, inventory, 0, inventory.size(), 0 );
