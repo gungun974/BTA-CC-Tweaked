@@ -22,6 +22,8 @@ import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.IComputerPlayer;
 import dan200.computercraft.shared.common.ServerTerminal;
 import dan200.computercraft.shared.network.client.*;
+import dan200.computercraft.shared.turtle.blocks.TileTurtle;
+import dan200.computercraft.shared.turtle.inventory.MenuTurtle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.container.ScreenContainerAbstract;
 import net.minecraft.core.block.entity.TileEntity;
@@ -106,6 +108,12 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
     public void update()
     {
         super.update();
+
+        TileEntity tileEntity = world.getTileEntity(position.x, position.y, position.z);
+        if (tileEntity instanceof TileTurtle) {
+            selectedSlot = ((TileTurtle) tileEntity).getAccess().getSelectedSlot();
+        }
+
         computer.tick();
 
         changedLastFrame = computer.pollAndResetChanged() || changed;

@@ -1,6 +1,7 @@
 package dan200.computercraft.shared.turtle.inventory;
 
 import dan200.computercraft.client.gui.widgets.WidgetTerminal;
+import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.fabric.GLFWKeyboardManager;
 import dan200.computercraft.shared.computer.core.ClientComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
@@ -117,5 +118,22 @@ public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContain
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.textureManager.loadTexture("/assets/computercraft/textures/gui/turtle_normal.png").bind();
         this.drawTexturedModalRect(j, k, 0, 0, this.xSize, this.ySize);
+
+        Terminal terminal = this.computer != null ? this.computer.getTerminal() : null;
+
+        if (terminal != null) {
+            // Draw selection slot
+            int slot = terminal.getSelectedSlot();
+            if( slot >= 0 )
+            {
+                int slotX = slot % 4;
+                int slotY = slot / 4;
+                this.drawTexturedModalRect( j + ContainerTurtle.TURTLE_START_X - 2 + slotX * 18, k + ContainerTurtle.PLAYER_START_Y - 2 + slotY * 18,
+                    0,
+                    217,
+                    24,
+                    24 );
+            }
+        }
     }
 }

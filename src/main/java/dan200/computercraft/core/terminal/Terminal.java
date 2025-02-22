@@ -22,6 +22,8 @@ public class Terminal
     private int cursorColour = 0;
     private int cursorBackgroundColour = 15;
 
+    private int selectedSlot = 0;
+
     private int width;
     private int height;
 
@@ -421,5 +423,15 @@ public class Terminal
         if( c >= '0' && c <= '9' ) return c - '0';
         if( c >= 'a' && c <= 'f' ) return c - 'a' + 10;
         return 15 - def.ordinal();
+    }
+
+    public void setSelectedSlot(int slot)
+    {
+        selectedSlot = slot;
+    }
+
+    public int getSelectedSlot()
+    {
+        return selectedSlot;
     }
 }

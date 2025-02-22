@@ -50,6 +50,7 @@ public class ClientTerminal implements ITerminal
         {
             resizeTerminal( state.width, state.height );
             state.apply( terminal );
+            terminal.setSelectedSlot(state.selectedSlot);
         }
         else
         {

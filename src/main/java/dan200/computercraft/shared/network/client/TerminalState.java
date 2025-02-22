@@ -30,6 +30,8 @@ public class TerminalState
     public final int width;
     public final int height;
 
+    public final int selectedSlot;
+
     private final boolean compress;
 
     @Nullable
@@ -37,14 +39,15 @@ public class TerminalState
 
     private ByteBuf compressed;
 
-    public TerminalState( boolean colour, @Nullable Terminal terminal )
+    public TerminalState( boolean colour, @Nullable Terminal terminal, int selectedSlot )
     {
-        this( colour, terminal, true );
+        this( colour, terminal, selectedSlot, true );
     }
 
-    public TerminalState( boolean colour, @Nullable Terminal terminal, boolean compress )
+    public TerminalState( boolean colour, @Nullable Terminal terminal, int selectedSlot, boolean compress )
     {
         this.colour = colour;
+        this.selectedSlot = selectedSlot;
         this.compress = compress;
 
         if( terminal == null )
@@ -93,6 +96,7 @@ public class TerminalState
     public TerminalState( UniversalPacket buf )
     {
         colour = buf.readBoolean();
+        selectedSlot = buf.readByte();
         compress = buf.readBoolean();
 
         if( buf.readBoolean() )
@@ -151,6 +155,7 @@ public class TerminalState
     public void write( UniversalPacket buf )
     {
         buf.writeBoolean( colour );
+        buf.writeByte((byte) selectedSlot);
         buf.writeBoolean( compress );
 
         buf.writeBoolean( buffer != null );

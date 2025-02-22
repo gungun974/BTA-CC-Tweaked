@@ -56,6 +56,8 @@ public class ServerTerminal implements ITerminal
         }
     }
 
+    protected int selectedSlot = 0;
+
     public void update()
     {
         terminalChangedLastFrame = terminalChanged.getAndSet( false );
@@ -81,7 +83,7 @@ public class ServerTerminal implements ITerminal
 
     public TerminalState write()
     {
-        return new TerminalState( colour, terminal );
+        return new TerminalState( colour, terminal, selectedSlot );
     }
     /*
 
