@@ -398,41 +398,41 @@ public class TurtleAPI implements ILuaAPI
         return trackCommand( new TurtleDetectCommand( InteractDirection.DOWN ) );
     }
 
-//    /**
-//     * Check if the block in front of the turtle is equal to the item in the currently selected slot.
-//     *
-//     * @return If the block and item are equal.
-//     * @cc.treturn boolean If the block and item are equal.
-//     */
-//    @LuaFunction
-//    public final MethodResult compare()
-//    {
-//        return trackCommand( new TurtleCompareCommand( InteractDirection.FORWARD ) );
-//    }
+    /**
+     * Check if the block in front of the turtle is equal to the item in the currently selected slot.
+     *
+     * @return If the block and item are equal.
+     * @cc.treturn boolean If the block and item are equal.
+     */
+    @LuaFunction
+    public final MethodResult compare()
+    {
+        return trackCommand( new TurtleCompareCommand( InteractDirection.FORWARD ) );
+    }
 
-//    /**
-//     * Check if the block above the turtle is equal to the item in the currently selected slot.
-//     *
-//     * @return If the block and item are equal.
-//     * @cc.treturn boolean If the block and item are equal.
-//     */
-//    @LuaFunction
-//    public final MethodResult compareUp()
-//    {
-//        return trackCommand( new TurtleCompareCommand( InteractDirection.UP ) );
-//    }
+    /**
+     * Check if the block above the turtle is equal to the item in the currently selected slot.
+     *
+     * @return If the block and item are equal.
+     * @cc.treturn boolean If the block and item are equal.
+     */
+    @LuaFunction
+    public final MethodResult compareUp()
+    {
+        return trackCommand( new TurtleCompareCommand( InteractDirection.UP ) );
+    }
 
-//    /**
-//     * Check if the block below the turtle is equal to the item in the currently selected slot.
-//     *
-//     * @return If the block and item are equal.
-//     * @cc.treturn boolean If the block and item are equal.
-//     */
-//    @LuaFunction
-//    public final MethodResult compareDown()
-//    {
-//        return trackCommand( new TurtleCompareCommand( InteractDirection.DOWN ) );
-//    }
+    /**
+     * Check if the block below the turtle is equal to the item in the currently selected slot.
+     *
+     * @return If the block and item are equal.
+     * @cc.treturn boolean If the block and item are equal.
+     */
+    @LuaFunction
+    public final MethodResult compareDown()
+    {
+        return trackCommand( new TurtleCompareCommand( InteractDirection.DOWN ) );
+    }
 
     /**
      * Attack the entity in front of the turtle.
