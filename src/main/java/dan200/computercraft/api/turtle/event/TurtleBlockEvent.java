@@ -171,29 +171,38 @@ public abstract class TurtleBlockEvent extends TurtleActionEvent
      */
     public static class Inspect extends TurtleBlockEvent
     {
-        private final int state;
+        private final int id;
+        private final int metadata;
         private final Map<String, Object> data;
 
-        public Inspect( @Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull int state,
+        public Inspect( @Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos, int id, int metadata,
                         @Nonnull Map<String, Object> data )
         {
             super( turtle, TurtleAction.INSPECT, world, pos );
 
-            Objects.requireNonNull( state, "state cannot be null" );
             Objects.requireNonNull( data, "data cannot be null" );
             this.data = data;
-            this.state = state;
+            this.id = id;
+            this.metadata = metadata;
         }
 
         /**
-         * Get the block state which is being inspected.
+         * Get the block id which is being inspected.
          *
-         * @return The inspected block state.
+         * @return The inspected block id.
          */
-        @Nonnull
-        public int getState()
+        public int getId() {
+            return id;
+        }
+
+        /**
+         * Get the block metadata which is being inspected.
+         *
+         * @return The inspected block metadata.
+         */
+        public int getMetadata()
         {
-            return state;
+            return metadata;
         }
 
         /**

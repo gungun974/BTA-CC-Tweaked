@@ -684,56 +684,56 @@ public class TurtleAPI implements ILuaAPI
         return trackCommand( new TurtleEquipCommand( TurtleSide.RIGHT ) );
     }
 
-//    /**
-//     * Get information about the block in front of the turtle.
-//     *
-//     * @return The turtle command result.
-//     * @cc.treturn boolean Whether there is a block in front of the turtle.
-//     * @cc.treturn table|string Information about the block in front, or a message explaining that there is no block.
-//     * @cc.usage <pre>{@code
-//     * local has_block, data = turtle.inspect()
-//     * if has_block then
-//     *   print(textutils.serialize(data))
-//     *   -- {
-//     *   --   name = "minecraft:oak_log",
-//     *   --   state = { axis = "x" },
-//     *   --   tags = { ["minecraft:logs"] = true, ... },
-//     *   -- }
-//     * else
-//     *   print("No block in front of the turtle")
-//     * end}</pre>
-//     */
-//    @LuaFunction
-//    public final MethodResult inspect()
-//    {
-//        return trackCommand( new TurtleInspectCommand( InteractDirection.FORWARD ) );
-//    }
+    /**
+     * Get information about the block in front of the turtle.
+     *
+     * @return The turtle command result.
+     * @cc.treturn boolean Whether there is a block in front of the turtle.
+     * @cc.treturn table|string Information about the block in front, or a message explaining that there is no block.
+     * @cc.usage <pre>{@code
+     * local has_block, data = turtle.inspect()
+     * if has_block then
+     *   print(textutils.serialize(data))
+     *   -- {
+     *   --   name = "minecraft:oak_log",
+     *   --   state = { axis = "x" },
+     *   --   tags = { ["minecraft:logs"] = true, ... },
+     *   -- }
+     * else
+     *   print("No block in front of the turtle")
+     * end}</pre>
+     */
+    @LuaFunction
+    public final MethodResult inspect()
+    {
+        return trackCommand( new TurtleInspectCommand( InteractDirection.FORWARD ) );
+    }
 
-//    /**
-//     * Get information about the block above the turtle.
-//     *
-//     * @return The turtle command result.
-//     * @cc.treturn boolean Whether there is a block above the turtle.
-//     * @cc.treturn table|string Information about the above below, or a message explaining that there is no block.
-//     */
-//    @LuaFunction
-//    public final MethodResult inspectUp()
-//    {
-//        return trackCommand( new TurtleInspectCommand( InteractDirection.UP ) );
-//    }
+    /**
+     * Get information about the block above the turtle.
+     *
+     * @return The turtle command result.
+     * @cc.treturn boolean Whether there is a block above the turtle.
+     * @cc.treturn table|string Information about the above below, or a message explaining that there is no block.
+     */
+    @LuaFunction
+    public final MethodResult inspectUp()
+    {
+        return trackCommand( new TurtleInspectCommand( InteractDirection.UP ) );
+    }
 
-//    /**
-//     * Get information about the block below the turtle.
-//     *
-//     * @return The turtle command result.
-//     * @cc.treturn boolean Whether there is a block below the turtle.
-//     * @cc.treturn table|string Information about the block below, or a message explaining that there is no block.
-//     */
-//    @LuaFunction
-//    public final MethodResult inspectDown()
-//    {
-//        return trackCommand( new TurtleInspectCommand( InteractDirection.DOWN ) );
-//    }
+    /**
+     * Get information about the block below the turtle.
+     *
+     * @return The turtle command result.
+     * @cc.treturn boolean Whether there is a block below the turtle.
+     * @cc.treturn table|string Information about the block below, or a message explaining that there is no block.
+     */
+    @LuaFunction
+    public final MethodResult inspectDown()
+    {
+        return trackCommand( new TurtleInspectCommand( InteractDirection.DOWN ) );
+    }
 
     /**
      * Get detailed information about the items in the given slot.
