@@ -8,33 +8,35 @@ package dan200.computercraft.shared.turtle.upgrades;
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.api.client.TransformedModel;
 import dan200.computercraft.api.turtle.*;
 import dan200.computercraft.api.turtle.event.TurtleAttackEvent;
 import dan200.computercraft.api.turtle.event.TurtleBlockEvent;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.shared.TurtlePermissions;
-import dan200.computercraft.shared.common.ComputerCraftTurtleUpgrades;
 import dan200.computercraft.shared.turtle.core.TurtleBrain;
-import dan200.computercraft.shared.turtle.core.TurtlePlaceCommand;
 import dan200.computercraft.shared.util.DropConsumer;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.WorldUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.client.entity.player.PlayerLocal;
+import net.minecraft.core.block.Block;
+import net.minecraft.core.block.BlockLogic;
+import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.Entity;
-import net.minecraft.core.entity.animal.MobPig;
+import net.minecraft.core.enums.EnumDropCause;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.net.packet.PacketBlockUpdate;
 import net.minecraft.core.util.helper.DamageType;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
+import net.minecraft.server.entity.player.PlayerServer;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 
 public class TurtleTool extends AbstractTurtleUpgrade
@@ -172,73 +174,55 @@ public class TurtleTool extends AbstractTurtleUpgrade
 
     private TurtleCommandResult dig( ITurtleAccess turtle, Direction direction, TurtleSide side )
     {
-//        // Get ready to dig
-//        World world = turtle.getWorld();
-//        BlockPos turtlePosition = turtle.getPosition();
-//        BlockEntity turtleBlock = turtle instanceof TurtleBrain ? ((TurtleBrain) turtle).getOwner() : world.getBlockEntity( turtlePosition );
-//        if( turtleBlock == null ) return TurtleCommandResult.failure( "Turtle has vanished from existence." );
-//
-//
-//        BlockPos blockPosition = turtlePosition.offset( direction );
-//
-//        if( world.isAir( blockPosition ) || WorldUtil.isLiquidBlock( world, blockPosition ) )
-//        {
-//            return TurtleCommandResult.failure( "Nothing to dig here" );
-//        }
-//
-//        BlockState state = world.getBlockState( blockPosition );
-//
-//        TurtlePlayer turtlePlayer = TurtlePlaceCommand.createPlayer( turtle, turtlePosition, direction );
-//        turtlePlayer.loadInventory( item.copy() );
-//
-//        if( ComputerCraft.turtlesObeyBlockProtection )
-//        {
-//            if( !TurtlePermissions.isBlockEditable( world, blockPosition, turtlePlayer ) )
-//            {
-//                return TurtleCommandResult.failure( "Cannot break protected block" );
-//            }
-//        }
-//
-//        // Check if we can break the block
-//        if( !canBreakBlock( state, world, blockPosition, turtlePlayer ) )
-//        {
-//            return TurtleCommandResult.failure( "Unbreakable block detected" );
-//        }
-//
-//        // Fire the dig event, checking whether it was cancelled.
-//        TurtleBlockEvent.Dig digEvent = new TurtleBlockEvent.Dig( turtle, turtlePlayer, world, blockPosition, state, this, side );
-//        if( TurtleEvent.post( digEvent ) )
-//        {
-//            return TurtleCommandResult.failure( digEvent.getFailureMessage() );
-//        }
-//
-//        // Consume the items the block drops
-//        DropConsumer.set( world, blockPosition, turtleDropConsumer( turtleBlock, turtle ) );
-//
-//        BlockEntity tile = world.getBlockEntity( blockPosition );
-//
-//        // Much of this logic comes from PlayerInteractionManager#tryHarvestBlock, so it's a good idea
-//        // to consult there before making any changes.
-//
-//        // Play the destruction sound and particles
-//        world.syncWorldEvent( 2001, blockPosition, Block.getRawIdFromState( state ) );
-//
-//        // Destroy the block
-//        state.getBlock()
-//            .onBreak( world, blockPosition, state, turtlePlayer );
-//        if( world.removeBlock( blockPosition, false ) )
-//        {
-//            state.getBlock()
-//                .onBroken( world, blockPosition, state );
-//            if( turtlePlayer.isUsingEffectiveTool( state ) )
-//            {
-//                state.getBlock()
-//                    .afterBreak( world, turtlePlayer, blockPosition, state, tile, turtlePlayer.getMainHandStack() );
-//            }
-//        }
-//
-//        stopConsuming( turtleBlock, turtle );
-//
+        // Get ready to dig
+        World world = turtle.getWorld();
+        BlockPos turtlePosition = turtle.getPosition();
+        TileEntity turtleBlock = turtle instanceof TurtleBrain ? ((TurtleBrain) turtle).getOwner() : world.getTileEntity( turtlePosition.x, turtlePosition.y, turtlePosition.z );
+        if( turtleBlock == null ) return TurtleCommandResult.failure( "Turtle has vanished from existence." );
+
+
+        BlockPos blockPosition = turtlePosition.offset( direction );
+
+        if( world.isAirBlock( blockPosition.x, blockPosition.y, blockPosition.z ) || WorldUtil.isLiquidBlock( world, blockPosition ) )
+        {
+            return TurtleCommandResult.failure( "Nothing to dig here" );
+        }
+
+        Block<?> block = Objects.requireNonNull(world.getBlock(blockPosition.x, blockPosition.y, blockPosition.z));
+
+        if( ComputerCraft.turtlesObeyBlockProtection )
+        {
+            if( !TurtlePermissions.isBlockEditable( world, blockPosition ) )
+            {
+                return TurtleCommandResult.failure( "Cannot break protected block" );
+            }
+        }
+
+        // Check if we can break the block
+        if( !canBreakBlock( world, blockPosition ) )
+        {
+            return TurtleCommandResult.failure( "Unbreakable block detected" );
+        }
+
+        // Fire the dig event, checking whether it was cancelled.
+        TurtleBlockEvent.Dig digEvent = new TurtleBlockEvent.Dig( turtle, world, blockPosition, block.id(), this, side );
+        if( TurtleEvent.post( digEvent ) )
+        {
+            return TurtleCommandResult.failure( digEvent.getFailureMessage() );
+        }
+
+        // Consume the items the block drops
+        DropConsumer.set( world, blockPosition, turtleDropConsumer( turtleBlock, turtle ) );
+
+        TileEntity tile = world.getTileEntity( blockPosition.x, blockPosition.y, blockPosition.z );
+
+        // Destroy the block
+        world.playBlockEvent(null, 2001, blockPosition.x, blockPosition.y, blockPosition.z, block.id());
+        block.dropBlockWithCause(world, EnumDropCause.PROPER_TOOL, blockPosition.x, blockPosition.y, blockPosition.z, world.getBlockMetadata(blockPosition.x, blockPosition.y, blockPosition.z), tile, null);
+        world.setBlockWithNotify(blockPosition.x, blockPosition.y, blockPosition.z, 0);
+
+        stopConsuming( turtleBlock, turtle );
+
         return TurtleCommandResult.success();
 
     }
@@ -266,9 +250,9 @@ public class TurtleTool extends AbstractTurtleUpgrade
         }
     }
 
-//    protected boolean canBreakBlock( TileEntity state, World world, BlockPos pos )
-//    {
-//        Block block = state.getBlock();
-//        return !state.isAir() && block != Blocks.BEDROCK && state.calcBlockBreakingDelta( player, world, pos ) > 0;
-//    }
+    protected boolean canBreakBlock( World world, BlockPos pos )
+    {
+        Block<?> block = world.getBlock(pos.x, pos.y, pos.z);
+        return block != null && block != Blocks.BEDROCK && block.blockHardness > 0;
+    }
 }
