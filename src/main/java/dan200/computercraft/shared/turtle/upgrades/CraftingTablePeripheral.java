@@ -22,43 +22,43 @@ import java.util.Optional;
  * @hidden
  * @cc.see turtle.craft This uses the {@link CraftingTablePeripheral} peripheral to craft items.
  */
-public class CraftingTablePeripheral// implements IPeripheral
+public class CraftingTablePeripheral implements IPeripheral
 {
-//    private final ITurtleAccess turtle;
-//
-//    public CraftingTablePeripheral( ITurtleAccess turtle )
-//    {
-//        this.turtle = turtle;
-//    }
-//
-//    @Nonnull
-//    @Override
-//    public String getType()
-//    {
-//        return "workbench";
-//    }
-//
-//    @Nonnull
-//    @Override
-//    public Object getTarget()
-//    {
-//        return turtle;
-//    }
-//
-//    @Override
-//    public boolean equals( IPeripheral other )
-//    {
-//        return other instanceof CraftingTablePeripheral;
-//    }
-//
-//    @LuaFunction
-//    public final MethodResult craft( Optional<Integer> count ) throws LuaException
-//    {
-//        int limit = count.orElse( 64 );
-//        if( limit < 0 || limit > 64 )
-//        {
-//            throw new LuaException( "Crafting count " + limit + " out of range" );
-//        }
-//        return turtle.executeCommand( new TurtleCraftCommand( limit ) );
-//    }
+    private final ITurtleAccess turtle;
+
+    public CraftingTablePeripheral( ITurtleAccess turtle )
+    {
+        this.turtle = turtle;
+    }
+
+    @Nonnull
+    @Override
+    public String getType()
+    {
+        return "workbench";
+    }
+
+    @Nonnull
+    @Override
+    public Object getTarget()
+    {
+        return turtle;
+    }
+
+    @Override
+    public boolean equals( IPeripheral other )
+    {
+        return other instanceof CraftingTablePeripheral;
+    }
+
+    @LuaFunction
+    public final MethodResult craft( Optional<Integer> count ) throws LuaException
+    {
+        int limit = count.orElse( 64 );
+        if( limit < 0 || limit > 64 )
+        {
+            throw new LuaException( "Crafting count " + limit + " out of range" );
+        }
+        return turtle.executeCommand( new TurtleCraftCommand( limit ) );
+    }
 }

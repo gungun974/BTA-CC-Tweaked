@@ -13,28 +13,29 @@ import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.api.turtle.TurtleUpgradeType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.block.Blocks;
 
 import javax.annotation.Nonnull;
 
-public class TurtleCraftingTable// extends AbstractTurtleUpgrade
+public class TurtleCraftingTable extends AbstractTurtleUpgrade
 {
 //    @Environment( EnvType.CLIENT )
 //    private ModelIdentifier leftModel;
 //
 //    @Environment( EnvType.CLIENT )
 //    private ModelIdentifier rightModel;
-//
-//    public TurtleCraftingTable( Identifier id )
-//    {
-//        super( id, TurtleUpgradeType.PERIPHERAL, Blocks.CRAFTING_TABLE );
-//    }
-//
-//    @Override
-//    public IPeripheral createPeripheral( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side )
-//    {
-//        return new CraftingTablePeripheral( turtle );
-//    }
-//
+
+    public TurtleCraftingTable( int id )
+    {
+        super( id, TurtleUpgradeType.PERIPHERAL, Blocks.WORKBENCH );
+    }
+
+    @Override
+    public IPeripheral createPeripheral( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side )
+    {
+        return new CraftingTablePeripheral( turtle );
+    }
+
 //    @Nonnull
 //    @Override
 //    @Environment( EnvType.CLIENT )
@@ -43,7 +44,7 @@ public class TurtleCraftingTable// extends AbstractTurtleUpgrade
 //        loadModelLocations();
 //        return TransformedModel.of( side == TurtleSide.LEFT ? leftModel : rightModel );
 //    }
-//
+
 //    @Environment( EnvType.CLIENT )
 //    private void loadModelLocations()
 //    {
