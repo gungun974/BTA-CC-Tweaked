@@ -19,13 +19,18 @@ import dan200.computercraft.shared.util.DropConsumer;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.WorldUtil;
 import net.minecraft.core.block.BlockLogicActivator;
+import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.entity.TileEntityActivator;
 import net.minecraft.core.block.entity.TileEntitySign;
+import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.enums.EnumBlockSoundEffectType;
 import net.minecraft.core.item.*;
 import net.minecraft.core.item.block.ItemBlock;
 import net.minecraft.core.util.helper.Axis;
 import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.util.helper.MathHelper;
+import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
 import org.apache.commons.lang3.tuple.Pair;
@@ -145,6 +150,15 @@ public class TurtlePlaceCommand implements ITurtleCommand
             placed = true;
         }
 
+        if (!placed && item instanceof ItemSign) {
+            placeSign(stack, turtle.getWorld(), turtlePosition.x, turtlePosition.y, turtlePosition.z, direction.getSide(), turtle.getDirection());
+        }
+
+        if( oldStackSize != stack.stackSize )
+        {
+            placed = true;
+        }
+
         // Set text on signs
         if( placed && item instanceof ItemSign)
         {
@@ -193,6 +207,63 @@ public class TurtlePlaceCommand implements ITurtleCommand
         return stack.copy();
     }
 
+    static private boolean placeSign(
+        ItemStack itemstack, World world, int blockX, int blockY, int blockZ, Side side, Direction direction
+    ) {
+        int sideHit = side.getOpposite().getId();
+        if (!world.getBlockMaterial(blockX, blockY, blockZ).isSolid()) {
+            return false;
+        } else {
+            if (!world.canPlaceInsideBlock(blockX, blockY, blockZ)) {
+                blockX += side.getOffsetX();
+                blockY += side.getOffsetY();
+                blockZ += side.getOffsetZ();
+            }
+
+            if (!world.getBlockMaterial(
+                blockX + side.getOffsetX(),
+                blockY + side.getOffsetY(),
+                blockZ + side.getOffsetZ()
+            ).isSolid()) {
+                sideHit = side.getId();
+            }
+
+            if (blockY < 0 || blockY >= world.getHeightBlocks()) {
+                return false;
+            } else if (!Blocks.SIGN_POST_PLANKS_OAK.canPlaceBlockAt(world, blockX, blockY, blockZ)) {
+                return false;
+            } else {
+                if (sideHit == Side.TOP.getId() || sideHit == Side.BOTTOM.getId()) {
+                    world.playBlockSoundEffect(
+                        null,
+                        (double)((float)blockX + 0.5F),
+                        (double)((float)blockY + 0.5F),
+                        (double)((float)blockZ + 0.5F),
+                        Blocks.SIGN_POST_PLANKS_OAK,
+                        EnumBlockSoundEffectType.PLACE
+                    );
+                    world.setBlockAndMetadataWithNotify(
+                        blockX, blockY, blockZ, Blocks.SIGN_POST_PLANKS_OAK.id(), MathHelper.floor((double)((DirectionUtil.getRotationYaw(direction) + 180.0F) * 16.0F / 360.0F) + 0.5) & 15
+                    );
+                } else {
+                    world.playBlockSoundEffect(
+                        null,
+                        (double)((float)blockX + 0.5F),
+                        (double)((float)blockY + 0.5F),
+                        (double)((float)blockZ + 0.5F),
+                        Blocks.SIGN_WALL_PLANKS_OAK,
+                        EnumBlockSoundEffectType.PLACE
+                    );
+                    world.setBlockAndMetadataWithNotify(blockX, blockY, blockZ, Blocks.SIGN_WALL_PLANKS_OAK.id(), sideHit);
+                }
+
+                itemstack.consumeItem(null);
+
+                return true;
+            }
+        }
+    }
+
     private static boolean canDeployOnBlock(ItemStack item, ITurtleAccess turtle, BlockPos position,
                                             Direction side, boolean allowReplaceable, String[] outErrorMessage) {
         if (position.getY() < 0 || position.getY() >= World.HEIGHT_BLOCKS) {
@@ -201,7 +272,7 @@ public class TurtlePlaceCommand implements ITurtleCommand
 
         World world = turtle.getWorld();
 
-        if (!(item.getItem() instanceof ItemBlock)) {
+        if (!(item.getItem() instanceof ItemBlock || item.getItem() instanceof ItemSign)) {
             return false;
         }
 
