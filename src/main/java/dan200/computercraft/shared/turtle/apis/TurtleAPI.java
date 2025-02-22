@@ -229,21 +229,21 @@ public class TurtleAPI implements ILuaAPI
         return trackCommand( new TurtlePlaceCommand( InteractDirection.DOWN, args.getAll() ) );
     }
 
-//    /**
-//     * Drop the currently selected stack into the inventory in front of the turtle, or as an item into the world if there is no inventory.
-//     *
-//     * @param count The number of items to drop. If not given, the entire stack will be dropped.
-//     * @return The turtle command result.
-//     * @throws LuaException If dropping an invalid number of items.
-//     * @cc.treturn boolean Whether items were dropped.
-//     * @cc.treturn string|nil The reason the no items were dropped.
-//     * @see #select
-//     */
-//    @LuaFunction
-//    public final MethodResult drop( Optional<Integer> count ) throws LuaException
-//    {
-//        return trackCommand( new TurtleDropCommand( InteractDirection.FORWARD, checkCount( count ) ) );
-//    }
+    /**
+     * Drop the currently selected stack into the inventory in front of the turtle, or as an item into the world if there is no inventory.
+     *
+     * @param count The number of items to drop. If not given, the entire stack will be dropped.
+     * @return The turtle command result.
+     * @throws LuaException If dropping an invalid number of items.
+     * @cc.treturn boolean Whether items were dropped.
+     * @cc.treturn string|nil The reason the no items were dropped.
+     * @see #select
+     */
+    @LuaFunction
+    public final MethodResult drop( Optional<Integer> count ) throws LuaException
+    {
+        return trackCommand( new TurtleDropCommand( InteractDirection.FORWARD, checkCount( count ) ) );
+    }
 
     private static int checkCount( Optional<Integer> countArg ) throws LuaException
     {
@@ -255,37 +255,37 @@ public class TurtleAPI implements ILuaAPI
         return count;
     }
 
-//    /**
-//     * Drop the currently selected stack into the inventory above the turtle, or as an item into the world if there is no inventory.
-//     *
-//     * @param count The number of items to drop. If not given, the entire stack will be dropped.
-//     * @return The turtle command result.
-//     * @throws LuaException If dropping an invalid number of items.
-//     * @cc.treturn boolean Whether items were dropped.
-//     * @cc.treturn string|nil The reason the no items were dropped.
-//     * @see #select
-//     */
-//    @LuaFunction
-//    public final MethodResult dropUp( Optional<Integer> count ) throws LuaException
-//    {
-//        return trackCommand( new TurtleDropCommand( InteractDirection.UP, checkCount( count ) ) );
-//    }
+    /**
+     * Drop the currently selected stack into the inventory above the turtle, or as an item into the world if there is no inventory.
+     *
+     * @param count The number of items to drop. If not given, the entire stack will be dropped.
+     * @return The turtle command result.
+     * @throws LuaException If dropping an invalid number of items.
+     * @cc.treturn boolean Whether items were dropped.
+     * @cc.treturn string|nil The reason the no items were dropped.
+     * @see #select
+     */
+    @LuaFunction
+    public final MethodResult dropUp( Optional<Integer> count ) throws LuaException
+    {
+        return trackCommand( new TurtleDropCommand( InteractDirection.UP, checkCount( count ) ) );
+    }
 
-//    /**
-//     * Drop the currently selected stack into the inventory in front of the turtle, or as an item into the world if there is no inventory.
-//     *
-//     * @param count The number of items to drop. If not given, the entire stack will be dropped.
-//     * @return The turtle command result.
-//     * @throws LuaException If dropping an invalid number of items.
-//     * @cc.treturn boolean Whether items were dropped.
-//     * @cc.treturn string|nil The reason the no items were dropped.
-//     * @see #select
-//     */
-//    @LuaFunction
-//    public final MethodResult dropDown( Optional<Integer> count ) throws LuaException
-//    {
-//        return trackCommand( new TurtleDropCommand( InteractDirection.DOWN, checkCount( count ) ) );
-//    }
+    /**
+     * Drop the currently selected stack into the inventory in front of the turtle, or as an item into the world if there is no inventory.
+     *
+     * @param count The number of items to drop. If not given, the entire stack will be dropped.
+     * @return The turtle command result.
+     * @throws LuaException If dropping an invalid number of items.
+     * @cc.treturn boolean Whether items were dropped.
+     * @cc.treturn string|nil The reason the no items were dropped.
+     * @see #select
+     */
+    @LuaFunction
+    public final MethodResult dropDown( Optional<Integer> count ) throws LuaException
+    {
+        return trackCommand( new TurtleDropCommand( InteractDirection.DOWN, checkCount( count ) ) );
+    }
 
     /**
      * Change the currently selected slot.
