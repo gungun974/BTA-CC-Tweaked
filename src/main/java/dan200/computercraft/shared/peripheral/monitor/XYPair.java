@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.shared.peripheral.monitor;
 
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.util.helper.Direction;
 
 public class XYPair
 {
@@ -18,7 +18,7 @@ public class XYPair
         this.y = y;
     }
 
-    public static XYPair of( float xPos, float yPos, float zPos, Direction facing, Direction orientation )
+    public static XYPair of(float xPos, float yPos, float zPos, Direction facing, Direction orientation )
     {
         switch( orientation )
         {

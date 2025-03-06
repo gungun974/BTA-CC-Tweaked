@@ -5,13 +5,11 @@
  */
 package dan200.computercraft.shared.peripheral.monitor;
 
-import net.minecraft.util.StringIdentifiable;
-
 import javax.annotation.Nonnull;
 
 import static dan200.computercraft.shared.peripheral.monitor.MonitorEdgeState.Flags.*;
 
-public enum MonitorEdgeState implements StringIdentifiable
+public enum MonitorEdgeState
 {
     NONE( "none", 0 ),
 
@@ -58,7 +56,6 @@ public enum MonitorEdgeState implements StringIdentifiable
     }
 
     @Nonnull
-    @Override
     public String asString()
     {
         return name;
@@ -66,7 +63,7 @@ public enum MonitorEdgeState implements StringIdentifiable
 
     static final class Flags
     {
-        static final int UP = 1 << 0;
+        static final int UP = 1;
         static final int DOWN = 1 << 1;
         static final int LEFT = 1 << 2;
         static final int RIGHT = 1 << 3;

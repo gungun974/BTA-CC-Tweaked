@@ -105,12 +105,12 @@ public final class FixedWidthFontRenderer
     {
         if( leftMarginSize > 0 )
         {
-            drawQuad( x - leftMarginSize, y, leftMarginSize, height, palette, greyscale, backgroundColour.charAt( 0 ) );
+            drawQuad(Tessellator.instance, x - leftMarginSize, y, leftMarginSize, height, palette, greyscale, backgroundColour.charAt( 0 ) );
         }
 
         if( rightMarginSize > 0 )
         {
-            drawQuad(
+            drawQuad(Tessellator.instance,
                 x + backgroundColour.length() * FONT_WIDTH,
                 y,
                 rightMarginSize,
@@ -133,7 +133,7 @@ public final class FixedWidthFontRenderer
 
             if( blockColour != '\0' )
             {
-                drawQuad( x + blockStart * FONT_WIDTH, y, FONT_WIDTH * (i - blockStart), height, palette, greyscale, blockColour );
+                drawQuad(Tessellator.instance, x + blockStart * FONT_WIDTH, y, FONT_WIDTH * (i - blockStart), height, palette, greyscale, blockColour );
             }
 
             blockColour = colourIndex;
@@ -142,7 +142,7 @@ public final class FixedWidthFontRenderer
 
         if( blockColour != '\0' )
         {
-            drawQuad(
+            drawQuad(Tessellator.instance,
                 x + blockStart * FONT_WIDTH,
                 y,
                 FONT_WIDTH * (backgroundColour.length() - blockStart),
@@ -179,33 +179,7 @@ public final class FixedWidthFontRenderer
 
         Tessellator tessellator = Tessellator.instance;
 
-//        buffer.vertex( transform, x, y, 0f )
-//            .color( r, g, b, 1.0f )
-//            .texture( xStart / WIDTH, yStart / WIDTH )
-//            .next();
-//        buffer.vertex( transform, x, y + FONT_HEIGHT, 0f )
-//            .color( r, g, b, 1.0f )
-//            .texture( xStart / WIDTH, (yStart + FONT_HEIGHT) / WIDTH )
-//            .next();
-//        buffer.vertex( transform, x + FONT_WIDTH, y, 0f )
-//            .color( r, g, b, 1.0f )
-//            .texture( (xStart + FONT_WIDTH) / WIDTH, yStart / WIDTH )
-//            .next();
-//        buffer.vertex( transform, x + FONT_WIDTH, y, 0f )
-//            .color( r, g, b, 1.0f )
-//            .texture( (xStart + FONT_WIDTH) / WIDTH, yStart / WIDTH )
-//            .next();
-//        buffer.vertex( transform, x, y + FONT_HEIGHT, 0f )
-//            .color( r, g, b, 1.0f )
-//            .texture( xStart / WIDTH, (yStart + FONT_HEIGHT) / WIDTH )
-//            .next();
-//        buffer.vertex( transform, x + FONT_WIDTH, y + FONT_HEIGHT, 0f )
-//            .color( r, g, b, 1.0f )
-//            .texture( (xStart + FONT_WIDTH) / WIDTH, (yStart + FONT_HEIGHT) / WIDTH )
-//            .next();
-
-
-        tessellator.startDrawing(6);
+        tessellator.startDrawing(GL11.GL_TRIANGLES);
 
         tessellator.setColorRGBA_F(r,g,b, 1f);
         tessellator.addVertexWithUV(x, y, 0, xStart / WIDTH, yStart / WIDTH);
@@ -216,7 +190,7 @@ public final class FixedWidthFontRenderer
 
         tessellator.draw();
 
-        tessellator.startDrawing(6);
+        tessellator.startDrawing(GL11.GL_TRIANGLES);
 
         tessellator.setColorRGBA_F(r,g,b, 1f);
 
@@ -230,7 +204,7 @@ public final class FixedWidthFontRenderer
 
     }
 
-    private static void drawQuad( float x, float y, float width, float height, Palette palette,
+    private static void drawQuad( Tessellator tessellator, float x, float y, float width, float height, Palette palette,
                                   boolean greyscale, char colourIndex )
     {
         double[] colour = palette.getColour( getColour( colourIndex, Colour.BLACK ) );
@@ -246,40 +220,12 @@ public final class FixedWidthFontRenderer
             b = (float) colour[2];
         }
 
-        drawQuad( x, y, width, height, r, g, b );
+        drawQuad( tessellator, x, y, width, height, r, g, b );
     }
 
-    private static void drawQuad( float x, float y, float width, float height, float r, float g, float b )
+    private static void drawQuad( Tessellator tessellator, float x, float y, float width, float height, float r, float g, float b )
     {
-
-        Tessellator tessellator = Tessellator.instance;
-
-//        buffer.vertex( transform, x, y, 0 )
-//            .color( r, g, b, 1.0f )
-//            .texture( BACKGROUND_START, BACKGROUND_START )
-//            .next();
-//        buffer.vertex( transform, x, y + height, 0 )
-//            .color( r, g, b, 1.0f )
-//            .texture( BACKGROUND_START, BACKGROUND_END )
-//            .next();
-//        buffer.vertex( transform, x + width, y, 0 )
-//            .color( r, g, b, 1.0f )
-//            .texture( BACKGROUND_END, BACKGROUND_START )
-//            .next();
-//        buffer.vertex( transform, x + width, y, 0 )
-//            .color( r, g, b, 1.0f )
-//            .texture( BACKGROUND_END, BACKGROUND_START )
-//            .next();
-//        buffer.vertex( transform, x, y + height, 0 )
-//            .color( r, g, b, 1.0f )
-//            .texture( BACKGROUND_START, BACKGROUND_END )
-//            .next();
-//        buffer.vertex( transform, x + width, y + height, 0 )
-//            .color( r, g, b, 1.0f )
-//            .texture( BACKGROUND_END, BACKGROUND_END )
-//            .next();
-
-        tessellator.startDrawing(6);
+        tessellator.startDrawing(GL11.GL_TRIANGLES);
 
         tessellator.setColorRGBA_F(r,g,b, 1f);
 
@@ -289,7 +235,7 @@ public final class FixedWidthFontRenderer
 
         tessellator.draw();
 
-        tessellator.startDrawing(6);
+        tessellator.startDrawing(GL11.GL_TRIANGLES);
 
         tessellator.setColorRGBA_F(r,g,b, 1f);
 
@@ -304,6 +250,8 @@ public final class FixedWidthFontRenderer
                                                   @Nonnull Terminal terminal, boolean greyscale, float topMarginSize, float bottomMarginSize,
                                                   float leftMarginSize, float rightMarginSize )
     {
+        bindFont();
+
         Palette palette = terminal.getPalette();
         int height = terminal.getHeight();
 
@@ -347,6 +295,8 @@ public final class FixedWidthFontRenderer
     public static void drawCursor( float x, float y, @Nonnull Terminal terminal,
                                    boolean greyscale )
     {
+        bindFont();
+
         Palette palette = terminal.getPalette();
         int width = terminal.getWidth();
         int height = terminal.getHeight();
@@ -383,50 +333,23 @@ public final class FixedWidthFontRenderer
 
     public static void drawEmptyTerminal( float x, float y, float width, float height )
     {
+       drawEmptyTerminal(Tessellator.instance, x, y, width, height);
+    }
+
+    public static void drawEmptyTerminal( Tessellator tessellator, float x, float y, float width, float height )
+    {
         bindFont();
 
         Colour colour = Colour.BLACK;
 
-        drawQuad(x, y, width, height, colour.getR(), colour.getG(), colour.getB() );
-
-        //renderer.draw();
+        drawQuad(tessellator, x, y, width, height, colour.getR(), colour.getG(), colour.getB() );
     }
-//
-//    public static void drawBlocker( @Nonnull Matrix4f transform, @Nonnull VertexConsumerProvider renderer, float x, float y, float width, float height )
-//    {
-//        Colour colour = Colour.BLACK;
-//        drawQuad( transform, renderer.getBuffer( Type.BLOCKER ), x, y, width, height, colour.getR(), colour.getG(), colour.getB() );
-//    }
-//
-//    private static final class Type extends RenderPhase
-//    {
-//        private static final int GL_MODE = GL11.GL_TRIANGLES;
-//
-//        private static final VertexFormat FORMAT = VertexFormats.POSITION_COLOR_TEXTURE;
-//
-//        static final RenderLayer MAIN = RenderLayer.of( "terminal_font", FORMAT, GL_MODE, 1024, false, false, // useDelegate, needsSorting
-//            RenderLayer.MultiPhaseParameters.builder()
-//                .texture( new RenderPhase.Texture( FONT,
-//                    false,
-//                    false ) ) // blur, minimap
-//                .alpha( ONE_TENTH_ALPHA )
-//                .lightmap( DISABLE_LIGHTMAP )
-//                .writeMaskState( COLOR_MASK )
-//                .build( false ) );
-//
-//        static final RenderLayer BLOCKER = RenderLayer.of( "terminal_blocker", FORMAT, GL_MODE, 256, false, false, // useDelegate, needsSorting
-//            RenderLayer.MultiPhaseParameters.builder()
-//                .texture( new RenderPhase.Texture( FONT,
-//                    false,
-//                    false ) ) // blur, minimap
-//                .alpha( ONE_TENTH_ALPHA )
-//                .writeMaskState( ALL_MASK )
-//                .lightmap( DISABLE_LIGHTMAP )
-//                .build( false ) );
-//
-//        private Type( String name, Runnable setup, Runnable destroy )
-//        {
-//            super( name, setup, destroy );
-//        }
-//    }
+
+    public static void drawBlocker( Tessellator tessellator, float x, float y, float width, float height )
+    {
+        bindFont();
+
+        Colour colour = Colour.BLACK;
+        drawQuad( tessellator, x, y, width, height, colour.getR(), colour.getG(), colour.getB() );
+    }
 }

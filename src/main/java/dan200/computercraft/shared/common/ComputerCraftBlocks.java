@@ -11,6 +11,8 @@ import dan200.computercraft.shared.peripheral.modem.wired.TileCable;
 import dan200.computercraft.shared.peripheral.modem.wired.TileWiredModemFull;
 import dan200.computercraft.shared.peripheral.modem.wireless.BlockWirelessModem;
 import dan200.computercraft.shared.peripheral.modem.wireless.TileWirelessModem;
+import dan200.computercraft.shared.peripheral.monitor.BlockMonitor;
+import dan200.computercraft.shared.peripheral.monitor.TileMonitor;
 import dan200.computercraft.shared.peripheral.speaker.BlockSpeaker;
 import dan200.computercraft.shared.peripheral.speaker.TileSpeaker;
 import dan200.computercraft.shared.turtle.blocks.BlockTurtle;
@@ -38,6 +40,8 @@ public class ComputerCraftBlocks {
     public static final Block<?> DISK_DRIVE;
 
     public static final Block<?> TURTLE;
+
+    public static final Block<?> MONITOR_ADVANCED;
 
     public ComputerCraftBlocks() {
 
@@ -115,5 +119,14 @@ public class ComputerCraftBlocks {
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileTurtle::new)
             .build("turtle", 10006, b -> new BlockTurtle(b));
+
+        EntityHelper.createTileEntity(TileMonitor.class, NamespaceID.getPermanent(MOD_ID, "monitor_advanced"));
+
+        MONITOR_ADVANCED = new BlockBuilder(MOD_ID)
+            .setHardness(1.5f)
+            .setResistance(10f)
+            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTileEntity(() -> new TileMonitor(true))
+            .build("monitor_advanced", 10007, b -> new BlockMonitor(b, true));
     }
 }

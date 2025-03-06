@@ -4,6 +4,9 @@ import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
 import dan200.computercraft.shared.peripheral.diskdrive.BlockModelDiskDrive;
 import dan200.computercraft.shared.peripheral.modem.wireless.BlockModelWirelessModem;
+import dan200.computercraft.shared.peripheral.monitor.BlockModelMonitor;
+import dan200.computercraft.shared.peripheral.monitor.TileEntityMonitorRenderer;
+import dan200.computercraft.shared.peripheral.monitor.TileMonitor;
 import net.minecraft.client.render.EntityRenderDispatcher;
 import net.minecraft.client.render.TileEntityRenderDispatcher;
 import net.minecraft.client.render.block.color.BlockColorDispatcher;
@@ -62,6 +65,13 @@ public class ComputerCraftModels implements ModelEntrypoint {
             .setTex(0, "computercraft:block/computer_normal_front", Side.NORTH)
         );
 
+        ModelHelper.setBlockModel(ComputerCraftBlocks.MONITOR_ADVANCED, () -> new BlockModelMonitor<>(ComputerCraftBlocks.MONITOR_ADVANCED)
+            .setTex(0, "computercraft:block/monitor_advanced_16", Side.TOP)
+            .setTex(0, "computercraft:block/monitor_advanced_4", Side.SOUTH, Side.EAST, Side.WEST )
+            .setTex(0, "computercraft:block/monitor_advanced_0", Side.NORTH)
+            .setTex(0, "computercraft:block/monitor_advanced_4", Side.BOTTOM)
+        );
+
         ComputerCraft.log.info("Block Models initialized.");
     }
 
@@ -80,7 +90,11 @@ public class ComputerCraftModels implements ModelEntrypoint {
     public void initEntityModels(EntityRenderDispatcher dispatcher) {}
 
     @Override
-    public void initTileEntityModels(TileEntityRenderDispatcher dispatcher) {}
+    public void initTileEntityModels(TileEntityRenderDispatcher dispatcher) {
+        ModelHelper.setTileEntityModel(TileMonitor.class, TileEntityMonitorRenderer::new);
+
+        ComputerCraft.log.info("Tile Entity Models initialized.");
+    }
 
     @Override
     public void initBlockColors(BlockColorDispatcher dispatcher) {}

@@ -14,7 +14,6 @@ import dan200.computercraft.core.apis.http.options.Action;
 import dan200.computercraft.core.apis.http.options.AddressRule;
 //import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
 //import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
-//import dan200.computercraft.shared.peripheral.monitor.MonitorRenderer;
 //import org.apache.logging.log4j.LogManager;
 
 import java.util.*;
@@ -32,6 +31,7 @@ import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
 import dan200.computercraft.shared.network.client.*;
 import dan200.computercraft.shared.network.server.*;
 import dan200.computercraft.shared.peripheral.generic.methods.InventoryMethods;
+import dan200.computercraft.shared.peripheral.monitor.MonitorRenderer;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.item.Item;
 import org.slf4j.Logger;
@@ -74,7 +74,7 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint
     public static int modemRangeDuringStorm = 64;
     public static int modemHighAltitudeRangeDuringStorm = 384;
     public static int maxNotesPerTick = 8;
-    //public static MonitorRenderer monitorRenderer = MonitorRenderer.BEST;
+    public static MonitorRenderer monitorRenderer = MonitorRenderer.DisplayList;
     public static double monitorDistanceSq = 4096;
     public static long monitorBandwidth = 1_000_000;
 
@@ -126,6 +126,7 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint
         NetworkHandler.registerNetworkMessage(  ComputerDataClientMessage::new );
 //        NetworkHandler.registerNetworkMessage( ComputerDeletedClientMessage::new );
         NetworkHandler.registerNetworkMessage(  ComputerTerminalClientMessage::new );
+        NetworkHandler.registerNetworkMessage(  MonitorClientMessage::new );
 //        NetworkHandler.registerNetworkMessage(  PlayRecordClientMessage.class, PlayRecordClientMessage::new );
 //        NetworkHandler.registerNetworkMessage(  TerminalDimensionsClientMessage.class, TerminalDimensionsClientMessage::new );
 

@@ -5,6 +5,7 @@
  */
 package dan200.computercraft.shared.common;
 
+import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.shared.network.client.TerminalState;
 
@@ -85,7 +86,6 @@ public class ServerTerminal implements ITerminal
     {
         return new TerminalState( colour, terminal, selectedSlot );
     }
-    /*
 
     public void writeDescription( CompoundTag nbt )
     {
@@ -99,5 +99,4 @@ public class ServerTerminal implements ITerminal
             nbt.put( "terminal", terminal );
         }
     }
-     */
 }

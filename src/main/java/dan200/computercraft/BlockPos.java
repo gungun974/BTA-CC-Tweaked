@@ -15,20 +15,24 @@ public class BlockPos {
         this.z = z;
     }
 
-    public double getX() {
+    public int getX() {
         return x;
     }
 
-    public double getY() {
+    public int getY() {
         return y;
     }
 
-    public double getZ() {
+    public int getZ() {
         return z;
     }
 
     public BlockPos offset(Direction dir) {
-        return new BlockPos(x + dir.getOffsetX(), y + dir.getOffsetY(), z + dir.getOffsetZ());
+        return offset(dir, 1);
+    }
+
+    public BlockPos offset(Direction dir, int mul) {
+        return new BlockPos(x + dir.getOffsetX() * mul, y + dir.getOffsetY() * mul, z + dir.getOffsetZ() * mul);
     }
 
     public BlockPos down() {
