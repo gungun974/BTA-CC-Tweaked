@@ -231,15 +231,12 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
     // region Sizing and placement stuff
     public Direction getDirection()
     {
-        // Ensure we're actually a monitor block. This _should_ always be the case, but sometimes there's
-        // fun problems with the block being missing on the client.
-        return BlockMonitor.metaToDirection(getBlockMeta());
+        return BlockMonitor.metaToFacing(getBlockMeta());
     }
 
     public Direction getOrientation()
     {
-        return Direction.NORTH;
-        //return BlockMonitor.metaToDirection(getBlockMeta() << 3);
+        return BlockMonitor.metaToOrientation(getBlockMeta());
     }
 
     @Override
@@ -434,7 +431,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
             yIndex > 0, xIndex > 0, xIndex < width - 1 );
 
         if (worldObj != null) {
-            final int newMetadata = (currentMetadata & ~0b1111000000) | (edgeState.ordinal() << 6);
+            final int newMetadata = (currentMetadata & ~0b11110000) | (BlockMonitor.stateToMeta(edgeState));
 
             worldObj.setBlockMetadataWithNotify(this.x, this.y, this.z, newMetadata);
         }

@@ -66,10 +66,9 @@ public class ComputerCraftModels implements ModelEntrypoint {
         );
 
         ModelHelper.setBlockModel(ComputerCraftBlocks.MONITOR_ADVANCED, () -> new BlockModelMonitor<>(ComputerCraftBlocks.MONITOR_ADVANCED)
-            .setTex(0, "computercraft:block/monitor_advanced_16", Side.TOP)
             .setTex(0, "computercraft:block/monitor_advanced_4", Side.SOUTH, Side.EAST, Side.WEST )
-            .setTex(0, "computercraft:block/monitor_advanced_0", Side.NORTH)
-            .setTex(0, "computercraft:block/monitor_advanced_4", Side.BOTTOM)
+            .setTex(0, "computercraft:block/monitor_advanced_0", Side.TOP, Side.BOTTOM)
+            .setTex(0, "computercraft:block/monitor_advanced_15", Side.NORTH)
         );
 
         ComputerCraft.log.info("Block Models initialized.");

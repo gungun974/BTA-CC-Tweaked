@@ -1,37 +1,406 @@
 package dan200.computercraft.shared.peripheral.monitor;
 
-import net.minecraft.client.render.block.model.BlockModelFullyRotatable;
+import net.minecraft.client.render.block.model.BlockModelStandard;
+import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
+import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogic;
+import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.helper.Sides;
 import net.minecraft.core.world.WorldSource;
 
-public class BlockModelMonitor<T extends BlockLogic> extends BlockModelFullyRotatable<T> {
+public class BlockModelMonitor<T extends BlockLogic> extends BlockModelStandard<T> {
     public BlockModelMonitor(Block<T> block) {
         super(block);
     }
 
-//    public IconCoordinate getBlockTexture(WorldSource blockAccess, int x, int y, int z, Side side) {
-//        int currentMetadata = blockAccess.getBlockMetadata(x, y, z);
-//        int index = Sides.orientationLookUpHorizontal[6 * Math.min(currentMetadata & 7, 5) + side.getId()];
-//        if (index >= Sides.orientationLookUpHorizontal.length) {
-//            return this.blockTextures.get(Side.BOTTOM);
-//        } else if (index != Side.BOTTOM.getId()) {
-//            IconCoordinate originalFront = this.blockTextures.get(Side.NORTH);
-//
-////            final boolean isOn = ((currentMetadata >> 3) & 0b1) == 1;
-////
-////            if (isOn) {
-////                return TextureRegistry.getTexture(originalFront.namespaceId.namespace() + ":block/" + originalFront.namespaceId.value() + "_on");
-////            }
-//
-//            return originalFront;
-//        } else {
-//            return this.blockTextures.get(Side.getSideById(index));
-//        }
-//    }
+    @Override
+    public boolean render(Tessellator tessellator, int x, int y, int z) {
+        int meta = renderBlocks.blockAccess.getBlockMetadata(x, y, z);
+        Direction dir = BlockMonitor.metaToFacing(meta);
+        Direction orientation = BlockMonitor.metaToOrientation(meta);
+
+        if (orientation == Direction.UP) {
+            switch (dir) {
+                case NORTH:
+                    renderBlocks.uvRotateSouth = 2;
+                    renderBlocks.uvRotateNorth = 1;
+                    renderBlocks.uvRotateTop = 3;
+                    renderBlocks.uvRotateBottom = 3;
+                    renderBlocks.uvRotateEast = 3;
+                    break;
+                case SOUTH:
+                    renderBlocks.uvRotateSouth = 1;
+                    renderBlocks.uvRotateNorth = 2;
+                    renderBlocks.uvRotateWest = 3;
+                    break;
+                case WEST:
+                    renderBlocks.uvRotateTop = 1;
+                    renderBlocks.uvRotateBottom = 2;
+                    renderBlocks.uvRotateEast = 2;
+                    renderBlocks.uvRotateWest = 1;
+                    renderBlocks.uvRotateNorth = 3;
+                    break;
+                case EAST:
+                    renderBlocks.uvRotateTop = 2;
+                    renderBlocks.uvRotateBottom = 1;
+                    renderBlocks.uvRotateEast = 1;
+                    renderBlocks.uvRotateWest = 2;
+                    renderBlocks.uvRotateSouth = 3;
+            }
+        } else if (orientation == Direction.DOWN) {
+            switch (dir) {
+                case NORTH:
+                    renderBlocks.uvRotateSouth = 1;
+                    renderBlocks.uvRotateNorth = 2;
+                    renderBlocks.uvRotateEast = 3;
+                    break;
+                case SOUTH:
+                    renderBlocks.uvRotateSouth = 2;
+                    renderBlocks.uvRotateNorth = 1;
+                    renderBlocks.uvRotateWest = 3;
+                    renderBlocks.uvRotateTop = 3;
+                    renderBlocks.uvRotateBottom = 3;
+                    break;
+                case WEST:
+                    renderBlocks.uvRotateTop = 2;
+                    renderBlocks.uvRotateBottom = 1;
+                    renderBlocks.uvRotateEast = 1;
+                    renderBlocks.uvRotateWest = 2;
+                    renderBlocks.uvRotateNorth = 3;
+                    break;
+                case EAST:
+                    renderBlocks.uvRotateTop = 1;
+                    renderBlocks.uvRotateBottom = 2;
+                    renderBlocks.uvRotateEast = 2;
+                    renderBlocks.uvRotateWest = 1;
+                    renderBlocks.uvRotateSouth = 3;
+            }
+        } else {
+            switch (dir) {
+                case NORTH:
+                    break;
+                case SOUTH:
+                    renderBlocks.uvRotateTop = 3;
+                    renderBlocks.uvRotateBottom = 3;
+                    break;
+                case WEST:
+                    renderBlocks.uvRotateTop = 2;
+                    renderBlocks.uvRotateBottom = 1;
+                    break;
+                case EAST:
+                    renderBlocks.uvRotateTop = 1;
+                    renderBlocks.uvRotateBottom = 2;
+            }
+        }
+
+        boolean result = this.renderStandardBlock(tessellator, this.block.getBlockBoundsFromState(renderBlocks.blockAccess, x, y, z), x, y, z);
+        this.resetRenderBlocks();
+        return result;
+    }
+
+    @Override
+    public IconCoordinate getBlockTextureFromSideAndMetadata(Side side, int data) {
+        int index = Sides.orientationLookUpHorizontal[6 * Math.min(data & 7, 5) + side.getId()];
+        return index >= Sides.orientationLookUpHorizontal.length
+            ? this.blockTextures.get(Side.BOTTOM)
+            : super.getBlockTextureFromSideAndMetadata(Side.getSideById(index), data);
+    }
+
+    public IconCoordinate getBlockTexture(WorldSource blockAccess, int x, int y, int z, Side side) {
+        int currentMetadata = blockAccess.getBlockMetadata(x, y, z);
+
+        Direction facing = BlockMonitor.metaToFacing(currentMetadata);
+
+        int index = Sides.orientationLookUpHorizontal[6 * Math.min(facing.getId(), 5) + side.getId()];
+
+        MonitorEdgeState edgeState = BlockMonitor.metaToState(currentMetadata);
+
+        Direction orientation = BlockMonitor.metaToOrientation(currentMetadata);
+
+        if (index >= Sides.orientationLookUpHorizontal.length) {
+            return this.blockTextures.get(Side.BOTTOM);
+        }
+
+            Side orientedSide = Side.getSideById(index);
+
+            IconCoordinate originalFront = this.blockTextures.get(Side.NORTH);
+
+            if (orientation == Direction.UP) {
+                switch (orientedSide) {
+                    case NORTH:
+                        orientedSide = Side.BOTTOM;
+                        break;
+                    case BOTTOM:
+                        orientedSide = Side.SOUTH;
+                        break;
+                    case SOUTH:
+                        orientedSide = Side.TOP;
+                        break;
+                    case TOP:
+                        orientedSide = Side.NORTH;
+                }
+            }
+            else if (orientation == Direction.DOWN) {
+                switch (orientedSide) {
+                    case NORTH:
+                        orientedSide = Side.TOP;
+                        break;
+                    case TOP:
+                        orientedSide = Side.SOUTH;
+                        break;
+                    case SOUTH:
+                        orientedSide = Side.BOTTOM;
+                        break;
+                    case BOTTOM:
+                        orientedSide = Side.NORTH;
+                }
+
+                if (orientedSide == Side.NORTH && facing != Direction.SOUTH) {
+                switch (edgeState) {
+                    case NONE:
+                        break;
+                    case L:
+                        edgeState = MonitorEdgeState.R;
+                        break;
+                    case R:
+                        edgeState = MonitorEdgeState.L;
+                        break;
+                    case LR:
+                        break;
+                    case U:
+                        break;
+                    case D:
+                        break;
+                    case UD:
+                        break;
+                    case RD:
+                        edgeState = MonitorEdgeState.LD;
+                        break;
+                    case LD:
+                        edgeState = MonitorEdgeState.RD;
+                        break;
+                    case RU:
+                        edgeState = MonitorEdgeState.LU;
+                        break;
+                    case LU:
+                        edgeState = MonitorEdgeState.RU;
+                        break;
+                    case LRD:
+                        break;
+                    case RUD:
+                        edgeState = MonitorEdgeState.LUD;
+                        break;
+                    case LUD:
+                        edgeState = MonitorEdgeState.RUD;
+                        break;
+                    case LRU:
+                        break;
+                    case LRUD:
+                        break;
+                }
+                }
+            }
+
+            switch (edgeState) {
+                case NONE:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_16");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_0");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_4");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_4");
+                    }
+                case L:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_19");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_1");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_33");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_4");
+                    }
+                case R:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_17");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_3");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_35");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_4");
+                    }
+                case LR:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_18");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_2");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_34");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_4");
+                    }
+                case U:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_22");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_0");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_38");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_38");
+                    }
+                case D:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_20");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_0");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_36");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_36");
+                    }
+                case UD:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_21");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_0");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_37");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_37");
+                    }
+                case RD:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_29");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_3");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_47");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_7");
+                    }
+                case LD:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_31");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_1");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_45");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_7");
+                    }
+                case RU:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_23");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_3");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_41");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_38");
+                    }
+                case LU:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_25");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_1");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_39");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_38");
+                    }
+                case LRD:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_30");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_2");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_46");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_7");
+                    }
+                case RUD:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_26");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_3");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_44");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_37");
+                    }
+                case LUD:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_28");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_1");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_42");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_37");
+                    }
+                case LRU:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_24");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_2");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_40");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_38");
+                    }
+                case LRUD:
+                    switch (orientedSide) {
+                        case NORTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_27");
+                        case TOP:
+                        case BOTTOM:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_2");
+                        case SOUTH:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_43");
+                        default:
+                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_37");
+                    }
+            }
+
+            return originalFront;
+    }
 
 
 
