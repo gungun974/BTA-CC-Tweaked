@@ -253,25 +253,23 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
         width = nbt.getInteger( NBT_WIDTH );
         height = nbt.getInteger( NBT_HEIGHT );
 
-        if( oldXIndex != xIndex || oldYIndex != yIndex )
-        {
-            // If our index has changed then it's possible the origin monitor has changed. Thus
-            // we'll clear our cache. If we're the origin then we'll need to remove the glList as well.
-            if( oldXIndex == 0 && oldYIndex == 0 && clientMonitor != null )
-            {
-                clientMonitor.destroy();
+        if (!Helper.isServerEnvironment()) {
+            if (oldXIndex != xIndex || oldYIndex != yIndex) {
+                // If our index has changed then it's possible the origin monitor has changed. Thus
+                // we'll clear our cache. If we're the origin then we'll need to remove the glList as well.
+                if (oldXIndex == 0 && oldYIndex == 0 && clientMonitor != null) {
+                    clientMonitor.destroy();
+                }
+                clientMonitor = null;
             }
-            clientMonitor = null;
-        }
 
-        if( xIndex == 0 && yIndex == 0 )
-        {
-            // If we're the origin terminal then create it.
-            if( clientMonitor == null )
-            {
-                clientMonitor = new ClientMonitor( advanced, this );
+            if (xIndex == 0 && yIndex == 0) {
+                // If we're the origin terminal then create it.
+                if (clientMonitor == null) {
+                    clientMonitor = new ClientMonitor(advanced, this);
+                }
+                clientMonitor.readDescription(nbt);
             }
-            clientMonitor.readDescription( nbt );
         }
 
         if( oldXIndex != xIndex || oldYIndex != yIndex || oldWidth != width || oldHeight != height )
