@@ -1,13 +1,10 @@
 package dan200.computercraft;
 
-import dan200.computercraft.fabric.Helper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.server.MinecraftServer;
-
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class ResourceManager {
 
@@ -32,7 +29,7 @@ public class ResourceManager {
             }
 
             Files.list(dirPath).forEach(found -> {
-                final Identifier identifier = new Identifier(namespace, found.toString().replaceFirst("/assets/" + namespace + "/", ""));
+                final Identifier identifier = new Identifier(namespace, found.toString().replaceFirst(".*?/assets/" + Pattern.quote(namespace) + "/", ""));
 
                 identifiers.add(identifier);
 
