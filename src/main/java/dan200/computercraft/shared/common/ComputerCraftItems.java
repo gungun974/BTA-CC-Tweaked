@@ -16,8 +16,8 @@ public class ComputerCraftItems {
     }
 
     static {
-       DISK = new ItemBuilder(MOD_ID)
-           .setKey("item.computercraft.disk")
+        DISK = new ItemBuilder(MOD_ID)
+            .setKey("item.disk")
             .build((new ItemDisk(NamespaceID.getPermanent(MOD_ID, "disk"), 16539)));
     }
 }

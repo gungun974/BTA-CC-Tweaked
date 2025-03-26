@@ -39,7 +39,7 @@ public class ComputerCraftBlocks {
 
     public static final Block<?> DISK_DRIVE;
 
-    public static final Block<?> TURTLE;
+    public static final Block<?> TURTLE_NORMAL;
 
     public static final Block<?> MONITOR_ADVANCED;
 
@@ -111,14 +111,14 @@ public class ComputerCraftBlocks {
             .setTileEntity(TileDiskDrive::new)
             .build("disk_drive", 10005, b -> new BlockDiskDrive(b));
 
-        EntityHelper.createTileEntity(TileTurtle.class, NamespaceID.getPermanent(MOD_ID, "turtle"));
+        EntityHelper.createTileEntity(TileTurtle.class, NamespaceID.getPermanent(MOD_ID, "turtle_normal"));
 
-        TURTLE = new BlockBuilder(MOD_ID)
+        TURTLE_NORMAL = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileTurtle::new)
-            .build("turtle", 10006, b -> new BlockTurtle(b));
+            .build("turtle_normal", 10006, b -> new BlockTurtle(b));
 
         EntityHelper.createTileEntity(TileMonitor.class, NamespaceID.getPermanent(MOD_ID, "monitor_advanced"));
 
