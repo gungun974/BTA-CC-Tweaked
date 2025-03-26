@@ -5,7 +5,7 @@ plugins {
 
 import org.gradle.internal.os.OperatingSystem
 
-project.ext.lwjglVersion = "3.3.5"
+project.ext.lwjglVersion = "3.3.2"
 
 switch (OperatingSystem.current()) {
     case OperatingSystem.LINUX:
