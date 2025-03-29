@@ -1,5 +1,6 @@
 package dan200.computercraft.shared.turtle.inventory;
 
+import dan200.computercraft.client.gui.FixedWidthFontRenderer;
 import dan200.computercraft.client.gui.widgets.WidgetTerminal;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.fabric.GLFWKeyboardManager;
@@ -15,6 +16,9 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import java.util.UUID;
+
+import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_HEIGHT;
+import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_WIDTH;
 
 public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContainerAbstract {
     public static final int PLAYER_START_Y = 134;
@@ -96,24 +100,21 @@ public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContain
         int j = (this.width - this.xSize) / 2;
         int k = (this.height - this.ySize) / 2;
 
-        if (terminal != null){
-            Tessellator tessellator = Tessellator.instance;
-
-            tessellator.startDrawingQuads();
-
-            tessellator.setColorRGBA_F(0,0,0, 1f);
-
-            tessellator.drawRectangle(j, k, this.xSize, this.ySize);
-
-            tessellator.draw();
-
+        if (terminal != null) {
             final int termPxWidth = terminal.getWidth();
             final int termPxHeight = terminal.getHeight();
 
             final int wrapperX = (width - termPxWidth) / 2;
             final int wrapperY = (height - termPxHeight - 80) / 2;
 
-            terminal.draw( wrapperX, wrapperY );
+            FixedWidthFontRenderer.drawEmptyTerminal(
+                wrapperX - 1,
+                wrapperY - 1,
+                termPxWidth + 2,
+                termPxHeight + 2
+            );
+
+            terminal.draw(wrapperX, wrapperY);
         }
 
 
