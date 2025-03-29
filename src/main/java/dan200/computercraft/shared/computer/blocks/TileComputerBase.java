@@ -29,15 +29,14 @@ import net.minecraft.core.util.helper.Side;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public abstract class TileComputerBase extends TileGeneric implements IComputerTile, IPeripheralTile
 {
     private static final String NBT_ID = "ComputerId";
     private static final String NBT_LABEL = "Label";
     private static final String NBT_ON = "On";
-    private final ComputerFamily family;
+    private static final String NBT_FAMILY = "Family";
+    private ComputerFamily family;
     protected String label = null;
     boolean startOn = false;
     private int instanceID = -1;
@@ -354,6 +353,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         computerID = nbt.containsKey( NBT_ID ) ? nbt.getInteger( NBT_ID ) : -1;
         label = nbt.containsKey( NBT_LABEL ) ? nbt.getString( NBT_LABEL ) : null;
         on = startOn = nbt.getBoolean( NBT_ON );
+        family = nbt.containsKey( NBT_FAMILY ) ? ComputerFamily.values()[nbt.getInteger( NBT_FAMILY )] : ComputerFamily.NORMAL;
     }
 
     @Override
@@ -369,6 +369,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             nbt.putString( NBT_LABEL, label );
         }
         nbt.putBoolean( NBT_ON, on );
+        nbt.putInt( NBT_FAMILY, family.ordinal() );
 
         super.writeToNBT( nbt );
     }

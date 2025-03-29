@@ -31,6 +31,7 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.lwjgl.glfw.GLFW.glfwGetKeyName;
@@ -94,7 +95,11 @@ public class GuiComputer<T extends ContainerComputerBase> extends Screen
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        this.mc.textureManager.loadTexture("/assets/computercraft/textures/gui/corners_normal.png").bind();
+        if (Objects.requireNonNull(family) == ComputerFamily.ADVANCED) {
+            this.mc.textureManager.loadTexture("/assets/computercraft/textures/gui/corners_advanced.png").bind();
+        } else {
+            this.mc.textureManager.loadTexture("/assets/computercraft/textures/gui/corners_normal.png").bind();
+        }
 
         doRender(
             wrapperX - MARGIN,

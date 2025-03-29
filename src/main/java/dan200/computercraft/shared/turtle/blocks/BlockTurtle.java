@@ -5,25 +5,18 @@
  */
 package dan200.computercraft.shared.turtle.blocks;
 
-import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
-import dan200.computercraft.shared.peripheral.modem.ModemShapes;
-import dan200.computercraft.shared.peripheral.modem.wireless.BlockWirelessModem;
-import dan200.computercraft.shared.turtle.core.TurtleBrain;
-import dan200.computercraft.shared.turtle.items.ITurtleItem;
+import dan200.computercraft.shared.computer.core.ComputerFamily;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.util.phys.AABB;
 import net.minecraft.core.world.WorldSource;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 public class BlockTurtle extends BlockLogicComputer
 {
-    public BlockTurtle(Block<?> block) {
-        super(block);
-        block.withEntity(TileTurtle::new);
+    public BlockTurtle(Block<?> block, ComputerFamily family) {
+        super(block, family);
+        block.withEntity(() -> new TileTurtle(family));
         this.setBlockBounds( 0.125, 0.125, 0.125, 0.875, 0.875, 0.875);
     }
 

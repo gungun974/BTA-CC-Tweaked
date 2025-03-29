@@ -5,6 +5,7 @@ import dan200.computercraft.BlockPos;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.common.IBundledRedstoneBlock;
+import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogicRotatable;
@@ -20,9 +21,9 @@ import net.minecraft.core.world.WorldSource;
 import org.jetbrains.annotations.Nullable;
 
 public class BlockLogicComputer extends BlockLogicRotatable implements IBundledRedstoneBlock {
-    public BlockLogicComputer(Block<?> block) {
+    public BlockLogicComputer(Block<?> block, ComputerFamily family) {
         super(block, Material.stone);
-        block.withEntity(TileEntityComputer::new);
+        block.withEntity(() -> new TileEntityComputer(family));
     }
 
     @Nullable

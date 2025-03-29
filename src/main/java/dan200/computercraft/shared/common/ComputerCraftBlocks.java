@@ -2,6 +2,7 @@ package dan200.computercraft.shared.common;
 
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
+import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.items.ItemBlockComputer;
 import dan200.computercraft.shared.peripheral.diskdrive.BlockDiskDrive;
 import dan200.computercraft.shared.peripheral.diskdrive.TileDiskDrive;
@@ -30,22 +31,29 @@ import static dan200.computercraft.ComputerCraft.MOD_ID;
 
 public class ComputerCraftBlocks {
     public static final Block<?> COMPUTER_NORMAL;
+    public static final Block<?> COMPUTER_ADVANCED;
+    // public static final BlockComputer COMPUTER_COMMAND // "computer_command"
+
+    public static final Block<?> TURTLE_NORMAL;
+    public static final Block<?> TURTLE_ADVANCED;
+
     public static final Block<?> SPEAKER;
-
-    public static final Block<?> WIRELESS_MODEM_NORMAL;
-
-    public static final Block<?> WIRED_MODEM_FULL;
-    public static final Block<?> CABLE;
 
     public static final Block<?> DISK_DRIVE;
 
-    public static final Block<?> TURTLE_NORMAL;
+    // public static final BlockPrinter PRINTER // "printer"
 
+    public static final Block<?> MONITOR_NORMAL;
     public static final Block<?> MONITOR_ADVANCED;
 
-    public ComputerCraftBlocks() {
+    public static final Block<?> WIRELESS_MODEM_NORMAL;
+    public static final Block<?> WIRELESS_MODEM_ADVANCED;
 
-    }
+    public static final Block<?> WIRED_MODEM_FULL;
+
+    public static final Block<?> CABLE;
+
+    public ComputerCraftBlocks() {}
 
     static {
         final IconCoordinate a = TextureRegistry.getTexture("computercraft:block/computer_normal_front");
@@ -62,9 +70,18 @@ public class ComputerCraftBlocks {
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
-            .setTileEntity(TileEntityComputer::new)
+            .setTileEntity(() -> new TileEntityComputer(ComputerFamily.NORMAL))
             .setBlockItem(ItemBlockComputer::new)
-            .build("computer_normal", 10000, b -> new BlockLogicComputer(b));
+            .build("computer_normal", 10000, b -> new BlockLogicComputer(b, ComputerFamily.NORMAL));
+
+
+        COMPUTER_ADVANCED = new BlockBuilder(MOD_ID)
+            .setHardness(1.5f)
+            .setResistance(10f)
+            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTileEntity(() -> new TileEntityComputer(ComputerFamily.ADVANCED))
+            .setBlockItem(ItemBlockComputer::new)
+            .build("computer_advanced", 10008, b -> new BlockLogicComputer(b, ComputerFamily.ADVANCED));
 
         EntityHelper.createTileEntity(TileSpeaker.class, NamespaceID.getPermanent(MOD_ID, "speaker"));
 
@@ -75,7 +92,7 @@ public class ComputerCraftBlocks {
             .setTileEntity(TileSpeaker::new)
             .build("speaker", 10001, b -> new BlockSpeaker(b));
 
-        EntityHelper.createTileEntity(TileWirelessModem.class, NamespaceID.getPermanent(MOD_ID, "wireless_modem_normal"));
+        EntityHelper.createTileEntity(TileWirelessModem.class, NamespaceID.getPermanent(MOD_ID, "wireless_modem"));
 
         WIRELESS_MODEM_NORMAL = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
@@ -83,6 +100,13 @@ public class ComputerCraftBlocks {
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileWirelessModem(false))
             .build("wireless_modem_normal", 10002, b -> new BlockWirelessModem(b, false));
+
+        WIRELESS_MODEM_ADVANCED = new BlockBuilder(MOD_ID)
+            .setHardness(1.5f)
+            .setResistance(10f)
+            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTileEntity(() -> new TileWirelessModem(true))
+            .build("wireless_modem_advanced", 10011, b -> new BlockWirelessModem(b, true));
 
         EntityHelper.createTileEntity(TileWiredModemFull.class, NamespaceID.getPermanent(MOD_ID, "wired_modem_full"));
 
@@ -111,16 +135,30 @@ public class ComputerCraftBlocks {
             .setTileEntity(TileDiskDrive::new)
             .build("disk_drive", 10005, b -> new BlockDiskDrive(b));
 
-        EntityHelper.createTileEntity(TileTurtle.class, NamespaceID.getPermanent(MOD_ID, "turtle_normal"));
+        EntityHelper.createTileEntity(TileTurtle.class, NamespaceID.getPermanent(MOD_ID, "turtle"));
 
         TURTLE_NORMAL = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
-            .setTileEntity(TileTurtle::new)
-            .build("turtle_normal", 10006, b -> new BlockTurtle(b));
+            .setTileEntity(() -> new TileTurtle(ComputerFamily.NORMAL))
+            .build("turtle_normal", 10006, b -> new BlockTurtle(b, ComputerFamily.NORMAL));
 
-        EntityHelper.createTileEntity(TileMonitor.class, NamespaceID.getPermanent(MOD_ID, "monitor_advanced"));
+        TURTLE_ADVANCED = new BlockBuilder(MOD_ID)
+            .setHardness(1.5f)
+            .setResistance(10f)
+            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTileEntity(() -> new TileTurtle(ComputerFamily.ADVANCED))
+            .build("turtle_advanced", 10009, b -> new BlockTurtle(b, ComputerFamily.ADVANCED));
+
+        EntityHelper.createTileEntity(TileMonitor.class, NamespaceID.getPermanent(MOD_ID, "monitor"));
+
+        MONITOR_NORMAL = new BlockBuilder(MOD_ID)
+            .setHardness(1.5f)
+            .setResistance(10f)
+            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTileEntity(() -> new TileMonitor(false))
+            .build("monitor_normal", 10010, b -> new BlockMonitor(b, false));
 
         MONITOR_ADVANCED = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)

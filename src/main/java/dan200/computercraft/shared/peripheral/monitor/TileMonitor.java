@@ -38,8 +38,9 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
     private static final String NBT_Y = "YIndex";
     private static final String NBT_WIDTH = "Width";
     private static final String NBT_HEIGHT = "Height";
+    private static final String NBT_ADVANCED = "Advanced";
 
-    private final boolean advanced;
+    private boolean advanced;
     private final Set<IComputerAccess> computers = new HashSet<>();
     // MonitorWatcher state.
     boolean enqueued;
@@ -55,9 +56,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
     private int xIndex = 0;
     private int yIndex = 0;
 
-    public TileMonitor() {
-        this.advanced = true;
-    }
+    public TileMonitor() {}
 
     public TileMonitor(  boolean advanced )
     {
@@ -252,6 +251,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
         yIndex = nbt.getInteger( NBT_Y );
         width = nbt.getInteger( NBT_WIDTH );
         height = nbt.getInteger( NBT_HEIGHT );
+        advanced = nbt.getBoolean( NBT_ADVANCED );
 
         if (!Helper.isServerEnvironment()) {
             if (oldXIndex != xIndex || oldYIndex != yIndex) {
@@ -287,6 +287,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
         tag.putInt( NBT_Y, yIndex );
         tag.putInt( NBT_WIDTH, width );
         tag.putInt( NBT_HEIGHT, height );
+        tag.putBoolean( NBT_ADVANCED, advanced );
 
         if( xIndex == 0 && yIndex == 0 && serverMonitor != null )
         {

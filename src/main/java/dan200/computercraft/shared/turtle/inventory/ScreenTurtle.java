@@ -110,15 +110,21 @@ public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContain
             final int termPxWidth = terminal.getWidth();
             final int termPxHeight = terminal.getHeight();
 
-            final int wrapperX = (width - termPxWidth) / 2 + 1;
-            final int wrapperY = (height - termPxHeight - 80) / 2 + 1;
+            final int wrapperX = (width - termPxWidth) / 2;
+            final int wrapperY = (height - termPxHeight - 80) / 2;
 
             terminal.draw( wrapperX, wrapperY );
         }
 
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.textureManager.loadTexture("/assets/computercraft/textures/gui/turtle_normal.png").bind();
+
+        if (family == ComputerFamily.ADVANCED) {
+            this.mc.textureManager.loadTexture("/assets/computercraft/textures/gui/turtle_advanced.png").bind();
+        } else {
+            this.mc.textureManager.loadTexture("/assets/computercraft/textures/gui/turtle_normal.png").bind();
+        }
+
         this.drawTexturedModalRect(j, k, 0, 0, this.xSize, this.ySize);
 
         Terminal terminal = this.computer != null ? this.computer.getTerminal() : null;

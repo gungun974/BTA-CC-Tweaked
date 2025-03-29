@@ -40,6 +40,10 @@ public class TileEntityComputer extends TileComputerBase  {
         super(ComputerFamily.NORMAL);
     }
 
+    public TileEntityComputer(ComputerFamily family) {
+        super(family);
+    }
+
     public boolean canBeCarried(World world, Entity potentialHolder) {
         return false;
     }

@@ -21,9 +21,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class BlockWirelessModem extends BlockLogicFullyRotatable
 {
-    //public static final DirectionProperty FACING = Properties.FACING;
-    //public static final BooleanProperty ON = BooleanProperty.of( "on" );
-
     public BlockWirelessModem(Block<?> block, boolean advanced) {
         super(block, Material.stone);
         block.withEntity(() -> new TileWirelessModem(advanced));
@@ -38,10 +35,6 @@ public class BlockWirelessModem extends BlockLogicFullyRotatable
     public void onBlockPlacedByMob(World world, int x, int y, int z, @NotNull Side side, Mob mob, double xPlaced, double yPlaced) {
         Direction direction = mob.getPlacementDirection(side, PlacementMode.SIDE);
         world.setBlockMetadataWithNotify(x, y, z, directionToMeta(direction));
-    }
-
-    public void onBlockPlacedOnSide(World world, int x, int y, int z, @NotNull Side side, double xPlaced, double yPlaced) {
-        world.setBlockMetadataWithNotify(x, y, z, directionToMeta(side.getDirection()));
     }
 
     public boolean isCubeShaped() {

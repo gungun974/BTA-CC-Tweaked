@@ -5,11 +5,14 @@
  */
 package dan200.computercraft.shared.peripheral.modem.wireless;
 
+import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.peripheral.modem.ModemPeripheral;
 import dan200.computercraft.shared.peripheral.modem.ModemState;
+import dan200.computercraft.shared.peripheral.monitor.ClientMonitor;
 import dan200.computercraft.shared.util.TickScheduler;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.phys.Vec3;
@@ -19,11 +22,13 @@ import javax.annotation.Nonnull;
 
 public class TileWirelessModem extends TileGeneric implements IPeripheralTile
 {
-    private final boolean advanced;
+    private boolean advanced;
     private final ModemPeripheral modem;
     private boolean hasModemDirection = false;
     private Direction modemDirection = Direction.DOWN;
     private boolean destroyed = false;
+
+    private static final String NBT_ADVANCED = "Advanced";
 
     public TileWirelessModem() {
         this(false);
@@ -113,6 +118,20 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile
     {
         refreshDirection();
         return side == modemDirection ? modem : null;
+    }
+
+    @Override
+    public void readFromNBT(CompoundTag nbt) {
+        super.readFromNBT(nbt);
+
+        advanced = nbt.getBoolean( NBT_ADVANCED );
+    }
+
+    @Override
+    public void writeToNBT(CompoundTag tag) {
+        tag.putBoolean( NBT_ADVANCED, advanced );
+
+        super.writeToNBT(tag);
     }
 
     private static class Peripheral extends WirelessModemPeripheral

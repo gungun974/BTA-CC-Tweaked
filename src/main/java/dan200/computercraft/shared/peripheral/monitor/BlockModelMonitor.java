@@ -12,8 +12,11 @@ import net.minecraft.core.util.helper.Sides;
 import net.minecraft.core.world.WorldSource;
 
 public class BlockModelMonitor<T extends BlockLogic> extends BlockModelStandard<T> {
-    public BlockModelMonitor(Block<T> block) {
+    private final String texturePrefix;
+
+    public BlockModelMonitor(Block<T> block, String texturePrefix) {
         super(block);
+        this.texturePrefix = texturePrefix;
     }
 
     @Override
@@ -124,41 +127,40 @@ public class BlockModelMonitor<T extends BlockLogic> extends BlockModelStandard<
             return this.blockTextures.get(Side.BOTTOM);
         }
 
-            Side orientedSide = Side.getSideById(index);
+        Side orientedSide = Side.getSideById(index);
 
-            IconCoordinate originalFront = this.blockTextures.get(Side.NORTH);
+        IconCoordinate originalFront = this.blockTextures.get(Side.NORTH);
 
-            if (orientation == Direction.UP) {
-                switch (orientedSide) {
-                    case NORTH:
-                        orientedSide = Side.BOTTOM;
-                        break;
-                    case BOTTOM:
-                        orientedSide = Side.SOUTH;
-                        break;
-                    case SOUTH:
-                        orientedSide = Side.TOP;
-                        break;
-                    case TOP:
-                        orientedSide = Side.NORTH;
-                }
+        if (orientation == Direction.UP) {
+            switch (orientedSide) {
+                case NORTH:
+                    orientedSide = Side.BOTTOM;
+                    break;
+                case BOTTOM:
+                    orientedSide = Side.SOUTH;
+                    break;
+                case SOUTH:
+                    orientedSide = Side.TOP;
+                    break;
+                case TOP:
+                    orientedSide = Side.NORTH;
             }
-            else if (orientation == Direction.DOWN) {
-                switch (orientedSide) {
-                    case NORTH:
-                        orientedSide = Side.TOP;
-                        break;
-                    case TOP:
-                        orientedSide = Side.SOUTH;
-                        break;
-                    case SOUTH:
-                        orientedSide = Side.BOTTOM;
-                        break;
-                    case BOTTOM:
-                        orientedSide = Side.NORTH;
-                }
+        } else if (orientation == Direction.DOWN) {
+            switch (orientedSide) {
+                case NORTH:
+                    orientedSide = Side.TOP;
+                    break;
+                case TOP:
+                    orientedSide = Side.SOUTH;
+                    break;
+                case SOUTH:
+                    orientedSide = Side.BOTTOM;
+                    break;
+                case BOTTOM:
+                    orientedSide = Side.NORTH;
+            }
 
-                if (orientedSide == Side.NORTH && facing != Direction.SOUTH) {
+            if (orientedSide == Side.NORTH && facing != Direction.SOUTH) {
                 switch (edgeState) {
                     case NONE:
                         break;
@@ -201,207 +203,204 @@ public class BlockModelMonitor<T extends BlockLogic> extends BlockModelStandard<
                     case LRUD:
                         break;
                 }
+            }
+        }
+
+        switch (edgeState) {
+            case NONE:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_16");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_0");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_4");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_4");
                 }
-            }
+            case L:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_19");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_1");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_33");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_4");
+                }
+            case R:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_17");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_3");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_35");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_4");
+                }
+            case LR:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_18");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_2");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_34");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_4");
+                }
+            case U:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_22");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_0");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_38");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_38");
+                }
+            case D:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_20");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_0");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_36");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_36");
+                }
+            case UD:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_21");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_0");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_37");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_37");
+                }
+            case RD:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_29");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_3");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_47");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_7");
+                }
+            case LD:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_31");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_1");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_45");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_7");
+                }
+            case RU:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_23");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_3");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_41");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_38");
+                }
+            case LU:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_25");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_1");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_39");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_38");
+                }
+            case LRD:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_30");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_2");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_46");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_7");
+                }
+            case RUD:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_26");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_3");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_44");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_37");
+                }
+            case LUD:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_28");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_1");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_42");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_37");
+                }
+            case LRU:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_24");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_2");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_40");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_38");
+                }
+            case LRUD:
+                switch (orientedSide) {
+                    case NORTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_27");
+                    case TOP:
+                    case BOTTOM:
+                        return TextureRegistry.getTexture(texturePrefix + "_2");
+                    case SOUTH:
+                        return TextureRegistry.getTexture(texturePrefix + "_43");
+                    default:
+                        return TextureRegistry.getTexture(texturePrefix + "_37");
+                }
+        }
 
-            switch (edgeState) {
-                case NONE:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_16");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_0");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_4");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_4");
-                    }
-                case L:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_19");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_1");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_33");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_4");
-                    }
-                case R:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_17");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_3");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_35");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_4");
-                    }
-                case LR:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_18");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_2");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_34");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_4");
-                    }
-                case U:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_22");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_0");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_38");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_38");
-                    }
-                case D:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_20");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_0");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_36");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_36");
-                    }
-                case UD:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_21");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_0");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_37");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_37");
-                    }
-                case RD:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_29");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_3");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_47");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_7");
-                    }
-                case LD:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_31");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_1");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_45");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_7");
-                    }
-                case RU:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_23");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_3");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_41");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_38");
-                    }
-                case LU:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_25");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_1");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_39");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_38");
-                    }
-                case LRD:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_30");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_2");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_46");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_7");
-                    }
-                case RUD:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_26");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_3");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_44");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_37");
-                    }
-                case LUD:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_28");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_1");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_42");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_37");
-                    }
-                case LRU:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_24");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_2");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_40");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_38");
-                    }
-                case LRUD:
-                    switch (orientedSide) {
-                        case NORTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_27");
-                        case TOP:
-                        case BOTTOM:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_2");
-                        case SOUTH:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_43");
-                        default:
-                            return TextureRegistry.getTexture("computercraft:block/monitor_advanced_37");
-                    }
-            }
-
-            return originalFront;
+        return originalFront;
     }
-
-
-
 }

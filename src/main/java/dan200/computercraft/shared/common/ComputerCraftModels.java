@@ -34,6 +34,12 @@ public class ComputerCraftModels implements ModelEntrypoint {
             .setTex(0, "computercraft:block/computer_normal_front", Side.NORTH)
         );
 
+        ModelHelper.setBlockModel(ComputerCraftBlocks.COMPUTER_ADVANCED, () -> new BlockModelComputer<>(ComputerCraftBlocks.COMPUTER_ADVANCED)
+            .setTex(0, "computercraft:block/computer_advanced_side", Side.SOUTH, Side.EAST, Side.WEST)
+            .setTex(0, "computercraft:block/computer_advanced_top", Side.TOP, Side.BOTTOM)
+            .setTex(0, "computercraft:block/computer_advanced_front", Side.NORTH)
+        );
+
         ModelHelper.setBlockModel(ComputerCraftBlocks.SPEAKER, () -> new BlockModelRotatable<>(ComputerCraftBlocks.SPEAKER)
             .setTex(0, "computercraft:block/speaker_side", Side.SOUTH, Side.EAST, Side.WEST)
             .setTex(0, "computercraft:block/speaker_top", Side.TOP, Side.BOTTOM)
@@ -42,6 +48,11 @@ public class ComputerCraftModels implements ModelEntrypoint {
 
         ModelHelper.setBlockModel(ComputerCraftBlocks.WIRELESS_MODEM_NORMAL, () -> new BlockModelWirelessModem<>(ComputerCraftBlocks.WIRELESS_MODEM_NORMAL)
             .setTex(0, "computercraft:block/wireless_modem_normal_face", Side.TOP, Side.NORTH, Side.SOUTH, Side.EAST, Side.WEST)
+            .setTex(0, "computercraft:block/modem_back", Side.BOTTOM)
+        );
+
+        ModelHelper.setBlockModel(ComputerCraftBlocks.WIRELESS_MODEM_ADVANCED, () -> new BlockModelWirelessModem<>(ComputerCraftBlocks.WIRELESS_MODEM_ADVANCED)
+            .setTex(0, "computercraft:block/wireless_modem_advanced_face", Side.TOP, Side.NORTH, Side.SOUTH, Side.EAST, Side.WEST)
             .setTex(0, "computercraft:block/modem_back", Side.BOTTOM)
         );
 
@@ -65,7 +76,19 @@ public class ComputerCraftModels implements ModelEntrypoint {
             .setTex(0, "computercraft:block/computer_normal_front", Side.NORTH)
         );
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.MONITOR_ADVANCED, () -> new BlockModelMonitor<>(ComputerCraftBlocks.MONITOR_ADVANCED)
+        ModelHelper.setBlockModel(ComputerCraftBlocks.TURTLE_ADVANCED, () -> new BlockModelComputer<>(ComputerCraftBlocks.TURTLE_ADVANCED)
+            .setTex(0, "computercraft:block/computer_advanced_side", Side.SOUTH, Side.EAST, Side.WEST)
+            .setTex(0, "computercraft:block/computer_advanced_top", Side.TOP, Side.BOTTOM)
+            .setTex(0, "computercraft:block/computer_advanced_front", Side.NORTH)
+        );
+
+        ModelHelper.setBlockModel(ComputerCraftBlocks.MONITOR_NORMAL, () -> new BlockModelMonitor<>(ComputerCraftBlocks.MONITOR_NORMAL, "computercraft:block/monitor_normal")
+            .setTex(0, "computercraft:block/monitor_normal_4", Side.SOUTH, Side.EAST, Side.WEST )
+            .setTex(0, "computercraft:block/monitor_normal_0", Side.TOP, Side.BOTTOM)
+            .setTex(0, "computercraft:block/monitor_normal_15", Side.NORTH)
+        );
+
+        ModelHelper.setBlockModel(ComputerCraftBlocks.MONITOR_ADVANCED, () -> new BlockModelMonitor<>(ComputerCraftBlocks.MONITOR_ADVANCED, "computercraft:block/monitor_advanced")
             .setTex(0, "computercraft:block/monitor_advanced_4", Side.SOUTH, Side.EAST, Side.WEST )
             .setTex(0, "computercraft:block/monitor_advanced_0", Side.TOP, Side.BOTTOM)
             .setTex(0, "computercraft:block/monitor_advanced_15", Side.NORTH)
