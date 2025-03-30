@@ -281,9 +281,7 @@ public class TurtleBrain implements ITurtleAccess
     @Override
     public Vec3 getVisualPosition( float f )
     {
-        Vec3 offset = getRenderOffset( f );
-        BlockPos pos = owner.getPos();
-        return Vec3.getPermanentVec3( pos.getX() + 0.5 + offset.x, pos.getY() + 0.5 + offset.y, pos.getZ() + 0.5 + offset.z );
+        return getRenderOffset( f );
     }
 
     @Override

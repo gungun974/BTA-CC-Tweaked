@@ -1,5 +1,6 @@
 package dan200.computercraft.shared.turtle.blocks;
 
+import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,6 +15,7 @@ import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.AABB;
+import net.minecraft.core.util.phys.Vec3;
 import org.lwjgl.opengl.GL11;
 
 @Environment(EnvType.CLIENT)
@@ -26,27 +28,13 @@ public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
             GL11.glEnable(32826);
             GL11.glPushMatrix();
 
-            float angle;
-            switch (BlockTurtle.getDirectionFromMeta(tileEntity.getBlockMeta())) {
-                case NORTH:
-                    angle = 0.0F;
-                    break;
-                case EAST:
-                    angle = -90F;
-                    break;
-                case SOUTH:
-                    angle = 180.0F;
-                    break;
-                case WEST:
-                default:
-                    angle = 90.0F;
-            }
+            Vec3 pos = tileEntity.getAccess().getVisualPosition(partialTick);
 
-            GL11.glTranslatef((float)x + 1 , (float)y + 1, (float)z + 1);
+            GL11.glTranslatef((float)x + (float)pos.x + 1 , (float)y + (float)pos.y + 1, (float)z + (float)pos.z + 1);
 
             GL11.glTranslatef(-0.5f, 0, -0.5f);
 
-            GL11.glRotatef(angle, 0, 1f, 0);
+            GL11.glRotatef(-tileEntity.getAccess().getVisualYaw(partialTick) + 180, 0, 1f, 0);
 
             GL11.glTranslatef(0.5f, 0, 0.5f);
 
