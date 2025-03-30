@@ -7,6 +7,9 @@ import dan200.computercraft.shared.peripheral.modem.wireless.BlockModelWirelessM
 import dan200.computercraft.shared.peripheral.monitor.BlockModelMonitor;
 import dan200.computercraft.shared.peripheral.monitor.TileEntityMonitorRenderer;
 import dan200.computercraft.shared.peripheral.monitor.TileMonitor;
+import dan200.computercraft.shared.turtle.blocks.BlockModelTurtle;
+import dan200.computercraft.shared.turtle.blocks.TileEntityRendererTurtle;
+import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import net.minecraft.client.render.EntityRenderDispatcher;
 import net.minecraft.client.render.TileEntityRenderDispatcher;
 import net.minecraft.client.render.block.color.BlockColorDispatcher;
@@ -70,13 +73,13 @@ public class ComputerCraftModels implements ModelEntrypoint {
             .setTex(0, "computercraft:block/disk_drive_front", Side.NORTH)
         );
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.TURTLE_NORMAL, () -> new BlockModelComputer<>(ComputerCraftBlocks.TURTLE_NORMAL)
+        ModelHelper.setBlockModel(ComputerCraftBlocks.TURTLE_NORMAL, () -> new BlockModelTurtle<>(ComputerCraftBlocks.TURTLE_NORMAL)
             .setTex(0, "computercraft:block/computer_normal_side", Side.SOUTH, Side.EAST, Side.WEST)
             .setTex(0, "computercraft:block/computer_normal_top", Side.TOP, Side.BOTTOM)
             .setTex(0, "computercraft:block/computer_normal_front", Side.NORTH)
         );
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.TURTLE_ADVANCED, () -> new BlockModelComputer<>(ComputerCraftBlocks.TURTLE_ADVANCED)
+        ModelHelper.setBlockModel(ComputerCraftBlocks.TURTLE_ADVANCED, () -> new BlockModelTurtle<>(ComputerCraftBlocks.TURTLE_ADVANCED)
             .setTex(0, "computercraft:block/computer_advanced_side", Side.SOUTH, Side.EAST, Side.WEST)
             .setTex(0, "computercraft:block/computer_advanced_top", Side.TOP, Side.BOTTOM)
             .setTex(0, "computercraft:block/computer_advanced_front", Side.NORTH)
@@ -114,6 +117,8 @@ public class ComputerCraftModels implements ModelEntrypoint {
     @Override
     public void initTileEntityModels(TileEntityRenderDispatcher dispatcher) {
         ModelHelper.setTileEntityModel(TileMonitor.class, TileEntityMonitorRenderer::new);
+
+        ModelHelper.setTileEntityModel(TileTurtle.class, TileEntityRendererTurtle::new);
 
         ComputerCraft.log.info("Tile Entity Models initialized.");
     }
