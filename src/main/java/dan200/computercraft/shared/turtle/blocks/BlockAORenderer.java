@@ -4,6 +4,7 @@ import net.minecraft.client.render.LightmapHelper;
 import net.minecraft.client.render.block.model.BlockModel;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.helper.Sides;
 import net.minecraft.core.util.phys.AABB;
@@ -36,7 +37,7 @@ public class BlockAORenderer {
     private double eastU2 = 0;
     private double eastV2 = 0;
 
-    BlockAORenderer(
+    public BlockAORenderer(
         AABB bounds
     ) {
         this.bounds = bounds;
@@ -135,6 +136,47 @@ public class BlockAORenderer {
         for (Side side : Side.sides) {
             somethingRendered |= renderSide(tessellator, tileEntity, bounds, sideId, tileEntity.x, tileEntity.y, tileEntity.z, r, g, b, side, meta
             );
+        }
+
+        return somethingRendered;
+    }
+
+    public boolean render(Tessellator tessellator, Side obscureSide
+    ) {
+        boolean somethingRendered = false;
+
+        int sideId = obscureSide.getId();
+
+        for (Side side : Side.sides) {
+            int index = Sides.orientationLookUpHorizontal[6 * Math.min(sideId, 5) + side.getId()];
+
+            if (index == 0) {
+                tessellator.setNormal(0.0F, 1.0F, 0.0F);
+            } else if (index == 1) {
+                tessellator.setNormal(0.0F, -1.0F, 0.0F);
+            } else if (index == 2) {
+                tessellator.setNormal(0.0F, 0.0F, 1.0F);
+            } else if (index == 3) {
+                tessellator.setNormal(0.0F, 0.0F, -1.0F);
+            } else if (index == 4) {
+                tessellator.setNormal(1.0F, 0.0F, 0.0F);
+            } else if (index == 5) {
+                tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+            }
+
+            if (side.getId() == 0) {
+                this.renderBottomFace(tessellator, bounds, bottomU1, bottomV1, bottomU2, bottomV2);
+            } else if (side.getId() == 1) {
+                this.renderTopFace(tessellator, bounds, topU1, topV1, topU2, topV2);
+            } else if (side.getId() == 2) {
+                this.renderNorthFace(tessellator, bounds, northU1, northV1, northU2, northV2);
+            } else if (side.getId() == 3) {
+                this.renderSouthFace(tessellator, bounds, southU1, southV1, southU2, southV2);
+            } else if (side.getId() == 4) {
+                this.renderWestFace(tessellator, bounds, westU1, westV1, westU2, westV2);
+            } else if (side.getId() == 5) {
+                this.renderEastFace(tessellator, bounds, eastU1, eastV1, eastU2, eastV2);
+            }
         }
 
         return somethingRendered;

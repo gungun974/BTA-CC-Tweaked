@@ -18,6 +18,7 @@ import dan200.computercraft.shared.peripheral.speaker.BlockSpeaker;
 import dan200.computercraft.shared.peripheral.speaker.TileSpeaker;
 import dan200.computercraft.shared.turtle.blocks.BlockTurtle;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
+import dan200.computercraft.shared.turtle.items.ItemTurtle;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
@@ -71,7 +72,10 @@ public class ComputerCraftBlocks {
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileEntityComputer(ComputerFamily.NORMAL))
-            .setBlockItem(ItemBlockComputer::new)
+            .setBlockItem(block -> {
+                ComputerCraftItems.COMPUTER_NORMAL = new ItemBlockComputer(block);
+                return ComputerCraftItems.COMPUTER_NORMAL;
+            })
             .build("computer_normal", 10000, b -> new BlockLogicComputer(b, ComputerFamily.NORMAL));
 
 
@@ -80,7 +84,10 @@ public class ComputerCraftBlocks {
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileEntityComputer(ComputerFamily.ADVANCED))
-            .setBlockItem(ItemBlockComputer::new)
+            .setBlockItem(block -> {
+                ComputerCraftItems.COMPUTER_ADVANCED = new ItemBlockComputer(block);
+                return ComputerCraftItems.COMPUTER_ADVANCED;
+            })
             .build("computer_advanced", 10008, b -> new BlockLogicComputer(b, ComputerFamily.ADVANCED));
 
         EntityHelper.createTileEntity(TileSpeaker.class, NamespaceID.getPermanent(MOD_ID, "speaker"));
@@ -142,6 +149,10 @@ public class ComputerCraftBlocks {
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileTurtle(ComputerFamily.NORMAL))
+            .setBlockItem(block -> {
+                ComputerCraftItems.TURTLE_NORMAL = new ItemTurtle(block);
+                return ComputerCraftItems.TURTLE_NORMAL;
+            })
             .build("turtle_normal", 10006, b -> new BlockTurtle(b, ComputerFamily.NORMAL));
 
         TURTLE_ADVANCED = new BlockBuilder(MOD_ID)
@@ -149,6 +160,10 @@ public class ComputerCraftBlocks {
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileTurtle(ComputerFamily.ADVANCED))
+            .setBlockItem(block -> {
+                ComputerCraftItems.TURTLE_ADVANCED = new ItemTurtle(block);
+                return ComputerCraftItems.TURTLE_ADVANCED;
+            })
             .build("turtle_advanced", 10009, b -> new BlockTurtle(b, ComputerFamily.ADVANCED));
 
         EntityHelper.createTileEntity(TileMonitor.class, NamespaceID.getPermanent(MOD_ID, "monitor"));

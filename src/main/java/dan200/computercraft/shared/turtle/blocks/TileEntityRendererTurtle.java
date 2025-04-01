@@ -73,7 +73,6 @@ public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
         (new BlockAORenderer(AABB.getTemporaryBB(3 / 16f, 6 / 16f, 13 / 16f, 13 / 16f, 13 / 16f, 15 / 16f)))
             .setBottomUV(11.75 / 16, 0.5 / 16, 9.25 / 16, 0)
             .setTopUV(14.25 / 16, 0, 11.75 / 16, 0.5 / 16)
-            .setNorthUV(11.5 / 16, 5.75 / 16, 8.5 / 16, 2.75 / 16)
             .setSouthUV(11.75 / 16, 2.25 / 16, 9.25 / 16, 0.5 / 16)
             .setWestUV(12.25 / 16, 2.25 / 16, 11.75 / 16, 0.5 / 16)
             .setEastUV(9.25 / 16, 2.25 / 16, 8.75 / 16, 0.5 / 16)

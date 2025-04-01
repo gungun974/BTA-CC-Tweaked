@@ -2,6 +2,7 @@ package dan200.computercraft.shared.computer.items;
 
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.shared.computer.blocks.TileComputerBase;
+import dan200.computercraft.shared.computer.core.ComputerFamily;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
@@ -13,9 +14,42 @@ import net.minecraft.core.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemBlockComputer extends ItemBlock {
+import javax.annotation.Nonnull;
+
+public class ItemBlockComputer extends ItemComputerBase {
     public ItemBlockComputer(@NotNull Block block) {
         super(block);
+    }
+
+    public ItemStack create( int id, String label )
+    {
+        ItemStack result = new ItemStack( this );
+
+       CompoundTag tag = result.getData();
+
+        if( id >= 0 )
+        {
+            tag
+                .putInt( NBT_ID, id );
+        }
+
+       result.setData(tag);
+
+        if( label != null )
+        {
+            result.setCustomName( label );
+        }
+        return result;
+    }
+
+    @Override
+    public ItemStack withFamily(@Nonnull ItemStack stack, @Nonnull ComputerFamily family )
+    {
+        ItemStack result = ComputerItemFactory.create( getComputerID( stack ), null, family );
+        if (stack.hasCustomName() && result != null) {
+            result.setCustomName(stack.getCustomName());
+        }
+        return result;
     }
 
     public boolean onUseItemOnBlock(ItemStack stack, @Nullable Player player, World world, int x, int y, int z, Side side, double xPlaced, double yPlaced) {
@@ -69,18 +103,5 @@ public class ItemBlockComputer extends ItemBlock {
     public String getTranslatedName(ItemStack itemstack) {
         return "Computer";
         //return I18n.getInstance().translateKey(itemstack.getItemKey() + ".name");
-    }
-
-    public String getTranslatedDescription(ItemStack itemstack) {
-        final CompoundTag nbt = itemstack.getData();
-
-        final int id = nbt.containsKey( "ComputerId" ) ? nbt.getInteger( "ComputerId" ) : -1;
-
-        if (id > 0) {
-            return "Computer ID: " + id;
-        }
-
-        return "New computer";
-        //return I18n.getInstance().translateKey(itemstack.getItemKey() + ".desc");
     }
 }

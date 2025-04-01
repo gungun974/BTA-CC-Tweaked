@@ -21,6 +21,5 @@ public interface ITurtleItem extends IComputerItem, IColouredItem
 
     int getFuelLevel( @Nonnull ItemStack stack );
 
-    @Nullable
     int getOverlay( @Nonnull ItemStack stack );
 }

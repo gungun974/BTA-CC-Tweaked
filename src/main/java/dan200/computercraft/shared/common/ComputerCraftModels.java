@@ -10,12 +10,15 @@ import dan200.computercraft.shared.peripheral.monitor.TileMonitor;
 import dan200.computercraft.shared.turtle.blocks.BlockModelTurtle;
 import dan200.computercraft.shared.turtle.blocks.TileEntityRendererTurtle;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
+import dan200.computercraft.shared.turtle.items.ItemTurtle;
+import dan200.computercraft.shared.turtle.items.TurtleItemModel;
 import net.minecraft.client.render.EntityRenderDispatcher;
 import net.minecraft.client.render.TileEntityRenderDispatcher;
 import net.minecraft.client.render.block.color.BlockColorDispatcher;
 import net.minecraft.client.render.block.model.BlockModelDispatcher;
 import net.minecraft.client.render.block.model.BlockModelRotatable;
 import net.minecraft.client.render.block.model.BlockModelStandard;
+import net.minecraft.client.render.item.model.ItemModelBlock;
 import net.minecraft.client.render.item.model.ItemModelDispatcher;
 import net.minecraft.client.render.item.model.ItemModelStandard;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
@@ -102,6 +105,8 @@ public class ComputerCraftModels implements ModelEntrypoint {
 
     @Override
     public void initItemModels(ItemModelDispatcher dispatcher) {
+        ModelHelper.setItemModel(ComputerCraftItems.TURTLE_ADVANCED, () -> new TurtleItemModel(ComputerCraftItems.TURTLE_ADVANCED));
+
         ModelHelper.setItemModel(ComputerCraftItems.DISK, () -> {
             ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.DISK, MOD_ID);
             itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/disk_frame"));

@@ -5,23 +5,26 @@
  */
 package dan200.computercraft.shared.turtle.items;
 
+import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.shared.TurtleUpgrades;
 import dan200.computercraft.shared.common.IColouredItem;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
-import dan200.computercraft.shared.turtle.blocks.BlockTurtle;
+import dan200.computercraft.shared.computer.items.ItemComputerBase;
+import net.minecraft.core.block.Block;
+import net.minecraft.core.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
 import static dan200.computercraft.shared.turtle.core.TurtleBrain.*;
 
-public class ItemTurtle// extends ItemComputerBase implements ITurtleItem
+public class ItemTurtle extends ItemComputerBase implements ITurtleItem
 {
-//    public ItemTurtle( BlockTurtle block, Settings settings )
-//    {
-//        super( block, settings );
-//    }
+    public ItemTurtle(@NotNull Block block) {
+        super(block);
+    }
 //
 //    @Override
 //    public void appendStacks( @Nonnull ItemGroup group, @Nonnull DefaultedList<ItemStack> list )
@@ -40,49 +43,54 @@ public class ItemTurtle// extends ItemComputerBase implements ITurtleItem
 //            .forEach( list::add );
 //    }
 //
-//    public ItemStack create( int id, String label, int colour, ITurtleUpgrade leftUpgrade, ITurtleUpgrade rightUpgrade, int fuelLevel, Identifier overlay )
-//    {
-//        // Build the stack
-//        ItemStack stack = new ItemStack( this );
-//        if( label != null )
-//        {
-//            stack.setCustomName( new LiteralText( label ) );
-//        }
-//        if( id >= 0 )
-//        {
-//            stack.getOrCreateTag()
-//                .putInt( NBT_ID, id );
-//        }
-//        IColouredItem.setColourBasic( stack, colour );
-//        if( fuelLevel > 0 )
-//        {
-//            stack.getOrCreateTag()
-//                .putInt( NBT_FUEL, fuelLevel );
-//        }
-//        if( overlay != null )
-//        {
-//            stack.getOrCreateTag()
-//                .putString( NBT_OVERLAY, overlay.toString() );
-//        }
-//
-//        if( leftUpgrade != null )
-//        {
-//            stack.getOrCreateTag()
-//                .putString( NBT_LEFT_UPGRADE,
-//                    leftUpgrade.getUpgradeID()
-//                        .toString() );
-//        }
-//
-//        if( rightUpgrade != null )
-//        {
-//            stack.getOrCreateTag()
-//                .putString( NBT_RIGHT_UPGRADE,
-//                    rightUpgrade.getUpgradeID()
-//                        .toString() );
-//        }
-//
-//        return stack;
-//    }
+    public ItemStack create( int id, String label, int colour, ITurtleUpgrade leftUpgrade, ITurtleUpgrade rightUpgrade, int fuelLevel, int overlay )
+    {
+        // Build the stack
+        ItemStack stack = new ItemStack( this );
+        if( label != null )
+        {
+            stack.setCustomName( label );
+        }
+
+       CompoundTag tag = stack.getData();
+
+        if( id >= 0 )
+        {
+            tag
+                .putInt( NBT_ID, id );
+        }
+        IColouredItem.setColourBasic( stack, colour );
+        if( fuelLevel > 0 )
+        {
+            tag
+                .putInt( NBT_FUEL, fuelLevel );
+        }
+        if( overlay != -1 )
+        {
+            tag
+                .putInt( NBT_OVERLAY, overlay );
+        }
+
+        if( leftUpgrade != null )
+        {
+            tag
+                .putInt( NBT_LEFT_UPGRADE,
+                    leftUpgrade.getUpgradeID()
+                         );
+        }
+
+        if( rightUpgrade != null )
+        {
+            tag
+                .putInt( NBT_RIGHT_UPGRADE,
+                    rightUpgrade.getUpgradeID()
+                         );
+        }
+
+        stack.setData(tag);
+
+        return stack;
+    }
 //
 //    @Nonnull
 //    @Override
@@ -135,38 +143,34 @@ public class ItemTurtle// extends ItemComputerBase implements ITurtleItem
 //    //        return super.getCreatorModId( stack );
 //    //    }
 //
-//    @Override
-//    public ITurtleUpgrade getUpgrade( @Nonnull ItemStack stack, @Nonnull TurtleSide side )
-//    {
-//        CompoundTag tag = stack.getTag();
-//        if( tag == null )
-//        {
-//            return null;
-//        }
-//
-//        String key = side == TurtleSide.LEFT ? NBT_LEFT_UPGRADE : NBT_RIGHT_UPGRADE;
-//        return tag.contains( key ) ? TurtleUpgrades.get( tag.getString( key ) ) : null;
-//    }
-//
-//    @Override
-//    public int getFuelLevel( @Nonnull ItemStack stack )
-//    {
-//        CompoundTag tag = stack.getTag();
-//        return tag != null && tag.contains( NBT_FUEL ) ? tag.getInt( NBT_FUEL ) : 0;
-//    }
-//
-//    @Override
-//    public Identifier getOverlay( @Nonnull ItemStack stack )
-//    {
-//        CompoundTag tag = stack.getTag();
-//        return tag != null && tag.contains( NBT_OVERLAY ) ? new Identifier( tag.getString( NBT_OVERLAY ) ) : null;
-//    }
-//
-//    @Override
-//    public ItemStack withFamily( @Nonnull ItemStack stack, @Nonnull ComputerFamily family )
-//    {
-//        return TurtleItemFactory.create( getComputerID( stack ), getLabel( stack ), getColour( stack ),
-//            family, getUpgrade( stack, TurtleSide.LEFT ),
-//            getUpgrade( stack, TurtleSide.RIGHT ), getFuelLevel( stack ), getOverlay( stack ) );
-//    }
+    @Override
+    public ITurtleUpgrade getUpgrade(@Nonnull ItemStack stack, @Nonnull TurtleSide side )
+    {
+        CompoundTag tag = stack.getData();
+
+        String key = side == TurtleSide.LEFT ? NBT_LEFT_UPGRADE : NBT_RIGHT_UPGRADE;
+        return tag.containsKey( key ) ? TurtleUpgrades.get( tag.getInteger( key ) ) : null;
+    }
+
+    @Override
+    public int getFuelLevel( @Nonnull ItemStack stack )
+    {
+        CompoundTag tag = stack.getData();
+        return tag.containsKey( NBT_FUEL ) ? tag.getInteger( NBT_FUEL ) : 0;
+    }
+
+    @Override
+    public int getOverlay( @Nonnull ItemStack stack )
+    {
+        CompoundTag tag = stack.getData();
+        return tag.containsKey( NBT_OVERLAY ) ? tag.getInteger( NBT_OVERLAY ) : -1;
+    }
+
+    @Override
+    public ItemStack withFamily( @Nonnull ItemStack stack, @Nonnull ComputerFamily family )
+    {
+        return TurtleItemFactory.create( getComputerID( stack ), getLabel( stack ), getColour( stack ),
+            family, getUpgrade( stack, TurtleSide.LEFT ),
+            getUpgrade( stack, TurtleSide.RIGHT ), getFuelLevel( stack ), getOverlay( stack ) );
+    }
 }
