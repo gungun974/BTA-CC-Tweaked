@@ -72,7 +72,7 @@ public interface ITurtleUpgrade extends IUpgradeBase
      * Called to draw the turtle tile upgrade
      */
     @Environment( EnvType.CLIENT )
-    void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @Nonnull TurtleSide side );
+    void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @Nonnull TurtleSide side, float partialTick);
 
     /**
      * Called to draw the turtle item upgrade

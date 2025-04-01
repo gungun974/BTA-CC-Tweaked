@@ -11,7 +11,6 @@ import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.api.turtle.TurtleUpgradeType;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.TextureManager;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.block.Blocks;
@@ -33,7 +32,7 @@ public class TurtleCraftingTable extends AbstractTurtleUpgrade
     }
 
     @Override
-    public void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @NotNull TurtleSide side) {
+    public void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @NotNull TurtleSide side, float partialTick) {
         textureManager.loadTexture("/assets/computercraft/textures/block/turtle_crafty_face.png").bind();
         tessellator.startDrawingQuads();
         if (side == TurtleSide.LEFT) {

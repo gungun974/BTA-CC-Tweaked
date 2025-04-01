@@ -54,13 +54,13 @@ public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
             ITurtleUpgrade leftUpgrade = tileEntity.getAccess().getUpgrade(TurtleSide.LEFT);
 
             if (leftUpgrade != null) {
-                leftUpgrade.drawTileUpgrade(tessellator, this.renderDispatcher.textureManager, tileEntity, angle, TurtleSide.LEFT);
+                leftUpgrade.drawTileUpgrade(tessellator, this.renderDispatcher.textureManager, tileEntity, angle, TurtleSide.LEFT, partialTick);
             }
 
             ITurtleUpgrade rightUpgrade = tileEntity.getAccess().getUpgrade(TurtleSide.RIGHT);
 
             if (rightUpgrade != null) {
-                rightUpgrade.drawTileUpgrade(tessellator, this.renderDispatcher.textureManager, tileEntity, angle, TurtleSide.RIGHT);
+                rightUpgrade.drawTileUpgrade(tessellator, this.renderDispatcher.textureManager, tileEntity, angle, TurtleSide.RIGHT, partialTick);
             }
 
             BlockModel.renderBlocks.enableAO = false;

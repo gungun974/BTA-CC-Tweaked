@@ -21,6 +21,8 @@ import dan200.computercraft.shared.util.WorldUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.TextureManager;
+import net.minecraft.client.render.item.model.ItemModel;
+import net.minecraft.client.render.item.model.ItemModelDispatcher;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
@@ -35,6 +37,7 @@ import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -95,13 +98,55 @@ public class TurtleTool extends AbstractTurtleUpgrade
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @Nonnull TurtleSide side) {
-        //float xOffset = side == TurtleSide.LEFT ? -0.40625f : 0.40625f;
-        //return TransformedModel.of( getCraftingItem(), new AffineTransformation( new Vector3f( xOffset + 1, 0, 1 ), Vector3f.POSITIVE_Y.getDegreesQuaternion( 270 ), new Vector3f( 1, 1, 1 ), Vector3f.POSITIVE_Z.getDegreesQuaternion( 90 ) ) );
+    public void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @Nonnull TurtleSide side, float partialTick) {
+        float xOffset = side == TurtleSide.LEFT ? -0.40625f : 0.40625f;
+
+        GL11.glPushMatrix();
+
+        GL11.glScalef(-1, -1, -1);
+
+        GL11.glRotatef(270, 0, 1f, 0);
+
+        ItemModel model = ItemModelDispatcher.getInstance().getDispatch(item);
+
+        float tileWidth = 1f / model.getIcon(null, item).width;
+
+        GL11.glTranslatef(-1 + tileWidth, -1 + tileWidth, 0.5f + tileWidth/2f - xOffset);
+
+        GL11.glTranslatef(0.5f, 0.5f, 0);
+
+        GL11.glRotatef(tileEntity.getToolRenderAngle(side, partialTick), 0f, 0f, 1f);
+
+        GL11.glTranslatef(-0.5f, -0.5f, 0);
+
+        model.renderItemInWorld(
+            tessellator, null, item, 1f, 1.0F, false
+        );
+
+        GL11.glPopMatrix();
     }
 
     @Override
     public void drawItemUpgrade(Tessellator tessellator, TextureManager textureManager, @NotNull TurtleSide side) {
+        float xOffset = side == TurtleSide.LEFT ? -0.40625f : 0.40625f;
+
+        GL11.glPushMatrix();
+
+        GL11.glScalef(-1, -1, -1);
+
+        GL11.glRotatef(270, 0, 1f, 0);
+
+        ItemModel model = ItemModelDispatcher.getInstance().getDispatch(item);
+
+        float tileWidth = 1f / model.getIcon(null, item).width;
+
+        GL11.glTranslatef(-1 + tileWidth, -1 + tileWidth, 0.5f + tileWidth/2f - xOffset);
+
+        model.renderItemInWorld(
+            tessellator, null, item, 1f, 1.0F, false
+        );
+
+        GL11.glPopMatrix();
 
     }
 
