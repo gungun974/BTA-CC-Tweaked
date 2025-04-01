@@ -48,6 +48,8 @@ public class TurtleTool extends AbstractTurtleUpgrade
 {
     protected final ItemStack item;
 
+    protected EnumDropCause dropCause = EnumDropCause.PROPER_TOOL;
+
     private static final int TAG_LIST = 9;
     private static final int TAG_COMPOUND = 10;
 
@@ -273,7 +275,7 @@ public class TurtleTool extends AbstractTurtleUpgrade
 
         // Destroy the block
         world.playBlockEvent(null, 2001, blockPosition.x, blockPosition.y, blockPosition.z, block.id());
-        block.dropBlockWithCause(world, EnumDropCause.PROPER_TOOL, blockPosition.x, blockPosition.y, blockPosition.z, world.getBlockMetadata(blockPosition.x, blockPosition.y, blockPosition.z), tile, null);
+        block.dropBlockWithCause(world, dropCause, blockPosition.x, blockPosition.y, blockPosition.z, world.getBlockMetadata(blockPosition.x, blockPosition.y, blockPosition.z), tile, null);
         world.setBlockWithNotify(blockPosition.x, blockPosition.y, blockPosition.z, 0);
 
         stopConsuming( turtleBlock, turtle );

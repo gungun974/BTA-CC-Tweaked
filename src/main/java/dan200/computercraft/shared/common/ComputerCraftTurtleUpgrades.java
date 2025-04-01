@@ -17,6 +17,7 @@ public final class ComputerCraftTurtleUpgrades
     public static TurtleTool diamondPickaxe = new TurtleTool( Items.TOOL_PICKAXE_DIAMOND.id, Items.TOOL_PICKAXE_DIAMOND );
     public static TurtleAxe diamondAxe = new TurtleAxe( Items.TOOL_AXE_DIAMOND.id, Items.TOOL_AXE_DIAMOND  );
     public static TurtleHoe diamondHoe = new TurtleHoe( Items.TOOL_HOE_DIAMOND.id, Items.TOOL_HOE_DIAMOND  );
+    public static TurtleSilkTouch goldenPickaxe = new TurtleSilkTouch( Items.TOOL_PICKAXE_GOLD.id, Items.TOOL_PICKAXE_GOLD  );
 
     public static void registerTurtleUpgrades()
     {
@@ -30,5 +31,6 @@ public final class ComputerCraftTurtleUpgrades
         ComputerCraftAPI.registerTurtleUpgrade( diamondPickaxe );
         ComputerCraftAPI.registerTurtleUpgrade( diamondAxe );
         ComputerCraftAPI.registerTurtleUpgrade( diamondHoe );
+        ComputerCraftAPI.registerTurtleUpgrade( goldenPickaxe );
     }
 }
