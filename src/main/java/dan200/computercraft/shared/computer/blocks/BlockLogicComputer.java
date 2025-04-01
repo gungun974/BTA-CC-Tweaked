@@ -79,6 +79,15 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
             }
         }
 
+
+        if ((tileEntity instanceof TileComputerBase)) {
+            TileComputerBase computerEntity = (TileComputerBase) tileEntity;
+
+            if (player.getGamemode() == Gamemode.creative && computerEntity.getComputerID() == -1) {
+                return;
+            }
+        }
+
         if (player.canHarvestBlock(this.block) || player.getGamemode() == Gamemode.creative) {
             this.dropBlockWithCause(world, EnumDropCause.PROPER_TOOL, x, y, z, meta, tileEntity, player);
         } else {
