@@ -1,6 +1,7 @@
 package dan200.computercraft.shared.computer.blocks;
 
 import dan200.computercraft.BlockPos;
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.shared.common.IBundledRedstoneBlock;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
@@ -10,9 +11,13 @@ import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogicRotatable;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.material.Material;
+import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.enums.EnumDropCause;
+import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.item.tool.ItemToolShears;
+import net.minecraft.core.player.gamemode.Gamemode;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
@@ -50,7 +55,34 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
 
                 return new ItemStack[]{item};
             default:
+                ComputerCraft.log.info("{}", dropCause);
                 return null;
+        }
+    }
+
+    @Override
+    public void harvestBlock(World world, Player player, int x, int y, int z, int meta, TileEntity tileEntity) {
+        player.addStat(this.block.getStat("stat_mined"), 1);
+        ItemStack heldItemStack = player.inventory.getCurrentItem();
+        Item heldItem = heldItemStack != null ? Item.itemsList[heldItemStack.itemID] : null;
+        if (heldItem != null) {
+            if (heldItem.isSilkTouch() && player.canHarvestBlock(this.block)) {
+                this.dropBlockWithCause(world, EnumDropCause.SILK_TOUCH, x, y, z, meta, tileEntity, player);
+                return;
+            }
+
+            if (heldItem instanceof ItemToolShears && (this.block.hasTag(BlockTags.SHEARS_DO_SILK_TOUCH) || this.block.hasTag(BlockTags.MINEABLE_BY_SHEARS))) {
+                ItemToolShears heldShears = (ItemToolShears)heldItem;
+                this.dropBlockWithCause(world, EnumDropCause.SILK_TOUCH, x, y, z, meta, tileEntity, player);
+                heldShears.onBlockSheared(player, heldItemStack);
+                return;
+            }
+        }
+
+        if (player.canHarvestBlock(this.block) || player.getGamemode() == Gamemode.creative) {
+            this.dropBlockWithCause(world, EnumDropCause.PROPER_TOOL, x, y, z, meta, tileEntity, player);
+        } else {
+            this.dropBlockWithCause(world, EnumDropCause.IMPROPER_TOOL, x, y, z, meta, tileEntity, player);
         }
     }
 

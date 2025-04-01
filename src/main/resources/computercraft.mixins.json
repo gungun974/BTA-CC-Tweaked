@@ -10,15 +10,17 @@
     ],
     "client": [
         "GLFWKeyboardImplementationMixin",
+        "PlayerControllerSPMixin",
         "WorldClientMixin",
         "WorldClientMPMixin"
     ],
     "server": [
         "MinecraftServerMixin",
         "PacketHandlerServerAccessor",
-        "PlayerServerAccessor"
+        "PlayerServerAccessor",
+        "ServerPlayerControllerMixin"
     ],
     "injectors": {
         "defaultRequire": 1
-    }
+  }
 }
