@@ -4,6 +4,7 @@ import dan200.computercraft.shared.computer.items.ItemBlockComputer;
 import dan200.computercraft.shared.media.items.ItemDisk;
 import dan200.computercraft.shared.turtle.items.ItemTurtle;
 import net.minecraft.core.item.Item;
+import net.minecraft.core.item.block.ItemBlock;
 import net.minecraft.core.util.collection.NamespaceID;
 import turniplabs.halplibe.helper.ItemBuilder;
 
@@ -16,6 +17,11 @@ public class ComputerCraftItems {
 
     public static ItemTurtle TURTLE_NORMAL;
     public static ItemTurtle TURTLE_ADVANCED;
+
+    public static ItemBlock<?> WIRELESS_MODEM_NORMAL;
+    public static ItemBlock<?> WIRELESS_MODEM_ADVANCED;
+
+    public static ItemBlock<?> SPEAKER;
 
     public static final Item DISK;
 

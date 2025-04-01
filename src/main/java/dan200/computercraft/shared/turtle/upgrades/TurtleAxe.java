@@ -19,15 +19,15 @@ public class TurtleAxe extends TurtleTool
     {
         super( id, item );
     }
-//
-//    public TurtleAxe(int id, ItemStack craftItem, ItemStack toolItem )
-//    {
-//        super( id, craftItem, toolItem );
-//    }
-//
-//    @Override
-//    protected float getDamageMultiplier()
-//    {
-//        return 6.0f;
-//    }
+
+    public TurtleAxe(int id, ItemStack craftItem, ItemStack toolItem )
+    {
+        super( id, craftItem, toolItem );
+    }
+
+    @Override
+    protected int getDamageMultiplier()
+    {
+        return 6;
+    }
 }

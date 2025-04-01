@@ -117,7 +117,12 @@ public class TurtleTool extends AbstractTurtleUpgrade
 
         GL11.glRotatef(tileEntity.getToolRenderAngle(side, partialTick), 0f, 0f, 1f);
 
+        GL11.glRotatef(180, 0, 1f, 0);
+        GL11.glRotatef(-90, 0, 0f, 1);
+
         GL11.glTranslatef(-0.5f, -0.5f, 0);
+
+        GL11.glTranslatef(tileWidth, tileWidth, tileWidth);
 
         model.renderItemInWorld(
             tessellator, null, item, 1f, 1.0F, false

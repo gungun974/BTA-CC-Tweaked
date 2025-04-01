@@ -56,7 +56,6 @@ public class TurtleBrain implements ITurtleAccess
     private final Map<TurtleSide, ITurtleUpgrade> upgrades = new EnumMap<>( TurtleSide.class );
     private final Map<TurtleSide, IPeripheral> peripherals = new EnumMap<>( TurtleSide.class );
     private final Map<TurtleSide, CompoundTag> upgradeNBTData = new EnumMap<>( TurtleSide.class );
-    TurtlePlayer cachedPlayer;
     private TileTurtle owner;
     private ComputerProxy proxy;
     private UUID owningPlayer;

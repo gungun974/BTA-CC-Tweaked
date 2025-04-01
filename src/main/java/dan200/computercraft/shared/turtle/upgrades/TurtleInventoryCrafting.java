@@ -5,18 +5,15 @@
  */
 package dan200.computercraft.shared.turtle.upgrades;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
-import dan200.computercraft.shared.turtle.core.TurtlePlayer;
 import net.minecraft.core.data.registry.Registries;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.ContainerCrafting;
 import net.minecraft.core.world.World;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;

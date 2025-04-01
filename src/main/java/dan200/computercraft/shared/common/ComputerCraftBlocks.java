@@ -24,6 +24,7 @@ import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
+import net.minecraft.core.item.block.ItemBlock;
 import net.minecraft.core.util.collection.NamespaceID;
 import turniplabs.halplibe.helper.BlockBuilder;
 import turniplabs.halplibe.helper.EntityHelper;
@@ -97,6 +98,10 @@ public class ComputerCraftBlocks {
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileSpeaker::new)
+            .setBlockItem(block -> {
+                ComputerCraftItems.SPEAKER = new ItemBlock<>(block);
+                return (ItemBlock<?>) ComputerCraftItems.SPEAKER;
+            })
             .build("speaker", 10001, b -> new BlockSpeaker(b));
 
         EntityHelper.createTileEntity(TileWirelessModem.class, NamespaceID.getPermanent(MOD_ID, "wireless_modem"));
@@ -106,6 +111,10 @@ public class ComputerCraftBlocks {
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileWirelessModem(false))
+            .setBlockItem(block -> {
+                ComputerCraftItems.WIRELESS_MODEM_NORMAL = new ItemBlock<>(block);
+                return (ItemBlock<?>) ComputerCraftItems.WIRELESS_MODEM_NORMAL;
+            })
             .build("wireless_modem_normal", 10002, b -> new BlockWirelessModem(b, false));
 
         WIRELESS_MODEM_ADVANCED = new BlockBuilder(MOD_ID)
@@ -113,6 +122,10 @@ public class ComputerCraftBlocks {
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileWirelessModem(true))
+            .setBlockItem(block -> {
+                ComputerCraftItems.WIRELESS_MODEM_ADVANCED = new ItemBlock<>(block);
+                return (ItemBlock<?>) ComputerCraftItems.WIRELESS_MODEM_ADVANCED;
+            })
             .build("wireless_modem_advanced", 10011, b -> new BlockWirelessModem(b, true));
 
         EntityHelper.createTileEntity(TileWiredModemFull.class, NamespaceID.getPermanent(MOD_ID, "wired_modem_full"));
