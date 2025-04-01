@@ -2,6 +2,8 @@ package dan200.computercraft.shared.turtle.blocks;
 
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
+import dan200.computercraft.shared.common.ComputerCraftBlocks;
+import dan200.computercraft.shared.common.ComputerCraftItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -40,7 +42,11 @@ public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
 
             GL11.glScalef(-1, -1, -1);
 
-            this.loadTexture("/assets/computercraft/textures/block/turtle_advanced.png");
+            if (block.id() == ComputerCraftBlocks.TURTLE_ADVANCED.id()) {
+                this.loadTexture("/assets/computercraft/textures/block/turtle_advanced.png");
+            } else {
+                this.loadTexture("/assets/computercraft/textures/block/turtle_normal.png");
+            }
 
             BlockModel.renderBlocks.enableAO = true;
 
