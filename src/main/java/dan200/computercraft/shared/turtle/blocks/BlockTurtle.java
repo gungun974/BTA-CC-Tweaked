@@ -5,19 +5,19 @@
  */
 package dan200.computercraft.shared.turtle.blocks;
 
-import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
-import dan200.computercraft.shared.computer.blocks.TileComputerBase;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.turtle.items.TurtleItemFactory;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.Entity;
+import net.minecraft.core.entity.Mob;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.AABB;
+import net.minecraft.core.world.World;
 import net.minecraft.core.world.WorldSource;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public class BlockTurtle extends BlockLogicComputer
 {
@@ -40,44 +40,15 @@ public class BlockTurtle extends BlockLogicComputer
         return AABB.getPermanentBB(0.125, 0.125, 0.125, 0.875, 0.875, 0.875);
     }
 
-
-//    @Nonnull
-//    @Override
-//    @Deprecated
-//    public BlockRenderType getRenderType( @Nonnull BlockState state )
-//    {
-//        return BlockRenderType.ENTITYBLOCK_ANIMATED;
-//    }
-
-//    @Nonnull
-//    @Override
-//    @Deprecated
-//    public VoxelShape getOutlineShape( @Nonnull BlockState state, BlockView world, @Nonnull BlockPos pos, @Nonnull ShapeContext context )
-//    {
-//        BlockEntity tile = world.getBlockEntity( pos );
-//        Vec3d offset = tile instanceof TileTurtle ? ((TileTurtle) tile).getRenderOffset( 1.0f ) : Vec3d.ZERO;
-//        return offset.equals( Vec3d.ZERO ) ? DEFAULT_SHAPE : DEFAULT_SHAPE.offset( offset.x, offset.y, offset.z );
-//    }
-
-//    @Override
-//    public float getBlastResistance()
-//    {
-//        // TODO Implement below functionality
-//        return 2000;
-//    }
-
+    @Override
+    public void onBlockPlacedByMob(World world, int x, int y, int z, @NotNull Side side, Mob mob, double xPlaced, double yPlaced) {
+        world.setBlockMetadataWithNotify(x, y, z, mob.getHorizontalPlacementDirection(side).getId());
+    }
 
     @Override
     public float getBlastResistance(Entity entity) {
         return 2000;
     }
-
-//    @Nonnull
-//    @Override
-//    protected ItemStack getItem( TileComputerBase tile )
-//    {
-//        return tile instanceof TileTurtle ? TurtleItemFactory.create( (TileTurtle) tile ) : ItemStack.EMPTY;
-//    }
 
     @Override
     protected ItemStack getItemStack(TileEntity entity) {
@@ -88,16 +59,4 @@ public class BlockTurtle extends BlockLogicComputer
 
         return TurtleItemFactory.create( (TileTurtle) entity );
     }
-
-    //    @Override
-    //    public float getBlastResistance( BlockState state, BlockView world, BlockPos pos, Explosion explosion )
-    //    {
-    //        Entity exploder = explosion.getExploder();
-    //        if( getFamily() == ComputerFamily.ADVANCED || exploder instanceof LivingEntity || exploder instanceof ExplosiveProjectileEntity )
-    //        {
-    //            return 2000;
-    //        }
-    //
-    //        return super.getExplosionResistance( state, world, pos, explosion );
-    //    }
 }
