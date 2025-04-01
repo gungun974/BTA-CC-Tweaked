@@ -27,7 +27,7 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
     }
 
     @Nullable
-    private ItemStack getItemStack(TileEntity entity) {
+    protected ItemStack getItemStack(TileEntity entity) {
         if( !(entity instanceof TileComputerBase) )
         {
             return null;

@@ -5,12 +5,19 @@
  */
 package dan200.computercraft.shared.turtle.blocks;
 
+import com.mojang.nbt.tags.CompoundTag;
+import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
+import dan200.computercraft.shared.computer.blocks.TileComputerBase;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
+import dan200.computercraft.shared.turtle.items.TurtleItemFactory;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.Entity;
+import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.phys.AABB;
 import net.minecraft.core.world.WorldSource;
+import org.jetbrains.annotations.Nullable;
 
 public class BlockTurtle extends BlockLogicComputer
 {
@@ -72,6 +79,16 @@ public class BlockTurtle extends BlockLogicComputer
 //        return tile instanceof TileTurtle ? TurtleItemFactory.create( (TileTurtle) tile ) : ItemStack.EMPTY;
 //    }
 
+    @Override
+    protected ItemStack getItemStack(TileEntity entity) {
+        if( !(entity instanceof TileTurtle) )
+        {
+            return null;
+        }
+
+        return TurtleItemFactory.create( (TileTurtle) entity );
+    }
+
     //    @Override
     //    public float getBlastResistance( BlockState state, BlockView world, BlockPos pos, Explosion explosion )
     //    {
@@ -83,51 +100,4 @@ public class BlockTurtle extends BlockLogicComputer
     //
     //        return super.getExplosionResistance( state, world, pos, explosion );
     //    }
-
-//    @Override
-//    public void onPlaced( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable LivingEntity player, @Nonnull ItemStack stack )
-//    {
-//        super.onPlaced( world, pos, state, player, stack );
-//
-//        BlockEntity tile = world.getBlockEntity( pos );
-//        if( !world.isClient && tile instanceof TileTurtle )
-//        {
-//            TileTurtle turtle = (TileTurtle) tile;
-//
-//            if( player instanceof PlayerEntity )
-//            {
-//                ((TileTurtle) tile).setOwningPlayer( ((PlayerEntity) player).getGameProfile() );
-//            }
-//
-//            if( stack.getItem() instanceof ITurtleItem )
-//            {
-//                ITurtleItem item = (ITurtleItem) stack.getItem();
-//
-//                // Set Upgrades
-//                for( TurtleSide side : TurtleSide.values() )
-//                {
-//                    turtle.getAccess()
-//                        .setUpgrade( side, item.getUpgrade( stack, side ) );
-//                }
-//
-//                turtle.getAccess()
-//                    .setFuelLevel( item.getFuelLevel( stack ) );
-//
-//                // Set colour
-//                int colour = item.getColour( stack );
-//                if( colour != -1 )
-//                {
-//                    turtle.getAccess()
-//                        .setColour( colour );
-//                }
-//
-//                // Set overlay
-//                Identifier overlay = item.getOverlay( stack );
-//                if( overlay != null )
-//                {
-//                    ((TurtleBrain) turtle.getAccess()).setOverlay( overlay );
-//                }
-//            }
-//        }
-//    }
 }

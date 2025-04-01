@@ -504,7 +504,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
         return brain.getToolRenderAngle( side, f );
     }
 
-    void setOwningPlayer( UUID player )
+    public void setOwningPlayer( UUID player )
     {
         brain.setOwningPlayer( player );
         markDirty();

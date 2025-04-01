@@ -13,26 +13,28 @@ import dan200.computercraft.api.turtle.event.TurtleAttackEvent;
 import dan200.computercraft.api.turtle.event.TurtleBlockEvent;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.shared.TurtlePermissions;
+import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import dan200.computercraft.shared.turtle.core.TurtleBrain;
 import dan200.computercraft.shared.util.DropConsumer;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.WorldUtil;
-import net.minecraft.client.entity.player.PlayerLocal;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.render.TextureManager;
+import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.block.Block;
-import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.enums.EnumDropCause;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.net.packet.PacketBlockUpdate;
 import net.minecraft.core.util.helper.DamageType;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
-import net.minecraft.server.entity.player.PlayerServer;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -91,16 +93,19 @@ public class TurtleTool extends AbstractTurtleUpgrade
         }
     }
 
-//    @Nonnull
-//    @Override
-//    @Environment( EnvType.CLIENT )
-//    public TransformedModel getModel( ITurtleAccess turtle, @Nonnull TurtleSide side )
-//    {
-//        float xOffset = side == TurtleSide.LEFT ? -0.40625f : 0.40625f;
-//        return TransformedModel.of( getCraftingItem(), new AffineTransformation( new Vector3f( xOffset + 1, 0, 1 ), Vector3f.POSITIVE_Y.getDegreesQuaternion( 270 ), new Vector3f( 1, 1, 1 ), Vector3f.POSITIVE_Z.getDegreesQuaternion( 90 ) ) );
-//    }
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @Nonnull TurtleSide side) {
+        //float xOffset = side == TurtleSide.LEFT ? -0.40625f : 0.40625f;
+        //return TransformedModel.of( getCraftingItem(), new AffineTransformation( new Vector3f( xOffset + 1, 0, 1 ), Vector3f.POSITIVE_Y.getDegreesQuaternion( 270 ), new Vector3f( 1, 1, 1 ), Vector3f.POSITIVE_Z.getDegreesQuaternion( 90 ) ) );
+    }
 
-    private TurtleCommandResult attack( ITurtleAccess turtle, Direction direction, TurtleSide side )
+    @Override
+    public void drawItemUpgrade(Tessellator tessellator, TextureManager textureManager, @NotNull TurtleSide side) {
+
+    }
+
+    private TurtleCommandResult attack(ITurtleAccess turtle, Direction direction, TurtleSide side )
     {
         // Create a fake player, and orient it appropriately
         World world = turtle.getWorld();

@@ -10,11 +10,20 @@ import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.shared.TurtleUpgrades;
 import dan200.computercraft.shared.common.IColouredItem;
+import dan200.computercraft.shared.computer.blocks.TileComputerBase;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.items.ItemComputerBase;
+import dan200.computercraft.shared.turtle.blocks.TileTurtle;
+import dan200.computercraft.shared.turtle.core.TurtleBrain;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.enums.EnumBlockSoundEffectType;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.util.helper.Side;
+import net.minecraft.core.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
@@ -170,7 +179,86 @@ public class ItemTurtle extends ItemComputerBase implements ITurtleItem
     public ItemStack withFamily( @Nonnull ItemStack stack, @Nonnull ComputerFamily family )
     {
         return TurtleItemFactory.create( getComputerID( stack ), getLabel( stack ), getColour( stack ),
-            family, getUpgrade( stack, TurtleSide.LEFT ),
-            getUpgrade( stack, TurtleSide.RIGHT ), getFuelLevel( stack ), getOverlay( stack ) );
+            family, getUpgrade(stack, TurtleSide.LEFT),
+            getUpgrade(stack, TurtleSide.RIGHT), getFuelLevel(stack), getOverlay(stack));
+    }
+
+    @Override
+    public boolean onUseItemOnBlock(ItemStack stack, @Nullable Player player, World world, int x, int y, int z, Side side, double xPlaced, double yPlaced) {
+        if (stack.stackSize <= 0) {
+            return false;
+        } else {
+            if (!world.canPlaceInsideBlock(x, y, z)) {
+                x += side.getOffsetX();
+                y += side.getOffsetY();
+                z += side.getOffsetZ();
+            }
+
+            if (y >= 0 && y < world.getHeightBlocks()) {
+                if (world.canBlockBePlacedAt(this.block.id(), x, y, z, false, side) && stack.consumeItem(player)) {
+                    int meta = this.getPlacedBlockMetadata(player, stack, world, x, y, z, side, xPlaced, yPlaced);
+                    if (world.setBlockAndMetadataWithNotify(x, y, z, this.block.id(), meta)) {
+                        if (player == null) {
+                            this.block.onBlockPlacedOnSide(world, x, y, z, side, xPlaced, yPlaced);
+                        } else {
+                            this.block.onBlockPlacedByMob(world, x, y, z, side, player, xPlaced, yPlaced);
+                        }
+
+                        world.playBlockSoundEffect(
+                            player, (double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), this.block, EnumBlockSoundEffectType.PLACE
+                        );
+
+                        TileEntity entity = (world.getTileEntity(x, y, z));
+                        if (!(entity instanceof TileTurtle)) {
+                            return false;
+                        }
+
+                        TileTurtle turtle = (TileTurtle) entity;
+
+                        turtle.readDescription(stack.getData());
+
+                        if (player != null) {
+                            turtle.setOwningPlayer(player.uuid);
+                        }
+
+                        if (stack.getItem() instanceof ITurtleItem) {
+                            ITurtleItem item = (ITurtleItem) stack.getItem();
+
+                            // Set Upgrades
+                            for (TurtleSide turtleSide : TurtleSide.values()) {
+                                turtle.getAccess()
+                                    .setUpgrade(turtleSide, item.getUpgrade(stack, turtleSide));
+                            }
+
+                            turtle.getAccess()
+                                .setFuelLevel(item.getFuelLevel(stack));
+
+                            // Set colour
+                            int colour = item.getColour(stack);
+                            if (colour != -1) {
+                                turtle.getAccess()
+                                    .setColour(colour);
+                            }
+
+                            // Set overlay
+                            int overlay = item.getOverlay(stack);
+                            if (overlay != -1) {
+                                ((TurtleBrain) turtle.getAccess()).setOverlay(overlay);
+                            }
+                        }
+
+                        return true;
+                    }
+
+                    if (player == null || player.getGamemode().consumeBlocks()) {
+                        stack.stackSize++;
+                    }
+                }
+
+                return false;
+            } else {
+                return false;
+            }
+        }
     }
 }

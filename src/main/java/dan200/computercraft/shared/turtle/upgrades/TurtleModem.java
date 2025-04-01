@@ -5,7 +5,6 @@
  */
 package dan200.computercraft.shared.turtle.upgrades;
 
-import dan200.computercraft.api.client.TransformedModel;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.turtle.*;
 import dan200.computercraft.shared.peripheral.modem.ModemState;

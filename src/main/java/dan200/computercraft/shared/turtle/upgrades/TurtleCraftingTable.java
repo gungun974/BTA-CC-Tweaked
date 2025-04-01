@@ -5,26 +5,22 @@
  */
 package dan200.computercraft.shared.turtle.upgrades;
 
-import dan200.computercraft.api.client.TransformedModel;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.turtle.AbstractTurtleUpgrade;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.api.turtle.TurtleUpgradeType;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import dan200.computercraft.shared.turtle.blocks.TileTurtle;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.TextureManager;
+import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.block.Blocks;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
 public class TurtleCraftingTable extends AbstractTurtleUpgrade
 {
-//    @Environment( EnvType.CLIENT )
-//    private ModelIdentifier leftModel;
-//
-//    @Environment( EnvType.CLIENT )
-//    private ModelIdentifier rightModel;
-
     public TurtleCraftingTable( int id )
     {
         super( id, TurtleUpgradeType.PERIPHERAL, Blocks.WORKBENCH );
@@ -36,22 +32,27 @@ public class TurtleCraftingTable extends AbstractTurtleUpgrade
         return new CraftingTablePeripheral( turtle );
     }
 
-//    @Nonnull
-//    @Override
-//    @Environment( EnvType.CLIENT )
-//    public TransformedModel getModel( ITurtleAccess turtle, @Nonnull TurtleSide side )
-//    {
-//        loadModelLocations();
-//        return TransformedModel.of( side == TurtleSide.LEFT ? leftModel : rightModel );
-//    }
+    @Override
+    public void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @NotNull TurtleSide side) {
+        textureManager.loadTexture("/assets/computercraft/textures/block/turtle_crafty_face.png").bind();
+        tessellator.startDrawingQuads();
+        if (side == TurtleSide.LEFT) {
+            drawUpgradeLeft(tessellator, tileEntity, angle);
+        } else {
+            drawUpgradeRight(tessellator, tileEntity, angle);
+        }
+        tessellator.draw();
+    }
 
-//    @Environment( EnvType.CLIENT )
-//    private void loadModelLocations()
-//    {
-//        if( leftModel == null )
-//        {
-//            leftModel = new ModelIdentifier( "computercraft:turtle_crafting_table_left", "inventory" );
-//            rightModel = new ModelIdentifier( "computercraft:turtle_crafting_table_right", "inventory" );
-//        }
-//    }
+    @Override
+    public void drawItemUpgrade(Tessellator tessellator, TextureManager textureManager, @NotNull TurtleSide side) {
+        textureManager.loadTexture("/assets/computercraft/textures/block/turtle_crafty_face.png").bind();
+        tessellator.startDrawingQuads();
+        if (side == TurtleSide.LEFT) {
+            drawUpgradeLeft(tessellator);
+        } else {
+            drawUpgradeRight(tessellator);
+        }
+        tessellator.draw();
+    }
 }

@@ -1,6 +1,10 @@
 package dan200.computercraft.shared.turtle.items;
 
+import dan200.computercraft.api.turtle.ITurtleUpgrade;
+import dan200.computercraft.api.turtle.TurtleSide;
+import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.turtle.blocks.BlockAORenderer;
+import dan200.computercraft.shared.turtle.core.TurtleBrain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Font;
 import net.minecraft.client.render.ItemRenderer;
@@ -75,9 +79,8 @@ public class TurtleItemModel extends ItemModelBlock {
 
         GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
 
-        drawTurtle(tessellator);
+        drawTurtle(tessellator, itemstack);
 
-        drawTurtle(tessellator);
         GL11.glDisable(3042);
     }
 
@@ -122,7 +125,7 @@ public class TurtleItemModel extends ItemModelBlock {
 
             GL11.glTranslatef(-0.12f, 0, -0.12f);
 
-            drawTurtle(tessellator);
+            drawTurtle(tessellator, itemStack);
 
 
             BlockModel.renderBlocks.useInventoryTint = true;
@@ -164,7 +167,7 @@ public class TurtleItemModel extends ItemModelBlock {
 
             GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
 
-            drawTurtle(tessellator);
+            drawTurtle(tessellator, itemstack);
             GL11.glPopMatrix();
         }
     }
@@ -190,7 +193,7 @@ public class TurtleItemModel extends ItemModelBlock {
             GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
             BlockModel.renderBlocks.useInventoryTint = this.useColor;
 
-            drawTurtle(tessellator);
+            drawTurtle(tessellator, itemStack);
 
             BlockModel.renderBlocks.useInventoryTint = true;
 
@@ -199,9 +202,13 @@ public class TurtleItemModel extends ItemModelBlock {
         }
     }
 
-    public void drawTurtle(Tessellator tessellator) {
+    public void drawTurtle(Tessellator tessellator, ItemStack itemStack) {
 
-        Minecraft.getMinecraft().textureManager.loadTexture("/assets/computercraft/textures/block/turtle_advanced.png").bind();
+        if (itemStack.itemID == ComputerCraftItems.TURTLE_ADVANCED.id) {
+            Minecraft.getMinecraft().textureManager.loadTexture("/assets/computercraft/textures/block/turtle_advanced.png").bind();
+        } else {
+            Minecraft.getMinecraft().textureManager.loadTexture("/assets/computercraft/textures/block/turtle_normal.png").bind();
+        }
 
         tessellator.startDrawingQuads();
 
@@ -223,5 +230,22 @@ public class TurtleItemModel extends ItemModelBlock {
             .render(tessellator, Side.NORTH);
 
         tessellator.draw();
+
+
+        if (itemStack.getItem() instanceof ITurtleItem) {
+            ITurtleItem item = (ITurtleItem) itemStack.getItem();
+
+            ITurtleUpgrade leftUpgrade = item.getUpgrade(itemStack, TurtleSide.LEFT);
+
+            if (leftUpgrade != null) {
+                leftUpgrade.drawItemUpgrade(tessellator, Minecraft.getMinecraft().textureManager, TurtleSide.LEFT);
+            }
+
+            ITurtleUpgrade rightUpgrade = item.getUpgrade(itemStack, TurtleSide.RIGHT);
+
+            if (rightUpgrade != null) {
+                rightUpgrade.drawItemUpgrade(tessellator, Minecraft.getMinecraft().textureManager, TurtleSide.RIGHT);
+            }
+        }
     }
 }

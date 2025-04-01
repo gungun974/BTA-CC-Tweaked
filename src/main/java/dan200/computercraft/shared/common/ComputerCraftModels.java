@@ -105,6 +105,7 @@ public class ComputerCraftModels implements ModelEntrypoint {
 
     @Override
     public void initItemModels(ItemModelDispatcher dispatcher) {
+        ModelHelper.setItemModel(ComputerCraftItems.TURTLE_NORMAL, () -> new TurtleItemModel(ComputerCraftItems.TURTLE_NORMAL));
         ModelHelper.setItemModel(ComputerCraftItems.TURTLE_ADVANCED, () -> new TurtleItemModel(ComputerCraftItems.TURTLE_ADVANCED));
 
         ModelHelper.setItemModel(ComputerCraftItems.DISK, () -> {

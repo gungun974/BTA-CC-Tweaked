@@ -1,8 +1,11 @@
 package dan200.computercraft.shared.turtle.blocks;
 
+import dan200.computercraft.api.turtle.ITurtleUpgrade;
+import dan200.computercraft.api.turtle.TurtleSide;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.TextureManager;
 import net.minecraft.client.render.block.model.BlockModel;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.client.render.tileentity.TileEntityRenderer;
@@ -39,17 +42,28 @@ public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
 
             this.loadTexture("/assets/computercraft/textures/block/turtle_advanced.png");
 
-            tessellator.startDrawingQuads();
-
             BlockModel.renderBlocks.enableAO = true;
 
             BlockModel.renderBlocks.cache.setupCache(block, tileEntity.worldObj, tileEntity.x, tileEntity.y, tileEntity.z);
 
+            tessellator.startDrawingQuads();
             drawBase(tessellator, tileEntity, angle);
+            tessellator.draw();
+
+
+            ITurtleUpgrade leftUpgrade = tileEntity.getAccess().getUpgrade(TurtleSide.LEFT);
+
+            if (leftUpgrade != null) {
+                leftUpgrade.drawTileUpgrade(tessellator, this.renderDispatcher.textureManager, tileEntity, angle, TurtleSide.LEFT);
+            }
+
+            ITurtleUpgrade rightUpgrade = tileEntity.getAccess().getUpgrade(TurtleSide.RIGHT);
+
+            if (rightUpgrade != null) {
+                rightUpgrade.drawTileUpgrade(tessellator, this.renderDispatcher.textureManager, tileEntity, angle, TurtleSide.RIGHT);
+            }
 
             BlockModel.renderBlocks.enableAO = false;
-
-            tessellator.draw();
 
             GL11.glPopMatrix();
 

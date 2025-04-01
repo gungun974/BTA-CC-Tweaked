@@ -8,8 +8,11 @@ package dan200.computercraft.api.turtle;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.IUpgradeBase;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.TextureManager;
+import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.util.helper.Direction;
 
 import javax.annotation.Nonnull;
@@ -65,16 +68,17 @@ public interface ITurtleUpgrade extends IUpgradeBase
         return TurtleCommandResult.failure();
     }
 
-//    /**
-//     * Called to obtain the model to be used when rendering a turtle peripheral.
-//     *
-//     * @param turtle Access to the turtle that the upgrade resides on. This will be null when getting item models!
-//     * @param side   Which side of the turtle (left or right) the upgrade resides on.
-//     * @return The model that you wish to be used to render your upgrade.
-//     */
-//    @Nonnull
-//    @Environment( EnvType.CLIENT )
-//    TransformedModel getModel( @Nullable ITurtleAccess turtle, @Nonnull TurtleSide side );
+    /**
+     * Called to draw the turtle tile upgrade
+     */
+    @Environment( EnvType.CLIENT )
+    void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @Nonnull TurtleSide side );
+
+    /**
+     * Called to draw the turtle item upgrade
+     */
+    @Environment( EnvType.CLIENT )
+    void drawItemUpgrade(Tessellator tessellator, TextureManager textureManager, @Nonnull TurtleSide side );
 
     /**
      * Called once per tick for each turtle which has the upgrade equipped.
