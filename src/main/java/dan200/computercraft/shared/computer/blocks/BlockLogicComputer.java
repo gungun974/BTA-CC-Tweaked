@@ -1,12 +1,11 @@
 package dan200.computercraft.shared.computer.blocks;
 
-import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.core.computer.ComputerSide;
-import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.common.IBundledRedstoneBlock;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerComputer;
+import dan200.computercraft.shared.computer.items.ComputerItemFactory;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogicRotatable;
 import net.minecraft.core.block.entity.TileEntity;
@@ -33,19 +32,7 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
             return null;
         }
 
-        final TileComputerBase computerEntity = (TileComputerBase) entity;
-
-        final CompoundTag tags = new CompoundTag();
-
-        computerEntity.writeDescription(tags);
-
-        final ItemStack item = new ItemStack(ComputerCraftBlocks.COMPUTER_NORMAL, 1 ,0, tags);
-
-        if (computerEntity.getLabel() != null) {
-            item.setCustomName(computerEntity.getLabel());
-        }
-
-        return item;
+        return ComputerItemFactory.create( (TileComputerBase) entity );
 
     }
 
