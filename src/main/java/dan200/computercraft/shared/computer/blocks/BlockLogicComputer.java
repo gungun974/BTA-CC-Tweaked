@@ -1,5 +1,6 @@
 package dan200.computercraft.shared.computer.blocks;
 
+import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.core.computer.ComputerSide;
@@ -51,6 +52,10 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
                 final ItemStack item = getItemStack(entity);
                 if (item == null) {
                     return null;
+                }
+
+                if (dropCause == EnumDropCause.PICK_BLOCK) {
+                    item.setData(new CompoundTag());
                 }
 
                 return new ItemStack[]{item};
