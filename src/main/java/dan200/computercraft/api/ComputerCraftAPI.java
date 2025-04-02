@@ -17,6 +17,7 @@ import dan200.computercraft.api.network.wired.IWiredNode;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import dan200.computercraft.api.pocket.IPocketUpgrade;
 import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
 //import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
@@ -204,11 +205,11 @@ public final class ComputerCraftAPI
     {
         getInstance().registerMediaProvider( provider );
     }
-//
-//    public static void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade )
-//    {
-//        getInstance().registerPocketUpgrade( upgrade );
-//    }
+
+    public static void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade )
+    {
+        getInstance().registerPocketUpgrade( upgrade );
+    }
 
     /**
      * Attempt to get the game-wide wireless network.
@@ -278,8 +279,8 @@ public final class ComputerCraftAPI
 
         void registerMediaProvider( @Nonnull IMediaProvider provider );
 
-//        void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade );
-//
+        void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade );
+
         @Nonnull
         IPacketNetwork getWirelessNetwork();
 

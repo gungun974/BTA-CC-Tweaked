@@ -9,6 +9,7 @@ import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.container.ScreenContainerAbstract;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.item.Item;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.player.inventory.container.ContainerInventory;
 import net.minecraft.core.player.inventory.menu.MenuAbstract;
@@ -20,20 +21,20 @@ import turniplabs.halplibe.helper.network.UniversalPacket;
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 
-public class OpenGuiContainerMessage<A extends TileEntity> implements NetworkMessage {
+public class OpenGuiContainerMessage<A> implements NetworkMessage {
     private int windowId = 0;
 
-    protected A tileEntity;
+    protected A container;
     protected Class<?> screen;
     private MenuAbstractSupplier<MenuAbstract, A> menu;
 
     @FunctionalInterface
-    public interface MenuAbstractSupplier<T extends MenuAbstract, B extends TileEntity> {
-        T get(Container inventory, B tileEntity);
+    public interface MenuAbstractSupplier<T extends MenuAbstract, B> {
+        T get(Container inventory, B container);
     }
 
-    public OpenGuiContainerMessage(Player player, A tileEntity, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, A> menu) {
-        this.tileEntity = tileEntity;
+    public OpenGuiContainerMessage(Player player, A container, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, A> menu) {
+        this.container = container;
         this.screen = screen;
         this.menu = menu;
         if (Helper.isServerEnvironment()) {
@@ -43,6 +44,14 @@ public class OpenGuiContainerMessage<A extends TileEntity> implements NetworkMes
 
     public static <C extends TileEntity> void SendToPlayer(Player player, C tileEntity, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, C> menu) {
         OpenGuiContainerMessage<C> message = new OpenGuiContainerMessage<>(player, tileEntity, screen, menu);
+        NetworkHandler.sendToPlayer(player, message);
+        if (Helper.isServerEnvironment()) {
+            message.serverSetWindow2(player);
+        }
+    }
+
+    public static <C extends Item> void SendToPlayer(Player player, C item, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, C> menu) {
+        OpenGuiContainerMessage<C> message = new OpenGuiContainerMessage<>(player, item, screen, menu);
         NetworkHandler.sendToPlayer(player, message);
         if (Helper.isServerEnvironment()) {
             message.serverSetWindow2(player);
@@ -61,7 +70,7 @@ public class OpenGuiContainerMessage<A extends TileEntity> implements NetworkMes
     protected void serverSetWindow2(Player player) {
         if (player instanceof PlayerServer) {
             player.craftingInventory.onCraftGuiClosed(player);
-            player.craftingInventory = menu.get(player.inventory, tileEntity);
+            player.craftingInventory = menu.get(player.inventory, container);
             player.craftingInventory.containerId = this.windowId;
             player.craftingInventory.addSlotListener((PlayerServer) player);
         }
@@ -73,7 +82,7 @@ public class OpenGuiContainerMessage<A extends TileEntity> implements NetworkMes
     @Override
     public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
         buf.writeInt(windowId);
-        buf.writeString(tileEntity.getClass().getName());
+        buf.writeString(container.getClass().getName());
         buf.writeString(screen.getName());
     }
 
@@ -82,9 +91,9 @@ public class OpenGuiContainerMessage<A extends TileEntity> implements NetworkMes
     public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
         windowId = buf.readInt();
         try {
-            Class<?> tileEntityKlass = Class.forName(buf.readString());
+            Class<?> containerKlass = Class.forName(buf.readString());
 
-            tileEntity = (A) tileEntityKlass.getDeclaredConstructor().newInstance();
+            container = (A) containerKlass.getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
                  InvocationTargetException e) {
             throw new RuntimeException(e);
@@ -99,7 +108,7 @@ public class OpenGuiContainerMessage<A extends TileEntity> implements NetworkMes
 
     protected Screen getScreenInstance(ContainerInventory inventory) {
         try {
-            return (Screen) screen.getConstructor(ContainerInventory.class, tileEntity.getClass()).newInstance(inventory, tileEntity);
+            return (Screen) screen.getConstructor(ContainerInventory.class, container.getClass()).newInstance(inventory, container);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
                  InvocationTargetException e) {
             throw new RuntimeException(e);

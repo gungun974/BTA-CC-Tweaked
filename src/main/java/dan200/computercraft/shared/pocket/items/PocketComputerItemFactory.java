@@ -6,27 +6,24 @@
 package dan200.computercraft.shared.pocket.items;
 
 import dan200.computercraft.api.pocket.IPocketUpgrade;
-import dan200.computercraft.shared.ComputerCraftRegistry;
+import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
-import net.minecraft.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import net.minecraft.core.item.ItemStack;
 
 public final class PocketComputerItemFactory
 {
     private PocketComputerItemFactory() {}
 
-    @Nonnull
-    public static ItemStack create( int id, String label, int colour, ComputerFamily family, IPocketUpgrade upgrade )
+    public static ItemStack create(int id, String label, int colour, ComputerFamily family, IPocketUpgrade upgrade )
     {
         switch( family )
         {
             case NORMAL:
-                return ComputerCraftRegistry.ModItems.POCKET_COMPUTER_NORMAL.create( id, label, colour, upgrade );
+                return ComputerCraftItems.POCKET_COMPUTER_NORMAL.create( id, label, colour, upgrade );
             case ADVANCED:
-                return ComputerCraftRegistry.ModItems.POCKET_COMPUTER_ADVANCED.create( id, label, colour, upgrade );
+                return ComputerCraftItems.POCKET_COMPUTER_ADVANCED.create( id, label, colour, upgrade );
             default:
-                return ItemStack.EMPTY;
+                return null;
         }
     }
 }

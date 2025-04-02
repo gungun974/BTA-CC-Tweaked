@@ -24,6 +24,7 @@ import dan200.computercraft.core.filesystem.FileMount;
 import dan200.computercraft.core.filesystem.ResourceMount;
 import dan200.computercraft.shared.BundledRedstone;
 import dan200.computercraft.shared.MediaProviders;
+import dan200.computercraft.shared.PocketUpgrades;
 import dan200.computercraft.shared.TurtleUpgrades;
 import dan200.computercraft.shared.peripheral.modem.wired.TileCable;
 import dan200.computercraft.shared.peripheral.modem.wired.TileWiredModemFull;
@@ -154,12 +155,12 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI
     {
         MediaProviders.register( provider );
     }
-//
-//    @Override
-//    public void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade )
-//    {
-//        PocketUpgrades.register( upgrade );
-//    }
+
+    @Override
+    public void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade )
+    {
+        PocketUpgrades.register( upgrade );
+    }
 
     @Override
     public void registerGenericSource( @Nonnull GenericSource source )

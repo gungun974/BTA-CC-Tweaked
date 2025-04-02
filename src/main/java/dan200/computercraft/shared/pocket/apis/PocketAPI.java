@@ -5,6 +5,7 @@
  */
 package dan200.computercraft.shared.pocket.apis;
 
+import dan200.computercraft.BlockPos;
 import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.pocket.IPocketUpgrade;
@@ -13,11 +14,10 @@ import dan200.computercraft.shared.pocket.core.PocketServerComputer;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.ItemStorage;
 import dan200.computercraft.shared.util.WorldUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.core.entity.Entity;
+import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.player.inventory.container.ContainerInventory;
 
 /**
  * Control the current pocket computer, adding or removing upgrades.
@@ -62,21 +62,17 @@ public class PocketAPI implements ILuaAPI
     public final Object[] equipBack()
     {
         Entity entity = computer.getEntity();
-        if( !(entity instanceof PlayerEntity) )
+        if( !(entity instanceof Player) )
         {
             return new Object[] { false, "Cannot find player" };
         }
-        PlayerEntity player = (PlayerEntity) entity;
-        PlayerInventory inventory = player.inventory;
+        Player player = (Player) entity;
+        ContainerInventory inventory = player.inventory;
         IPocketUpgrade previousUpgrade = computer.getUpgrade();
 
         // Attempt to find the upgrade, starting in the main segment, and then looking in the opposite
         // one. We start from the position the item is currently in and loop round to the start.
-        IPocketUpgrade newUpgrade = findUpgrade( inventory.main, inventory.selectedSlot, previousUpgrade );
-        if( newUpgrade == null )
-        {
-            newUpgrade = findUpgrade( inventory.offHand, 0, previousUpgrade );
-        }
+        IPocketUpgrade newUpgrade = findUpgrade( inventory.mainInventory, inventory.getCurrentItemIndex(), previousUpgrade );
         if( newUpgrade == null )
         {
             return new Object[] { false, "Cannot find a valid upgrade" };
@@ -86,12 +82,12 @@ public class PocketAPI implements ILuaAPI
         if( previousUpgrade != null )
         {
             ItemStack stack = previousUpgrade.getCraftingItem();
-            if( !stack.isEmpty() )
+            if( stack != null )
             {
-                stack = InventoryUtil.storeItems( stack, ItemStorage.wrap( inventory ), inventory.selectedSlot );
-                if( !stack.isEmpty() )
+                stack = InventoryUtil.storeItems( stack, ItemStorage.wrap( inventory ), inventory.getCurrentItemIndex() );
+                if( stack != null )
                 {
-                    WorldUtil.dropItemStack( stack, player.getEntityWorld(), player.getPos() );
+                    WorldUtil.dropItemStack( stack, player.world, new BlockPos((int) player.x, (int) player.y, (int) player.z) );
                 }
             }
         }
@@ -102,12 +98,12 @@ public class PocketAPI implements ILuaAPI
         return new Object[] { true };
     }
 
-    private static IPocketUpgrade findUpgrade( DefaultedList<ItemStack> inv, int start, IPocketUpgrade previous )
+    private static IPocketUpgrade findUpgrade(ItemStack[] inv, int start, IPocketUpgrade previous )
     {
-        for( int i = 0; i < inv.size(); i++ )
+        for( int i = 0; i < inv.length; i++ )
         {
-            ItemStack invStack = inv.get( (i + start) % inv.size() );
-            if( !invStack.isEmpty() )
+            ItemStack invStack = inv[(i + start) % inv.length];
+            if( invStack != null )
             {
                 IPocketUpgrade newUpgrade = PocketUpgrades.get( invStack );
 
@@ -115,8 +111,8 @@ public class PocketAPI implements ILuaAPI
                 {
                     // Consume an item from this stack and exit the loop
                     invStack = invStack.copy();
-                    invStack.decrement( 1 );
-                    inv.set( (i + start) % inv.size(), invStack.isEmpty() ? ItemStack.EMPTY : invStack );
+                    invStack.stackSize -= 1;
+                    inv[(i + start) % inv.length] =  invStack.stackSize == 0 ? null : invStack;
 
                     return newUpgrade;
                 }
@@ -137,12 +133,12 @@ public class PocketAPI implements ILuaAPI
     public final Object[] unequipBack()
     {
         Entity entity = computer.getEntity();
-        if( !(entity instanceof PlayerEntity) )
+        if( !(entity instanceof Player) )
         {
             return new Object[] { false, "Cannot find player" };
         }
-        PlayerEntity player = (PlayerEntity) entity;
-        PlayerInventory inventory = player.inventory;
+        Player player = (Player) entity;
+        ContainerInventory inventory = player.inventory;
         IPocketUpgrade previousUpgrade = computer.getUpgrade();
 
         if( previousUpgrade == null )
@@ -153,12 +149,12 @@ public class PocketAPI implements ILuaAPI
         computer.setUpgrade( null );
 
         ItemStack stack = previousUpgrade.getCraftingItem();
-        if( !stack.isEmpty() )
+        if( stack != null )
         {
-            stack = InventoryUtil.storeItems( stack, ItemStorage.wrap( inventory ), inventory.selectedSlot );
-            if( stack.isEmpty() )
+            stack = InventoryUtil.storeItems( stack, ItemStorage.wrap( inventory ), inventory.getCurrentItemIndex() );
+            if( stack == null )
             {
-                WorldUtil.dropItemStack( stack, player.getEntityWorld(), player.getPos() );
+                WorldUtil.dropItemStack( stack, player.world, new BlockPos((int) player.x, (int) player.y, (int) player.z) );
             }
         }
 

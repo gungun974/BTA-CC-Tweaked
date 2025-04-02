@@ -6,6 +6,13 @@
 package dan200.computercraft.shared.computer.inventory;
 
 import dan200.computercraft.shared.computer.blocks.TileComputerBase;
+import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
+import net.minecraft.core.entity.Entity;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.player.inventory.container.ContainerInventory;
+import net.minecraft.core.world.World;
+
+import javax.annotation.Nonnull;
 
 public class ContainerComputer extends ContainerComputerBase
 {
@@ -14,8 +21,8 @@ public class ContainerComputer extends ContainerComputerBase
         super( tile.createServerComputer().getInstanceID(), tile.getFamily() );
     }
 
-//    public ContainerComputer( int i, PlayerInventory playerInventory, PacketByteBuf packetByteBuf )
-//    {
-//        super( ComputerCraftRegistry.ModContainers.COMPUTER, i, playerInventory, packetByteBuf );
-//    }
+    public ContainerComputer(ItemPocketComputer item, final World world, ContainerInventory inventory, Entity entity, @Nonnull ItemStack stack)
+    {
+        super( item.createServerComputer(world, inventory, entity, stack).getInstanceID(), item.getFamily() );
+    }
 }

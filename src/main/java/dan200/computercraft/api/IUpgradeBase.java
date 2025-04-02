@@ -26,7 +26,6 @@ public interface IUpgradeBase
      *
      * @return The unique ID for this upgrade.
      */
-    @Nonnull
     int getUpgradeID();
 
     /**

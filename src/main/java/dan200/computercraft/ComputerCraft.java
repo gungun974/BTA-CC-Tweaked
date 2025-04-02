@@ -24,10 +24,7 @@ import java.util.concurrent.TimeUnit;
 //import static dan200.computercraft.shared.ComputerCraftRegistry.init;
 
 import dan200.computercraft.shared.TurtlePermissions;
-import dan200.computercraft.shared.common.ComputerCraftBlocks;
-import dan200.computercraft.shared.common.ComputerCraftItems;
-import dan200.computercraft.shared.common.ComputerCraftTurtleUpgrades;
-import dan200.computercraft.shared.common.DefaultBundledRedstoneProvider;
+import dan200.computercraft.shared.common.*;
 import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
 import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
 import dan200.computercraft.shared.network.client.*;
@@ -199,7 +196,7 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint
 
     @Override
     public void afterGameStart() {
+        ComputerCraftPocketUpgrades.registerPocketUpgrades();
         ComputerCraftTurtleUpgrades.registerTurtleUpgrades();
-
     }
 }

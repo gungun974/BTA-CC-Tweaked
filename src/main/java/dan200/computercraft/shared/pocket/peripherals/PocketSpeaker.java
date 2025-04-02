@@ -8,18 +8,18 @@ package dan200.computercraft.shared.pocket.peripherals;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.pocket.AbstractPocketUpgrade;
 import dan200.computercraft.api.pocket.IPocketAccess;
-import dan200.computercraft.shared.ComputerCraftRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Identifier;
+import dan200.computercraft.shared.common.ComputerCraftItems;
+import net.minecraft.core.entity.Entity;
+import net.minecraft.core.util.phys.Vec3;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class PocketSpeaker extends AbstractPocketUpgrade
 {
-    public PocketSpeaker()
+    public PocketSpeaker(int id)
     {
-        super( new Identifier( "computercraft", "speaker" ), ComputerCraftRegistry.ModBlocks.SPEAKER );
+        super( id, ComputerCraftItems.SPEAKER );
     }
 
     @Nullable
@@ -42,7 +42,7 @@ public class PocketSpeaker extends AbstractPocketUpgrade
         Entity entity = access.getEntity();
         if( entity != null )
         {
-            speaker.setLocation( entity.getEntityWorld(), entity.getCameraPosVec( 1 ) );
+            speaker.setLocation( entity.world, Vec3.getPermanentVec3(entity.x, entity.y + entity.getHeadHeight(), entity.z));
         }
 
         speaker.update();

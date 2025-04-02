@@ -28,6 +28,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.container.ScreenContainerAbstract;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.item.Item;
 import net.minecraft.core.player.inventory.menu.MenuAbstract;
 import net.minecraft.core.world.World;
 import net.minecraft.server.MinecraftServer;
@@ -304,11 +305,20 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         NetworkHandler.sendToPlayer( player, createOpenComputerGuiPacket() );
     }
 
-    public <C extends TileEntity> void  sendOpenContainerComputerGui(Player player, C tileEntity, Class<? extends ScreenContainerAbstract> screen, OpenGuiContainerMessage.MenuAbstractSupplier<MenuAbstract, C> menu )
+    public <C extends TileEntity> void sendOpenContainerComputerGui(Player player, C tileEntity, Class<? extends ScreenContainerAbstract> screen, OpenGuiContainerMessage.MenuAbstractSupplier<MenuAbstract, C> menu )
     {
         final TerminalState state = write();
         NetworkHandler.sendToPlayer(player, createOpenComputerGuiPacket());
         OpenContainerComputerGuiClientMessage.SendToPlayer(player, tileEntity, screen, menu,
+            getInstanceID(), getFamily(), state.width, state.height
+        );
+    }
+
+    public <C extends Item> void sendOpenContainerComputerGui(Player player, C item, Class<? extends ScreenContainerAbstract> screen, OpenGuiContainerMessage.MenuAbstractSupplier<MenuAbstract, C> menu )
+    {
+        final TerminalState state = write();
+        NetworkHandler.sendToPlayer(player, createOpenComputerGuiPacket());
+        OpenContainerComputerGuiClientMessage.SendToPlayer(player, item, screen, menu,
             getInstanceID(), getFamily(), state.width, state.height
         );
     }

@@ -7,6 +7,7 @@ import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.container.ScreenContainerAbstract;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.item.Item;
 import net.minecraft.core.player.inventory.container.ContainerInventory;
 import net.minecraft.core.player.inventory.menu.MenuAbstract;
 import turniplabs.halplibe.helper.network.NetworkHandler;
@@ -15,7 +16,7 @@ import turniplabs.halplibe.helper.network.UniversalPacket;
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 
-public class OpenContainerComputerGuiClientMessage<A extends TileEntity> extends OpenGuiContainerMessage<A>
+public class OpenContainerComputerGuiClientMessage<A> extends OpenGuiContainerMessage<A>
 {
     private int instanceId;
     private ComputerFamily family;
@@ -23,14 +24,14 @@ public class OpenContainerComputerGuiClientMessage<A extends TileEntity> extends
     private int height;
 
     public OpenContainerComputerGuiClientMessage(
-        Player player, A tileEntity, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, A> menu,
+        Player player, A container, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, A> menu,
         int instanceId,
         ComputerFamily family,
         int width,
         int height
     )
     {
-        super(player, tileEntity, screen, menu);
+        super(player, container, screen, menu);
         this.instanceId = instanceId;
         this.family = family;
         this.width = width;
@@ -47,6 +48,24 @@ public class OpenContainerComputerGuiClientMessage<A extends TileEntity> extends
        int height
     ) {
         OpenContainerComputerGuiClientMessage<C> message = new OpenContainerComputerGuiClientMessage<>(player, tileEntity, screen, menu,
+            instanceId,
+            family,
+            width,
+            height
+        );
+        NetworkHandler.sendToPlayer(player, message);
+        if (Helper.isServerEnvironment()) {
+            message.serverSetWindow2(player);
+        }
+    }
+
+    public static <C extends Item> void SendToPlayer(Player player, C item, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, C> menu,
+                                                     int instanceId,
+                                                     ComputerFamily family,
+                                                     int width,
+                                                     int height
+    ) {
+        OpenContainerComputerGuiClientMessage<C> message = new OpenContainerComputerGuiClientMessage<>(player, item, screen, menu,
             instanceId,
             family,
             width,
@@ -81,12 +100,12 @@ public class OpenContainerComputerGuiClientMessage<A extends TileEntity> extends
         ContainerComputerBase container = new ContainerComputerBase(instanceId, family);
 
         try {
-            return (Screen) screen.getConstructor(ContainerComputerBase.class, int.class, int.class, ContainerInventory.class, tileEntity.getClass()).newInstance(
+            return (Screen) screen.getConstructor(ContainerComputerBase.class, int.class, int.class, ContainerInventory.class, this.container.getClass()).newInstance(
                 container,
                 width,
                 height,
                 inventory,
-                tileEntity
+                this.container
             );
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
                  InvocationTargetException e) {

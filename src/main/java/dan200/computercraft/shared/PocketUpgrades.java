@@ -6,11 +6,11 @@
 package dan200.computercraft.shared;
 
 import dan200.computercraft.api.pocket.IPocketUpgrade;
+import dan200.computercraft.shared.common.ComputerCraftPocketUpgrades;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenCustomHashMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Util;
+import net.minecraft.core.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -18,8 +18,8 @@ import java.util.*;
 
 public final class PocketUpgrades
 {
-    private static final Map<String, IPocketUpgrade> upgrades = new HashMap<>();
-    private static final Map<IPocketUpgrade, String> upgradeOwners = new Object2ObjectLinkedOpenCustomHashMap<>( Util.identityHashStrategy() );
+    private static final Map<Integer, IPocketUpgrade> upgrades = new HashMap<>();
+    //private static final Map<IPocketUpgrade, String> upgradeOwners = new Object2ObjectLinkedOpenCustomHashMap<>();
 
     private PocketUpgrades() {}
 
@@ -27,7 +27,7 @@ public final class PocketUpgrades
     {
         Objects.requireNonNull( upgrade, "upgrade cannot be null" );
 
-        String id = upgrade.getUpgradeID().toString();
+        int id = upgrade.getUpgradeID();
         IPocketUpgrade existing = upgrades.get( id );
         if( existing != null )
         {
@@ -36,28 +36,25 @@ public final class PocketUpgrades
 
         upgrades.put( id, upgrade );
 
-        // Infer the mod id by the identifier of the upgrade. This is not how the forge api works, so it may break peripheral mods using the api.
-        // TODO: get the mod id of the mod that is currently being loaded.
-        ModContainer mc = FabricLoader.getInstance().getModContainer( upgrade.getUpgradeID().getNamespace() ).orElseGet( null );
-        if( mc != null && mc.getMetadata().getId() != null ) upgradeOwners.put( upgrade, mc.getMetadata().getId() );
+//        // Infer the mod id by the identifier of the upgrade. This is not how the forge api works, so it may break peripheral mods using the api.
+//        // TODO: get the mod id of the mod that is currently being loaded.
+//        ModContainer mc = FabricLoader.getInstance().getModContainer( upgrade.getUpgradeID().getNamespace() ).orElseGet( null );
+//        if( mc != null && mc.getMetadata().getId() != null ) upgradeOwners.put( upgrade, mc.getMetadata().getId() );
     }
 
-    public static IPocketUpgrade get( String id )
+    public static IPocketUpgrade get( int id )
     {
-        // Fix a typo in the advanced modem upgrade's name. I'm sorry, I realise this is horrible.
-        if( id.equals( "computercraft:advanved_modem" ) ) id = "computercraft:advanced_modem";
-
         return upgrades.get( id );
     }
 
-    public static IPocketUpgrade get( @Nonnull ItemStack stack )
+    public static IPocketUpgrade get( ItemStack stack )
     {
-        if( stack.isEmpty() ) return null;
+        if( stack == null ) return null;
 
         for( IPocketUpgrade upgrade : upgrades.values() )
         {
             ItemStack craftingStack = upgrade.getCraftingItem();
-            if( !craftingStack.isEmpty() && craftingStack.getItem() == stack.getItem() && upgrade.isItemSuitable( stack ) )
+            if( craftingStack != null && craftingStack.getItem().equals(stack.getItem()) && upgrade.isItemSuitable( stack ) )
             {
                 return upgrade;
             }
@@ -66,18 +63,18 @@ public final class PocketUpgrades
         return null;
     }
 
-    @Nullable
-    public static String getOwner( IPocketUpgrade upgrade )
-    {
-        return upgradeOwners.get( upgrade );
-    }
+//    @Nullable
+//    public static String getOwner( IPocketUpgrade upgrade )
+//    {
+//        return upgradeOwners.get( upgrade );
+//    }
 
     public static Iterable<IPocketUpgrade> getVanillaUpgrades()
     {
         List<IPocketUpgrade> vanilla = new ArrayList<>();
-        vanilla.add( ComputerCraftRegistry.PocketUpgrades.wirelessModemNormal );
-        vanilla.add( ComputerCraftRegistry.PocketUpgrades.wirelessModemAdvanced );
-        vanilla.add( ComputerCraftRegistry.PocketUpgrades.speaker );
+        vanilla.add( ComputerCraftPocketUpgrades.wirelessModemNormal );
+        vanilla.add( ComputerCraftPocketUpgrades.wirelessModemAdvanced );
+        vanilla.add( ComputerCraftPocketUpgrades.speaker );
         return vanilla;
     }
 

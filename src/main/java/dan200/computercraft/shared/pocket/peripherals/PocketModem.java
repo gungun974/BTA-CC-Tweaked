@@ -8,10 +8,10 @@ package dan200.computercraft.shared.pocket.peripherals;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.pocket.AbstractPocketUpgrade;
 import dan200.computercraft.api.pocket.IPocketAccess;
-import dan200.computercraft.shared.ComputerCraftRegistry;
+import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.peripheral.modem.ModemState;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.entity.Entity;
+import net.minecraft.core.util.phys.Vec3;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,10 +20,9 @@ public class PocketModem extends AbstractPocketUpgrade
 {
     private final boolean advanced;
 
-    public PocketModem( boolean advanced )
+    public PocketModem( boolean advanced, int id )
     {
-        super( new Identifier( "computercraft", advanced ? "wireless_modem_advanced" : "wireless_modem_normal" ),
-            advanced ? ComputerCraftRegistry.ModBlocks.WIRELESS_MODEM_ADVANCED : ComputerCraftRegistry.ModBlocks.WIRELESS_MODEM_NORMAL );
+        super( id, advanced ? ComputerCraftItems.WIRELESS_MODEM_ADVANCED : ComputerCraftItems.WIRELESS_MODEM_NORMAL );
         this.advanced = advanced;
     }
 
@@ -48,7 +47,7 @@ public class PocketModem extends AbstractPocketUpgrade
 
         if( entity != null )
         {
-            modem.setLocation( entity.getEntityWorld(), entity.getCameraPosVec( 1 ) );
+            modem.setLocation( entity.world, Vec3.getPermanentVec3(entity.x, entity.y + entity.getHeadHeight(), entity.z));
         }
 
         ModemState state = modem.getModemState();
