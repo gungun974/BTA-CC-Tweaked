@@ -84,9 +84,9 @@ public class TurtleModem extends AbstractTurtleUpgrade
     @Override
     public void drawItemUpgrade(Tessellator tessellator, TextureManager textureManager, @NotNull TurtleSide side) {
         if (!advanced) {
-            textureManager.loadTexture("/assets/computercraft/textures/block/wireless_modem_advanced_face.png").bind();
+            textureManager.loadTexture("/assets/computercraft/textures/block/wireless_modem_normal_face.png").bind();
         } else {
-            textureManager.loadTexture("/assets/computercraft/textures/block/wireless_modem_face.png").bind();
+            textureManager.loadTexture("/assets/computercraft/textures/block/wireless_modem_advanced_face.png").bind();
         }
 
         tessellator.startDrawingQuads();
