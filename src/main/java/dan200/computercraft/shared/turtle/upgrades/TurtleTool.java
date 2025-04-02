@@ -148,6 +148,15 @@ public class TurtleTool extends AbstractTurtleUpgrade
 
         GL11.glTranslatef(-1 + tileWidth, -1 + tileWidth, 0.5f + tileWidth/2f - xOffset);
 
+        GL11.glTranslatef(0.5f, 0.5f, 0);
+
+        GL11.glRotatef(180, 0, 1f, 0);
+        GL11.glRotatef(-90, 0, 0f, 1);
+
+        GL11.glTranslatef(-0.5f, -0.5f, 0);
+
+        GL11.glTranslatef(tileWidth, tileWidth, tileWidth);
+
         model.renderItemInWorld(
             tessellator, null, item, 1f, 1.0F, false
         );
