@@ -160,7 +160,7 @@ public class ComputerCraftBlocks {
         TURTLE_NORMAL = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
-            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTags(BlockTags.NOT_IN_CREATIVE_MENU, BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileTurtle(ComputerFamily.NORMAL))
             .setBlockItem(block -> {
                 ComputerCraftItems.TURTLE_NORMAL = new ItemTurtle(block);
@@ -171,7 +171,7 @@ public class ComputerCraftBlocks {
         TURTLE_ADVANCED = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
-            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTags(BlockTags.NOT_IN_CREATIVE_MENU, BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileTurtle(ComputerFamily.ADVANCED))
             .setBlockItem(block -> {
                 ComputerCraftItems.TURTLE_ADVANCED = new ItemTurtle(block);

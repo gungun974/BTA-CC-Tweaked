@@ -1,26 +1,27 @@
 {
-    "required": true,
-    "package": "dan200.computercraft.fabric.mixin",
-    "compatibilityLevel": "JAVA_8",
-    "mixins": [
-        "EntityMixin",
-        "LogicBlockMixin",
-        "PlayerMixin",
-        "WorldMixin"
-    ],
-    "client": [
-        "GLFWKeyboardImplementationMixin",
-        "PlayerControllerSPMixin",
-        "WorldClientMixin",
-        "WorldClientMPMixin"
-    ],
-    "server": [
-        "MinecraftServerMixin",
-        "PacketHandlerServerAccessor",
-        "PlayerServerAccessor",
-        "ServerPlayerControllerMixin"
-    ],
-    "injectors": {
-        "defaultRequire": 1
+  "required": true,
+  "package": "dan200.computercraft.fabric.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "EntityMixin",
+    "LogicBlockMixin",
+    "MenuInventoryCreativeMixin",
+    "PlayerMixin",
+    "WorldMixin"
+  ],
+  "client": [
+    "GLFWKeyboardImplementationMixin",
+    "PlayerControllerSPMixin",
+    "WorldClientMixin",
+    "WorldClientMPMixin"
+  ],
+  "server": [
+    "MinecraftServerMixin",
+    "PacketHandlerServerAccessor",
+    "PlayerServerAccessor",
+    "ServerPlayerControllerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
   }
 }
