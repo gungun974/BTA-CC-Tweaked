@@ -10,6 +10,7 @@ import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.api.turtle.event.TurtleAction;
+import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.core.apis.http.options.Action;
 import dan200.computercraft.core.apis.http.options.AddressRule;
 //import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 //import static dan200.computercraft.shared.ComputerCraftRegistry.ModBlocks;
 //import static dan200.computercraft.shared.ComputerCraftRegistry.init;
 
+import dan200.computercraft.shared.TurtlePermissions;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.common.ComputerCraftTurtleUpgrades;
@@ -32,6 +34,8 @@ import dan200.computercraft.shared.network.client.*;
 import dan200.computercraft.shared.network.server.*;
 import dan200.computercraft.shared.peripheral.generic.methods.InventoryMethods;
 import dan200.computercraft.shared.peripheral.monitor.MonitorRenderer;
+import dan200.computercraft.shared.turtle.FurnaceRefuelHandler;
+import dan200.computercraft.shared.turtle.SignInspectHandler;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.item.Item;
 import org.slf4j.Logger;
@@ -78,7 +82,7 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint
     public static double monitorDistanceSq = 4096;
     public static long monitorBandwidth = 1_000_000;
 
-    public static boolean turtlesNeedFuel = false;
+    public static boolean turtlesNeedFuel = true;
     public static int turtleFuelLimit = 20000;
     public static int advancedTurtleFuelLimit = 100000;
     public static boolean turtlesObeyBlockProtection = true;
@@ -158,6 +162,10 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint
 //            }
             return null;
         } );
+
+        TurtleEvent.EVENT_BUS.register( FurnaceRefuelHandler.INSTANCE );
+        TurtleEvent.EVENT_BUS.register( new TurtlePermissions() );
+        TurtleEvent.EVENT_BUS.register( new SignInspectHandler() );
 
         ComputerCraftAPI.registerGenericSource( new InventoryMethods() );
         /*

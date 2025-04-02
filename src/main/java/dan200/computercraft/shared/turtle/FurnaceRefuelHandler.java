@@ -6,6 +6,7 @@
 package dan200.computercraft.shared.turtle;
 
 import com.google.common.eventbus.Subscribe;
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.event.TurtleRefuelEvent;
 import dan200.computercraft.shared.util.InventoryUtil;
@@ -14,6 +15,7 @@ import dan200.computercraft.shared.util.WorldUtil;
 import net.minecraft.core.crafting.LookupFuelFurnace;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.item.Items;
 
 import javax.annotation.Nonnull;
 
@@ -43,6 +45,16 @@ public final class FurnaceRefuelHandler implements TurtleRefuelEvent.Handler
 
         // Store the replacement item in the inventory
         Item replacementStack = stack.getItem();
+
+        if (stack.getItem().equals(Items.BUCKET_LAVA)) {
+            replacementStack = Items.BUCKET;
+        } else {
+            currentStack.stackSize--;
+            if (currentStack.stackSize < 0) {
+                replacementStack = null;
+            }
+        }
+
         if( replacementStack != null )
         {
             ItemStack remainder = InventoryUtil.storeItems( new ItemStack( replacementStack ), storage, turtle.getSelectedSlot() );
