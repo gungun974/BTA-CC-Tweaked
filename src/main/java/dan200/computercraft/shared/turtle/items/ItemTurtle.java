@@ -118,7 +118,7 @@ public class ItemTurtle extends ItemComputerBase implements ITurtleItem
         }
         else
         {
-            return i18n.translateKey( baseString );
+            return i18n.translateKey( baseString + ".name" );
         }
     }
 //
