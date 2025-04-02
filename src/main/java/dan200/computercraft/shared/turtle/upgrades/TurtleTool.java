@@ -152,8 +152,9 @@ public class TurtleTool extends AbstractTurtleUpgrade
             tessellator, null, item, 1f, 1.0F, false
         );
 
-        GL11.glPopMatrix();
+        GL11.glEnable(32826);
 
+        GL11.glPopMatrix();
     }
 
     private TurtleCommandResult attack(ITurtleAccess turtle, Direction direction, TurtleSide side )
