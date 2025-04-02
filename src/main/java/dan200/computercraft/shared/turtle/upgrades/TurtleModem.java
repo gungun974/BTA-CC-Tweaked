@@ -118,6 +118,14 @@ public class TurtleModem extends AbstractTurtleUpgrade
         }
     }
 
+    @Override
+    public @NotNull String getUnlocalisedAdjective() {
+        if (advanced) {
+            return "upgrade.computercraft.wireless_modem_advanced.adjective";
+        }
+        return "upgrade.computercraft.wireless_modem_normal.adjective";
+    }
+
     private static class Peripheral extends WirelessModemPeripheral
     {
         private final ITurtleAccess turtle;

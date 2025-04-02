@@ -11,14 +11,10 @@ import net.minecraft.core.block.material.Material;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.world.World;
+import org.jetbrains.annotations.NotNull;
 
 public class TurtleSword extends TurtleTool
 {
-    public TurtleSword( int id, String adjective, Item item )
-    {
-        super( id, adjective, item );
-    }
-
     public TurtleSword( int id, Item item )
     {
         super( id, item );
@@ -27,6 +23,11 @@ public class TurtleSword extends TurtleTool
     public TurtleSword(int id, ItemStack craftItem, ItemStack toolItem )
     {
         super( id, craftItem, toolItem );
+    }
+
+    @Override
+    public @NotNull String getUnlocalisedAdjective() {
+        return "upgrade.minecraft.diamond_sword.adjective";
     }
 
     @Override

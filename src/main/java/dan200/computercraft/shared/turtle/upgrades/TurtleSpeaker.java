@@ -70,6 +70,11 @@ public class TurtleSpeaker extends AbstractTurtleUpgrade
         }
     }
 
+    @Override
+    public @NotNull String getUnlocalisedAdjective() {
+        return "upgrade.computercraft.speaker.adjective";
+    }
+
     private static class Peripheral extends SpeakerPeripheral
     {
         ITurtleAccess turtle;

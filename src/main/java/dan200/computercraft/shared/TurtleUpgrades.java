@@ -7,6 +7,7 @@ package dan200.computercraft.shared;
 
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
+import dan200.computercraft.shared.common.ComputerCraftTurtleUpgrades;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import net.minecraft.core.item.ItemStack;
 
@@ -98,17 +99,19 @@ public final class TurtleUpgrades
             //TODO: Upgrade the turtle !!!
             vanilla = new ITurtleUpgrade[] {
                 // ComputerCraft upgrades
-//                ComputerCraftRegistry.TurtleUpgrades.wirelessModemNormal,
-//                ComputerCraftRegistry.TurtleUpgrades.wirelessModemAdvanced,
-//                ComputerCraftRegistry.TurtleUpgrades.speaker,
+                ComputerCraftTurtleUpgrades.wirelessModemNormal,
+                ComputerCraftTurtleUpgrades.wirelessModemAdvanced,
+                ComputerCraftTurtleUpgrades.speaker,
 
                 // Vanilla Minecraft upgrades
-//                ComputerCraftRegistry.TurtleUpgrades.diamondPickaxe,
-//                ComputerCraftRegistry.TurtleUpgrades.diamondAxe,
-//                ComputerCraftRegistry.TurtleUpgrades.diamondSword,
-//                ComputerCraftRegistry.TurtleUpgrades.diamondShovel,
-//                ComputerCraftRegistry.TurtleUpgrades.diamondHoe,
-//                ComputerCraftRegistry.TurtleUpgrades.craftingTable,
+                ComputerCraftTurtleUpgrades.diamondPickaxe,
+                ComputerCraftTurtleUpgrades.diamondAxe,
+                ComputerCraftTurtleUpgrades.diamondSword,
+                ComputerCraftTurtleUpgrades.diamondShovel,
+                ComputerCraftTurtleUpgrades.diamondHoe,
+                ComputerCraftTurtleUpgrades.craftingTable,
+
+                ComputerCraftTurtleUpgrades.goldenPickaxe,
             };
         }
 

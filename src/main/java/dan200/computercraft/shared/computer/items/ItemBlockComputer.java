@@ -98,10 +98,4 @@ public class ItemBlockComputer extends ItemComputerBase {
             }
         }
     }
-
-
-    public String getTranslatedName(ItemStack itemstack) {
-        return "Computer";
-        //return I18n.getInstance().translateKey(itemstack.getItemKey() + ".name");
-    }
 }

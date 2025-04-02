@@ -24,21 +24,7 @@ public abstract class AbstractTurtleUpgrade implements ITurtleUpgrade
 {
     private final int id;
     private final TurtleUpgradeType type;
-    private final String adjective;
     private final ItemStack stack;
-
-    protected AbstractTurtleUpgrade( int id, TurtleUpgradeType type, String adjective, IItemConvertible item )
-    {
-        this( id, type, adjective, new ItemStack( item ) );
-    }
-
-    protected AbstractTurtleUpgrade( int id, TurtleUpgradeType type, String adjective, ItemStack stack )
-    {
-        this.id = id;
-        this.type = type;
-        this.adjective = adjective;
-        this.stack = stack;
-    }
 
     protected AbstractTurtleUpgrade( int id, TurtleUpgradeType type, IItemConvertible item )
     {
@@ -47,23 +33,16 @@ public abstract class AbstractTurtleUpgrade implements ITurtleUpgrade
 
     protected AbstractTurtleUpgrade( int id, TurtleUpgradeType type, ItemStack stack )
     {
-        //this( id, type, Util.createTranslationKey( "upgrade", id ) + ".adjective", stack );
-        this( id, type,  "upgrade" + id  + ".adjective", stack );
+        this.id = id;
+        this.type = type;
+        this.stack = stack;
     }
-
 
     @Nonnull
     @Override
     public final int getUpgradeID()
     {
         return id;
-    }
-
-    @Nonnull
-    @Override
-    public final String getUnlocalisedAdjective()
-    {
-        return adjective;
     }
 
     @Nonnull

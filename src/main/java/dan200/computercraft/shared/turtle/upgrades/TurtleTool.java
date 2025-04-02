@@ -53,12 +53,6 @@ public class TurtleTool extends AbstractTurtleUpgrade
     private static final int TAG_LIST = 9;
     private static final int TAG_COMPOUND = 10;
 
-    public TurtleTool( int id, String adjective, Item item )
-    {
-        super( id, TurtleUpgradeType.TOOL, adjective, item );
-        this.item = new ItemStack( item );
-    }
-
     public TurtleTool( int id, Item item )
     {
         super( id, TurtleUpgradeType.TOOL, item );
@@ -69,6 +63,11 @@ public class TurtleTool extends AbstractTurtleUpgrade
     {
         super( id, TurtleUpgradeType.TOOL, craftItem );
         item = toolItem;
+    }
+
+    @Override
+    public @NotNull String getUnlocalisedAdjective() {
+        return "upgrade.minecraft.diamond_pickaxe.adjective";
     }
 
     @Override

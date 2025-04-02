@@ -54,4 +54,9 @@ public class TurtleCraftingTable extends AbstractTurtleUpgrade
         }
         tessellator.draw();
     }
+
+    @Override
+    public @NotNull String getUnlocalisedAdjective() {
+        return "upgrade.minecraft.crafting_table.adjective";
+    }
 }

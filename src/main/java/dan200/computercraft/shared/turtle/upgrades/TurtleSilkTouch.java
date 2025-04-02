@@ -18,17 +18,12 @@ import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
 public class TurtleSilkTouch extends TurtleTool
 {
-    public TurtleSilkTouch(int id, String adjective, Item item )
-    {
-        super( id, adjective, item );
-        dropCause = EnumDropCause.SILK_TOUCH;
-    }
-
     public TurtleSilkTouch(int id, Item item )
     {
         super( id, item );
@@ -39,5 +34,10 @@ public class TurtleSilkTouch extends TurtleTool
     {
         super( id, craftItem, toolItem );
         dropCause = EnumDropCause.SILK_TOUCH;
+    }
+
+    @Override
+    public @NotNull String getUnlocalisedAdjective() {
+        return "upgrade.minecraft.golden_pickaxe.adjective";
     }
 }

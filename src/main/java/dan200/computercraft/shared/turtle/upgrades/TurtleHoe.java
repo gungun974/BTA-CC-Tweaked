@@ -17,16 +17,12 @@ import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
 public class TurtleHoe extends TurtleTool
 {
-    public TurtleHoe( int id, String adjective, Item item )
-    {
-        super( id, adjective, item );
-    }
-
     public TurtleHoe( int id, Item item )
     {
         super( id, item );
@@ -35,6 +31,11 @@ public class TurtleHoe extends TurtleTool
     public TurtleHoe(int id, ItemStack craftItem, ItemStack toolItem )
     {
         super( id, craftItem, toolItem );
+    }
+
+    @Override
+    public @NotNull String getUnlocalisedAdjective() {
+        return "upgrade.minecraft.diamond_hoe.adjective";
     }
 
     @Nonnull

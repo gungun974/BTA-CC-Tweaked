@@ -6,11 +6,11 @@
 package dan200.computercraft.shared.turtle.items;
 
 import com.mojang.nbt.tags.CompoundTag;
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.shared.TurtleUpgrades;
 import dan200.computercraft.shared.common.IColouredItem;
-import dan200.computercraft.shared.computer.blocks.TileComputerBase;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.items.ItemComputerBase;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
@@ -20,6 +20,7 @@ import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.enums.EnumBlockSoundEffectType;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.lang.I18n;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -100,33 +101,31 @@ public class ItemTurtle extends ItemComputerBase implements ITurtleItem
 
         return stack;
     }
-//
-//    @Nonnull
-//    @Override
-//    public Text getName( @Nonnull ItemStack stack )
-//    {
-//        String baseString = getTranslationKey( stack );
-//        ITurtleUpgrade left = getUpgrade( stack, TurtleSide.LEFT );
-//        ITurtleUpgrade right = getUpgrade( stack, TurtleSide.RIGHT );
-//        if( left != null && right != null )
-//        {
-//            return new TranslatableText( baseString + ".upgraded_twice",
-//                new TranslatableText( right.getUnlocalisedAdjective() ),
-//                new TranslatableText( left.getUnlocalisedAdjective() ) );
-//        }
-//        else if( left != null )
-//        {
-//            return new TranslatableText( baseString + ".upgraded", new TranslatableText( left.getUnlocalisedAdjective() ) );
-//        }
-//        else if( right != null )
-//        {
-//            return new TranslatableText( baseString + ".upgraded", new TranslatableText( right.getUnlocalisedAdjective() ) );
-//        }
-//        else
-//        {
-//            return new TranslatableText( baseString );
-//        }
-//    }
+
+    public String getTranslatedName(ItemStack itemStack) {
+        I18n i18n = I18n.getInstance();
+        String baseString = itemStack.getItemKey();
+        ITurtleUpgrade left = getUpgrade( itemStack, TurtleSide.LEFT );
+        ITurtleUpgrade right = getUpgrade( itemStack, TurtleSide.RIGHT );
+        if( left != null && right != null )
+        {
+            return i18n.translateKeyAndFormat( baseString + ".upgraded_twice.name",
+                i18n.translateKey( right.getUnlocalisedAdjective() ),
+                i18n.translateKey( left.getUnlocalisedAdjective() ) );
+        }
+        else if( left != null )
+        {
+            return i18n.translateKeyAndFormat( baseString + ".upgraded.name", i18n.translateKey(left.getUnlocalisedAdjective()) );
+        }
+        else if( right != null )
+        {
+            return i18n.translateKeyAndFormat( baseString + ".upgraded.name", i18n.translateKey(right.getUnlocalisedAdjective()) );
+        }
+        else
+        {
+            return i18n.translateKey( baseString );
+        }
+    }
 //
 //    //    @Nullable
 //    //    @Override

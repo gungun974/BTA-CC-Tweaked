@@ -7,14 +7,10 @@ package dan200.computercraft.shared.turtle.upgrades;
 
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class TurtleAxe extends TurtleTool
 {
-    public TurtleAxe( int id, String adjective, Item item )
-    {
-        super( id, adjective, item );
-    }
-
     public TurtleAxe( int id, Item item )
     {
         super( id, item );
@@ -23,6 +19,11 @@ public class TurtleAxe extends TurtleTool
     public TurtleAxe(int id, ItemStack craftItem, ItemStack toolItem )
     {
         super( id, craftItem, toolItem );
+    }
+
+    @Override
+    public @NotNull String getUnlocalisedAdjective() {
+        return "upgrade.minecraft.diamond_axe.adjective";
     }
 
     @Override
