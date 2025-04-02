@@ -26,9 +26,6 @@ import dan200.computercraft.shared.computer.items.IComputerItem;
 import dan200.computercraft.shared.pocket.apis.PocketAPI;
 import dan200.computercraft.shared.pocket.core.PocketServerComputer;
 import dan200.computercraft.shared.pocket.inventory.ScreenPocketComputer;
-import dan200.computercraft.shared.turtle.inventory.MenuPocketComputer;
-import dan200.computercraft.shared.turtle.inventory.MenuTurtle;
-import dan200.computercraft.shared.turtle.inventory.ScreenTurtle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.entity.Entity;
@@ -162,7 +159,7 @@ public class ItemPocketComputer extends Item implements IComputerItem, IMedia, I
                 //createServerComputer().turnOn();
                 computer.sendTerminalState( player );
                 ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this, world, player.inventory, player, stack));
-                computer.sendOpenContainerComputerGui( player, this, ScreenPocketComputer.class, MenuPocketComputer::new );
+                computer.sendOpenComputerGui( player, ScreenPocketComputer.class);
             }
         }
         return stack;

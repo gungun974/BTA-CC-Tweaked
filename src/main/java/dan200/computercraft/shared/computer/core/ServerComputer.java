@@ -25,6 +25,7 @@ import dan200.computercraft.shared.network.client.*;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import dan200.computercraft.shared.turtle.inventory.MenuTurtle;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.container.ScreenContainerAbstract;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
@@ -209,10 +210,10 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         return new ComputerTerminalClientMessage( getInstanceID(), write() );
     }
 
-    protected NetworkMessage createOpenComputerGuiPacket()
+    protected NetworkMessage createOpenComputerGuiPacket(Class<? extends Screen> screen)
     {
         final TerminalState state = write();
-        return new OpenComputerGuiClientMessage( getInstanceID(), getFamily(), state.width, state.height );
+        return new OpenComputerGuiClientMessage( screen, getInstanceID(), getFamily(), state.width, state.height );
     }
 
     @Nullable
@@ -300,25 +301,15 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         NetworkHandler.sendToPlayer( player, createTerminalPacket() );
     }
 
-    public void sendOpenComputerGui( Player player )
+    public void sendOpenComputerGui( Player player, Class<? extends Screen> screen  )
     {
-        NetworkHandler.sendToPlayer( player, createOpenComputerGuiPacket() );
+        NetworkHandler.sendToPlayer( player, createOpenComputerGuiPacket(screen) );
     }
 
     public <C extends TileEntity> void sendOpenContainerComputerGui(Player player, C tileEntity, Class<? extends ScreenContainerAbstract> screen, OpenGuiContainerMessage.MenuAbstractSupplier<MenuAbstract, C> menu )
     {
         final TerminalState state = write();
-        NetworkHandler.sendToPlayer(player, createOpenComputerGuiPacket());
         OpenContainerComputerGuiClientMessage.SendToPlayer(player, tileEntity, screen, menu,
-            getInstanceID(), getFamily(), state.width, state.height
-        );
-    }
-
-    public <C extends Item> void sendOpenContainerComputerGui(Player player, C item, Class<? extends ScreenContainerAbstract> screen, OpenGuiContainerMessage.MenuAbstractSupplier<MenuAbstract, C> menu )
-    {
-        final TerminalState state = write();
-        NetworkHandler.sendToPlayer(player, createOpenComputerGuiPacket());
-        OpenContainerComputerGuiClientMessage.SendToPlayer(player, item, screen, menu,
             getInstanceID(), getFamily(), state.width, state.height
         );
     }

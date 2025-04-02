@@ -12,6 +12,7 @@ import dan200.computercraft.Peripherals;
 import dan200.computercraft.PortableTickScheduler;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
+import dan200.computercraft.client.gui.GuiComputer;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.IComputerPlayer;
@@ -100,7 +101,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
                 createServerComputer().turnOn();
                 createServerComputer().sendTerminalState( player );
                 ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this));
-                createServerComputer().sendOpenComputerGui( player );
+                createServerComputer().sendOpenComputerGui( player, GuiComputer.class );
             }
 
             return true;
