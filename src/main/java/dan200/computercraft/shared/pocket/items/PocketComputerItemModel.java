@@ -8,6 +8,7 @@ import net.minecraft.client.render.item.model.ItemModelStandard;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
+import net.minecraft.core.entity.Entity;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.collection.NamespaceID;
@@ -24,6 +25,142 @@ public class PocketComputerItemModel extends ItemModelStandard {
     public static final IconCoordinate POCKET_COMPUTER_ON = TextureRegistry.getTexture("computercraft:item/pocket_computer_on");
     public static final IconCoordinate POCKET_COMPUTER_BLINK = TextureRegistry.getTexture("computercraft:item/pocket_computer_blink");
     public static final IconCoordinate POCKET_COMPUTER_LIGHT = TextureRegistry.getTexture("computercraft:item/pocket_computer_light");
+
+    @Override
+    public void renderItemInWorld(Tessellator tessellator, Entity entity, ItemStack itemStack, float brightness, float alpha, boolean worldTransform) {
+        GL11.glEnable(3042);
+        GL11.glBlendFunc(770, 771);
+        if (this.useColor) {
+            int color = this.getColor(itemStack);
+            float r = (float)(color >> 16 & 0xFF) / 255.0F;
+            float g = (float)(color >> 8 & 0xFF) / 255.0F;
+            float b = (float)(color & 0xFF) / 255.0F;
+            GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
+        } else {
+            GL11.glColor4f(brightness, brightness, brightness, alpha);
+        }
+
+        IconCoordinate tex = this.getIcon(entity, itemStack);
+
+        int lightState = ItemPocketComputer.getLightState(itemStack);
+
+        switch (ItemPocketComputer.getState(itemStack)) {
+            case OFF:
+                draw3DModel(tessellator, worldTransform, POCKET_COMPUTER_FRAME);
+                draw3DModel(tessellator, worldTransform, tex);
+                break;
+            case ON:
+                draw3DModel(tessellator, worldTransform, POCKET_COMPUTER_ON);
+                draw3DModel(tessellator, worldTransform, tex);
+                break;
+            case BLINKING:
+                draw3DModel(tessellator, worldTransform, POCKET_COMPUTER_BLINK);
+                draw3DModel(tessellator, worldTransform, tex);
+        }
+
+
+        if (lightState != -1) {
+            float r = (float)(lightState >> 16 & 0xFF) / 255.0F;
+            float g = (float)(lightState >> 8 & 0xFF) / 255.0F;
+            float b = (float)(lightState & 0xFF) / 255.0F;
+            GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
+            draw3DModel(tessellator, worldTransform, POCKET_COMPUTER_LIGHT);
+        }
+
+        GL11.glDisable(32826);
+        GL11.glDisable(3042);
+    }
+
+    private static void draw3DModel(Tessellator tessellator, boolean worldTransform, IconCoordinate tex) {
+        tex.parentAtlas.bind();
+        int tileWidth = tex.width;
+        float uMin = (float) tex.getIconUMin();
+        float uMax = (float) tex.getIconUMax();
+        float vMin = (float) tex.getIconVMin();
+        float vMax = (float) tex.getIconVMax();
+        float uDiff = uMin - uMax;
+        float vDiff = vMin - vMax;
+        float width = 1.0F;
+        float foon = 0.5F / (float) tex.parentAtlas.getHeight();
+        float goon = 0.0625F * (16.0F / (float)tileWidth);
+        GL11.glEnable(32826);
+        float thickness = 0.0625F;
+        float pixelWidth = 1.0F / (float)tileWidth;
+        if (worldTransform) {
+            GL11.glTranslatef(-0.5F, -0.5F, 0.03125F);
+        }
+
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0F, 0.0F, 1.0F);
+        tessellator.addVertexWithUV(0.0, 0.0, 0.0, (double)uMax, (double)vMax);
+        tessellator.addVertexWithUV(1.0, 0.0, 0.0, (double)uMin, (double)vMax);
+        tessellator.addVertexWithUV(1.0, 1.0, 0.0, (double)uMin, (double)vMin);
+        tessellator.addVertexWithUV(0.0, 1.0, 0.0, (double)uMax, (double)vMin);
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0F, 0.0F, -1.0F);
+        tessellator.addVertexWithUV(0.0, 1.0, -0.0625, (double)uMax, (double)vMin);
+        tessellator.addVertexWithUV(1.0, 1.0, -0.0625, (double)uMin, (double)vMin);
+        tessellator.addVertexWithUV(1.0, 0.0, -0.0625, (double)uMin, (double)vMax);
+        tessellator.addVertexWithUV(0.0, 0.0, -0.0625, (double)uMax, (double)vMax);
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+
+        for (int i = 0; i < tileWidth; i++) {
+            float texProgress = (float)i * pixelWidth;
+            float u = uMax + uDiff * texProgress - foon;
+            float x = 1.0F * texProgress;
+            tessellator.addVertexWithUV((double)x, 0.0, -0.0625, (double)u, (double)vMax);
+            tessellator.addVertexWithUV((double)x, 0.0, 0.0, (double)u, (double)vMax);
+            tessellator.addVertexWithUV((double)x, 1.0, 0.0, (double)u, (double)vMin);
+            tessellator.addVertexWithUV((double)x, 1.0, -0.0625, (double)u, (double)vMin);
+        }
+
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(1.0F, 0.0F, 0.0F);
+
+        for (int i = 0; i < tileWidth; i++) {
+            float texProgress = (float)i * pixelWidth;
+            float u = uMax + uDiff * texProgress - foon;
+            float x = 1.0F * texProgress + goon;
+            tessellator.addVertexWithUV((double)x, 1.0, -0.0625, (double)u, (double)vMin);
+            tessellator.addVertexWithUV((double)x, 1.0, 0.0, (double)u, (double)vMin);
+            tessellator.addVertexWithUV((double)x, 0.0, 0.0, (double)u, (double)vMax);
+            tessellator.addVertexWithUV((double)x, 0.0, -0.0625, (double)u, (double)vMax);
+        }
+
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0F, 1.0F, 0.0F);
+
+        for (int i = 0; i < tileWidth; i++) {
+            float texProgress = (float)i * pixelWidth;
+            float v = vMax + vDiff * texProgress - foon;
+            float y = 1.0F * texProgress + goon;
+            tessellator.addVertexWithUV(0.0, (double)y, 0.0, (double)uMax, (double)v);
+            tessellator.addVertexWithUV(1.0, (double)y, 0.0, (double)uMin, (double)v);
+            tessellator.addVertexWithUV(1.0, (double)y, -0.0625, (double)uMin, (double)v);
+            tessellator.addVertexWithUV(0.0, (double)y, -0.0625, (double)uMax, (double)v);
+        }
+
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0F, -1.0F, 0.0F);
+
+        for (int i = 0; i < tileWidth; i++) {
+            float texProgress = (float)i * pixelWidth;
+            float v = vMax + vDiff * texProgress - foon;
+            float y = 1.0F * texProgress;
+            tessellator.addVertexWithUV(1.0, (double)y, 0.0, (double)uMin, (double)v);
+            tessellator.addVertexWithUV(0.0, (double)y, 0.0, (double)uMax, (double)v);
+            tessellator.addVertexWithUV(0.0, (double)y, -0.0625, (double)uMax, (double)v);
+            tessellator.addVertexWithUV(1.0, (double)y, -0.0625, (double)uMin, (double)v);
+        }
+
+        tessellator.draw();
+    }
 
     @Override
     public void renderItemIntoGui(
