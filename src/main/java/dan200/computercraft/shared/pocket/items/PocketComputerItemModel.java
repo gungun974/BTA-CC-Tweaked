@@ -1,8 +1,9 @@
 package dan200.computercraft.shared.pocket.items;
 
-import dan200.computercraft.ComputerCraft;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.EntityRenderDispatcher;
 import net.minecraft.client.render.Font;
+import net.minecraft.client.render.LightmapHelper;
 import net.minecraft.client.render.TextureManager;
 import net.minecraft.client.render.item.model.ItemModelStandard;
 import net.minecraft.client.render.tessellator.Tessellator;
@@ -11,10 +12,11 @@ import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.util.collection.NamespaceID;
 import org.lwjgl.opengl.GL11;
 
-import static dan200.computercraft.ComputerCraft.MOD_ID;
+import javax.annotation.Nullable;
+
+import java.util.Random;
 
 public class PocketComputerItemModel extends ItemModelStandard {
     public PocketComputerItemModel(Item item, String namespace) {
@@ -213,6 +215,90 @@ public class PocketComputerItemModel extends ItemModelStandard {
             GL11.glEnable(2896);
             GL11.glDisable(2884);
             GL11.glDisable(3042);
+        }
+    }
+
+    @Override
+    public void renderAsItemEntity(
+        Tessellator tessellator, @Nullable Entity entity, Random random, ItemStack itemstack, int renderCount, float yaw, float brightness, float partialTick
+    ) {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc.fullbright || this.itemfullBright) {
+            brightness = 1.0F;
+        }
+
+        EntityRenderDispatcher renderDispatcher = EntityRenderDispatcher.instance;
+        GL11.glScalef(0.5F, 0.5F, 0.5F);
+        IconCoordinate tex = this.getIcon(entity, itemstack);
+        tex.parentAtlas.bind();
+        if (this.useColor) {
+            int color = this.getColor(itemstack);
+            float r = (float)(color >> 16 & 0xFF) / 255.0F;
+            float g = (float)(color >> 8 & 0xFF) / 255.0F;
+            float b = (float)(color & 0xFF) / 255.0F;
+            GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0F);
+        } else {
+            GL11.glColor4f(brightness, brightness, brightness, 1.0F);
+        }
+
+        if (LightmapHelper.isLightmapEnabled() && this.itemfullBright && entity != null) {
+            int lmc = entity.getLightmapCoord(1.0F);
+            lmc = LightmapHelper.setBlocklightValue(lmc, 15);
+            LightmapHelper.setLightmapCoord(lmc);
+        }
+
+        if (mc.gameSettings.items3D.value) {
+            GL11.glPushMatrix();
+            GL11.glScaled(1.0, 1.0, 1.0);
+            GL11.glRotated((double)yaw, 0.0, 1.0, 0.0);
+            GL11.glTranslated(-0.5, 0.0, -0.05 * (double)(renderCount - 1));
+
+            for (int i = 0; i < renderCount; i++) {
+                GL11.glPushMatrix();
+                GL11.glTranslated(0.0, 0.0, 0.1 * (double)i);
+                this.renderItem(tessellator, renderDispatcher.itemRenderer, itemstack, entity, brightness, false);
+                GL11.glPopMatrix();
+            }
+
+            GL11.glPopMatrix();
+        } else {
+            for (int i = 0; i < renderCount; i++) {
+                GL11.glPushMatrix();
+                if (i > 0) {
+                    float rOffX = (random.nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float rOffY = (random.nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float rOffZ = (random.nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    GL11.glTranslatef(rOffX, rOffY, rOffZ);
+                }
+
+                GL11.glRotatef(180.0F - renderDispatcher.viewLerpYaw, 0.0F, 1.0F, 0.0F);
+
+                int lightState = ItemPocketComputer.getLightState(itemstack);
+
+                switch (ItemPocketComputer.getState(itemstack)) {
+                    case OFF:
+                        this.renderFlat(tessellator, POCKET_COMPUTER_FRAME);
+                        this.renderFlat(tessellator, tex);
+                        break;
+                    case ON:
+                        this.renderFlat(tessellator, POCKET_COMPUTER_ON);
+                        this.renderFlat(tessellator, tex);
+                        break;
+                    case BLINKING:
+                        this.renderFlat(tessellator, POCKET_COMPUTER_BLINK);
+                        this.renderFlat(tessellator, tex);
+                }
+
+
+                if (lightState != -1) {
+                    float r = (float)(lightState >> 16 & 0xFF) / 255.0F;
+                    float g = (float)(lightState >> 8 & 0xFF) / 255.0F;
+                    float b = (float)(lightState & 0xFF) / 255.0F;
+                    GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0f);
+                    this.renderFlat(tessellator, POCKET_COMPUTER_LIGHT);
+                }
+                GL11.glPopMatrix();
+            }
         }
     }
 }
