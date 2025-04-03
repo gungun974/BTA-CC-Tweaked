@@ -19,7 +19,7 @@ public class ScreenDiskDrive extends ScreenContainerAbstract {
 
     @Override
     protected void drawGuiContainerForegroundLayer() {
-        this.font.drawString(I18n.getInstance().translateKey("gui.dispenser.label.dispenser"), 8, 6, 4210752);
+        this.font.drawString(I18n.getInstance().translateKey("tile.computercraft.disk.drive.name"), 8, 6, 4210752);
         this.font.drawString(I18n.getInstance().translateKey("gui.dispenser.label.inventory"), 8, this.ySize - 96 + 2, 4210752);
     }
 
