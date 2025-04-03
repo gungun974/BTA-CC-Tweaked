@@ -5,41 +5,34 @@
  */
 package dan200.computercraft.shared.peripheral.printer;
 
+import com.mojang.nbt.tags.CompoundTag;
+import com.mojang.nbt.tags.ListTag;
+import dan200.computercraft.BlockPos;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.media.items.ItemPrintout;
 import dan200.computercraft.shared.util.ColourUtils;
-import dan200.computercraft.shared.util.DefaultSidedInventory;
+import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.ItemStorage;
 import dan200.computercraft.shared.util.WorldUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Nameable;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.item.Item;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.item.Items;
+import net.minecraft.core.player.inventory.container.Container;
+import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.util.helper.DyeColor;
+import net.minecraft.core.util.phys.Vec3;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public final class TilePrinter extends TileGeneric implements DefaultSidedInventory, IPeripheralTile, Nameable, NamedScreenHandlerFactory
+public final class TilePrinter extends TileGeneric implements IPeripheralTile, Container
 {
     static final int SLOTS = 13;
     private static final String NBT_NAME = "CustomName";
@@ -62,56 +55,59 @@ public final class TilePrinter extends TileGeneric implements DefaultSidedInvent
         6,
     };
     private static final int[] SIDE_SLOTS = new int[] { 0 };
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize( SLOTS, ItemStack.EMPTY );
+    private final List<ItemStack> inventory = new ArrayList<>(Collections.nCopies(SLOTS, null));
     private final ItemStorage itemHandlerAll = ItemStorage.wrap( this );
     private final Terminal page = new Terminal( ItemPrintout.LINE_MAX_LENGTH, ItemPrintout.LINES_PER_PAGE );
-    Text customName;
+    String customName;
     private String pageTitle = "";
     private boolean printing = false;
 
-    public TilePrinter( BlockEntityType<TilePrinter> type )
+    public TilePrinter()
     {
-        super( type );
     }
 
-    @Override
-    public void destroy()
-    {
-        ejectContents();
-    }
+//    @Override
+//    public void destroy()
+//    {
+//        ejectContents();
+//    }
 
-    @Nonnull
-    @Override
-    public ActionResult onActivate( PlayerEntity player, Hand hand, BlockHitResult hit )
-    {
-        if( player.isInSneakingPose() )
-        {
-            return ActionResult.PASS;
-        }
-
-        if( !getWorld().isClient )
-        {
-            player.openHandledScreen( this );
-        }
-        return ActionResult.SUCCESS;
-    }
+//    @Nonnull
+//    @Override
+//    public ActionResult onActivate( PlayerEntity player, Hand hand, BlockHitResult hit )
+//    {
+//        if( player.isInSneakingPose() )
+//        {
+//            return ActionResult.PASS;
+//        }
+//
+//        if( !getWorld().isClient )
+//        {
+//            player.openHandledScreen( this );
+//        }
+//        return ActionResult.SUCCESS;
+//    }
 
     private void ejectContents()
     {
         for( int i = 0; i < 13; i++ )
         {
             ItemStack stack = inventory.get( i );
-            if( !stack.isEmpty() )
+            if( stack != null )
             {
                 // Remove the stack from the inventory
-                setStack( i, ItemStack.EMPTY );
+                setItem( i, null );
 
                 // Spawn the item in the world
-                WorldUtil.dropItemStack( stack, getWorld(),
-                    Vec3d.of( getPos() )
+                WorldUtil.dropItemStack( stack, worldObj,
+                    Vec3.getPermanentVec3(x, y, z)
                         .add( 0.5, 0.75, 0.5 ) );
             }
         }
+    }
+
+    public BlockPos getPos() {
+        return new BlockPos(x, y, z);
     }
 
     private void updateBlockState()
@@ -120,7 +116,7 @@ public final class TilePrinter extends TileGeneric implements DefaultSidedInvent
         for( int i = 1; i < 7; i++ )
         {
             ItemStack stack = inventory.get( i );
-            if( !stack.isEmpty() && isPaper( stack ) )
+            if( stack != null && isPaper( stack ) )
             {
                 top = true;
                 break;
@@ -129,7 +125,7 @@ public final class TilePrinter extends TileGeneric implements DefaultSidedInvent
         for( int i = 7; i < 13; i++ )
         {
             ItemStack stack = inventory.get( i );
-            if( !stack.isEmpty() && isPaper( stack ) )
+            if( stack != null && isPaper( stack ) )
             {
                 bottom = true;
                 break;
@@ -147,28 +143,31 @@ public final class TilePrinter extends TileGeneric implements DefaultSidedInvent
 
     private void updateBlockState( boolean top, boolean bottom )
     {
-        if( removed )
+        if( isInvalid() )
         {
             return;
         }
 
-        BlockState state = getCachedState();
-        if( state.get( BlockPrinter.TOP ) == top & state.get( BlockPrinter.BOTTOM ) == bottom )
-        {
-            return;
-        }
+        final int currentMetadata = getBlockMeta();
 
-        getWorld().setBlockState( getPos(),
-            state.with( BlockPrinter.TOP, top )
-                .with( BlockPrinter.BOTTOM, bottom ) );
+        final boolean currentBottom = ((currentMetadata >> 3) & 0b1) == 1;
+        final boolean currentTop = ((currentMetadata >> 4) & 0b1) == 1;
+
+        if( currentBottom != bottom || currentTop != top )
+        {
+            final int newMetadata = (currentMetadata & ~0b11000) | ((bottom ? 1 << 3 : 0) + (top ? 1 << 4 : 0));
+
+            if (worldObj != null) {
+                worldObj.setBlockMetadataWithNotify(this.x, this.y, this.z, newMetadata);
+            }
+        }
     }
 
     @Override
-    public void fromTag( @Nonnull BlockState state, @Nonnull CompoundTag nbt )
-    {
-        super.fromTag( state, nbt );
+    public void readFromNBT(CompoundTag nbt) {
+        super.readFromNBT(nbt);
 
-        customName = nbt.contains( NBT_NAME ) ? Text.Serializer.fromJson( nbt.getString( NBT_NAME ) ) : null;
+        customName = nbt.containsKey( NBT_NAME ) ? nbt.getString( NBT_NAME ) : null;
 
         // Read page
         synchronized( page )
@@ -179,16 +178,25 @@ public final class TilePrinter extends TileGeneric implements DefaultSidedInvent
         }
 
         // Read inventory
-        Inventories.fromTag( nbt, inventory );
+        ListTag nbttaglist = nbt.getList("Items");
+        inventory.replaceAll(ignored -> null);
+        for( int i = 0; i < nbttaglist.tagCount(); i++ )
+        {
+            CompoundTag tag = (CompoundTag) nbttaglist.tagAt( i );
+            int slot = tag.getByte( "Slot" ) & 0xff;
+            if( slot < inventory.size() )
+            {
+                inventory.set( slot, ItemStack.readItemStackFromNbt( tag ) );
+                ItemStack item = inventory.get( slot );
+            }
+        }
     }
 
-    @Nonnull
     @Override
-    public CompoundTag toTag( @Nonnull CompoundTag nbt )
-    {
+    public void writeToNBT(CompoundTag nbt) {
         if( customName != null )
         {
-            nbt.putString( NBT_NAME, Text.Serializer.toJson( customName ) );
+            nbt.putString( NBT_NAME, customName );
         }
 
         // Write page
@@ -200,9 +208,23 @@ public final class TilePrinter extends TileGeneric implements DefaultSidedInvent
         }
 
         // Write inventory
-        Inventories.toTag( nbt, inventory );
+        ListTag nbttaglist = new ListTag();
+        for( int i = 0; i < inventory.size(); i++ )
+        {
+            ItemStack item = inventory.get( i );
+            if( item != null )
+            {
+                CompoundTag tag = new CompoundTag();
+                tag.putByte( "Slot", (byte) i );
+                item.writeToNBT( tag );
+                nbttaglist.addTag( tag );
+            } else {
+                inventory.set(i, null);
+            }
+        }
+        nbt.put( "Items", nbttaglist );
 
-        return super.toTag( nbt );
+        super.writeToNBT(nbt);
     }
 
     boolean isPrinting()
@@ -212,131 +234,94 @@ public final class TilePrinter extends TileGeneric implements DefaultSidedInvent
 
     // IInventory implementation
     @Override
-    public int size()
-    {
+    public int getContainerSize() {
         return inventory.size();
     }
 
     @Override
-    public boolean isEmpty()
-    {
-        for( ItemStack stack : inventory )
-        {
-            if( !stack.isEmpty() )
-            {
-                return false;
-            }
-        }
-        return true;
+    public @Nullable ItemStack getItem(int slot) {
+        return slot >= 0 && slot < inventory.size() ? inventory.get( slot ) : null;
     }
 
-    @Nonnull
     @Override
-    public ItemStack getStack( int slot )
-    {
-        return inventory.get( slot );
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack removeStack( int slot, int count )
-    {
+    public @Nullable ItemStack removeItem(int slot, int count) {
         ItemStack stack = inventory.get( slot );
-        if( stack.isEmpty() )
+        if( stack == null )
         {
-            return ItemStack.EMPTY;
+            return null;
         }
 
-        if( stack.getCount() <= count )
+        if( stack.stackSize <= count )
         {
-            setStack( slot, ItemStack.EMPTY );
+            setItem( slot, null );
             return stack;
         }
 
-        ItemStack part = stack.split( count );
-        if( inventory.get( slot )
-            .isEmpty() )
+        ItemStack part = stack.splitStack( count );
+        if( inventory.get( slot ) == null )
         {
-            inventory.set( slot, ItemStack.EMPTY );
+            inventory.set( slot, null );
             updateBlockState();
         }
-        markDirty();
+        //markDirty();
         return part;
     }
 
-    @Nonnull
     @Override
-    public ItemStack removeStack( int slot )
-    {
-        ItemStack result = inventory.get( slot );
-        inventory.set( slot, ItemStack.EMPTY );
-        markDirty();
-        updateBlockState();
-        return result;
-    }
-
-    // ISidedInventory implementation
-
-    @Override
-    public void setStack( int slot, @Nonnull ItemStack stack )
-    {
-        inventory.set( slot, stack );
-        markDirty();
-        updateBlockState();
-    }
-
-    @Override
-    public boolean canPlayerUse( @Nonnull PlayerEntity playerEntity )
-    {
-        return isUsable( playerEntity, false );
-    }
-
-    @Override
-    public void clear()
-    {
-        for( int i = 0; i < inventory.size(); i++ )
+    public void setItem(int i, @Nullable ItemStack stack) {
+        if( i >= 0 && i < inventory.size() && !InventoryUtil.areItemsEqual( stack, inventory.get( i ) ) )
         {
-            inventory.set( i, ItemStack.EMPTY );
-        }
-        markDirty();
-        updateBlockState();
-    }
-
-    @Override
-    public boolean isValid( int slot, @Nonnull ItemStack stack )
-    {
-        if( slot == 0 )
-        {
-            return isInk( stack );
-        }
-        else if( slot >= TOP_SLOTS[0] && slot <= TOP_SLOTS[TOP_SLOTS.length - 1] )
-        {
-            return isPaper( stack );
-        }
-        else
-        {
-            return false;
+            inventory.set( i, stack );
         }
     }
+
+
+//    @Override
+//    public boolean canPlayerUse( @Nonnull PlayerEntity playerEntity )
+//    {
+//        return isUsable( playerEntity, false );
+//    }
+
+    @Override
+    public String getNameTranslationKey() {
+        return "";
+    }
+
+    @Override
+    public int getMaxStackSize() {
+        return 64;
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return isUsable( player, false );
+    }
+
+    @Override
+    public void sortContainer() {
+
+    }
+
+//    @Override
+//    public boolean isValid( int slot, @Nonnull ItemStack stack )
+//    {
+//        if( slot == 0 )
+//        {
+//            return isInk( stack );
+//        }
+//        else if( slot >= TOP_SLOTS[0] && slot <= TOP_SLOTS[TOP_SLOTS.length - 1] )
+//        {
+//            return isPaper( stack );
+//        }
+//        else
+//        {
+//            return false;
+//        }
+//    }
 
     static boolean isInk( @Nonnull ItemStack stack )
     {
         return ColourUtils.getStackColour( stack ) != null;
-    }
-
-    @Nonnull
-    @Override
-    public int[] getAvailableSlots( @Nonnull Direction side )
-    {
-        switch( side )
-        {
-            case DOWN: // Bottom (Out tray)
-                return BOTTOM_SLOTS;
-            case UP: // Top (In tray)
-                return TOP_SLOTS;
-            default: // Sides (Ink)
-                return SIDE_SLOTS;
-        }
     }
 
     @Nonnull
@@ -395,10 +380,9 @@ public final class TilePrinter extends TileGeneric implements DefaultSidedInvent
         ItemStack stack = ItemPrintout.createSingleFromTitleAndText( pageTitle, lines, colours );
         for( int slot : BOTTOM_SLOTS )
         {
-            if( inventory.get( slot )
-                .isEmpty() )
+            if( inventory.get( slot ).stackSize == 0 )
             {
-                setStack( slot, stack );
+                setItem( slot, stack );
                 printing = false;
                 return true;
             }
@@ -409,7 +393,7 @@ public final class TilePrinter extends TileGeneric implements DefaultSidedInvent
     int getInkLevel()
     {
         ItemStack inkStack = inventory.get( 0 );
-        return isInk( inkStack ) ? inkStack.getCount() : 0;
+        return isInk( inkStack ) ? inkStack.stackSize : 0;
     }
 
     int getPaperLevel()
@@ -420,7 +404,7 @@ public final class TilePrinter extends TileGeneric implements DefaultSidedInvent
             ItemStack paperStack = inventory.get( i );
             if( isPaper( paperStack ) )
             {
-                count += paperStack.getCount();
+                count += paperStack.stackSize;
             }
         }
         return count;
@@ -440,7 +424,7 @@ public final class TilePrinter extends TileGeneric implements DefaultSidedInvent
     private boolean canInputPage()
     {
         ItemStack inkStack = inventory.get( 0 );
-        return !inkStack.isEmpty() && isInk( inkStack ) && getPaperLevel() > 0;
+        return inkStack != null && isInk( inkStack ) && getPaperLevel() > 0;
     }
 
     private boolean inputPage()
@@ -452,13 +436,13 @@ public final class TilePrinter extends TileGeneric implements DefaultSidedInvent
         for( int i = 1; i < 7; i++ )
         {
             ItemStack paperStack = inventory.get( i );
-            if( paperStack.isEmpty() || !isPaper( paperStack ) )
+            if( paperStack == null || !isPaper( paperStack ) )
             {
                 continue;
             }
 
             // Setup the new page
-            page.setTextColour( dye.getId() );
+            page.setTextColour( dye.blockMeta );
 
             page.clear();
             if( paperStack.getItem() instanceof ItemPrintout )
@@ -478,58 +462,51 @@ public final class TilePrinter extends TileGeneric implements DefaultSidedInvent
             page.setCursorPos( 0, 0 );
 
             // Decrement ink
-            inkStack.decrement( 1 );
-            if( inkStack.isEmpty() )
+            inkStack.stackSize -= 1;
+            if( inkStack.stackSize == 0 )
             {
-                inventory.set( 0, ItemStack.EMPTY );
+                inventory.set( 0, null );
             }
 
             // Decrement paper
-            paperStack.decrement( 1 );
-            if( paperStack.isEmpty() )
+            paperStack.stackSize -= 1;
+            if( paperStack.stackSize == 0 )
             {
-                inventory.set( i, ItemStack.EMPTY );
+                inventory.set( i, null );
                 updateBlockState();
             }
 
-            markDirty();
+            //markDirty();
             printing = true;
             return true;
         }
         return false;
     }
 
-    @Nonnull
-    @Override
-    public Text getName()
-    {
-        return customName != null ? customName : new TranslatableText( getCachedState().getBlock()
-            .getTranslationKey() );
-    }
-
-    @Override
-    public boolean hasCustomName()
-    {
-        return customName != null;
-    }
-
-    @Override
-    public Text getDisplayName()
-    {
-        return Nameable.super.getDisplayName();
-    }
-
-    @Nullable
-    @Override
-    public Text getCustomName()
-    {
-        return customName;
-    }
-
-    @Nonnull
-    @Override
-    public ScreenHandler createMenu( int id, @Nonnull PlayerInventory inventory, @Nonnull PlayerEntity player )
-    {
-        return new ContainerPrinter( id, inventory, this );
-    }
+//    @Nonnull
+//    @Override
+//    public Text getName()
+//    {
+//        return customName != null ? customName : new TranslatableText( getCachedState().getBlock()
+//            .getTranslationKey() );
+//    }
+//
+//    @Override
+//    public boolean hasCustomName()
+//    {
+//        return customName != null;
+//    }
+//
+//    @Override
+//    public Text getDisplayName()
+//    {
+//        return Nameable.super.getDisplayName();
+//    }
+//
+//    @Nullable
+//    @Override
+//    public Text getCustomName()
+//    {
+//        return customName;
+//    }
 }

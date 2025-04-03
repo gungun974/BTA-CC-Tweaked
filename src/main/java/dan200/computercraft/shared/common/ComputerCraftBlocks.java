@@ -14,6 +14,8 @@ import dan200.computercraft.shared.peripheral.modem.wireless.BlockWirelessModem;
 import dan200.computercraft.shared.peripheral.modem.wireless.TileWirelessModem;
 import dan200.computercraft.shared.peripheral.monitor.BlockMonitor;
 import dan200.computercraft.shared.peripheral.monitor.TileMonitor;
+import dan200.computercraft.shared.peripheral.printer.BlockPrinter;
+import dan200.computercraft.shared.peripheral.printer.TilePrinter;
 import dan200.computercraft.shared.peripheral.speaker.BlockSpeaker;
 import dan200.computercraft.shared.peripheral.speaker.TileSpeaker;
 import dan200.computercraft.shared.turtle.blocks.BlockTurtle;
@@ -43,7 +45,7 @@ public class ComputerCraftBlocks {
 
     public static final Block<?> DISK_DRIVE;
 
-    // public static final BlockPrinter PRINTER // "printer"
+    public static final Block<?> PRINTER;
 
     public static final Block<?> MONITOR_NORMAL;
     public static final Block<?> MONITOR_ADVANCED;
@@ -154,6 +156,15 @@ public class ComputerCraftBlocks {
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileDiskDrive::new)
             .build("disk_drive", 10005, b -> new BlockDiskDrive(b));
+
+        EntityHelper.createTileEntity(TilePrinter.class, NamespaceID.getPermanent(MOD_ID, "printer"));
+
+        PRINTER = new BlockBuilder(MOD_ID)
+            .setHardness(1.5f)
+            .setResistance(10f)
+            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTileEntity(TileDiskDrive::new)
+            .build("printer", 10012, b -> new BlockPrinter(b));
 
         EntityHelper.createTileEntity(TileTurtle.class, NamespaceID.getPermanent(MOD_ID, "turtle"));
 

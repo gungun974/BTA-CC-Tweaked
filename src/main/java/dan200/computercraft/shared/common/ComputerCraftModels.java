@@ -18,6 +18,7 @@ import net.minecraft.client.render.EntityRenderDispatcher;
 import net.minecraft.client.render.TileEntityRenderDispatcher;
 import net.minecraft.client.render.block.color.BlockColorDispatcher;
 import net.minecraft.client.render.block.model.BlockModelDispatcher;
+import net.minecraft.client.render.block.model.BlockModelHorizontalRotation;
 import net.minecraft.client.render.block.model.BlockModelRotatable;
 import net.minecraft.client.render.block.model.BlockModelStandard;
 import net.minecraft.client.render.item.model.ItemModelBlock;
@@ -78,6 +79,12 @@ public class ComputerCraftModels implements ModelEntrypoint {
             .setTex(0, "computercraft:block/disk_drive_front", Side.NORTH)
         );
 
+        ModelHelper.setBlockModel(ComputerCraftBlocks.PRINTER, () -> new BlockModelHorizontalRotation<>(ComputerCraftBlocks.PRINTER)
+            .setTex(0, "computercraft:block/printer_side", Side.SOUTH, Side.EAST, Side.WEST)
+            .setTex(0, "computercraft:block/printer_top", Side.TOP, Side.BOTTOM)
+            .setTex(0, "computercraft:block/printer_front", Side.NORTH)
+        );
+
         ModelHelper.setBlockModel(ComputerCraftBlocks.TURTLE_NORMAL, () -> new BlockModelTurtle<>(ComputerCraftBlocks.TURTLE_NORMAL)
             .setTex(0, "computercraft:block/computer_normal_side", Side.SOUTH, Side.EAST, Side.WEST)
             .setTex(0, "computercraft:block/computer_normal_top", Side.TOP, Side.BOTTOM)
@@ -125,6 +132,24 @@ public class ComputerCraftModels implements ModelEntrypoint {
         ModelHelper.setItemModel(ComputerCraftItems.DISK, () -> {
             ItemModelStandard itemModelStandard = new DiskItemModel(ComputerCraftItems.DISK, MOD_ID);
             itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/disk_frame"));
+            return itemModelStandard;
+        });
+
+        ModelHelper.setItemModel(ComputerCraftItems.PRINTED_PAGE, () -> {
+            ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.PRINTED_PAGE, MOD_ID);
+            itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/printed_page"));
+            return itemModelStandard;
+        });
+
+        ModelHelper.setItemModel(ComputerCraftItems.PRINTED_PAGES, () -> {
+            ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.PRINTED_PAGES, MOD_ID);
+            itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/printed_pages"));
+            return itemModelStandard;
+        });
+
+        ModelHelper.setItemModel(ComputerCraftItems.PRINTED_BOOK, () -> {
+            ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.PRINTED_BOOK, MOD_ID);
+            itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/printed_book"));
             return itemModelStandard;
         });
 
