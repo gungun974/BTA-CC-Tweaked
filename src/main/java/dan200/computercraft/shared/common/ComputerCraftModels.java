@@ -3,6 +3,7 @@ package dan200.computercraft.shared.common;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
 import dan200.computercraft.shared.peripheral.diskdrive.BlockModelDiskDrive;
+import dan200.computercraft.shared.peripheral.diskdrive.DiskItemModel;
 import dan200.computercraft.shared.peripheral.modem.wireless.BlockModelWirelessModem;
 import dan200.computercraft.shared.peripheral.monitor.BlockModelMonitor;
 import dan200.computercraft.shared.peripheral.monitor.TileEntityMonitorRenderer;
@@ -122,7 +123,7 @@ public class ComputerCraftModels implements ModelEntrypoint {
         ModelHelper.setItemModel(ComputerCraftItems.TURTLE_ADVANCED, () -> new TurtleItemModel(ComputerCraftItems.TURTLE_ADVANCED));
 
         ModelHelper.setItemModel(ComputerCraftItems.DISK, () -> {
-            ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.DISK, MOD_ID);
+            ItemModelStandard itemModelStandard = new DiskItemModel(ComputerCraftItems.DISK, MOD_ID);
             itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/disk_frame"));
             return itemModelStandard;
         });

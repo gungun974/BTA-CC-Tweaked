@@ -10,20 +10,27 @@ import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.media.IMedia;
+import dan200.computercraft.api.pocket.IPocketUpgrade;
 import dan200.computercraft.fabric.Helper;
+import dan200.computercraft.shared.PocketUpgrades;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
+import dan200.computercraft.shared.common.ComputerCraftItems;
+import dan200.computercraft.shared.common.IColouredItem;
 import dan200.computercraft.shared.peripheral.diskdrive.TileDiskDrive;
+import dan200.computercraft.shared.util.Colour;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.lang.I18n;
 import net.minecraft.core.util.collection.NamespaceID;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
-public class ItemDisk extends Item implements IMedia//, IColouredItem
+public class ItemDisk extends Item implements IMedia, IColouredItem
 {
     private static final String NBT_ID = "DiskId";
 
@@ -48,41 +55,40 @@ public class ItemDisk extends Item implements IMedia//, IColouredItem
         }
     }
 
-//    @Override
-//    public void appendTooltip( @Nonnull ItemStack stack, @Nullable World world, @Nonnull List<Text> list, TooltipContext options )
-//    {
-//        if( options.isAdvanced() )
-//        {
-//            int id = getDiskID( stack );
-//            if( id >= 0 )
-//            {
-//                list.add( new TranslatableText( "gui.computercraft.tooltip.disk_id", id ).formatted( Formatting.GRAY ) );
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public void appendStacks( @Nonnull ItemGroup tabs, @Nonnull DefaultedList<ItemStack> list )
-//    {
-//        if( !isIn( tabs ) )
-//        {
-//            return;
-//        }
-//        for( int colour = 0; colour < 16; colour++ )
-//        {
-//            list.add( createFromIDAndColour( -1, null, Colour.VALUES[colour].getHex() ) );
-//        }
-//    }
+    @Override
+    public String getTranslatedDescription(ItemStack stack) {
+        I18n i18n = I18n.getInstance();
 
-//    @Nonnull
-//    public static ItemStack createFromIDAndColour( int id, String label, int colour )
-//    {
-//        ItemStack stack = new ItemStack( ComputerCraftRegistry.ModItems.DISK );
-//        setDiskID( stack, id );
-//        ComputerCraftRegistry.ModItems.DISK.setLabel( stack, label );
-//        IColouredItem.setColourBasic( stack, colour );
-//        return stack;
-//    }
+        String text = super.getTranslatedDescription(stack);
+
+        if( getLabel( stack ) == null )
+        {
+            int id = getDiskID( stack );
+            if( id >= 0 )
+            {
+                text += "\n" + i18n.translateKeyAndFormat( "gui.computercraft.tooltip.disk_id", id );
+            }
+        }
+
+        return text;
+    }
+
+    public void addToCreativeMenu(@Nonnull List<ItemStack> list) {
+        for( int colour = 0; colour < 16; colour++ )
+        {
+            list.add( createFromIDAndColour( -1, null, Colour.VALUES[colour].getHex() ) );
+        }
+    }
+
+    @Nonnull
+    public static ItemStack createFromIDAndColour( int id, String label, int colour )
+    {
+        ItemStack stack = new ItemStack( ComputerCraftItems.DISK );
+        setDiskID( stack, id );
+        ComputerCraftItems.DISK.setLabel( stack, label );
+        IColouredItem.setColourBasic( stack, colour );
+        return stack;
+    }
 
     private static void setDiskID( @Nonnull ItemStack stack, int id )
     {
@@ -131,10 +137,10 @@ public class ItemDisk extends Item implements IMedia//, IColouredItem
         return ComputerCraftAPI.createSaveDirMount( world, "disk/" + diskID, ComputerCraft.floppySpaceLimit );
     }
 
-//    @Override
-//    public int getColour( @Nonnull ItemStack stack )
-//    {
-//        int colour = IColouredItem.getColourBasic( stack );
-//        return colour == -1 ? Colour.WHITE.getHex() : colour;
-//    }
+    @Override
+    public int getColour( @Nonnull ItemStack stack )
+    {
+        int colour = IColouredItem.getColourBasic( stack );
+        return colour == -1 ? Colour.WHITE.getHex() : colour;
+    }
 }

@@ -28,7 +28,7 @@ public class ComputerCraftItems {
 
     public static ItemBlock<?> SPEAKER;
 
-    public static final Item DISK;
+    public static final ItemDisk DISK;
 
     public ComputerCraftItems() {
 
