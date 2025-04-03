@@ -5,6 +5,7 @@
   "mixins": [
     "EntityMixin",
     "LogicBlockMixin",
+    "MenuAbstractMixin",
     "MenuInventoryCreativeMixin",
     "PlayerMixin",
     "WorldMixin"

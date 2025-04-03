@@ -21,8 +21,11 @@ import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.Mob;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.item.tool.ItemToolSword;
+import net.minecraft.core.net.packet.PacketContainerSetSlot;
 import net.minecraft.core.player.inventory.container.ContainerInventory;
 import net.minecraft.core.world.World;
+import net.minecraft.server.entity.player.PlayerServer;
 import turniplabs.halplibe.helper.network.NetworkHandler;
 
 import javax.annotation.Nonnull;
@@ -106,7 +109,7 @@ public class PocketServerComputer extends ServerComputer implements IPocketAcces
         }
         else if( tag.containsKey( NBT_LIGHT ) )
         {
-            tag.put( NBT_LIGHT, null);
+            tag.getValue().remove( NBT_LIGHT );
             updateUserData();
         }
     }

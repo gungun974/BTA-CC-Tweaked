@@ -152,7 +152,7 @@ public class PocketAPI implements ILuaAPI
         if( stack != null )
         {
             stack = InventoryUtil.storeItems( stack, ItemStorage.wrap( inventory ), inventory.getCurrentItemIndex() );
-            if( stack == null )
+            if( stack != null )
             {
                 WorldUtil.dropItemStack( stack, player.world, new BlockPos((int) player.x, (int) player.y, (int) player.z) );
             }

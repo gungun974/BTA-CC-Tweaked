@@ -32,11 +32,13 @@ import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.lang.I18n;
 import net.minecraft.core.player.inventory.container.ContainerInventory;
 import net.minecraft.core.util.collection.NamespaceID;
 import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class ItemPocketComputer extends Item implements IComputerItem, IMedia, IColouredItem
 {
@@ -97,7 +99,7 @@ public class ItemPocketComputer extends Item implements IComputerItem, IMedia, I
 
         if( upgrade == null )
         {
-            compound.put( NBT_UPGRADE, null );
+            compound.getValue().remove( NBT_UPGRADE );
         }
         else
         {
@@ -105,7 +107,7 @@ public class ItemPocketComputer extends Item implements IComputerItem, IMedia, I
                 upgrade.getUpgradeID());
         }
 
-        compound.put( NBT_UPGRADE_INFO, null );
+        compound.getValue().remove( NBT_UPGRADE_INFO);
 
         stack.setData(compound);
     }
@@ -154,9 +156,6 @@ public class ItemPocketComputer extends Item implements IComputerItem, IMedia, I
 
             if( !stop && computer != null )
             {
-                //new ComputerContainerData( computer ).open( player, new ContainerPocketComputer.Factory( computer, stack, this, hand ) );
-
-                //createServerComputer().turnOn();
                 computer.sendTerminalState( player );
                 ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this, world, player.inventory, player, stack));
                 computer.sendOpenComputerGui( player, ScreenPocketComputer.class);
@@ -218,50 +217,48 @@ public class ItemPocketComputer extends Item implements IComputerItem, IMedia, I
         }
     }
 
-//    @Override
-//    public void appendTooltip( @Nonnull ItemStack stack, @Nullable World world, @Nonnull List<Text> list, TooltipContext flag )
-//    {
-//        if( flag.isAdvanced() || getLabel( stack ) == null )
-//        {
-//            int id = getComputerID( stack );
-//            if( id >= 0 )
-//            {
-//                list.add( new TranslatableText( "gui.computercraft.tooltip.computer_id", id ).formatted( Formatting.GRAY ) );
-//            }
-//        }
-//    }
+    @Override
+    public String getTranslatedName(ItemStack stack) {
+        I18n i18n = I18n.getInstance();
+        String baseString = stack.getItemKey();
+        IPocketUpgrade upgrade = getUpgrade( stack );
+        if( upgrade != null )
+        {
+            return i18n.translateKeyAndFormat( baseString + ".upgraded.name", i18n.translateKey( upgrade.getUnlocalisedAdjective() ) );
+        }
+        else
+        {
+            return super.getTranslatedName( stack );
+        }
+    }
 
-//    @Nonnull
-//    @Override
-//    public Text getName( @Nonnull ItemStack stack )
-//    {
-//        String baseString = getTranslationKey( stack );
-//        IPocketUpgrade upgrade = getUpgrade( stack );
-//        if( upgrade != null )
-//        {
-//            return new TranslatableText( baseString + ".upgraded", new TranslatableText( upgrade.getUnlocalisedAdjective() ) );
-//        }
-//        else
-//        {
-//            return super.getName( stack );
-//        }
-//    }
+    @Override
+    public String getTranslatedDescription(ItemStack stack) {
+        I18n i18n = I18n.getInstance();
+
+        String text = super.getTranslatedDescription(stack);
+
+        if( getLabel( stack ) == null )
+        {
+            int id = getComputerID( stack );
+            if( id >= 0 )
+            {
+                text += "\n" + i18n.translateKeyAndFormat( "gui.computercraft.tooltip.computer_id", id );
+            }
+        }
+
+        return text;
+    }
+
 
     // IComputerItem implementation
 
-//    @Override
-//    public void appendStacks( @Nonnull ItemGroup group, @Nonnull DefaultedList<ItemStack> stacks )
-//    {
-//        if( !isIn( group ) )
-//        {
-//            return;
-//        }
-//        stacks.add( create( -1, null, -1, null ) );
-//        for( IPocketUpgrade upgrade : PocketUpgrades.getVanillaUpgrades() )
-//        {
-//            stacks.add( create( -1, null, -1, upgrade ) );
-//        }
-//    }
+    public void addToCreativeMenu(@Nonnull List<ItemStack> stacks) {
+        stacks.add(create(-1, null, -1, null));
+        for (IPocketUpgrade upgrade : PocketUpgrades.getVanillaUpgrades()) {
+            stacks.add(create(-1, null, -1, upgrade));
+        }
+    }
 
     public ItemStack create( int id, String label, int colour, IPocketUpgrade upgrade )
     {

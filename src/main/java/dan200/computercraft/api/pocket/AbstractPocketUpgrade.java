@@ -18,26 +18,17 @@ import javax.annotation.Nonnull;
 public abstract class AbstractPocketUpgrade implements IPocketUpgrade
 {
     private final int id;
-    private final String adjective;
     private final ItemStack stack;
 
     protected AbstractPocketUpgrade( int id, IItemConvertible item )
     {
-        //this( id, Util.createTranslationKey( "upgrade", id ) + ".adjective", item );
-        this( id, "upgrade" + id  + ".adjective", item );
-    }
-
-    protected AbstractPocketUpgrade( int id, String adjective, IItemConvertible item )
-    {
         this.id = id;
-        this.adjective = adjective;
         stack = new ItemStack( item );
     }
 
-    protected AbstractPocketUpgrade( int id, String adjective, ItemStack stack )
+    protected AbstractPocketUpgrade( int id, ItemStack stack )
     {
         this.id = id;
-        this.adjective = adjective;
         this.stack = stack;
     }
 
@@ -47,13 +38,6 @@ public abstract class AbstractPocketUpgrade implements IPocketUpgrade
     public final int getUpgradeID()
     {
         return id;
-    }
-
-    @Nonnull
-    @Override
-    public final String getUnlocalisedAdjective()
-    {
-        return adjective;
     }
 
     @Nonnull

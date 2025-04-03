@@ -11,6 +11,7 @@ import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.block.ItemBlock;
+import net.minecraft.core.lang.I18n;
 import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
@@ -34,31 +35,23 @@ public abstract class ItemComputerBase extends ItemBlock implements IComputerIte
         family = ComputerFamily.NORMAL;
     }
 
-//    @Override
-//    public void appendTooltip(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<Text> list, @Nonnull TooltipContext options )
-//    {
-//        if( options.isAdvanced() || getLabel( stack ) == null )
-//        {
-//            int id = getComputerID( stack );
-//            if( id >= 0 )
-//            {
-//                list.add( new TranslatableText( "gui.computercraft.tooltip.computer_id", id ).formatted( Formatting.GRAY ) );
-//            }
-//        }
-//    }
+    @Override
+    public String getTranslatedDescription(ItemStack stack) {
+        I18n i18n = I18n.getInstance();
 
-public String getTranslatedDescription(ItemStack itemstack) {
-    final CompoundTag nbt = itemstack.getData();
+        String text = super.getTranslatedDescription(stack);
 
-    final int id = nbt.containsKey( "ComputerId" ) ? nbt.getInteger( "ComputerId" ) : -1;
+        if( getLabel( stack ) == null )
+        {
+            int id = getComputerID( stack );
+            if( id >= 0 )
+            {
+                text += "\n" + i18n.translateKeyAndFormat( "gui.computercraft.tooltip.computer_id", id );
+            }
+        }
 
-    if (id > 0) {
-        return "Computer ID: " + id;
+        return text;
     }
-
-    return "New computer";
-    //return I18n.getInstance().translateKey(itemstack.getItemKey() + ".desc");
-}
 
     @Override
     public String getLabel( @Nonnull ItemStack stack )

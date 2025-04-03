@@ -7,6 +7,7 @@ import dan200.computercraft.shared.peripheral.modem.wireless.BlockModelWirelessM
 import dan200.computercraft.shared.peripheral.monitor.BlockModelMonitor;
 import dan200.computercraft.shared.peripheral.monitor.TileEntityMonitorRenderer;
 import dan200.computercraft.shared.peripheral.monitor.TileMonitor;
+import dan200.computercraft.shared.pocket.items.PocketComputerItemModel;
 import dan200.computercraft.shared.turtle.blocks.BlockModelTurtle;
 import dan200.computercraft.shared.turtle.blocks.TileEntityRendererTurtle;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
@@ -105,6 +106,18 @@ public class ComputerCraftModels implements ModelEntrypoint {
 
     @Override
     public void initItemModels(ItemModelDispatcher dispatcher) {
+        ModelHelper.setItemModel(ComputerCraftItems.POCKET_COMPUTER_NORMAL, () -> {
+            ItemModelStandard itemModelStandard = new PocketComputerItemModel(ComputerCraftItems.POCKET_COMPUTER_NORMAL, MOD_ID);
+            itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/pocket_computer_normal"));
+            return itemModelStandard;
+        });
+
+        ModelHelper.setItemModel(ComputerCraftItems.POCKET_COMPUTER_ADVANCED, () -> {
+            ItemModelStandard itemModelStandard = new PocketComputerItemModel(ComputerCraftItems.POCKET_COMPUTER_ADVANCED, MOD_ID);
+            itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/pocket_computer_advanced"));
+            return itemModelStandard;
+        });
+
         ModelHelper.setItemModel(ComputerCraftItems.TURTLE_NORMAL, () -> new TurtleItemModel(ComputerCraftItems.TURTLE_NORMAL));
         ModelHelper.setItemModel(ComputerCraftItems.TURTLE_ADVANCED, () -> new TurtleItemModel(ComputerCraftItems.TURTLE_ADVANCED));
 

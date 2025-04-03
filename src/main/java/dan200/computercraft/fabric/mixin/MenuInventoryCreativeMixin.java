@@ -1,6 +1,9 @@
 package dan200.computercraft.fabric.mixin;
 
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
+import dan200.computercraft.shared.common.ComputerCraftItems;
+import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
 import dan200.computercraft.shared.turtle.items.ItemTurtle;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
@@ -46,7 +49,23 @@ public class MenuInventoryCreativeMixin
 
     @Inject(
         method = "<clinit>",
-        at = @At("TAIL")
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/core/item/Item;hasTag(Lnet/minecraft/core/data/tag/Tag;)Z"),
+        locals = LocalCapture.CAPTURE_FAILSOFT
+    )
+    private static void addPocketFamily(CallbackInfo ci, int i)
+    {
+        if (i == ComputerCraftItems.POCKET_COMPUTER_NORMAL.id || i == ComputerCraftItems.POCKET_COMPUTER_ADVANCED.id) {
+            int before = creativeItems.size();
+            if (Item.itemsList[i] != null) {
+                ((ItemPocketComputer) Objects.requireNonNull(Item.itemsList[i])).addToCreativeMenu(creativeItems);
+            }
+            extraCount += creativeItems.size() - before;
+        }
+    }
+
+    @Inject(
+        method = "<clinit>",
+        at = @At(value = "FIELD", target = "Lnet/minecraft/core/player/inventory/menu/MenuInventoryCreative;creativeItemsCount:I", shift = At.Shift.AFTER)
     )
     private static void addUpItemCount(CallbackInfo ci)
     {

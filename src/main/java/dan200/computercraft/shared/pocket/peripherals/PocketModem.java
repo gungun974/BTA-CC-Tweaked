@@ -12,6 +12,7 @@ import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.peripheral.modem.ModemState;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.util.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,6 +32,14 @@ public class PocketModem extends AbstractPocketUpgrade
     public IPeripheral createPeripheral( @Nonnull IPocketAccess access )
     {
         return new PocketModemPeripheral( advanced );
+    }
+
+    @Override
+    public @NotNull String getUnlocalisedAdjective() {
+        if (advanced) {
+            return "upgrade.computercraft.wireless_modem_advanced.adjective";
+        }
+        return "upgrade.computercraft.wireless_modem_normal.adjective";
     }
 
     @Override

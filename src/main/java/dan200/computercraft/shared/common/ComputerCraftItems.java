@@ -41,7 +41,7 @@ public class ComputerCraftItems {
 
         POCKET_COMPUTER_ADVANCED = new ItemBuilder(MOD_ID)
             .setKey("item.pocket_computer_advanced")
-            .build((new ItemPocketComputer( NamespaceID.getPermanent(MOD_ID, "pocket_computer_advanced"), 16541, ComputerFamily.NORMAL )));
+            .build((new ItemPocketComputer( NamespaceID.getPermanent(MOD_ID, "pocket_computer_advanced"), 16541, ComputerFamily.ADVANCED )));
 
         DISK = new ItemBuilder(MOD_ID)
             .setKey("item.disk")

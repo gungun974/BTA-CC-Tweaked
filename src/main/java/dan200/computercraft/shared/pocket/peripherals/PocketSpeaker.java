@@ -11,6 +11,7 @@ import dan200.computercraft.api.pocket.IPocketAccess;
 import dan200.computercraft.shared.common.ComputerCraftItems;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.util.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,6 +28,11 @@ public class PocketSpeaker extends AbstractPocketUpgrade
     public IPeripheral createPeripheral( @Nonnull IPocketAccess access )
     {
         return new PocketSpeakerPeripheral();
+    }
+
+    @Override
+    public @NotNull String getUnlocalisedAdjective() {
+        return "upgrade.computercraft.speaker.adjective";
     }
 
     @Override
