@@ -8,6 +8,7 @@ import dan200.computercraft.shared.peripheral.modem.wireless.BlockModelWirelessM
 import dan200.computercraft.shared.peripheral.monitor.BlockModelMonitor;
 import dan200.computercraft.shared.peripheral.monitor.TileEntityMonitorRenderer;
 import dan200.computercraft.shared.peripheral.monitor.TileMonitor;
+import dan200.computercraft.shared.peripheral.printer.BlockModelPrinter;
 import dan200.computercraft.shared.pocket.items.PocketComputerItemModel;
 import dan200.computercraft.shared.turtle.blocks.BlockModelTurtle;
 import dan200.computercraft.shared.turtle.blocks.TileEntityRendererTurtle;
@@ -79,10 +80,10 @@ public class ComputerCraftModels implements ModelEntrypoint {
             .setTex(0, "computercraft:block/disk_drive_front", Side.NORTH)
         );
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.PRINTER, () -> new BlockModelHorizontalRotation<>(ComputerCraftBlocks.PRINTER)
+        ModelHelper.setBlockModel(ComputerCraftBlocks.PRINTER, () -> new BlockModelPrinter<>(ComputerCraftBlocks.PRINTER)
             .setTex(0, "computercraft:block/printer_side", Side.SOUTH, Side.EAST, Side.WEST)
             .setTex(0, "computercraft:block/printer_top", Side.TOP, Side.BOTTOM)
-            .setTex(0, "computercraft:block/printer_front", Side.NORTH)
+            .setTex(0, "computercraft:block/printer_front_empty", Side.NORTH)
         );
 
         ModelHelper.setBlockModel(ComputerCraftBlocks.TURTLE_NORMAL, () -> new BlockModelTurtle<>(ComputerCraftBlocks.TURTLE_NORMAL)

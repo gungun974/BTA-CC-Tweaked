@@ -12,12 +12,9 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.fabric.Helper;
-import dan200.computercraft.shared.MediaProviders;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.media.items.ItemPrintout;
 import dan200.computercraft.shared.network.client.OpenGuiContainerMessage;
-import dan200.computercraft.shared.peripheral.diskdrive.MenuDiskDrive;
-import dan200.computercraft.shared.peripheral.diskdrive.ScreenDiskDrive;
 import dan200.computercraft.shared.util.ColourUtils;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.ItemStorage;
@@ -120,7 +117,7 @@ public boolean onBlockRightClicked(Player player, Side side, double xPlaced, dou
         for( int i = 1; i < 7; i++ )
         {
             ItemStack stack = inventory.get( i );
-            if( stack != null && isPaper( stack ) )
+            if(isPaper(stack))
             {
                 top = true;
                 break;
@@ -129,7 +126,7 @@ public boolean onBlockRightClicked(Player player, Side side, double xPlaced, dou
         for( int i = 7; i < 13; i++ )
         {
             ItemStack stack = inventory.get( i );
-            if( stack != null && isPaper( stack ) )
+            if(isPaper(stack))
             {
                 bottom = true;
                 break;
@@ -261,6 +258,7 @@ public boolean onBlockRightClicked(Player player, Side side, double xPlaced, dou
         if( stack.stackSize <= count )
         {
             setItem( slot, null );
+            updateBlockState();
             return stack;
         }
 
@@ -271,6 +269,7 @@ public boolean onBlockRightClicked(Player player, Side side, double xPlaced, dou
             updateBlockState();
         }
         //markDirty();
+        updateBlockState();
         return part;
     }
 
@@ -280,6 +279,7 @@ public boolean onBlockRightClicked(Player player, Side side, double xPlaced, dou
         {
             inventory.set( i, stack );
         }
+        updateBlockState();
     }
 
 
