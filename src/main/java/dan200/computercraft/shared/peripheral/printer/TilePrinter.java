@@ -11,8 +11,13 @@ import dan200.computercraft.BlockPos;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.core.terminal.Terminal;
+import dan200.computercraft.fabric.Helper;
+import dan200.computercraft.shared.MediaProviders;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.media.items.ItemPrintout;
+import dan200.computercraft.shared.network.client.OpenGuiContainerMessage;
+import dan200.computercraft.shared.peripheral.diskdrive.MenuDiskDrive;
+import dan200.computercraft.shared.peripheral.diskdrive.ScreenDiskDrive;
 import dan200.computercraft.shared.util.ColourUtils;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.ItemStorage;
@@ -24,6 +29,7 @@ import net.minecraft.core.item.Items;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.DyeColor;
+import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.Vec3;
 
 import javax.annotation.Nonnull;
@@ -72,21 +78,19 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
 //        ejectContents();
 //    }
 
-//    @Nonnull
-//    @Override
-//    public ActionResult onActivate( PlayerEntity player, Hand hand, BlockHitResult hit )
-//    {
-//        if( player.isInSneakingPose() )
-//        {
-//            return ActionResult.PASS;
-//        }
-//
-//        if( !getWorld().isClient )
-//        {
-//            player.openHandledScreen( this );
-//        }
-//        return ActionResult.SUCCESS;
-//    }
+public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
+    if( player.isSneaking() )
+    {
+        return true;
+    }
+
+    // Open the GUI
+    if( !Helper.isClientWorld() )
+    {
+        OpenGuiContainerMessage.SendToPlayer(player, this, ScreenPrinter.class, MenuPrinter::new);
+    }
+    return true;
+}
 
     private void ejectContents()
     {
@@ -135,10 +139,13 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
         updateBlockState( top, bottom );
     }
 
-    private static boolean isPaper( @Nonnull ItemStack stack )
+    private static boolean isPaper( ItemStack stack )
     {
+        if (stack == null) {
+            return false;
+        }
         Item item = stack.getItem();
-        return item == Items.PAPER || (item instanceof ItemPrintout && ((ItemPrintout) item).getType() == ItemPrintout.Type.PAGE);
+        return item.equals(Items.PAPER) || (item instanceof ItemPrintout && ((ItemPrintout) item).getType() == ItemPrintout.Type.PAGE);
     }
 
     private void updateBlockState( boolean top, boolean bottom )
@@ -380,7 +387,7 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
         ItemStack stack = ItemPrintout.createSingleFromTitleAndText( pageTitle, lines, colours );
         for( int slot : BOTTOM_SLOTS )
         {
-            if( inventory.get( slot ).stackSize == 0 )
+            if( inventory.get( slot ) == null )
             {
                 setItem( slot, stack );
                 printing = false;

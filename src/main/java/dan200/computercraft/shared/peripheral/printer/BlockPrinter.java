@@ -66,7 +66,7 @@ public class BlockPrinter extends BlockLogicRotatable
 //        }
 //    }
 
-//    public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
-//        return ((TilePrinter)world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
-//    }
+    public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
+        return ((TilePrinter)world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
+    }
 }
