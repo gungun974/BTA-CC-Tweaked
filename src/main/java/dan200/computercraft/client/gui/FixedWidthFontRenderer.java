@@ -28,22 +28,13 @@ public final class FixedWidthFontRenderer
     public static final float WIDTH = 256.0f;
     public static final float BACKGROUND_START = (WIDTH - 6.0f) / WIDTH;
     public static final float BACKGROUND_END = (WIDTH - 4.0f) / WIDTH;
-//    private static final Matrix4f IDENTITY = AffineTransformation.identity()
-//        .getMatrix();
-//    private static final Identifier FONT = new Identifier( "computercraft", "textures/gui/term_font.png" );
-//    public static final RenderLayer TYPE = Type.MAIN;
-//
-//
-//    private FixedWidthFontRenderer()
-//    {
-//    }
-//
+
     public static void drawString( float x, float y, @Nonnull TextBuffer text, @Nonnull TextBuffer textColour, @Nullable TextBuffer backgroundColour,
                                    @Nonnull Palette palette, boolean greyscale, float leftMarginSize, float rightMarginSize )
     {
         bindFont();
 
-        drawString(
+        drawString2(
             x,
             y,
             text,
@@ -58,11 +49,10 @@ public final class FixedWidthFontRenderer
     private static void bindFont()
     {
         Minecraft.getMinecraft().textureManager.loadTexture("/assets/computercraft/textures/gui/term_font.png").bind();
-        //TODO: RenderSystem.texParameter( GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP );
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
     }
 
-    public static void drawString2( float x, float y, @Nonnull TextBuffer text,
+    private static void drawString2( float x, float y, @Nonnull TextBuffer text,
                                    @Nonnull TextBuffer textColour, @Nullable TextBuffer backgroundColour, @Nonnull Palette palette, boolean greyscale,
                                    float leftMarginSize, float rightMarginSize )
     {

@@ -123,6 +123,7 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint
         NetworkHandler.registerNetworkMessage(  OpenGuiContainerMessage::new );
         NetworkHandler.registerNetworkMessage(  OpenContainerComputerGuiClientMessage::new );
         NetworkHandler.registerNetworkMessage(  OpenComputerGuiClientMessage::new );
+        NetworkHandler.registerNetworkMessage(  OpenGuiPrintoutMessage::new );
 //        NetworkHandler.registerNetworkMessage(  ChatTableClientMessage::new );
         NetworkHandler.registerNetworkMessage(  ComputerDataClientMessage::new );
 //        NetworkHandler.registerNetworkMessage( ComputerDeletedClientMessage::new );

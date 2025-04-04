@@ -6,10 +6,17 @@
 package dan200.computercraft.shared.media.items;
 
 import com.mojang.nbt.tags.CompoundTag;
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.common.ComputerCraftItems;
+import dan200.computercraft.shared.network.client.OpenGuiPrintoutMessage;
+import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.net.NetworkManager;
 import net.minecraft.core.util.collection.NamespaceID;
+import net.minecraft.core.world.World;
+import turniplabs.halplibe.helper.NetworkHelper;
+import turniplabs.halplibe.helper.network.NetworkHandler;
 
 import javax.annotation.Nonnull;
 
@@ -114,19 +121,17 @@ public class ItemPrintout extends Item
         return getLines( stack, NBT_LINE_COLOUR );
     }
 
-//    @Nonnull
-//    @Override
-//    public TypedActionResult<ItemStack> use( World world, @Nonnull PlayerEntity player, @Nonnull Hand hand )
-//    {
-//        if( !world.isClient )
-//        {
-//            new HeldItemContainerData( hand ).open( player,
-//                new ContainerHeldItem.Factory( ComputerCraftRegistry.ModContainers.PRINTOUT,
-//                    player.getStackInHand( hand ),
-//                    hand ) );
-//        }
-//        return new TypedActionResult<>( ActionResult.SUCCESS, player.getStackInHand( hand ) );
-//    }
+    @Override
+    public ItemStack onUseItem(ItemStack stack, World world, Player player) {
+        if (Helper.isClientWorld()) {
+            return stack;
+        }
+
+        NetworkHandler.sendToPlayer(player, new OpenGuiPrintoutMessage(stack));
+
+        return stack;
+    }
+
 
 //    @Override
 //    public void appendTooltip( @Nonnull ItemStack stack, World world, @Nonnull List<Text> list, @Nonnull TooltipContext options )
