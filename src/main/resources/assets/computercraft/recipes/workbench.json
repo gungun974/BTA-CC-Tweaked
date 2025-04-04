@@ -1,0 +1,1149 @@
+[
+    {
+        "name": "computercraft:workbench/computer_advanced",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#R#",
+            "#G#"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "item.ingot.gold",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "R",
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "G",
+                "stack": {
+                    "key": "tile.glass",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.computer.advanced",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+    {
+        "name": "computercraft:workbench/computer_normal",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#R#",
+            "#G#"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "group": "minecraft:cobblestones"
+            },
+            {
+                "symbol": "R",
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "G",
+                "stack": {
+                    "key": "tile.glass",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.computer.normal",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 1118481
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 1
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 13388876
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 2
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 5744206
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 3
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 8349260
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 4
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 3368652
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 5
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 11691749
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 6
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 5020082
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 7
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 10066329
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 8
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 5000268
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 9
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 15905484
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 10
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 8375321
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 11
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 14605932
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 12
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 10072818
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 13
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 15040472
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 14
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 15905331
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/disk",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.paper",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1,
+                    "meta": 15
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.disk",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Color": {
+                    "type": "TAG_Int",
+                    "value": 15790320
+                }
+            }
+        }
+    },
+
+
+
+    {
+        "name": "computercraft:workbench/disk_drive",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#R#",
+            "#R#"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "group": "minecraft:cobblestones"
+            },
+            {
+                "symbol": "R",
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.disk.drive",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+    {
+        "name": "computercraft:workbench/monitor_advanced",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#G#",
+            "###"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "item.ingot.gold",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "G",
+                "stack": {
+                    "key": "tile.glass",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.monitor.advanced",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+    {
+        "name": "computercraft:workbench/monitor_normal",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#G#",
+            "###"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "group": "minecraft:cobblestones"
+            },
+            {
+                "symbol": "G",
+                "stack": {
+                    "key": "tile.glass",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.monitor.normal",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+    {
+        "name": "computercraft:workbench/pocket_computer_advanced",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#A#",
+            "#G#"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "item.ingot.gold",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "A",
+                "stack": {
+                    "key": "item.food.apple.gold",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "G",
+                "stack": {
+                    "key": "tile.glass",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.pocket_computer_advanced",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+
+
+    {
+        "name": "computercraft:workbench/pocket_computer_normal",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#A#",
+            "#G#"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "group": "minecraft:cobblestones"
+            },
+            {
+                "symbol": "A",
+                "stack": {
+                    "key": "item.food.apple.gold",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "G",
+                "stack": {
+                    "key": "tile.glass",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.pocket_computer_normal",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+
+
+
+    {
+        "name": "computercraft:impostor_shapeless/printed_book",
+        "type": "computercraft:impostor_shapeless",
+        "ingredients": [
+            { "item": "minecraft:leather" },
+            { "item": "computercraft:printed_page" },
+            { "item": "minecraft:string" }
+        ],
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.leather",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.computercraft.printed_page",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.string",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.printed_book",
+            "amount": 1,
+            "meta": 0
+        }
+    },
+    {
+        "name": "computercraft:impostor_shapeless/printed_pages",
+        "type": "computercraft:impostor_shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.computercraft.printed_page",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.computercraft.printed_page",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "stack": {
+                    "key": "item.string",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.printed_pages",
+            "amount": 1,
+            "meta": 0
+        }
+    },
+    {
+        "name": "computercraft:workbench/printer",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#R#",
+            "#D#"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "group": "minecraft:cobblestones"
+            },
+            {
+                "symbol": "R",
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "D",
+                "stack": {
+                    "key": "item.dye",
+                    "amount": 1
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.printer",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+
+    {
+        "name": "computercraft:workbench/speaker",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#N#",
+            "#R#"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "group": "minecraft:cobblestones"
+            },
+            {
+                "symbol": "N",
+                "stack": {
+                    "key": "tile.noteblock",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "R",
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.speaker",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+    {
+        "name": "computercraft:workbench/turtle_advanced",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#C#",
+            "#I#"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "item.ingot.gold",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "C",
+                "stack": {
+                    "key": "tile.computercraft.computer.advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "I",
+                "group": "minecraft:chests"
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.turtle.advanced",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+
+    {
+        "name": "computercraft:workbench/turtle_normal",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#C#",
+            "#I#"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "item.ingot.iron",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "C",
+                "stack": {
+                    "key": "tile.computercraft.computer.normal",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "I",
+                "group": "minecraft:chests"
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.turtle.normal",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+
+    {
+        "name": "computercraft:workbench/wireless_modem_advanced",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#E#",
+            "###"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "item.ingot.gold",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "E",
+                "stack": {
+                    "key": "item.food.apple",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.wireless.modem.advanced",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+    {
+        "name": "computercraft:workbench/wireless_modem_normal",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#E#",
+            "###"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "group": "minecraft:cobblestones"
+            },
+            {
+                "symbol": "E",
+                "stack": {
+                    "key": "item.food.apple",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.wireless.modem.normal",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    }
+
+
+]

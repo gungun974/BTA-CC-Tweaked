@@ -115,7 +115,19 @@ public final class TurtleUpgrades
             };
         }
 
-        return Arrays.stream( vanilla ).filter( x -> x != null && wrappers.get( x ).enabled );
+        return Arrays.stream( vanilla ).filter( x -> {
+            if (x == null) {
+                return false;
+            }
+
+            Wrapper wrapper = wrappers.get(x);
+
+            if (wrapper == null) {
+                return true;
+            }
+
+            return wrapper.enabled;
+        });
     }
 
     public static Stream<ITurtleUpgrade> getUpgrades()

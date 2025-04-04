@@ -35,6 +35,9 @@
         "main": [
             "dan200.computercraft.ComputerCraft"
         ],
+        "recipesReady": [
+            "dan200.computercraft.shared.common.ComputerCraftRecipe"
+        ],
         "client": [
         ],
         "modmenu": [
@@ -47,6 +50,9 @@
         ],
         "afterGameStart": [
             "dan200.computercraft.ComputerCraft"
+        ],
+        "gatherTMBPlugins": [
+            "dan200.computercraft.shared.integration.TMBIntegration"
         ]
     },
     "mixins": [
