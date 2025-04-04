@@ -1,14 +1,17 @@
 package dan200.computercraft.shared.integration;
 
 import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.shared.computer.recipe.ComputerUpgradeRecipe;
 import dan200.computercraft.shared.recipe.ImpostorShapelessRecipe;
 import net.minecraft.core.data.registry.Registries;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCrafting;
+import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCraftingShaped;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCraftingShapeless;
 import turing.tmb.TMB;
 import turing.tmb.api.ITMBPlugin;
 import turing.tmb.api.TMBEntrypoint;
 import turing.tmb.api.runtime.ITMBRuntime;
+import turing.tmb.vanilla.ShapedCraftingRecipeTranslator;
 import turing.tmb.vanilla.ShapelessCraftingRecipeTranslator;
 import turing.tmb.vanilla.VanillaPlugin;
 
@@ -31,6 +34,24 @@ public class TMBIntegration implements ITMBPlugin, TMBEntrypoint {
                     impostorShapelessRecipe.getInput(),
                     impostorShapelessRecipe.getOutput()),
                     ShapelessCraftingRecipeTranslator::new
+                );
+                useEntryCrafting.add(entryCrafting);
+            }
+            if (entryCrafting instanceof ComputerUpgradeRecipe) {
+                if (useEntryCrafting.contains(entryCrafting)) {
+                    continue;
+                }
+
+                ComputerUpgradeRecipe computerUpgradeRecipe = (ComputerUpgradeRecipe) entryCrafting;
+                runtime.getRecipeIndex().registerRecipe(VanillaPlugin.shapedCraftingCategory, new RecipeEntryCraftingShaped(
+                        computerUpgradeRecipe.recipeWidth,
+                        computerUpgradeRecipe.recipeHeight,
+                        computerUpgradeRecipe.getInput(),
+                        computerUpgradeRecipe.getOutput(),
+                        computerUpgradeRecipe.consumeContainerItem,
+                        computerUpgradeRecipe.allowMirrored
+                ),
+                    ShapedCraftingRecipeTranslator::new
                 );
                 useEntryCrafting.add(entryCrafting);
             }

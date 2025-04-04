@@ -41,6 +41,40 @@
         "consumeContainers": false
     },
     {
+        "name": "computercraft:computer_upgrade/computer_advanced",
+        "type": "computercraft:computer_upgrade",
+        "pattern": [
+            "###",
+            "#C#",
+            "# #"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "item.ingot.gold",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "C",
+                "stack": {
+                    "key": "tile.computercraft.computer.normal",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "family": "advanced",
+        "result": {
+            "key": "tile.computercraft.computer.advanced",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+    {
         "name": "computercraft:workbench/computer_normal",
         "type": "minecraft:crafting/shaped",
         "pattern": [
@@ -821,8 +855,40 @@
         },
         "consumeContainers": false
     },
-
-
+    {
+        "name": "computercraft:computer_upgrade/pocket_computer_advanced",
+        "type": "computercraft:computer_upgrade",
+        "pattern": [
+            "###",
+            "#C#",
+            "# #"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "item.ingot.gold",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "C",
+                "stack": {
+                    "key": "item.computercraft.pocket_computer_normal",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "family": "advanced",
+        "result": {
+            "key": "item.computercraft.pocket_computer_advanced",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
     {
         "name": "computercraft:workbench/pocket_computer_normal",
         "type": "minecraft:crafting/shaped",
@@ -1036,6 +1102,48 @@
                 "group": "minecraft:chests"
             }
         ],
+        "result": {
+            "key": "tile.computercraft.turtle.advanced",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+    {
+        "name": "computercraft:computer_upgrade/turtle_advanced",
+        "type": "computercraft:computer_upgrade",
+        "pattern": [
+            "###",
+            "#C#",
+            " B "
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "item.ingot.gold",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "C",
+                "stack": {
+                    "key": "tile.computercraft.turtle.normal",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "B",
+                "stack": {
+                    "key": "tile.block.gold",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "family": "advanced",
         "result": {
             "key": "tile.computercraft.turtle.advanced",
             "amount": 1,
