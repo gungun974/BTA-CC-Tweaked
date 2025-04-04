@@ -132,16 +132,18 @@ public class ItemPrintout extends Item
         return stack;
     }
 
+    @Override
+    public String getTranslatedDescription(ItemStack stack) {
+        String text = super.getTranslatedDescription(stack);
 
-//    @Override
-//    public void appendTooltip( @Nonnull ItemStack stack, World world, @Nonnull List<Text> list, @Nonnull TooltipContext options )
-//    {
-//        String title = getTitle( stack );
-//        if( title != null && !title.isEmpty() )
-//        {
-//            list.add( new LiteralText( title ) );
-//        }
-//    }
+        String title = getTitle( stack );
+        if( title != null && !title.isEmpty() )
+        {
+            text += "\n" + title;
+        }
+
+        return text;
+    }
 
     public static String getTitle( @Nonnull ItemStack stack )
     {
