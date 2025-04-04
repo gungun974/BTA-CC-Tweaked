@@ -186,7 +186,19 @@ public final class TurtleUpgradeRecipe extends RecipeEntryCrafting<RecipeSymbol[
 
     @Override
     public ItemStack[] onCraftResult(ContainerCrafting containerCrafting) {
-        return new ItemStack[0];
+        ItemStack[] returnStack = new ItemStack[9];
+
+        for(int i = 0; i < containerCrafting.getContainerSize(); ++i) {
+            ItemStack itemStack = containerCrafting.getItem(i);
+            if (itemStack != null) {
+                containerCrafting.removeItem(i, 1);
+                if (itemStack.getItem().hasContainerItem()) {
+                    containerCrafting.setItem(i, new ItemStack(itemStack.getItem().getContainerItem()));
+                }
+            }
+        }
+
+        return returnStack;
     }
 
     @Override

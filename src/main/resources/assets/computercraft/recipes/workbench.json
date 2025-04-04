@@ -926,9 +926,10 @@
         },
         "consumeContainers": false
     },
-
-
-
+    {
+        "name": "computercraft:pocket_computer_upgrade",
+        "type": "computercraft:pocket_computer_upgrade"
+    },
     {
         "name": "computercraft:impostor_shapeless/printed_book",
         "type": "computercraft:impostor_shapeless",
