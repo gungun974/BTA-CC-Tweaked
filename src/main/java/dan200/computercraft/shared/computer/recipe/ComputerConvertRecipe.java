@@ -5,7 +5,6 @@
  */
 package dan200.computercraft.shared.computer.recipe;
 
-import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.items.IComputerItem;
 import net.minecraft.core.data.registry.recipe.RecipeSymbol;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCraftingShaped;

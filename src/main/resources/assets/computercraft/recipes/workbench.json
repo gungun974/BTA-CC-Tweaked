@@ -1073,8 +1073,8 @@
         "consumeContainers": false
     },
     {
-        "name": "computercraft:workbench/turtle_advanced",
-        "type": "minecraft:crafting/shaped",
+        "name": "computercraft:turtle/turtle_advanced",
+        "type": "computercraft:turtle",
         "pattern": [
             "###",
             "#C#",
@@ -1102,6 +1102,7 @@
                 "group": "minecraft:chests"
             }
         ],
+        "family": "advanced",
         "result": {
             "key": "tile.computercraft.turtle.advanced",
             "amount": 1,
@@ -1151,10 +1152,9 @@
         },
         "consumeContainers": false
     },
-
     {
-        "name": "computercraft:workbench/turtle_normal",
-        "type": "minecraft:crafting/shaped",
+        "name": "computercraft:turtle/turtle_normal",
+        "type": "computercraft:turtle",
         "pattern": [
             "###",
             "#C#",
@@ -1182,6 +1182,7 @@
                 "group": "minecraft:chests"
             }
         ],
+        "family": "normal",
         "result": {
             "key": "tile.computercraft.turtle.normal",
             "amount": 1,
@@ -1189,7 +1190,10 @@
         },
         "consumeContainers": false
     },
-
+    {
+        "name": "computercraft:turtle_upgrade",
+        "type": "computercraft:turtle_upgrade"
+    },
     {
         "name": "computercraft:workbench/wireless_modem_advanced",
         "type": "minecraft:crafting/shaped",

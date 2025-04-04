@@ -1,18 +1,16 @@
 package dan200.computercraft.shared.common;
 
-import com.mojang.nbt.NbtIo;
-import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.computer.recipe.ComputerUpgradeRecipe;
 import dan200.computercraft.shared.recipe.ImpostorShapelessRecipe;
-import dan200.computercraft.shared.util.NBTUtil;
+import dan200.computercraft.shared.turtle.recipes.TurtleRecipe;
+import dan200.computercraft.shared.turtle.recipes.TurtleUpgradeRecipe;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.data.DataLoader;
 import net.minecraft.core.data.registry.Registries;
 import net.minecraft.core.data.registry.recipe.RecipeGroup;
 import net.minecraft.core.data.registry.recipe.RecipeSymbol;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCrafting;
-import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCraftingShapeless;
 import net.minecraft.core.item.ItemStack;
 import turniplabs.halplibe.util.RecipeEntrypoint;
 
@@ -22,6 +20,8 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
     public static RecipeGroup<RecipeEntryCrafting<?,?>> WORKBENCH;
     public static RecipeGroup<ComputerUpgradeRecipe> COMPUTER_UPGRADE;
     public static RecipeGroup<ImpostorShapelessRecipe> IMPOSTOR_SHAPELESS;
+    public static RecipeGroup<TurtleRecipe> TURTLE;
+    public static RecipeGroup<TurtleUpgradeRecipe> TURTLE_UPGRADE;
 
     @Override
     public void onRecipesReady() {
@@ -43,6 +43,8 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
         COMPUTER_CRAFT.register("workbench", WORKBENCH);
         COMPUTER_CRAFT.register("computer_upgrade", COMPUTER_UPGRADE);
         COMPUTER_CRAFT.register("impostor_shapeless", IMPOSTOR_SHAPELESS);
+        COMPUTER_CRAFT.register("turtle", TURTLE);
+        COMPUTER_CRAFT.register("turtle_upgrade", TURTLE_UPGRADE);
         Registries.RECIPES.register("computercraft", COMPUTER_CRAFT);
     }
 
@@ -50,20 +52,21 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
         WORKBENCH = new RecipeGroup<RecipeEntryCrafting<?, ?>>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
         COMPUTER_UPGRADE = new RecipeGroup<ComputerUpgradeRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
         IMPOSTOR_SHAPELESS = new RecipeGroup<ImpostorShapelessRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
+        TURTLE = new RecipeGroup<TurtleRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
+        TURTLE_UPGRADE = new RecipeGroup<TurtleUpgradeRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
     }
 
     public void load(){
         Registries.RECIPE_TYPES.register("computercraft:computer_upgrade", ComputerUpgradeRecipe.class);
         Registries.RECIPE_TYPES.register("computercraft:impostor_shapeless", ImpostorShapelessRecipe.class);
+        Registries.RECIPE_TYPES.register("computercraft:turtle", TurtleRecipe.class);
+        Registries.RECIPE_TYPES.register("computercraft:turtle_upgrade", TurtleUpgradeRecipe.class);
 //        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "colour" ), ColourableRecipe.SERIALIZER );
-//        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "computer_upgrade" ), ComputerUpgradeRecipe.SERIALIZER );
 //        Registry.register( Registry.RECIPE_SERIALIZER,
 //            new Identifier( ComputerCraft.MOD_ID, "pocket_computer_upgrade" ),
 //            PocketComputerUpgradeRecipe.SERIALIZER );
 //        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "disk" ), DiskRecipe.SERIALIZER );
 //        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "printout" ), PrintoutRecipe.SERIALIZER );
-//        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "turtle" ), TurtleRecipe.SERIALIZER );
-//        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "turtle_upgrade" ), TurtleUpgradeRecipe.SERIALIZER );
 //        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "impostor_shaped" ), ImpostorRecipe.SERIALIZER );
 //        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "impostor_shapeless" ), ImpostorShapelessRecipe.SERIALIZER );
 //        Registry.register( Registry.LOOT_CONDITION_TYPE, new Identifier( ComputerCraft.MOD_ID, "block_named" ), BlockNamedEntityLootCondition.TYPE );
