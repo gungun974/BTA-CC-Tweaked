@@ -25,36 +25,6 @@ public class TMBIntegration implements ITMBPlugin, TMBEntrypoint {
     @Override
     public void registerRecipes(ITMBRuntime runtime) {
         for (RecipeEntryCrafting<?, ?> entryCrafting : Registries.RECIPES.getAllCraftingRecipes()) {
-            if (entryCrafting instanceof ImpostorShapelessRecipe) {
-                if (useEntryCrafting.contains(entryCrafting)) {
-                    continue;
-                }
-                ImpostorShapelessRecipe impostorShapelessRecipe = (ImpostorShapelessRecipe) entryCrafting;
-                runtime.getRecipeIndex().registerRecipe(VanillaPlugin.shapelessCraftingCategory, new RecipeEntryCraftingShapeless(
-                    impostorShapelessRecipe.getInput(),
-                    impostorShapelessRecipe.getOutput()),
-                    ShapelessCraftingRecipeTranslator::new
-                );
-                useEntryCrafting.add(entryCrafting);
-            }
-            if (entryCrafting instanceof ComputerUpgradeRecipe) {
-                if (useEntryCrafting.contains(entryCrafting)) {
-                    continue;
-                }
-
-                ComputerUpgradeRecipe computerUpgradeRecipe = (ComputerUpgradeRecipe) entryCrafting;
-                runtime.getRecipeIndex().registerRecipe(VanillaPlugin.shapedCraftingCategory, new RecipeEntryCraftingShaped(
-                        computerUpgradeRecipe.recipeWidth,
-                        computerUpgradeRecipe.recipeHeight,
-                        computerUpgradeRecipe.getInput(),
-                        computerUpgradeRecipe.getOutput(),
-                        computerUpgradeRecipe.consumeContainerItem,
-                        computerUpgradeRecipe.allowMirrored
-                ),
-                    ShapedCraftingRecipeTranslator::new
-                );
-                useEntryCrafting.add(entryCrafting);
-            }
         }
     }
 

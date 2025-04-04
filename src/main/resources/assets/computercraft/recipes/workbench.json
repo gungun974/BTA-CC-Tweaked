@@ -1,5 +1,9 @@
 [
     {
+        "name": "computercraft:colour",
+        "type": "computercraft:colour"
+    },
+    {
         "name": "computercraft:workbench/computer_advanced",
         "type": "minecraft:crafting/shaped",
         "pattern": [
@@ -938,9 +942,15 @@
         "name": "computercraft:impostor_shapeless/printed_book",
         "type": "computercraft:impostor_shapeless",
         "ingredients": [
-            { "item": "minecraft:leather" },
-            { "item": "computercraft:printed_page" },
-            { "item": "minecraft:string" }
+            {
+                "item": "minecraft:leather"
+            },
+            {
+                "item": "computercraft:printed_page"
+            },
+            {
+                "item": "minecraft:string"
+            }
         ],
         "inputs": [
             {
@@ -1039,7 +1049,6 @@
         },
         "consumeContainers": false
     },
-
     {
         "name": "computercraft:workbench/speaker",
         "type": "minecraft:crafting/shaped",
@@ -1261,6 +1270,4 @@
         },
         "consumeContainers": false
     }
-
-
 ]

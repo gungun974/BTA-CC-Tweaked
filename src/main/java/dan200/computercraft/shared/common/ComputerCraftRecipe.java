@@ -5,6 +5,8 @@ import dan200.computercraft.shared.computer.recipe.ComputerUpgradeRecipe;
 import dan200.computercraft.shared.media.recipes.DiskRecipe;
 import dan200.computercraft.shared.media.recipes.PrintoutRecipe;
 import dan200.computercraft.shared.pocket.recipes.PocketComputerUpgradeRecipe;
+import dan200.computercraft.shared.recipe.ColourableRecipe;
+import dan200.computercraft.shared.recipe.ImpostorShapedRecipe;
 import dan200.computercraft.shared.recipe.ImpostorShapelessRecipe;
 import dan200.computercraft.shared.turtle.recipes.TurtleRecipe;
 import dan200.computercraft.shared.turtle.recipes.TurtleUpgradeRecipe;
@@ -21,8 +23,10 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
 
     public static ComputerCraftRecipeNamespace COMPUTER_CRAFT = new ComputerCraftRecipeNamespace();
     public static RecipeGroup<RecipeEntryCrafting<?,?>> WORKBENCH;
+    public static RecipeGroup<ColourableRecipe> COLOUR;
     public static RecipeGroup<ComputerUpgradeRecipe> COMPUTER_UPGRADE;
     public static RecipeGroup<ImpostorShapelessRecipe> IMPOSTOR_SHAPELESS;
+    public static RecipeGroup<ImpostorShapedRecipe> IMPOSTOR_SHAPED;
     public static RecipeGroup<TurtleRecipe> TURTLE;
     public static RecipeGroup<TurtleUpgradeRecipe> TURTLE_UPGRADE;
     public static RecipeGroup<PocketComputerUpgradeRecipe> POCKET_COMPUTER_UPGRADE;
@@ -47,8 +51,10 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
 
     public void registerNamespaces(){
         COMPUTER_CRAFT.register("workbench", WORKBENCH);
+        COMPUTER_CRAFT.register("colour", COLOUR);
         COMPUTER_CRAFT.register("computer_upgrade", COMPUTER_UPGRADE);
         COMPUTER_CRAFT.register("impostor_shapeless", IMPOSTOR_SHAPELESS);
+        COMPUTER_CRAFT.register("impostor_shaped", IMPOSTOR_SHAPED);
         COMPUTER_CRAFT.register("turtle", TURTLE);
         COMPUTER_CRAFT.register("turtle_upgrade", TURTLE_UPGRADE);
         COMPUTER_CRAFT.register("pocket_computer_upgrade", POCKET_COMPUTER_UPGRADE);
@@ -59,8 +65,10 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
 
     public void resetGroups(){
         WORKBENCH = new RecipeGroup<RecipeEntryCrafting<?, ?>>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
+        COLOUR = new RecipeGroup<ColourableRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
         COMPUTER_UPGRADE = new RecipeGroup<ComputerUpgradeRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
         IMPOSTOR_SHAPELESS = new RecipeGroup<ImpostorShapelessRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
+        IMPOSTOR_SHAPED = new RecipeGroup<ImpostorShapedRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
         TURTLE = new RecipeGroup<TurtleRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
         TURTLE_UPGRADE = new RecipeGroup<TurtleUpgradeRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
         POCKET_COMPUTER_UPGRADE = new RecipeGroup<PocketComputerUpgradeRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
@@ -69,15 +77,15 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
     }
 
     public void load(){
+        Registries.RECIPE_TYPES.register("computercraft:colour", ColourableRecipe.class);
         Registries.RECIPE_TYPES.register("computercraft:computer_upgrade", ComputerUpgradeRecipe.class);
         Registries.RECIPE_TYPES.register("computercraft:impostor_shapeless", ImpostorShapelessRecipe.class);
+        Registries.RECIPE_TYPES.register("computercraft:impostor_shaped", ImpostorShapedRecipe.class);
         Registries.RECIPE_TYPES.register("computercraft:turtle", TurtleRecipe.class);
         Registries.RECIPE_TYPES.register("computercraft:turtle_upgrade", TurtleUpgradeRecipe.class);
         Registries.RECIPE_TYPES.register("computercraft:pocket_computer_upgrade", PocketComputerUpgradeRecipe.class);
         Registries.RECIPE_TYPES.register("computercraft:disk", DiskRecipe.class);
         Registries.RECIPE_TYPES.register("computercraft:printout", PrintoutRecipe.class);
-//        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "colour" ), ColourableRecipe.SERIALIZER );
-//        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "impostor_shaped" ), ImpostorRecipe.SERIALIZER );
 
         DataLoader.loadRecipesFromFile("/assets/computercraft/recipes/workbench.json");
         ComputerCraft.log.info("{} recipes in {} groups.", COMPUTER_CRAFT.getAllRecipes().size(), COMPUTER_CRAFT.size());
