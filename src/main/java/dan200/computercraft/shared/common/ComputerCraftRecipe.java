@@ -2,6 +2,8 @@ package dan200.computercraft.shared.common;
 
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.computer.recipe.ComputerUpgradeRecipe;
+import dan200.computercraft.shared.media.recipes.DiskRecipe;
+import dan200.computercraft.shared.media.recipes.PrintoutRecipe;
 import dan200.computercraft.shared.pocket.recipes.PocketComputerUpgradeRecipe;
 import dan200.computercraft.shared.recipe.ImpostorShapelessRecipe;
 import dan200.computercraft.shared.turtle.recipes.TurtleRecipe;
@@ -24,6 +26,8 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
     public static RecipeGroup<TurtleRecipe> TURTLE;
     public static RecipeGroup<TurtleUpgradeRecipe> TURTLE_UPGRADE;
     public static RecipeGroup<PocketComputerUpgradeRecipe> POCKET_COMPUTER_UPGRADE;
+    public static RecipeGroup<DiskRecipe> DISK;
+    public static RecipeGroup<PrintoutRecipe> PRINTOUT;
 
     @Override
     public void onRecipesReady() {
@@ -48,6 +52,8 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
         COMPUTER_CRAFT.register("turtle", TURTLE);
         COMPUTER_CRAFT.register("turtle_upgrade", TURTLE_UPGRADE);
         COMPUTER_CRAFT.register("pocket_computer_upgrade", POCKET_COMPUTER_UPGRADE);
+        COMPUTER_CRAFT.register("disk", DISK);
+        COMPUTER_CRAFT.register("printout", PRINTOUT);
         Registries.RECIPES.register("computercraft", COMPUTER_CRAFT);
     }
 
@@ -58,6 +64,8 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
         TURTLE = new RecipeGroup<TurtleRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
         TURTLE_UPGRADE = new RecipeGroup<TurtleUpgradeRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
         POCKET_COMPUTER_UPGRADE = new RecipeGroup<PocketComputerUpgradeRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
+        DISK = new RecipeGroup<DiskRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
+        PRINTOUT = new RecipeGroup<PrintoutRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
     }
 
     public void load(){
@@ -66,9 +74,9 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
         Registries.RECIPE_TYPES.register("computercraft:turtle", TurtleRecipe.class);
         Registries.RECIPE_TYPES.register("computercraft:turtle_upgrade", TurtleUpgradeRecipe.class);
         Registries.RECIPE_TYPES.register("computercraft:pocket_computer_upgrade", PocketComputerUpgradeRecipe.class);
+        Registries.RECIPE_TYPES.register("computercraft:disk", DiskRecipe.class);
+        Registries.RECIPE_TYPES.register("computercraft:printout", PrintoutRecipe.class);
 //        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "colour" ), ColourableRecipe.SERIALIZER );
-//        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "disk" ), DiskRecipe.SERIALIZER );
-//        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "printout" ), PrintoutRecipe.SERIALIZER );
 //        Registry.register( Registry.RECIPE_SERIALIZER, new Identifier( ComputerCraft.MOD_ID, "impostor_shaped" ), ImpostorRecipe.SERIALIZER );
 
         DataLoader.loadRecipesFromFile("/assets/computercraft/recipes/workbench.json");

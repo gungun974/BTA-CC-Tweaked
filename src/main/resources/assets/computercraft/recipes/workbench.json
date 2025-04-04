@@ -111,7 +111,10 @@
         },
         "consumeContainers": false
     },
-
+    {
+        "name": "computercraft:disk",
+        "type": "computercraft:disk"
+    },
     {
         "name": "computercraft:impostor_shapeless/disk",
         "type": "computercraft:impostor_shapeless",
@@ -720,9 +723,10 @@
             }
         }
     },
-
-
-
+    {
+        "name": "computercraft:printout",
+        "type": "computercraft:printout"
+    },
     {
         "name": "computercraft:workbench/disk_drive",
         "type": "minecraft:crafting/shaped",

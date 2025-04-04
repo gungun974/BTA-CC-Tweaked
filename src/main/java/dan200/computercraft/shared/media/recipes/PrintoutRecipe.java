@@ -5,29 +5,25 @@
  */
 package dan200.computercraft.shared.media.recipes;
 
+import com.google.gson.*;
+import dan200.computercraft.fabric.mixin.ContainerCraftingAccessor;
 import dan200.computercraft.shared.media.items.ItemPrintout;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.SpecialCraftingRecipe;
-import net.minecraft.recipe.SpecialRecipeSerializer;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
+import net.minecraft.core.data.registry.recipe.HasJsonAdapter;
+import net.minecraft.core.data.registry.recipe.RecipeSymbol;
+import net.minecraft.core.data.registry.recipe.SearchQuery;
+import net.minecraft.core.data.registry.recipe.adapter.RecipeJsonAdapter;
+import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCrafting;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.item.Items;
+import net.minecraft.core.player.inventory.container.ContainerCrafting;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Type;
 
-public final class PrintoutRecipe extends SpecialCraftingRecipe
+public final class PrintoutRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> implements HasJsonAdapter
 {
-    public static final RecipeSerializer<?> SERIALIZER = new SpecialRecipeSerializer<>( PrintoutRecipe::new );
-    private final Ingredient paper = Ingredient.ofItems( Items.PAPER );
-    private final Ingredient leather = Ingredient.ofItems( Items.LEATHER );
-    private final Ingredient string = Ingredient.ofItems( Items.STRING );
-
-    private PrintoutRecipe( Identifier id )
+    public PrintoutRecipe()
     {
-        super( id );
     }
 
     @Nonnull
@@ -38,15 +34,17 @@ public final class PrintoutRecipe extends SpecialCraftingRecipe
     }
 
     @Override
-    public boolean matches( @Nonnull CraftingInventory inventory, @Nonnull World world )
-    {
-        return !craft( inventory ).isEmpty();
+    public boolean matches(ContainerCrafting inventory) {
+        return getCraftingResult( inventory ) != null;
     }
 
-    @Nonnull
     @Override
-    public ItemStack craft( @Nonnull CraftingInventory inventory )
-    {
+    public boolean matchesQuery(SearchQuery searchQuery) {
+        return false;
+    }
+
+    @Override
+    public ItemStack getCraftingResult(ContainerCrafting inventory) {
         // See if we match the recipe, and extract the input disk ID and dye colour
         int numPages = 0;
         int numPrintouts = 0;
@@ -54,12 +52,16 @@ public final class PrintoutRecipe extends SpecialCraftingRecipe
         boolean stringFound = false;
         boolean leatherFound = false;
         boolean printoutFound = false;
-        for( int y = 0; y < inventory.getHeight(); y++ )
+
+        int width = ((ContainerCraftingAccessor) inventory).getWidth();
+        int height = inventory.getContainerSize() / width;
+
+        for( int y = 0; y < height; y++ )
         {
-            for( int x = 0; x < inventory.getWidth(); x++ )
+            for( int x = 0; x < width; x++ )
             {
-                ItemStack stack = inventory.getStack( x + y * inventory.getWidth() );
-                if( !stack.isEmpty() )
+                ItemStack stack = inventory.getItem( x + y * width );
+                if( stack != null )
                 {
                     if( stack.getItem() instanceof ItemPrintout && ((ItemPrintout) stack.getItem()).getType() != ItemPrintout.Type.BOOK )
                     {
@@ -72,7 +74,7 @@ public final class PrintoutRecipe extends SpecialCraftingRecipe
                         numPrintouts++;
                         printoutFound = true;
                     }
-                    else if( paper.test( stack ) )
+                    else if (stack.getItem().equals(Items.PAPER))
                     {
                         if( printouts == null )
                         {
@@ -82,17 +84,17 @@ public final class PrintoutRecipe extends SpecialCraftingRecipe
                         numPages++;
                         numPrintouts++;
                     }
-                    else if( string.test( stack ) && !stringFound )
+                    else if( stack.getItem().equals(Items.STRING) && !stringFound )
                     {
                         stringFound = true;
                     }
-                    else if( leather.test( stack ) && !leatherFound )
+                    else if( stack.getItem().equals(Items.LEATHER) && !leatherFound )
                     {
                         leatherFound = true;
                     }
                     else
                     {
-                        return ItemStack.EMPTY;
+                        return null;
                     }
                 }
             }
@@ -148,19 +150,44 @@ public final class PrintoutRecipe extends SpecialCraftingRecipe
             }
         }
 
-        return ItemStack.EMPTY;
+        return null;
     }
 
     @Override
-    public boolean fits( int x, int y )
-    {
-        return x >= 3 && y >= 3;
+    public int getRecipeSize() {
+        return 2;
     }
 
-    @Nonnull
     @Override
-    public RecipeSerializer<?> getSerializer()
-    {
-        return SERIALIZER;
+    public ItemStack[] onCraftResult(ContainerCrafting containerCrafting) {
+        ItemStack[] returnStack = new ItemStack[9];
+
+        for(int i = 0; i < containerCrafting.getContainerSize(); ++i) {
+            ItemStack itemStack = containerCrafting.getItem(i);
+            if (itemStack != null) {
+                containerCrafting.removeItem(i, 1);
+                if (itemStack.getItem().hasContainerItem()) {
+                    containerCrafting.setItem(i, new ItemStack(itemStack.getItem().getContainerItem()));
+                }
+            }
+        }
+
+        return returnStack;
+    }
+
+    @Override
+    public RecipeJsonAdapter<?> getAdapter() {
+        return new PrintoutRecipeJsonAdapter();
+    }
+
+    private static class PrintoutRecipeJsonAdapter implements RecipeJsonAdapter<PrintoutRecipe> {
+        @Override
+        public PrintoutRecipe deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            return new PrintoutRecipe();
+        }
+
+        public JsonElement serialize(PrintoutRecipe src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonObject();
+        }
     }
 }
