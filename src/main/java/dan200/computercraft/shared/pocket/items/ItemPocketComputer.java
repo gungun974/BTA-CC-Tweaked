@@ -26,6 +26,7 @@ import dan200.computercraft.shared.computer.items.IComputerItem;
 import dan200.computercraft.shared.pocket.apis.PocketAPI;
 import dan200.computercraft.shared.pocket.core.PocketServerComputer;
 import dan200.computercraft.shared.pocket.inventory.ScreenPocketComputer;
+import dan200.computercraft.shared.util.Colour;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.entity.Entity;

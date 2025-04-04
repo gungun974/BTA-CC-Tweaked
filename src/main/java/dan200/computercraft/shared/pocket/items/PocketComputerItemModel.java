@@ -1,5 +1,6 @@
 package dan200.computercraft.shared.pocket.items;
 
+import dan200.computercraft.shared.common.IColouredItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.EntityRenderDispatcher;
 import net.minecraft.client.render.Font;
@@ -27,6 +28,7 @@ public class PocketComputerItemModel extends ItemModelStandard {
     public static final IconCoordinate POCKET_COMPUTER_ON = TextureRegistry.getTexture("computercraft:item/pocket_computer_on");
     public static final IconCoordinate POCKET_COMPUTER_BLINK = TextureRegistry.getTexture("computercraft:item/pocket_computer_blink");
     public static final IconCoordinate POCKET_COMPUTER_LIGHT = TextureRegistry.getTexture("computercraft:item/pocket_computer_light");
+    public static final IconCoordinate POCKET_COMPUTER_COLOUR = TextureRegistry.getTexture("computercraft:item/pocket_computer_colour");
 
     @Override
     public void renderItemInWorld(Tessellator tessellator, Entity entity, ItemStack itemStack, float brightness, float alpha, boolean worldTransform) {
@@ -45,21 +47,28 @@ public class PocketComputerItemModel extends ItemModelStandard {
         IconCoordinate tex = this.getIcon(entity, itemStack);
 
         int lightState = ItemPocketComputer.getLightState(itemStack);
+        int colour = IColouredItem.getColourBasic(itemStack);
 
         switch (ItemPocketComputer.getState(itemStack)) {
             case OFF:
                 draw3DModel(tessellator, worldTransform, POCKET_COMPUTER_FRAME);
-                draw3DModel(tessellator, worldTransform, tex);
                 break;
             case ON:
                 draw3DModel(tessellator, worldTransform, POCKET_COMPUTER_ON);
-                draw3DModel(tessellator, worldTransform, tex);
                 break;
             case BLINKING:
                 draw3DModel(tessellator, worldTransform, POCKET_COMPUTER_BLINK);
-                draw3DModel(tessellator, worldTransform, tex);
         }
 
+        if (colour != -1) {
+            float r = (float)(colour >> 16 & 0xFF) / 255.0F;
+            float g = (float)(colour >> 8 & 0xFF) / 255.0F;
+            float b = (float)(colour & 0xFF) / 255.0F;
+            GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
+            draw3DModel(tessellator, worldTransform, POCKET_COMPUTER_COLOUR);
+        } else {
+            draw3DModel(tessellator, worldTransform, tex);
+        }
 
         if (lightState != -1) {
             float r = (float)(lightState >> 16 & 0xFF) / 255.0F;
@@ -187,21 +196,28 @@ public class PocketComputerItemModel extends ItemModelStandard {
             }
 
             int lightState = ItemPocketComputer.getLightState(itemStack);
+            int colour = IColouredItem.getColourBasic(itemStack);
 
             switch (ItemPocketComputer.getState(itemStack)) {
                 case OFF:
                     this.renderTexturedQuad(tessellator, x, y, POCKET_COMPUTER_FRAME);
-                    this.renderTexturedQuad(tessellator, x, y, textureIndex);
                     break;
                 case ON:
                     this.renderTexturedQuad(tessellator, x, y, POCKET_COMPUTER_ON);
-                    this.renderTexturedQuad(tessellator, x, y, textureIndex);
                     break;
                 case BLINKING:
                     this.renderTexturedQuad(tessellator, x, y, POCKET_COMPUTER_BLINK);
-                    this.renderTexturedQuad(tessellator, x, y, textureIndex);
             }
 
+            if (colour != -1) {
+                float r = (float)(colour >> 16 & 0xFF) / 255.0F;
+                float g = (float)(colour >> 8 & 0xFF) / 255.0F;
+                float b = (float)(colour & 0xFF) / 255.0F;
+                GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
+                this.renderTexturedQuad(tessellator, x, y, POCKET_COMPUTER_COLOUR);
+            } else {
+                this.renderTexturedQuad(tessellator, x, y, textureIndex);
+            }
 
             if (lightState != -1) {
                 float r = (float)(lightState >> 16 & 0xFF) / 255.0F;
@@ -274,6 +290,7 @@ public class PocketComputerItemModel extends ItemModelStandard {
                 GL11.glRotatef(180.0F - renderDispatcher.viewLerpYaw, 0.0F, 1.0F, 0.0F);
 
                 int lightState = ItemPocketComputer.getLightState(itemstack);
+                int colour = IColouredItem.getColourBasic(itemstack);
 
                 switch (ItemPocketComputer.getState(itemstack)) {
                     case OFF:
@@ -286,9 +303,17 @@ public class PocketComputerItemModel extends ItemModelStandard {
                         break;
                     case BLINKING:
                         this.renderFlat(tessellator, POCKET_COMPUTER_BLINK);
-                        this.renderFlat(tessellator, tex);
                 }
 
+                if (colour != -1) {
+                    float r = (float)(colour >> 16 & 0xFF) / 255.0F;
+                    float g = (float)(colour >> 8 & 0xFF) / 255.0F;
+                    float b = (float)(colour & 0xFF) / 255.0F;
+                    GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0f);
+                    this.renderFlat(tessellator, POCKET_COMPUTER_COLOUR);
+                } else {
+                    this.renderFlat(tessellator, tex);
+                }
 
                 if (lightState != -1) {
                     float r = (float)(lightState >> 16 & 0xFF) / 255.0F;

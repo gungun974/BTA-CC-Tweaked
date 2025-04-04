@@ -35,7 +35,7 @@ public interface IColouredItem
         if( colour == -1 )
         {
             CompoundTag tag = stack.getData();
-            tag.putInt( NBT_COLOUR, -1);
+            tag.getValue().remove( NBT_COLOUR);
         }
         else
         {
