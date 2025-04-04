@@ -45,13 +45,14 @@ public final class PrintoutRenderer
 
     private PrintoutRenderer() {}
 
-    public static void drawText( int x, int y, int start, TextBuffer[] text, TextBuffer[] colours )
+    public static void drawText( int x, int y, float z, int start, TextBuffer[] text, TextBuffer[] colours )
     {
         for( int line = 0; line < LINES_PER_PAGE && line < text.length; line++ )
         {
             FixedWidthFontRenderer.drawString(
                 x,
                 y + line * FONT_HEIGHT,
+                z,
                 text[start + line],
                 colours[start + line],
                 null,
@@ -62,13 +63,14 @@ public final class PrintoutRenderer
         }
     }
 
-    public static void drawText( int x, int y, int start, String[] text, String[] colours )
+    public static void drawText( int x, int y, int z, int start, String[] text, String[] colours )
     {
         for( int line = 0; line < LINES_PER_PAGE && line < text.length; line++ )
         {
             FixedWidthFontRenderer.drawString(
                 x,
                 y + line * FONT_HEIGHT,
+                z,
                 new TextBuffer( text[start + line] ),
                 new TextBuffer( colours[start + line] ),
                 null,
@@ -92,14 +94,14 @@ public final class PrintoutRenderer
             float right = x + X_SIZE + offset - 4;
 
             // Left and right border
-            drawTexture( left - 4, y - 8, z - 0.02f, COVER_X, 0, COVER_SIZE, Y_SIZE + COVER_SIZE * 2 );
-            drawTexture( right, y - 8, z - 0.02f, COVER_X + COVER_SIZE, 0, COVER_SIZE, Y_SIZE + COVER_SIZE * 2 );
+            drawTexture( left - 4, y - 8, z, COVER_X, 0, COVER_SIZE, Y_SIZE + COVER_SIZE * 2 );
+            drawTexture( right, y - 8, z, COVER_X + COVER_SIZE, 0, COVER_SIZE, Y_SIZE + COVER_SIZE * 2 );
 
             // Draw centre panel (just stretched texture, sorry).
             drawTexture(
                 x - offset,
                 y,
-                z - 0.02f,
+                z,
                 X_SIZE + offset * 2,
                 Y_SIZE,
                 COVER_X + COVER_SIZE / 2.0f,
@@ -111,26 +113,26 @@ public final class PrintoutRenderer
             while( borderX < right )
             {
                 double thisWidth = Math.min( right - borderX, X_SIZE );
-                drawTexture( borderX, y - 8, z - 0.02f, 0, COVER_Y, (float) thisWidth, COVER_SIZE );
-                drawTexture( borderX, y + Y_SIZE - 4, z - 0.02f, 0, COVER_Y + COVER_SIZE, (float) thisWidth, COVER_SIZE );
+                drawTexture( borderX, y - 8, z, 0, COVER_Y, (float) thisWidth, COVER_SIZE );
+                drawTexture( borderX, y + Y_SIZE - 4, z, 0, COVER_Y + COVER_SIZE, (float) thisWidth, COVER_SIZE );
                 borderX += thisWidth;
             }
         }
 
         // Left half
-        drawTexture( x, y, z, X_FOLD_SIZE * 2, 0, X_SIZE / 2.0f, Y_SIZE );
+        drawTexture( x, y, z+ 0.02f, X_FOLD_SIZE * 2, 0, X_SIZE / 2.0f, Y_SIZE );
         for( int n = 0; n <= leftPages; n++ )
         {
-            drawTexture( x - offsetAt( n ), y, z - 1e-3f * n,
+            drawTexture( x - offsetAt( n ), y, z - 1e-3f * n+ 0.02f,
                 // Use the left "bold" fold for the outermost page
                 n == leftPages ? 0 : X_FOLD_SIZE, 0, X_FOLD_SIZE, Y_SIZE );
         }
 
         // Right half
-        drawTexture( x + X_SIZE / 2.0f, y, z, X_FOLD_SIZE * 2 + X_SIZE / 2.0f, 0, X_SIZE / 2.0f, Y_SIZE );
+        drawTexture( x + X_SIZE / 2.0f, y, z+ 0.02f, X_FOLD_SIZE * 2 + X_SIZE / 2.0f, 0, X_SIZE / 2.0f, Y_SIZE );
         for( int n = 0; n <= rightPages; n++ )
         {
-            drawTexture(x + (X_SIZE - X_FOLD_SIZE) + offsetAt( n ), y, z - 1e-3f * n,
+            drawTexture(x + (X_SIZE - X_FOLD_SIZE) + offsetAt( n ), y, z - 1e-3f * n+ 0.02f,
                 // Two folds, then the main page. Use the right "bold" fold for the outermost page.
                 X_FOLD_SIZE * 2 + X_SIZE + (n == rightPages ? X_FOLD_SIZE : 0), 0, X_FOLD_SIZE, Y_SIZE );
         }

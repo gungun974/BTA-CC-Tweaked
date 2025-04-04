@@ -29,7 +29,7 @@ public final class FixedWidthFontRenderer
     public static final float BACKGROUND_START = (WIDTH - 6.0f) / WIDTH;
     public static final float BACKGROUND_END = (WIDTH - 4.0f) / WIDTH;
 
-    public static void drawString( float x, float y, @Nonnull TextBuffer text, @Nonnull TextBuffer textColour, @Nullable TextBuffer backgroundColour,
+    public static void drawString( float x, float y, float z, @Nonnull TextBuffer text, @Nonnull TextBuffer textColour, @Nullable TextBuffer backgroundColour,
                                    @Nonnull Palette palette, boolean greyscale, float leftMarginSize, float rightMarginSize )
     {
         bindFont();
@@ -37,6 +37,7 @@ public final class FixedWidthFontRenderer
         drawString2(
             x,
             y,
+            z,
             text,
             textColour,
             backgroundColour,
@@ -52,7 +53,7 @@ public final class FixedWidthFontRenderer
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
     }
 
-    private static void drawString2( float x, float y, @Nonnull TextBuffer text,
+    private static void drawString2( float x, float y, float z, @Nonnull TextBuffer text,
                                    @Nonnull TextBuffer textColour, @Nullable TextBuffer backgroundColour, @Nonnull Palette palette, boolean greyscale,
                                    float leftMarginSize, float rightMarginSize )
     {
@@ -84,7 +85,7 @@ public final class FixedWidthFontRenderer
             {
                 index = '?';
             }
-            drawChar( x + i * FONT_WIDTH, y, index, r, g, b );
+            drawChar( x + i * FONT_WIDTH, y, z, index, r, g, b );
         }
 
     }
@@ -153,7 +154,7 @@ public final class FixedWidthFontRenderer
         return (float) ((rgb[0] + rgb[1] + rgb[2]) / 3);
     }
 
-    private static void drawChar( float x, float y, int index, float r, float g, float b )
+    private static void drawChar( float x, float y, float z, int index, float r, float g, float b )
     {
         // Short circuit to avoid the common case - the texture should be blank here after all.
         if( index == '\0' || index == ' ' )
@@ -172,11 +173,11 @@ public final class FixedWidthFontRenderer
         tessellator.startDrawing(GL11.GL_TRIANGLES);
 
         tessellator.setColorRGBA_F(r,g,b, 1f);
-        tessellator.addVertexWithUV(x, y, 0, xStart / WIDTH, yStart / WIDTH);
+        tessellator.addVertexWithUV(x, y, z, xStart / WIDTH, yStart / WIDTH);
 
-        tessellator.addVertexWithUV(x, y + FONT_HEIGHT, 0f, xStart / WIDTH, (yStart + FONT_HEIGHT) / WIDTH );
+        tessellator.addVertexWithUV(x, y + FONT_HEIGHT, z, xStart / WIDTH, (yStart + FONT_HEIGHT) / WIDTH );
 
-        tessellator.addVertexWithUV(x + FONT_WIDTH, y, 0f, (xStart + FONT_WIDTH) / WIDTH, yStart / WIDTH );
+        tessellator.addVertexWithUV(x + FONT_WIDTH, y, z, (xStart + FONT_WIDTH) / WIDTH, yStart / WIDTH );
 
         tessellator.draw();
 
@@ -184,11 +185,11 @@ public final class FixedWidthFontRenderer
 
         tessellator.setColorRGBA_F(r,g,b, 1f);
 
-        tessellator.addVertexWithUV(x + FONT_WIDTH, y, 0f, (xStart + FONT_WIDTH) / WIDTH, yStart / WIDTH );
+        tessellator.addVertexWithUV(x + FONT_WIDTH, y, z, (xStart + FONT_WIDTH) / WIDTH, yStart / WIDTH );
 
-        tessellator.addVertexWithUV(x, y + FONT_HEIGHT, 0f, xStart / WIDTH, (yStart + FONT_HEIGHT) / WIDTH );
+        tessellator.addVertexWithUV(x, y + FONT_HEIGHT, z, xStart / WIDTH, (yStart + FONT_HEIGHT) / WIDTH );
 
-        tessellator.addVertexWithUV(x + FONT_WIDTH, y + FONT_HEIGHT, 0f, (xStart + FONT_WIDTH) / WIDTH, (yStart + FONT_HEIGHT) / WIDTH );
+        tessellator.addVertexWithUV(x + FONT_WIDTH, y + FONT_HEIGHT, z, (xStart + FONT_WIDTH) / WIDTH, (yStart + FONT_HEIGHT) / WIDTH );
 
         tessellator.draw();
 
@@ -272,6 +273,7 @@ public final class FixedWidthFontRenderer
             drawString2(
                 x,
                 y + FixedWidthFontRenderer.FONT_HEIGHT * i,
+                0,
                 terminal.getLine( i ),
                 terminal.getTextColourLine( i ),
                 terminal.getBackgroundColourLine( i ),
@@ -308,7 +310,7 @@ public final class FixedWidthFontRenderer
                 b = (float) colour[2];
             }
 
-            drawChar(x + cursorX * FONT_WIDTH, y + cursorY * FONT_HEIGHT, '_', r, g, b );
+            drawChar(x + cursorX * FONT_WIDTH, y + cursorY * FONT_HEIGHT, 0, '_', r, g, b );
         }
     }
 
