@@ -1,0 +1,362 @@
+[
+    {
+        "name": "computercraft:impostor_shaped/turtle_advanced",
+        "type": "computercraft:impostor_shaped",
+        "pattern": [
+            "#T"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "tile.computercraft.turtle.advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "T",
+                "stack": {
+                    "key": "tile.computercraft.speaker",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.turtle.advanced",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "RightUpgrade": {
+                    "type": "TAG_String",
+                    "value": "tile.computercraft.speaker"
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shaped/turtle_advanced",
+        "type": "computercraft:impostor_shaped",
+        "pattern": [
+            "#T"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "tile.computercraft.turtle.advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "T",
+                "stack": {
+                    "key": "tile.computercraft.wireless.modem.advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.turtle.advanced",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "RightUpgrade": {
+                    "type": "TAG_String",
+                    "value": "tile.computercraft.wireless.modem.advanced"
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shaped/turtle_advanced",
+        "type": "computercraft:impostor_shaped",
+        "pattern": [
+            "#T"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "tile.computercraft.turtle.advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "T",
+                "stack": {
+                    "key": "tile.computercraft.wireless.modem.normal",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.turtle.advanced",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "RightUpgrade": {
+                    "type": "TAG_String",
+                    "value": "tile.computercraft.wireless.modem.normal"
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shaped/turtle_advanced",
+        "type": "computercraft:impostor_shaped",
+        "pattern": [
+            "#T"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "tile.computercraft.turtle.advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "T",
+                "stack": {
+                    "key": "tile.workbench",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.turtle.advanced",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "RightUpgrade": {
+                    "type": "TAG_String",
+                    "value": "tile.workbench"
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shaped/turtle_advanced",
+        "type": "computercraft:impostor_shaped",
+        "pattern": [
+            "#T"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "tile.computercraft.turtle.advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "T",
+                "stack": {
+                    "key": "item.tool.axe.diamond",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.turtle.advanced",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "RightUpgrade": {
+                    "type": "TAG_String",
+                    "value": "item.tool.axe.diamond"
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shaped/turtle_advanced",
+        "type": "computercraft:impostor_shaped",
+        "pattern": [
+            "#T"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "tile.computercraft.turtle.advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "T",
+                "stack": {
+                    "key": "item.tool.hoe.diamond",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.turtle.advanced",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "RightUpgrade": {
+                    "type": "TAG_String",
+                    "value": "item.tool.hoe.diamond"
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shaped/turtle_advanced",
+        "type": "computercraft:impostor_shaped",
+        "pattern": [
+            "#T"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "tile.computercraft.turtle.advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "T",
+                "stack": {
+                    "key": "item.tool.pickaxe.diamond",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.turtle.advanced",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "RightUpgrade": {
+                    "type": "TAG_String",
+                    "value": "item.tool.pickaxe.diamond"
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shaped/turtle_advanced",
+        "type": "computercraft:impostor_shaped",
+        "pattern": [
+            "#T"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "tile.computercraft.turtle.advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "T",
+                "stack": {
+                    "key": "item.tool.pickaxe.gold",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.turtle.advanced",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "RightUpgrade": {
+                    "type": "TAG_String",
+                    "value": "item.tool.pickaxe.gold"
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shaped/turtle_advanced",
+        "type": "computercraft:impostor_shaped",
+        "pattern": [
+            "#T"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "tile.computercraft.turtle.advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "T",
+                "stack": {
+                    "key": "item.tool.shovel.diamond",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.turtle.advanced",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "RightUpgrade": {
+                    "type": "TAG_String",
+                    "value": "item.tool.shovel.diamond"
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shaped/turtle_advanced",
+        "type": "computercraft:impostor_shaped",
+        "pattern": [
+            "#T"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "tile.computercraft.turtle.advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "T",
+                "stack": {
+                    "key": "item.tool.sword.diamond",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.turtle.advanced",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "RightUpgrade": {
+                    "type": "TAG_String",
+                    "value": "item.tool.sword.diamond"
+                }
+            }
+        }
+    }
+]

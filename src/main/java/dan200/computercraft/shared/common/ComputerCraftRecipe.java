@@ -88,6 +88,11 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
         Registries.RECIPE_TYPES.register("computercraft:printout", PrintoutRecipe.class);
 
         DataLoader.loadRecipesFromFile("/assets/computercraft/recipes/workbench.json");
+        DataLoader.loadRecipesFromFile("/assets/computercraft/recipes/turtle_normal.json");
+        DataLoader.loadRecipesFromFile("/assets/computercraft/recipes/turtle_advanced.json");
+        DataLoader.loadRecipesFromFile("/assets/computercraft/recipes/pocket_normal.json");
+        DataLoader.loadRecipesFromFile("/assets/computercraft/recipes/pocket_advanced.json");
+
         ComputerCraft.log.info("{} recipes in {} groups.", COMPUTER_CRAFT.getAllRecipes().size(), COMPUTER_CRAFT.size());
     }
 }

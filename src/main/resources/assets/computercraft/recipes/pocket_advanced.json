@@ -1,0 +1,113 @@
+[
+    {
+        "name": "computercraft:impostor_shaped/pocket_advanced",
+        "type": "computercraft:impostor_shaped",
+        "pattern": [
+            "#",
+            "P"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "tile.computercraft.speaker",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "P",
+                "stack": {
+                    "key": "item.computercraft.pocket_computer_advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.pocket_computer_advanced",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Upgrade": {
+                    "type": "TAG_String",
+                    "value": "tile.computercraft.speaker"
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shaped/pocket_advanced",
+        "type": "computercraft:impostor_shaped",
+        "pattern": [
+            "#",
+            "P"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "tile.computercraft.wireless.modem.advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "P",
+                "stack": {
+                    "key": "item.computercraft.pocket_computer_advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.pocket_computer_advanced",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Upgrade": {
+                    "type": "TAG_String",
+                    "value": "tile.computercraft.wireless.modem.advanced"
+                }
+            }
+        }
+    },
+    {
+        "name": "computercraft:impostor_shaped/pocket_advanced",
+        "type": "computercraft:impostor_shaped",
+        "pattern": [
+            "#",
+            "P"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "stack": {
+                    "key": "tile.computercraft.wireless.modem.normal",
+                    "amount": 1,
+                    "meta": 0
+                }
+            },
+            {
+                "symbol": "P",
+                "stack": {
+                    "key": "item.computercraft.pocket_computer_advanced",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.pocket_computer_advanced",
+            "amount": 1,
+            "meta": 0,
+            "tag": {
+                "Upgrade": {
+                    "type": "TAG_String",
+                    "value": "tile.computercraft.wireless.modem.normal"
+                }
+            }
+        }
+    }
+]
