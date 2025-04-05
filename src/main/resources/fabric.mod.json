@@ -50,9 +50,6 @@
         ],
         "afterGameStart": [
             "dan200.computercraft.ComputerCraft"
-        ],
-        "gatherTMBPlugins": [
-            "dan200.computercraft.shared.integration.TMBIntegration"
         ]
     },
     "mixins": [

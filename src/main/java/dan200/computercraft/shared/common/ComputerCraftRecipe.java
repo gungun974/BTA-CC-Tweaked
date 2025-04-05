@@ -74,6 +74,7 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
         POCKET_COMPUTER_UPGRADE = new RecipeGroup<PocketComputerUpgradeRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
         DISK = new RecipeGroup<DiskRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
         PRINTOUT = new RecipeGroup<PrintoutRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
+        Registries.RECIPES.unregister("computercraft");
     }
 
     public void load(){
