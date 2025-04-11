@@ -101,6 +101,14 @@ public class GuiComputer<T extends ContainerComputerBase> extends Screen
             this.mc.textureManager.loadTexture("/assets/computercraft/textures/gui/corners_normal.png").bind();
         }
 
+        if (mouseButton != -1) {
+            terminal.mouseDragged(
+                mx - wrapperX - MARGIN,
+                my - wrapperY - MARGIN,
+                mouseButton
+            );
+        }
+
         doRender(
             wrapperX - MARGIN,
             wrapperY - MARGIN,
@@ -238,68 +246,53 @@ public class GuiComputer<T extends ContainerComputerBase> extends Screen
             terminal.charTyped((char) codepoint);
     }
 
-//
-//    @Override
-//    public void render( @Nonnull MatrixStack stack, int mouseX, int mouseY, float partialTicks )
-//    {
-//        this.renderBackground( stack );
-//        super.render( stack, mouseX, mouseY, partialTicks );
-//        drawMouseoverTooltip( stack, mouseX, mouseY );
-//    }
-//
-//    @Override
-//    protected void drawForeground( @Nonnull MatrixStack transform, int mouseX, int mouseY )
-//    {
-//        // Skip rendering labels.
-//    }
-//
-//    @Override
-//    public void drawBackground( @Nonnull MatrixStack stack, float partialTicks, int mouseX, int mouseY )
-//    {
-//        // Draw terminal
-//        terminal.draw( terminalWrapper.getX(), terminalWrapper.getY() );
-//
-//        // Draw a border around the terminal
-//        RenderSystem.color4f( 1, 1, 1, 1 );
-//        client.getTextureManager()
-//            .bindTexture( ComputerBorderRenderer.getTexture( family ) );
-//        ComputerBorderRenderer.render( terminalWrapper.getX() - MARGIN, terminalWrapper.getY() - MARGIN,
-//            getZOffset(), terminalWrapper.getWidth() + MARGIN * 2, terminalWrapper.getHeight() + MARGIN * 2 );
-//    }
-//
-//    @Override
-//    public boolean mouseDragged( double x, double y, int button, double deltaX, double deltaY )
-//    {
-//        return (getFocused() != null && getFocused().mouseDragged( x, y, button, deltaX, deltaY )) || super.mouseDragged( x, y, button, deltaX, deltaY );
-//    }
-//
-//    @Override
-//    public boolean mouseReleased( double mouseX, double mouseY, int button )
-//    {
-//        return (getFocused() != null && getFocused().mouseReleased( mouseX, mouseY, button )) || super.mouseReleased( x, y, button );
-//    }
-//
-//    @Override
-//    public boolean keyPressed( int key, int scancode, int modifiers )
-//    {
-//        // Forward the tab key to the terminal, rather than moving between controls.
-//        if( key == GLFW.GLFW_KEY_TAB && getFocused() != null && getFocused() == terminalWrapper )
-//        {
-//            return getFocused().keyPressed( key, scancode, modifiers );
-//        }
-//
-//        return super.keyPressed( key, scancode, modifiers );
-//    }
-//
-//    @Override
-//    public void removed()
-//    {
-//        super.removed();
-//        children.remove( terminal );
-//        terminal = null;
-//        client.keyboard.setRepeatEvents( false );
-//    }
-//
+    private int mouseButton = -1;
+
+    @Override
+    public void mouseClicked(int mx, int my, int buttonNum) {
+        super.mouseClicked(mx, my, buttonNum);
+        final int termPxWidth = terminal.getWidth();
+        final int termPxHeight = terminal.getHeight();
+
+        final int wrapperX = (width - termPxWidth) / 2;
+        final int wrapperY = (height - termPxHeight) / 2;
+
+        this.mouseButton = buttonNum;
+
+        terminal.mouseClicked(
+            mx - wrapperX - MARGIN,
+            my - wrapperY - MARGIN,
+            buttonNum
+        );
+    }
+
+    @Override
+    public void mouseReleased(int mx, int my, int buttonNum) {
+        super.mouseReleased(mx, my, buttonNum);
+        final int termPxWidth = terminal.getWidth();
+        final int termPxHeight = terminal.getHeight();
+
+        final int wrapperX = (width - termPxWidth) / 2;
+        final int wrapperY = (height - termPxHeight) / 2;
+
+        if (mouseButton != -1) {
+            terminal.mouseDragged(
+                mx - wrapperX - MARGIN,
+                my - wrapperY - MARGIN,
+                mouseButton
+            );
+        }
+
+        if (buttonNum != -1) {
+            this.mouseButton = -1;
+            terminal.mouseReleased(
+                mx - wrapperX - MARGIN,
+                my - wrapperY - MARGIN,
+                buttonNum
+            );
+        }
+    }
+
     @Override
     public void tick()
     {

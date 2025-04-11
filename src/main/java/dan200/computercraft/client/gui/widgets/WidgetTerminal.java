@@ -5,13 +5,11 @@
  */
 package dan200.computercraft.client.gui.widgets;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.client.gui.FixedWidthFontRenderer;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.shared.computer.core.ClientComputer;
 import dan200.computercraft.shared.computer.core.IComputer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ButtonElement;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiElement;
 import org.lwjgl.glfw.GLFW;
@@ -100,90 +98,84 @@ public class WidgetTerminal extends Gui implements GuiElement
         return termHeight * FONT_HEIGHT;
     }
 
-//    @Override
-//    public boolean mouseClicked( double mouseX, double mouseY, int button )
-//    {
-//        ClientComputer computer = this.computer.get();
-//        if( computer == null || !computer.isColour() || button < 0 || button > 2 )
-//        {
-//            return false;
-//        }
-//
-//        Terminal term = computer.getTerminal();
-//        if( term != null )
-//        {
-//            int charX = (int) (mouseX / FONT_WIDTH);
-//            int charY = (int) (mouseY / FONT_HEIGHT);
-//            charX = Math.min( Math.max( charX, 0 ), term.getWidth() - 1 );
-//            charY = Math.min( Math.max( charY, 0 ), term.getHeight() - 1 );
-//
-//            computer.mouseClick( button + 1, charX + 1, charY + 1 );
-//
-//            lastMouseButton = button;
-//            lastMouseX = charX;
-//            lastMouseY = charY;
-//        }
-//
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean mouseReleased( double mouseX, double mouseY, int button )
-//    {
-//        ClientComputer computer = this.computer.get();
-//        if( computer == null || !computer.isColour() || button < 0 || button > 2 )
-//        {
-//            return false;
-//        }
-//
-//        Terminal term = computer.getTerminal();
-//        if( term != null )
-//        {
-//            int charX = (int) (mouseX / FONT_WIDTH);
-//            int charY = (int) (mouseY / FONT_HEIGHT);
-//            charX = Math.min( Math.max( charX, 0 ), term.getWidth() - 1 );
-//            charY = Math.min( Math.max( charY, 0 ), term.getHeight() - 1 );
-//
-//            if( lastMouseButton == button )
-//            {
-//                computer.mouseUp( lastMouseButton + 1, charX + 1, charY + 1 );
-//                lastMouseButton = -1;
-//            }
-//
-//            lastMouseX = charX;
-//            lastMouseY = charY;
-//        }
-//
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean mouseDragged( double mouseX, double mouseY, int button, double v2, double v3 )
-//    {
-//        ClientComputer computer = this.computer.get();
-//        if( computer == null || !computer.isColour() || button < 0 || button > 2 )
-//        {
-//            return false;
-//        }
-//
-//        Terminal term = computer.getTerminal();
-//        if( term != null )
-//        {
-//            int charX = (int) (mouseX / FONT_WIDTH);
-//            int charY = (int) (mouseY / FONT_HEIGHT);
-//            charX = Math.min( Math.max( charX, 0 ), term.getWidth() - 1 );
-//            charY = Math.min( Math.max( charY, 0 ), term.getHeight() - 1 );
-//
-//            if( button == lastMouseButton && (charX != lastMouseX || charY != lastMouseY) )
-//            {
-//                computer.mouseDrag( button + 1, charX + 1, charY + 1 );
-//                lastMouseX = charX;
-//                lastMouseY = charY;
-//            }
-//        }
-//
-//        return false;
-//    }
+    public void mouseClicked(double mouseX, double mouseY, int button )
+    {
+        ClientComputer computer = this.computer.get();
+        if( computer == null || !computer.isColour() || button < 0 || button > 2 )
+        {
+            return;
+        }
+
+        Terminal term = computer.getTerminal();
+        if( term != null )
+        {
+            int charX = (int) (mouseX / FONT_WIDTH);
+            int charY = (int) (mouseY / FONT_HEIGHT);
+            charX = Math.min( Math.max( charX, 0 ), term.getWidth() - 1 );
+            charY = Math.min( Math.max( charY, 0 ), term.getHeight() - 1 );
+
+            computer.mouseClick( button + 1, charX + 1, charY + 1 );
+
+            lastMouseButton = button;
+            lastMouseX = charX;
+            lastMouseY = charY;
+        }
+
+    }
+
+    public void mouseReleased(double mouseX, double mouseY, int button )
+    {
+        ClientComputer computer = this.computer.get();
+        if( computer == null || !computer.isColour() || button < 0 || button > 2 )
+        {
+            return;
+        }
+
+        Terminal term = computer.getTerminal();
+        if( term != null )
+        {
+            int charX = (int) (mouseX / FONT_WIDTH);
+            int charY = (int) (mouseY / FONT_HEIGHT);
+            charX = Math.min( Math.max( charX, 0 ), term.getWidth() - 1 );
+            charY = Math.min( Math.max( charY, 0 ), term.getHeight() - 1 );
+
+            if( lastMouseButton == button )
+            {
+                computer.mouseUp( lastMouseButton + 1, charX + 1, charY + 1 );
+                lastMouseButton = -1;
+            }
+
+            lastMouseX = charX;
+            lastMouseY = charY;
+        }
+
+    }
+
+    public void mouseDragged(double mouseX, double mouseY, int button )
+    {
+        ClientComputer computer = this.computer.get();
+        if( computer == null || !computer.isColour() || button < 0 || button > 2 )
+        {
+            return;
+        }
+
+        Terminal term = computer.getTerminal();
+        if( term != null )
+        {
+            int charX = (int) (mouseX / FONT_WIDTH);
+            int charY = (int) (mouseY / FONT_HEIGHT);
+            charX = Math.min( Math.max( charX, 0 ), term.getWidth() - 1 );
+            charY = Math.min( Math.max( charY, 0 ), term.getHeight() - 1 );
+
+            if( button == lastMouseButton && (charX != lastMouseX || charY != lastMouseY) )
+            {
+                computer.mouseDrag( button + 1, charX + 1, charY + 1 );
+                lastMouseX = charX;
+                lastMouseY = charY;
+            }
+        }
+
+    }
 //
 //    @Override
 //    public boolean mouseScrolled( double mouseX, double mouseY, double delta )
