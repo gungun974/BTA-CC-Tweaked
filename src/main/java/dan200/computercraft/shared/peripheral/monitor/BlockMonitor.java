@@ -128,6 +128,10 @@ public class BlockMonitor extends BlockLogic
         }
     }
 
+    public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
+        return ((TileMonitor)world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
+    }
+
     @Override
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
         super.onBlockRemoved(world, x, y, z, data);

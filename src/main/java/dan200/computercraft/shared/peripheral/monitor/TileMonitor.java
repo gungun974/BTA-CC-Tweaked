@@ -24,6 +24,7 @@ import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.net.packet.PacketTileEntityData;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
+import net.minecraft.core.util.phys.HitResult;
 import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
@@ -98,26 +99,18 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
         clientMonitor = null;
     }
 
-//    @Nonnull
-//    @Override
-//    public ActionResult onActivate( PlayerEntity player, Hand hand, BlockHitResult hit )
-//    {
-//        if( !player.isInSneakingPose() && getFront() == hit.getSide() )
-//        {
-//            if( !getWorld().isClient )
-//            {
-//                monitorTouched( (float) (hit.getPos().x - hit.getBlockPos()
-//                        .getX()),
-//                    (float) (hit.getPos().y - hit.getBlockPos()
-//                        .getY()),
-//                    (float) (hit.getPos().z - hit.getBlockPos()
-//                        .getZ()) );
-//            }
-//            return ActionResult.SUCCESS;
-//        }
-//
-//        return ActionResult.PASS;
-//    }
+public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
+        if( !player.isSneaking() && getFront() == side.getDirection() )
+        {
+            if( !Helper.isClientWorld() )
+            {
+                HitResult hit = player.rayTrace(player.distanceTo(x, y, z), 0, false, false);
+                monitorTouched((float) (hit.location.x - hit.x ), (float) (hit.location.y - hit.y ), (float) (hit.location.z - hit.z ));
+            }
+        }
+
+    return true;
+}
 
     @Override
     public void tick()
