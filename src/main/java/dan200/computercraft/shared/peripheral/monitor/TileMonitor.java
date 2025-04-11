@@ -19,9 +19,11 @@ import dan200.computercraft.shared.network.client.TerminalState;
 import dan200.computercraft.shared.util.DirectionUtil;
 import dan200.computercraft.shared.util.TickScheduler;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.net.packet.PacketTileEntityData;
 import net.minecraft.core.util.helper.Direction;
+import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
@@ -356,9 +358,10 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
         {
             // If we're the origin, set up the new monitor
             serverMonitor = new ServerMonitor( advanced, this );
+            clientMonitor = null;
             serverMonitor.rebuild();
 
-            // And propagate it to child monitors
+            // And propagate it to child monitormonitors
             for( int x = 0; x < width; x++ )
             {
                 for( int y = 0; y < height; y++ )
@@ -473,6 +476,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
         if( xIndex != 0 || yIndex != 0 )
         {
             serverMonitor = null;
+            clientMonitor = null;
         }
 
         xIndex = 0;
@@ -504,11 +508,13 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
             if( serverMonitor == null )
             {
                 serverMonitor = new ServerMonitor( advanced, this );
+                clientMonitor = null;
             }
         }
         else
         {
             serverMonitor = null;
+            clientMonitor = null;
         }
 
         // Update the terminal's width and height and rebuild it. This ensures the monitor
@@ -534,6 +540,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
                 monitor.width = width;
                 monitor.height = height;
                 monitor.serverMonitor = serverMonitor;
+                monitor.clientMonitor = null;
                 monitor.updateBlockState();
                 monitor.updateBlock();
             }
@@ -653,11 +660,17 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
     @SuppressWarnings( "StatementWithEmptyBody" )
     void expand()
     {
+        if (Helper.isSinglePlayer()) {
+            createServerMonitor();
+        }
         while( mergeLeft() || mergeRight() || mergeUp() || mergeDown() ) ;
     }
 
     void contractNeighbours()
     {
+        if (Helper.isSinglePlayer()) {
+            createServerMonitor();
+        }
         visiting = true;
         if( xIndex > 0 )
         {
@@ -696,6 +709,9 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile
 
     void contract()
     {
+        if (Helper.isSinglePlayer()) {
+            createServerMonitor();
+        }
         int height = this.height;
         int width = this.width;
 

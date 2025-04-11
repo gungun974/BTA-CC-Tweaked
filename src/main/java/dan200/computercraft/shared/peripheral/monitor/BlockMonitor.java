@@ -6,11 +6,13 @@
 package dan200.computercraft.shared.peripheral.monitor;
 
 import dan200.computercraft.fabric.Helper;
+import dan200.computercraft.shared.computer.blocks.TileComputerBase;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.entity.Mob;
+import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
