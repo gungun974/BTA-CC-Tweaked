@@ -40,7 +40,7 @@ public class GLFWKeyboardImplementationMixin {
     private void putKeyboardEvent(int keycode, byte state, int ch, long nanos, boolean repeat) {}
 
     @Inject(method = "createKeyboard()V", at = @At("TAIL"))
-    private void tickComputers(CallbackInfo info) {
+    private void addDirectAccess(CallbackInfo info) {
         this.keyCallback = GLFWKeyCallback.create((window, glfwKey, scancode, action, mods) -> {
             int key = translateKeyFromGLFW(glfwKey);
             if (action == GLFW.GLFW_PRESS) {

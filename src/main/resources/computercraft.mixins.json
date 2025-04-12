@@ -12,6 +12,7 @@
     "WorldMixin"
   ],
   "client": [
+    "GLFMouseImplementationMixin",
     "GLFWKeyboardImplementationMixin",
     "PlayerControllerSPMixin",
     "WorldClientMixin",

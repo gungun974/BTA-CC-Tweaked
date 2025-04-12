@@ -10,6 +10,7 @@ import dan200.computercraft.client.gui.widgets.WidgetTerminal;
 import dan200.computercraft.client.gui.widgets.WidgetWrapper;
 import dan200.computercraft.client.render.ComputerBorderRenderer;
 import dan200.computercraft.fabric.GLFWKeyboardManager;
+import dan200.computercraft.fabric.GLFWMouseManager;
 import dan200.computercraft.shared.computer.core.ClientComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
@@ -210,6 +211,7 @@ public class GuiComputer<T extends ContainerComputerBase> extends Screen
 
     UUID glfwKeyCallbackId;
     UUID glfwCharCallbackId;
+    UUID glfwScrollCallbackId;
 
     @Override
     public void init()
@@ -225,12 +227,18 @@ public class GuiComputer<T extends ContainerComputerBase> extends Screen
         glfwCharCallbackId = GLFWKeyboardManager.getInstance().addCharObserver(
             this::glfwCharCallback
         );
+
+        GLFWMouseManager.getInstance().removeScrollObserver(glfwScrollCallbackId);
+        glfwScrollCallbackId = GLFWMouseManager.getInstance().addScrollObserver(
+            this::glfwScrollCallback
+        );
     }
 
     @Override
     public void removed() {
         GLFWKeyboardManager.getInstance().removeKeyObserver(glfwKeyCallbackId);
         GLFWKeyboardManager.getInstance().removeCharObserver(glfwCharCallbackId);
+        GLFWMouseManager.getInstance().removeScrollObserver(glfwScrollCallbackId);
     }
 
     public void glfwKeyCallback(long window, int key, int scancode, int action, int mods) {
@@ -244,6 +252,23 @@ public class GuiComputer<T extends ContainerComputerBase> extends Screen
 
     public void glfwCharCallback(long window, int codepoint) {
             terminal.charTyped((char) codepoint);
+    }
+
+    public void glfwScrollCallback(long window, double xoffset, double yoffset) {
+        int mx = Mouse.getEventX() * this.width / this.mc.resolution.getWidthScreenCoords();
+        int my = this.height - Mouse.getEventY() * this.height / this.mc.resolution.getHeightScreenCoords() - 1;
+
+        final int termPxWidth = terminal.getWidth();
+        final int termPxHeight = terminal.getHeight();
+
+        final int wrapperX = (width - termPxWidth) / 2;
+        final int wrapperY = (height - termPxHeight) / 2;
+
+        terminal.mouseScrolled(
+            mx - wrapperX - MARGIN,
+            my - wrapperY - MARGIN,
+            yoffset
+        );
     }
 
     private int mouseButton = -1;

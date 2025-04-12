@@ -176,38 +176,37 @@ public class WidgetTerminal extends Gui implements GuiElement
         }
 
     }
+
+    public boolean mouseScrolled( double mouseX, double mouseY, double delta )
+    {
+        ClientComputer computer = this.computer.get();
+        if( computer == null || !computer.isColour() || delta == 0 )
+        {
+            return false;
+        }
+
+        Terminal term = computer.getTerminal();
+        if( term != null )
+        {
+            int charX = (int) (mouseX / FONT_WIDTH);
+            int charY = (int) (mouseY / FONT_HEIGHT);
+            charX = Math.min( Math.max( charX, 0 ), term.getWidth() - 1 );
+            charY = Math.min( Math.max( charY, 0 ), term.getHeight() - 1 );
+
+            computer.mouseScroll( delta < 0 ? 1 : -1, charX + 1, charY + 1 );
+
+            lastMouseX = charX;
+            lastMouseY = charY;
+        }
+
+        return true;
+    }
 //
-//    @Override
-//    public boolean mouseScrolled( double mouseX, double mouseY, double delta )
-//    {
-//        ClientComputer computer = this.computer.get();
-//        if( computer == null || !computer.isColour() || delta == 0 )
-//        {
-//            return false;
-//        }
-//
-//        Terminal term = computer.getTerminal();
-//        if( term != null )
-//        {
-//            int charX = (int) (mouseX / FONT_WIDTH);
-//            int charY = (int) (mouseY / FONT_HEIGHT);
-//            charX = Math.min( Math.max( charX, 0 ), term.getWidth() - 1 );
-//            charY = Math.min( Math.max( charY, 0 ), term.getHeight() - 1 );
-//
-//            computer.mouseScroll( delta < 0 ? 1 : -1, charX + 1, charY + 1 );
-//
-//            lastMouseX = charX;
-//            lastMouseY = charY;
-//        }
-//
-//        return true;
-//    }
-//
-    public boolean keyPressed( int key, int scancode, int modifiers )
+    public void keyPressed(int key, int scancode, int modifiers )
     {
         if( key == Keyboard.KEY_ESCAPE)
         {
-            return false;
+            return;
         }
         if( (modifiers & GLFW.GLFW_MOD_CONTROL) != 0 )
         {
@@ -218,19 +217,19 @@ public class WidgetTerminal extends Gui implements GuiElement
                     {
                         terminateTimer = 0;
                     }
-                    return true;
+                    return;
                 case GLFW.GLFW_KEY_S:
                     if( shutdownTimer < 0 )
                     {
                         shutdownTimer = 0;
                     }
-                    return true;
+                    return;
                 case GLFW.GLFW_KEY_R:
                     if( rebootTimer < 0 )
                     {
                         rebootTimer = 0;
                     }
-                    return true;
+                    return;
 
                 case GLFW.GLFW_KEY_V:
                     // Ctrl+V for paste
@@ -265,7 +264,7 @@ public class WidgetTerminal extends Gui implements GuiElement
                             queueEvent( "paste", clipboard );
                         }
 
-                        return true;
+                        return;
                     }
             }
         }
@@ -282,10 +281,9 @@ public class WidgetTerminal extends Gui implements GuiElement
             }
         }
 
-        return true;
     }
 
-    public boolean keyReleased( int key, int scancode, int modifiers )
+    public void keyReleased(int key, int scancode, int modifiers )
     {
         // Queue the "key_up" event and remove from the down set
         if( key >= 0 && keysDown.get( key ) )
@@ -315,10 +313,9 @@ public class WidgetTerminal extends Gui implements GuiElement
                 break;
         }
 
-        return true;
     }
 
-    public boolean charTyped( char ch )
+    public void charTyped(char ch )
     {
         if( ch >= 32 && ch <= 126 || ch >= 160 && ch <= 255 ) // printable chars in byte range
         {
@@ -326,7 +323,6 @@ public class WidgetTerminal extends Gui implements GuiElement
             queueEvent( "char", Character.toString( ch ) );
         }
 
-        return true;
     }
 //
 //    @Override
