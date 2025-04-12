@@ -19,6 +19,7 @@ import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.network.client.OpenGuiContainerMessage;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.RecordUtil;
+import net.minecraft.client.sound.SoundEntry;
 import net.minecraft.client.sound.SoundEvent;
 import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.entity.player.Player;
@@ -148,7 +149,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
                 if( recordQueued )
                 {
                     IMedia contents = getDiskMedia();
-                    SoundEvent record = contents != null ? contents.getAudio( diskStack ) : null;
+                    SoundEntry record = contents != null ? contents.getAudio( diskStack ) : null;
                     if( record != null )
                     {
                         recordPlaying = true;
@@ -492,7 +493,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
     private void playRecord()
     {
         IMedia contents = getDiskMedia();
-        SoundEvent record = contents != null ? contents.getAudio( diskStack ) : null;
+        SoundEntry record = contents != null ? contents.getAudio( diskStack ) : null;
         if( record != null )
         {
             RecordUtil.playRecord( record, contents.getAudioTitle( diskStack ), worldObj, new BlockPos(x, y, z) );

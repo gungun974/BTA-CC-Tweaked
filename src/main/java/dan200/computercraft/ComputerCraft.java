@@ -27,6 +27,7 @@ import dan200.computercraft.shared.TurtlePermissions;
 import dan200.computercraft.shared.common.*;
 import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
 import dan200.computercraft.shared.computer.core.ServerComputerRegistry;
+import dan200.computercraft.shared.media.items.RecordMedia;
 import dan200.computercraft.shared.network.client.*;
 import dan200.computercraft.shared.network.server.*;
 import dan200.computercraft.shared.peripheral.generic.methods.InventoryMethods;
@@ -35,6 +36,7 @@ import dan200.computercraft.shared.turtle.FurnaceRefuelHandler;
 import dan200.computercraft.shared.turtle.SignInspectHandler;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.item.Item;
+import net.minecraft.core.item.ItemDiscMusic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -154,10 +156,10 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint
             {
                 return (IMedia) item;
             }
-//            if( item instanceof ItemDiscMusic)
-//            {
-//                return RecordMedia.INSTANCE;
-//            }
+            if( item instanceof ItemDiscMusic)
+            {
+                return RecordMedia.INSTANCE;
+            }
             return null;
         } );
 

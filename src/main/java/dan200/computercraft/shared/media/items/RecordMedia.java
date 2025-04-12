@@ -6,12 +6,11 @@
 package dan200.computercraft.shared.media.items;
 
 import dan200.computercraft.api.media.IMedia;
-import dan200.computercraft.fabric.mixin.MusicDiscItemAccessor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.MusicDiscItem;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.sound.SoundEntry;
+import net.minecraft.client.sound.SoundRepository;
+import net.minecraft.core.item.Item;
+import net.minecraft.core.item.ItemDiscMusic;
+import net.minecraft.core.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
@@ -36,22 +35,23 @@ public final class RecordMedia implements IMedia
     public String getAudioTitle( @Nonnull ItemStack stack )
     {
         Item item = stack.getItem();
-        if( !(item instanceof MusicDiscItem) )
+        if( !(item instanceof ItemDiscMusic) )
         {
             return null;
         }
 
-        return new TranslatableText( item.getTranslationKey() + ".desc" ).getString();
+        return ((ItemDiscMusic) item).recordName;
     }
 
     @Override
-    public SoundEvent getAudio( @Nonnull ItemStack stack )
+    public SoundEntry getAudio(@Nonnull ItemStack stack )
     {
         Item item = stack.getItem();
-        if( !(item instanceof MusicDiscItem) )
+        if( !(item instanceof ItemDiscMusic) )
         {
             return null;
         }
-        return ((MusicDiscItemAccessor) item).getSound();
+
+        return SoundRepository.SOUNDS.getSoundEntry(((ItemDiscMusic) item).recordName);
     }
 }

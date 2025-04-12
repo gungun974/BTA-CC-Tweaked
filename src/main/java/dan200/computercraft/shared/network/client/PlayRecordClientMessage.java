@@ -7,7 +7,9 @@ package dan200.computercraft.shared.network.client;
 
 import dan200.computercraft.BlockPos;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.sound.SoundEvent;
+import net.minecraft.client.sound.SoundEntry;
+import net.minecraft.client.sound.SoundRepository;
+import net.minecraft.core.lang.I18n;
 import org.jetbrains.annotations.NotNull;
 import turniplabs.halplibe.helper.network.NetworkMessage;
 import turniplabs.halplibe.helper.network.UniversalPacket;
@@ -25,20 +27,20 @@ public class PlayRecordClientMessage implements NetworkMessage
 {
     private BlockPos pos;
     private String name;
-    private SoundEvent soundEvent;
+    private SoundEntry soundEntry;
 
-    public PlayRecordClientMessage( BlockPos pos, SoundEvent event, String name )
+    public PlayRecordClientMessage( BlockPos pos, SoundEntry entry, String name )
     {
         this.pos = pos;
         this.name = name;
-        soundEvent = event;
+        soundEntry = entry;
     }
 
     public PlayRecordClientMessage( BlockPos pos )
     {
         this.pos = pos;
         name = null;
-        soundEvent = null;
+        soundEntry = null;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class PlayRecordClientMessage implements NetworkMessage
         buf.writeInt( pos.x );
         buf.writeInt( pos.y );
         buf.writeInt( pos.z );
-        if( soundEvent == null )
+        if( soundEntry == null )
         {
             buf.writeBoolean( false );
         }
@@ -55,7 +57,7 @@ public class PlayRecordClientMessage implements NetworkMessage
         {
             buf.writeBoolean( true );
             buf.writeString( name );
-            buf.writeString( soundEvent.getEventID() );
+            buf.writeString( soundEntry.name );
         }
     }
 
@@ -68,12 +70,12 @@ public class PlayRecordClientMessage implements NetworkMessage
         if( buf.readBoolean() )
         {
             name = buf.readString();
-            soundEvent = null;
+            soundEntry = SoundRepository.SOUNDS.getSoundEntry(buf.readString());
         }
         else
         {
             name = null;
-            soundEvent = null;
+            soundEntry = null;
         }
     }
 
@@ -81,21 +83,12 @@ public class PlayRecordClientMessage implements NetworkMessage
     public void handle(NetworkContext context)
     {
         Minecraft mc = Minecraft.getMinecraft();
-//        mc.worldRenderer.playSong( soundEvent, pos );
-//        mc
-//            .currentWorld
-//            .playSoundEffect(
-//                null,
-//                SoundCategory.WEATHER_SOUNDS,
-//                d,
-//                d1,
-//                d2,
-//                "ambient.weather.rain",
-//                0.1F * this.mc.currentWorld.weatherManager.getWeatherIntensity() * this.mc.currentWorld.weatherManager.getWeatherPower() * 0.5F,
-//                0.5F
+
+        mc.sndManager.playMusic(soundEntry, pos.x, pos.y, pos.z, 1.0F, 1.0F);
+
         if( name != null )
         {
-            mc.hudIngame.setRecordPlayingMessage(name);
+            mc.hudIngame.setRecordPlayingMessage(I18n.getInstance().translateKey(name));
         }
     }
 }
