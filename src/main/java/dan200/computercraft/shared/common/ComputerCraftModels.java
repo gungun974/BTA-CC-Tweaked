@@ -6,6 +6,7 @@ import dan200.computercraft.shared.peripheral.diskdrive.BlockModelDiskDrive;
 import dan200.computercraft.shared.peripheral.diskdrive.DiskItemModel;
 import dan200.computercraft.shared.peripheral.modem.wired.BlockModelCable;
 import dan200.computercraft.shared.peripheral.modem.wired.BlockModelModemFull;
+import dan200.computercraft.shared.peripheral.modem.wired.CableItemModel;
 import dan200.computercraft.shared.peripheral.modem.wireless.BlockModelWirelessModem;
 import dan200.computercraft.shared.peripheral.monitor.BlockModelMonitor;
 import dan200.computercraft.shared.peripheral.monitor.TileEntityMonitorRenderer;
@@ -153,6 +154,9 @@ public class ComputerCraftModels implements ModelEntrypoint {
             itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/printed_book"));
             return itemModelStandard;
         });
+
+        ModelHelper.setItemModel(ComputerCraftItems.CABLE, () -> new CableItemModel(ComputerCraftItems.CABLE));
+        ModelHelper.setItemModel(ComputerCraftItems.WIRED_MODEM, () -> new CableItemModel(ComputerCraftItems.WIRED_MODEM));
 
         ComputerCraft.log.info("Item Models initialized.");
     }

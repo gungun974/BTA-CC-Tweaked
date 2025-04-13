@@ -36,8 +36,8 @@ public class ComputerCraftItems {
     public static ItemPrintout PRINTED_PAGES;
     public static ItemPrintout PRINTED_BOOK;
 
-    public static ItemBlockCable.Cable CABLE;// = register( "cable", new ItemBlockCable.Cable( ModBlocks.CABLE, properties() ) );
-    public static ItemBlockCable.WiredModem WIRED_MODEM;// = register( "wired_modem", new ItemBlockCable.WiredModem( ModBlocks.CABLE, properties() ) );
+    public static ItemBlockCable.Cable CABLE;
+    public static ItemBlockCable.WiredModem WIRED_MODEM;
 
     public ComputerCraftItems() {
 

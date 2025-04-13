@@ -141,7 +141,7 @@ public class ComputerCraftBlocks {
         CABLE = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
-            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setTags(BlockTags.NOT_IN_CREATIVE_MENU, BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileCable::new)
             .build("cable", 10004, b -> new BlockCable(b, Material.stone));
 

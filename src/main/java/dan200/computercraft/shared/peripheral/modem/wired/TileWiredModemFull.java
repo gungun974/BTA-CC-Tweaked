@@ -20,6 +20,7 @@ import dan200.computercraft.shared.peripheral.modem.ModemState;
 import dan200.computercraft.shared.util.DirectionUtil;
 import dan200.computercraft.shared.util.TickScheduler;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.lang.I18n;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.Vec3;
@@ -289,7 +290,8 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile
             base.append(  names.get( i ) );
         }
 
-        player.sendMessage( kind + base);
+        I18n i18n = I18n.getInstance();
+        player.sendMessage( i18n.translateKeyAndFormat(kind, base));
     }
 
     @Override

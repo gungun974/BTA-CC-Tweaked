@@ -1,5 +1,9 @@
 package dan200.computercraft.shared.peripheral.modem.wired;
 
+import dan200.computercraft.shared.peripheral.modem.ModemShapes;
+import net.minecraft.client.render.LightmapHelper;
+import net.minecraft.client.render.block.color.BlockColor;
+import net.minecraft.client.render.block.color.BlockColorDispatcher;
 import net.minecraft.client.render.block.model.BlockModelStandard;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
@@ -10,6 +14,8 @@ import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.AABB;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.GL11;
 
 public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T> {
     public static final IconCoordinate CABLE_CORE = TextureRegistry.getTexture("computercraft:block/cable_core");
@@ -287,6 +293,91 @@ public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T>
 
         this.resetRenderBlocks();
         return true;
+    }
+
+    @Override
+    public void renderBlockOnInventory(Tessellator tessellator, int metadata, float brightness, float alpha, @Nullable Integer lightmapCoordinate) {
+        if (renderBlocks.useInventoryTint) {
+            int color = ((BlockColor) BlockColorDispatcher.getInstance().getDispatch(this.block)).getFallbackColor(metadata);
+            float r = (float)(color >> 16 & 255) / 255.0F;
+            float g = (float)(color >> 8 & 255) / 255.0F;
+            float b = (float)(color & 255) / 255.0F;
+            GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
+        } else {
+            GL11.glColor4f(brightness, brightness, brightness, alpha);
+        }
+
+        float yOffset = 0.5F;
+        AABB bounds = this.getBlockBoundsForItemRender();
+        GL11.glTranslatef(-0.5F, 0.0F - yOffset, -0.5F);
+
+        if (LightmapHelper.isLightmapEnabled() && lightmapCoordinate != null) {
+            LightmapHelper.setLightmapCoord(lightmapCoordinate);
+        }
+
+        tessellator.startDrawingQuads();
+
+        if (metadata == 1) {
+            setBounds(bounds, ModemShapes.getBounds(Direction.WEST));
+
+            renderBlocks.uvRotateTop = 1;
+            tessellator.setNormal(0.0F, 0.0F, 1.0F);
+            this.renderSouthFace(tessellator, bounds, 0.0, 0.0, 0.0, WIRED_MODEM_FACE);
+            tessellator.setNormal(0.0F, -1.0F, 0.0F);
+            this.renderTopFace(tessellator, bounds, 0.0, 0.0, 0.0, WIRED_MODEM_FACE);
+            tessellator.setNormal(0.0F, -1.0F, 0.0F);
+            this.renderBottomFace(tessellator, bounds, 0.0, 0.0, 0.0, WIRED_MODEM_FACE);
+            tessellator.setNormal(1.0F, 0.0F, 0.0F);
+            this.renderEastFace(tessellator, bounds, 0.0, 0.0, 0.0, WIRED_MODEM_FACE);
+            renderBlocks.flipTexture = true;
+            tessellator.setNormal(0.0F, 0.0F, -1.0F);
+            this.renderNorthFace(tessellator, bounds, 0.0, 0.0, 0.0, WIRED_MODEM_FACE);
+            renderBlocks.flipTexture = false;
+
+            tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+            this.renderWestFace(tessellator, bounds, 0.0, 0.0, 0.0, MODEM_BACK);
+        } else {
+
+            setBounds(bounds, CableShapes.SHAPE_CABLE_CORE);
+            tessellator.setNormal(0.0F, 0.0F, -1.0F);
+            this.renderNorthFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
+            tessellator.setNormal(0.0F, 0.0F, 1.0F);
+            this.renderSouthFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
+            tessellator.setNormal(0.0F, 1.0F, 0.0F);
+            this.renderTopFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
+            tessellator.setNormal(0.0F, -1.0F, 0.0F);
+            this.renderBottomFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
+
+            setBounds(bounds, CableShapes.SHAPE_CABLE_ARM.get(Direction.EAST));
+
+            tessellator.setNormal(0.0F, 0.0F, -1.0F);
+            this.renderNorthFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
+            tessellator.setNormal(0.0F, 0.0F, 1.0F);
+            this.renderSouthFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
+            tessellator.setNormal(0.0F, 1.0F, 0.0F);
+            this.renderTopFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
+            tessellator.setNormal(0.0F, -1.0F, 0.0F);
+            this.renderBottomFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
+            tessellator.setNormal(1.0F, 0.0F, 0.0F);
+            this.renderEastFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_CORE);
+
+            setBounds(bounds, CableShapes.SHAPE_CABLE_ARM.get(Direction.WEST));
+            tessellator.setNormal(0.0F, 0.0F, -1.0F);
+            this.renderNorthFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
+            tessellator.setNormal(0.0F, 0.0F, 1.0F);
+            this.renderSouthFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
+            tessellator.setNormal(0.0F, 1.0F, 0.0F);
+            this.renderTopFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
+            tessellator.setNormal(0.0F, -1.0F, 0.0F);
+            this.renderBottomFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
+            tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+            this.renderWestFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_CORE);
+
+        }
+
+        tessellator.draw();
+
+        GL11.glTranslatef(0.5F, yOffset, 0.5F);
     }
 
     private static void setBounds(AABB bounds, AABB shape) {

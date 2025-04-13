@@ -24,6 +24,7 @@ import dan200.computercraft.shared.util.TickScheduler;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.lang.I18n;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.Vec3;
@@ -117,13 +118,14 @@ public boolean onBlockRightClicked(Player player, Side side, double xPlaced, dou
         String newName = peripheral.getConnectedName();
         if( !Objects.equals( newName, oldName ) )
         {
+            I18n i18n = I18n.getInstance();
             if( oldName != null )
             {
-                player.sendMessage( "chat.computercraft.wired_modem.peripheral_disconnected" + oldName);
+                player.sendMessage( i18n.translateKeyAndFormat("chat.computercraft.wired_modem.peripheral_disconnected", oldName));
             }
             if( newName != null )
             {
-                player.sendMessage(  "chat.computercraft.wired_modem.peripheral_connected" + newName );
+                player.sendMessage( i18n.translateKeyAndFormat("chat.computercraft.wired_modem.peripheral_connected", newName));
             }
         }
 

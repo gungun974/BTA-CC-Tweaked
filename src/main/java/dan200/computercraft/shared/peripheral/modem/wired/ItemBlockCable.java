@@ -22,8 +22,6 @@ import static dan200.computercraft.shared.peripheral.modem.wired.BlockCable.*;
 
 public abstract class ItemBlockCable extends Item
 {
-    private String translationKey;
-
     public ItemBlockCable(NamespaceID namespaceId, int id )
     {
         super(namespaceId, id);
@@ -107,26 +105,6 @@ public abstract class ItemBlockCable extends Item
         }
         return false;
     }
-
-//    @Nonnull
-//    @Override
-//    public String getTranslationKey()
-//    {
-//        if( translationKey == null )
-//        {
-//            translationKey = Util.createTranslationKey( "block", Registry.ITEM.getId( this ) );
-//        }
-//        return translationKey;
-//    }
-
-//    @Override
-//    public void appendStacks( @Nonnull ItemGroup group, @Nonnull DefaultedList<ItemStack> list )
-//    {
-//        if( isIn( group ) )
-//        {
-//            list.add( new ItemStack( this ) );
-//        }
-//    }
 
     public static class WiredModem extends ItemBlockCable
     {
