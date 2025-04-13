@@ -4,6 +4,7 @@ import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.items.ItemBlockComputer;
 import dan200.computercraft.shared.media.items.ItemDisk;
 import dan200.computercraft.shared.media.items.ItemPrintout;
+import dan200.computercraft.shared.peripheral.modem.wired.ItemBlockCable;
 import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
 import dan200.computercraft.shared.turtle.items.ItemTurtle;
 import net.minecraft.core.item.Item;
@@ -35,6 +36,9 @@ public class ComputerCraftItems {
     public static ItemPrintout PRINTED_PAGES;
     public static ItemPrintout PRINTED_BOOK;
 
+    public static ItemBlockCable.Cable CABLE;// = register( "cable", new ItemBlockCable.Cable( ModBlocks.CABLE, properties() ) );
+    public static ItemBlockCable.WiredModem WIRED_MODEM;// = register( "wired_modem", new ItemBlockCable.WiredModem( ModBlocks.CABLE, properties() ) );
+
     public ComputerCraftItems() {
 
     }
@@ -63,5 +67,13 @@ public class ComputerCraftItems {
         PRINTED_BOOK = new ItemBuilder(MOD_ID)
             .setKey("item.printed_book")
             .build((new ItemPrintout(NamespaceID.getPermanent(MOD_ID, "printed_book"), 16544, ItemPrintout.Type.BOOK)));
+
+        CABLE = new ItemBuilder(MOD_ID)
+            .setKey("item.cable")
+            .build((new ItemBlockCable.Cable(NamespaceID.getPermanent(MOD_ID, "cable"), 16545)));
+
+        WIRED_MODEM = new ItemBuilder(MOD_ID)
+            .setKey("item.wired_modem")
+            .build((new ItemBlockCable.WiredModem(NamespaceID.getPermanent(MOD_ID, "wired_modem"), 16546)));
     }
 }

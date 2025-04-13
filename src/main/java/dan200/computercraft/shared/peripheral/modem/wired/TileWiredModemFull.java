@@ -155,7 +155,7 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile
         for( Direction facing : DirectionUtil.FACINGS )
         {
             BlockPos offset = current.offset( facing );
-            if( !worldObj.isChunkLoaded( offset.x, offset.z ) )
+            if( !worldObj.isChunkLoaded( Math.floorDiv(offset.x, 16), Math.floorDiv(offset.z, 16) ) )
             {
                 continue;
             }

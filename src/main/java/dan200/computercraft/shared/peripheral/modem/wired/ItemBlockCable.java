@@ -6,19 +6,22 @@
 package dan200.computercraft.shared.peripheral.modem.wired;
 
 import net.minecraft.core.block.Block;
+import net.minecraft.core.item.Item;
 import net.minecraft.core.item.block.ItemBlock;
+import net.minecraft.core.util.collection.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
 import static dan200.computercraft.shared.peripheral.modem.wired.BlockCable.*;
 
-public abstract class ItemBlockCable extends ItemBlock
+public abstract class ItemBlockCable extends Item
 {
     private String translationKey;
 
-    public ItemBlockCable(@NotNull Block block) {
-        super(block);
+    public ItemBlockCable(NamespaceID namespaceId, int id )
+    {
+        super(namespaceId, id);
     }
 
 
@@ -73,8 +76,9 @@ public abstract class ItemBlockCable extends ItemBlock
 
     public static class WiredModem extends ItemBlockCable
     {
-        public WiredModem(@NotNull Block block) {
-            super(block);
+        public WiredModem(NamespaceID namespaceId, int id )
+        {
+            super(namespaceId, id);
         }
 //
 //        @Nonnull
@@ -111,9 +115,9 @@ public abstract class ItemBlockCable extends ItemBlock
 
     public static class Cable extends ItemBlockCable
     {
-
-        public Cable(@NotNull Block block) {
-            super(block);
+        public Cable(NamespaceID namespaceId, int id )
+        {
+            super(namespaceId, id);
         }
 
 //        @Nonnull
