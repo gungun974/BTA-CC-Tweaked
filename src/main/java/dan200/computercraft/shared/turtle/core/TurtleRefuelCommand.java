@@ -15,42 +15,35 @@ import net.minecraft.core.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class TurtleRefuelCommand implements ITurtleCommand
-{
+public class TurtleRefuelCommand implements ITurtleCommand {
     private final int limit;
 
-    public TurtleRefuelCommand( int limit )
-    {
+    public TurtleRefuelCommand(int limit) {
         this.limit = limit;
     }
 
     @Nonnull
     @Override
-    public TurtleCommandResult execute( @Nonnull ITurtleAccess turtle )
-    {
+    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
         int slot = turtle.getSelectedSlot();
         ItemStack stack = turtle.getInventory()
-            .getItem( slot );
-        if( stack == null )
-        {
-            return TurtleCommandResult.failure( "No items to combust" );
+            .getItem(slot);
+        if (stack == null) {
+            return TurtleCommandResult.failure("No items to combust");
         }
 
-        TurtleRefuelEvent event = new TurtleRefuelEvent( turtle, stack );
-        if( TurtleEvent.post( event ) )
-        {
-            return TurtleCommandResult.failure( event.getFailureMessage() );
+        TurtleRefuelEvent event = new TurtleRefuelEvent(turtle, stack);
+        if (TurtleEvent.post(event)) {
+            return TurtleCommandResult.failure(event.getFailureMessage());
         }
-        if( event.getHandler() == null )
-        {
-            return TurtleCommandResult.failure( "Items not combustible" );
+        if (event.getHandler() == null) {
+            return TurtleCommandResult.failure("Items not combustible");
         }
 
-        if( limit != 0 )
-        {
-            turtle.addFuel( event.getHandler()
-                .refuel( turtle, stack, slot, limit ) );
-            turtle.playAnimation( TurtleAnimation.WAIT );
+        if (limit != 0) {
+            turtle.addFuel(event.getHandler()
+                .refuel(turtle, stack, slot, limit));
+            turtle.playAnimation(TurtleAnimation.WAIT);
         }
 
         return TurtleCommandResult.success();

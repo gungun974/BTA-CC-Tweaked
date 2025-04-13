@@ -18,17 +18,14 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public class TurtleCraftingTable extends AbstractTurtleUpgrade
-{
-    public TurtleCraftingTable( int id )
-    {
-        super( id, TurtleUpgradeType.PERIPHERAL, Blocks.WORKBENCH );
+public class TurtleCraftingTable extends AbstractTurtleUpgrade {
+    public TurtleCraftingTable(int id) {
+        super(id, TurtleUpgradeType.PERIPHERAL, Blocks.WORKBENCH);
     }
 
     @Override
-    public IPeripheral createPeripheral( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side )
-    {
-        return new CraftingTablePeripheral( turtle );
+    public IPeripheral createPeripheral(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side) {
+        return new CraftingTablePeripheral(turtle);
     }
 
     @Override

@@ -21,8 +21,7 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-public final class TurtleRecipe extends ComputerFamilyRecipe implements HasJsonAdapter
-{
+public final class TurtleRecipe extends ComputerFamilyRecipe implements HasJsonAdapter {
     public TurtleRecipe(int recipeWidth, int recipeHeight, RecipeSymbol[] input, ItemStack output, boolean consumeContainerItem, boolean allowMirrored, ComputerFamily family) {
         super(recipeWidth, recipeHeight, input, output, consumeContainerItem, allowMirrored, family);
     }
@@ -33,10 +32,9 @@ public final class TurtleRecipe extends ComputerFamilyRecipe implements HasJsonA
 
     @Nonnull
     @Override
-    protected ItemStack convert( @Nonnull IComputerItem item, @Nonnull ItemStack stack )
-    {
-        int computerID = item.getComputerID( stack );
-        String label = item.getLabel( stack );
+    protected ItemStack convert(@Nonnull IComputerItem item, @Nonnull ItemStack stack) {
+        int computerID = item.getComputerID(stack);
+        String label = item.getLabel(stack);
 
         return Objects.requireNonNull(TurtleItemFactory.create(computerID, label, -1, getFamily(), null, null, 0, -1));
     }
@@ -65,7 +63,7 @@ public final class TurtleRecipe extends ComputerFamilyRecipe implements HasJsonA
         }
 
         public JsonElement serialize(TurtleRecipe src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonElement recipeEntryCraftingShaped = (new RecipeCraftingShapedJsonAdapter()).serialize( src, typeOfSrc, context);
+            JsonElement recipeEntryCraftingShaped = (new RecipeCraftingShapedJsonAdapter()).serialize(src, typeOfSrc, context);
 
             JsonObject obj = recipeEntryCraftingShaped.getAsJsonObject();
 

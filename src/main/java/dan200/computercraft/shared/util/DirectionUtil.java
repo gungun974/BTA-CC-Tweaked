@@ -11,8 +11,7 @@ import net.minecraft.core.util.helper.Direction;
 
 import java.util.Arrays;
 
-public final class DirectionUtil
-{
+public final class DirectionUtil {
     public static final Direction[] FACINGS = {
         Direction.NORTH,
         Direction.EAST,
@@ -22,46 +21,38 @@ public final class DirectionUtil
         Direction.DOWN,
     };
 
-    private DirectionUtil() {}
+    private DirectionUtil() {
+    }
 
-    public static ComputerSide toLocal( Direction front, Direction dir )
-    {
-       if (dir == Direction.NONE) {
-           throw new RuntimeException("Direction should not be none in Computer World");
-       }
+    public static ComputerSide toLocal(Direction front, Direction dir) {
+        if (dir == Direction.NONE) {
+            throw new RuntimeException("Direction should not be none in Computer World");
+        }
 
-        if( front.getAxis() == Axis.Y )
-        {
+        if (front.getAxis() == Axis.Y) {
             front = Direction.NORTH;
         }
 
-        if( dir == front )
-        {
+        if (dir == front) {
             return ComputerSide.FRONT;
         }
-        if( dir == front.getOpposite() )
-        {
+        if (dir == front.getOpposite()) {
             return ComputerSide.BACK;
         }
-        if( dir == rotateYCounterclockwise(front) )
-        {
+        if (dir == rotateYCounterclockwise(front)) {
             return ComputerSide.LEFT;
         }
-        if( dir == rotateYClockwise(front) )
-        {
+        if (dir == rotateYClockwise(front)) {
             return ComputerSide.RIGHT;
         }
-        if( dir == Direction.UP )
-        {
+        if (dir == Direction.UP) {
             return ComputerSide.TOP;
         }
         return ComputerSide.BOTTOM;
     }
 
-    public static float toPitchAngle( Direction dir )
-    {
-        switch( dir )
-        {
+    public static float toPitchAngle(Direction dir) {
+        switch (dir) {
             case DOWN:
                 return 90.0f;
             case UP:

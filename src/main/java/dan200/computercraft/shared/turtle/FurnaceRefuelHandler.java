@@ -6,7 +6,6 @@
 package dan200.computercraft.shared.turtle;
 
 import com.google.common.eventbus.Subscribe;
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.event.TurtleRefuelEvent;
 import dan200.computercraft.shared.util.InventoryUtil;
@@ -19,29 +18,29 @@ import net.minecraft.core.item.Items;
 
 import javax.annotation.Nonnull;
 
-public final class FurnaceRefuelHandler implements TurtleRefuelEvent.Handler
-{
+public final class FurnaceRefuelHandler implements TurtleRefuelEvent.Handler {
     public static final FurnaceRefuelHandler INSTANCE = new FurnaceRefuelHandler();
 
-    private FurnaceRefuelHandler()
-    {
+    private FurnaceRefuelHandler() {
     }
 
     @Subscribe
-    public static void onTurtleRefuel( TurtleRefuelEvent event )
-    {
-        if( event.getHandler() == null && getFuelPerItem( event.getStack() ) > 0 )
-        {
-            event.setHandler( INSTANCE );
+    public static void onTurtleRefuel(TurtleRefuelEvent event) {
+        if (event.getHandler() == null && getFuelPerItem(event.getStack()) > 0) {
+            event.setHandler(INSTANCE);
         }
     }
 
+    private static int getFuelPerItem(@Nonnull ItemStack stack) {
+        int burnTime = LookupFuelFurnace.instance.getFuelYield(stack.getItem().id);
+        return (burnTime * 5) / 100;
+    }
+
     @Override
-    public int refuel( @Nonnull ITurtleAccess turtle, @Nonnull ItemStack currentStack, int slot, int limit )
-    {
-        ItemStorage storage = ItemStorage.wrap( turtle.getInventory() );
-        ItemStack stack = storage.take( slot, limit, null, false );
-        int fuelToGive = getFuelPerItem( stack ) * stack.stackSize;
+    public int refuel(@Nonnull ITurtleAccess turtle, @Nonnull ItemStack currentStack, int slot, int limit) {
+        ItemStorage storage = ItemStorage.wrap(turtle.getInventory());
+        ItemStack stack = storage.take(slot, limit, null, false);
+        int fuelToGive = getFuelPerItem(stack) * stack.stackSize;
 
         // Store the replacement item in the inventory
         Item replacementStack = stack.getItem();
@@ -55,25 +54,17 @@ public final class FurnaceRefuelHandler implements TurtleRefuelEvent.Handler
             }
         }
 
-        if( replacementStack != null )
-        {
-            ItemStack remainder = InventoryUtil.storeItems( new ItemStack( replacementStack ), storage, turtle.getSelectedSlot() );
-            if( remainder != null )
-            {
-                WorldUtil.dropItemStack( remainder,
+        if (replacementStack != null) {
+            ItemStack remainder = InventoryUtil.storeItems(new ItemStack(replacementStack), storage, turtle.getSelectedSlot());
+            if (remainder != null) {
+                WorldUtil.dropItemStack(remainder,
                     turtle.getWorld(),
                     turtle.getPosition(),
                     turtle.getDirection()
-                        .getOpposite() );
+                        .getOpposite());
             }
         }
 
         return fuelToGive;
-    }
-
-    private static int getFuelPerItem( @Nonnull ItemStack stack )
-    {
-        int burnTime = LookupFuelFurnace.instance.getFuelYield(stack.getItem().id);
-        return (burnTime * 5) / 100;
     }
 }

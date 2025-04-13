@@ -12,8 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.InputStream;
 
-public interface IComputerEnvironment
-{
+public interface IComputerEnvironment {
     int getDay();
 
     double getTimeOfDay();
@@ -31,11 +30,11 @@ public interface IComputerEnvironment
     int assignNewID();
 
     @Nullable
-    IWritableMount createSaveDirMount( String subPath, long capacity );
+    IWritableMount createSaveDirMount(String subPath, long capacity);
 
     @Nullable
-    IMount createResourceMount( String domain, String subPath );
+    IMount createResourceMount(String domain, String subPath);
 
     @Nullable
-    InputStream createResourceFile( String domain, String subPath );
+    InputStream createResourceFile(String domain, String subPath);
 }

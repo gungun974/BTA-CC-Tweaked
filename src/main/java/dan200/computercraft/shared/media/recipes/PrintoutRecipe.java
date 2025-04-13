@@ -20,22 +20,19 @@ import net.minecraft.core.player.inventory.container.ContainerCrafting;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 
-public final class PrintoutRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> implements HasJsonAdapter
-{
-    public PrintoutRecipe()
-    {
+public final class PrintoutRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> implements HasJsonAdapter {
+    public PrintoutRecipe() {
     }
 
     @Nonnull
     @Override
-    public ItemStack getOutput()
-    {
-        return ItemPrintout.createMultipleFromTitleAndText( null, null, null );
+    public ItemStack getOutput() {
+        return ItemPrintout.createMultipleFromTitleAndText(null, null, null);
     }
 
     @Override
     public boolean matches(ContainerCrafting inventory) {
-        return getCraftingResult( inventory ) != null;
+        return getCraftingResult(inventory) != null;
     }
 
     @Override
@@ -56,44 +53,30 @@ public final class PrintoutRecipe extends RecipeEntryCrafting<RecipeSymbol[], It
         int width = ((ContainerCraftingAccessor) inventory).getWidth();
         int height = inventory.getContainerSize() / width;
 
-        for( int y = 0; y < height; y++ )
-        {
-            for( int x = 0; x < width; x++ )
-            {
-                ItemStack stack = inventory.getItem( x + y * width );
-                if( stack != null )
-                {
-                    if( stack.getItem() instanceof ItemPrintout && ((ItemPrintout) stack.getItem()).getType() != ItemPrintout.Type.BOOK )
-                    {
-                        if( printouts == null )
-                        {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                ItemStack stack = inventory.getItem(x + y * width);
+                if (stack != null) {
+                    if (stack.getItem() instanceof ItemPrintout && ((ItemPrintout) stack.getItem()).getType() != ItemPrintout.Type.BOOK) {
+                        if (printouts == null) {
                             printouts = new ItemStack[9];
                         }
                         printouts[numPrintouts] = stack;
-                        numPages += ItemPrintout.getPageCount( stack );
+                        numPages += ItemPrintout.getPageCount(stack);
                         numPrintouts++;
                         printoutFound = true;
-                    }
-                    else if (stack.getItem().equals(Items.PAPER))
-                    {
-                        if( printouts == null )
-                        {
+                    } else if (stack.getItem().equals(Items.PAPER)) {
+                        if (printouts == null) {
                             printouts = new ItemStack[9];
                         }
                         printouts[numPrintouts] = stack;
                         numPages++;
                         numPrintouts++;
-                    }
-                    else if( stack.getItem().equals(Items.STRING) && !stringFound )
-                    {
+                    } else if (stack.getItem().equals(Items.STRING) && !stringFound) {
                         stringFound = true;
-                    }
-                    else if( stack.getItem().equals(Items.LEATHER) && !leatherFound )
-                    {
+                    } else if (stack.getItem().equals(Items.LEATHER) && !leatherFound) {
                         leatherFound = true;
-                    }
-                    else
-                    {
+                    } else {
                         return null;
                     }
                 }
@@ -101,32 +84,25 @@ public final class PrintoutRecipe extends RecipeEntryCrafting<RecipeSymbol[], It
         }
 
         // Build some pages with what was passed in
-        if( numPages <= ItemPrintout.MAX_PAGES && stringFound && printoutFound && numPrintouts >= (leatherFound ? 1 : 2) )
-        {
+        if (numPages <= ItemPrintout.MAX_PAGES && stringFound && printoutFound && numPrintouts >= (leatherFound ? 1 : 2)) {
             String[] text = new String[numPages * ItemPrintout.LINES_PER_PAGE];
             String[] colours = new String[numPages * ItemPrintout.LINES_PER_PAGE];
             int line = 0;
 
-            for( int printout = 0; printout < numPrintouts; printout++ )
-            {
+            for (int printout = 0; printout < numPrintouts; printout++) {
                 ItemStack stack = printouts[printout];
-                if( stack.getItem() instanceof ItemPrintout )
-                {
+                if (stack.getItem() instanceof ItemPrintout) {
                     // Add a printout
-                    String[] pageText = ItemPrintout.getText( printouts[printout] );
-                    String[] pageColours = ItemPrintout.getColours( printouts[printout] );
-                    for( int pageLine = 0; pageLine < pageText.length; pageLine++ )
-                    {
+                    String[] pageText = ItemPrintout.getText(printouts[printout]);
+                    String[] pageColours = ItemPrintout.getColours(printouts[printout]);
+                    for (int pageLine = 0; pageLine < pageText.length; pageLine++) {
                         text[line] = pageText[pageLine];
                         colours[line] = pageColours[pageLine];
                         line++;
                     }
-                }
-                else
-                {
+                } else {
                     // Add a blank page
-                    for( int pageLine = 0; pageLine < ItemPrintout.LINES_PER_PAGE; pageLine++ )
-                    {
+                    for (int pageLine = 0; pageLine < ItemPrintout.LINES_PER_PAGE; pageLine++) {
                         text[line] = "";
                         colours[line] = "";
                         line++;
@@ -135,18 +111,14 @@ public final class PrintoutRecipe extends RecipeEntryCrafting<RecipeSymbol[], It
             }
 
             String title = null;
-            if( printouts[0].getItem() instanceof ItemPrintout )
-            {
-                title = ItemPrintout.getTitle( printouts[0] );
+            if (printouts[0].getItem() instanceof ItemPrintout) {
+                title = ItemPrintout.getTitle(printouts[0]);
             }
 
-            if( leatherFound )
-            {
-                return ItemPrintout.createBookFromTitleAndText( title, text, colours );
-            }
-            else
-            {
-                return ItemPrintout.createMultipleFromTitleAndText( title, text, colours );
+            if (leatherFound) {
+                return ItemPrintout.createBookFromTitleAndText(title, text, colours);
+            } else {
+                return ItemPrintout.createMultipleFromTitleAndText(title, text, colours);
             }
         }
 
@@ -162,7 +134,7 @@ public final class PrintoutRecipe extends RecipeEntryCrafting<RecipeSymbol[], It
     public ItemStack[] onCraftResult(ContainerCrafting containerCrafting) {
         ItemStack[] returnStack = new ItemStack[9];
 
-        for(int i = 0; i < containerCrafting.getContainerSize(); ++i) {
+        for (int i = 0; i < containerCrafting.getContainerSize(); ++i) {
             ItemStack itemStack = containerCrafting.getItem(i);
             if (itemStack != null) {
                 containerCrafting.removeItem(i, 1);

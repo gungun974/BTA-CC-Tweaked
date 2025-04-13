@@ -1,6 +1,5 @@
 package dan200.computercraft.fabric.mixin;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;

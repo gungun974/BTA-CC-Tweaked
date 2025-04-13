@@ -5,16 +5,7 @@
  */
 package dan200.computercraft.client.render;
 
-import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.shared.computer.core.ComputerFamily;
-import net.minecraft.client.render.tessellator.Tessellator;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Matrix4f;
-
-import javax.annotation.Nonnull;
-
-public class ComputerBorderRenderer
-{
+public class ComputerBorderRenderer {
 //    public static final Identifier BACKGROUND_NORMAL = new Identifier( ComputerCraft.MOD_ID, "textures/gui/corners_normal.png" );
 //    public static final Identifier BACKGROUND_ADVANCED = new Identifier( ComputerCraft.MOD_ID, "textures/gui/corners_advanced.png" );
 //    public static final Identifier BACKGROUND_COMMAND = new Identifier( ComputerCraft.MOD_ID, "textures/gui/corners_command.png" );

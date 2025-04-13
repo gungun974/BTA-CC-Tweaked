@@ -9,9 +9,8 @@ import dan200.computercraft.BlockPos;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
 
-public interface IBundledRedstoneBlock
-{
-    boolean getBundledRedstoneConnectivity(World world, BlockPos pos, Direction side );
+public interface IBundledRedstoneBlock {
+    boolean getBundledRedstoneConnectivity(World world, BlockPos pos, Direction side);
 
-    int getBundledRedstoneOutput( World world, BlockPos pos, Direction side );
+    int getBundledRedstoneOutput(World world, BlockPos pos, Direction side);
 }

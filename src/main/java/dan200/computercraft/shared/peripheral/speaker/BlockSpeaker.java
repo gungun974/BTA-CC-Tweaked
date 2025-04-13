@@ -5,13 +5,11 @@
  */
 package dan200.computercraft.shared.peripheral.speaker;
 
-import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogicRotatable;
 import net.minecraft.core.block.material.Material;
 
-public class BlockSpeaker extends BlockLogicRotatable
-{
+public class BlockSpeaker extends BlockLogicRotatable {
     public BlockSpeaker(Block<?> block) {
         super(block, Material.stone);
         block.withEntity(TileSpeaker::new);

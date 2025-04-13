@@ -11,15 +11,12 @@ import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.event.TurtleActionEvent;
 import net.minecraft.core.world.World;
 
-public final class TurtlePermissions
-{
-    public static boolean isBlockEditable(World world, BlockPos pos )
-    {
-        return isBlockEnterable( world, pos );
+public final class TurtlePermissions {
+    public static boolean isBlockEditable(World world, BlockPos pos) {
+        return isBlockEnterable(world, pos);
     }
 
-    public static boolean isBlockEnterable( World world, BlockPos pos  )
-    {
+    public static boolean isBlockEnterable(World world, BlockPos pos) {
         //TODO: Make sure turtle respect spawn protection
         return true;
 //        MinecraftServer server = MinecraftServer.getInstance();
@@ -27,11 +24,9 @@ public final class TurtlePermissions
     }
 
     @Subscribe
-    public void onTurtleAction( TurtleActionEvent event )
-    {
-        if( ComputerCraft.turtleDisabledActions.contains( event.getAction() ) )
-        {
-            event.setCanceled( true, "Action has been disabled" );
+    public void onTurtleAction(TurtleActionEvent event) {
+        if (ComputerCraft.turtleDisabledActions.contains(event.getAction())) {
+            event.setCanceled(true, "Action has been disabled");
         }
     }
 }

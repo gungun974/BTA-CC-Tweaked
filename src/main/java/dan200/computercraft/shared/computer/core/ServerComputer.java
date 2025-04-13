@@ -38,8 +38,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.InputStream;
 
-public class ServerComputer extends ServerTerminal implements IComputer, IComputerEnvironment
-{
+public class ServerComputer extends ServerTerminal implements IComputer, IComputerEnvironment {
     private final int instanceID;
     private final ComputerFamily family;
     private final Computer computer;
@@ -51,17 +50,16 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
     private boolean changedLastFrame;
     private int ticksSincePing;
 
-    public ServerComputer( World world, int computerID, String label, int instanceID, ComputerFamily family, int terminalWidth, int terminalHeight )
-    {
-        super( family != ComputerFamily.NORMAL, terminalWidth, terminalHeight );
+    public ServerComputer(World world, int computerID, String label, int instanceID, ComputerFamily family, int terminalWidth, int terminalHeight) {
+        super(family != ComputerFamily.NORMAL, terminalWidth, terminalHeight);
         this.instanceID = instanceID;
 
         this.world = world;
         position = null;
 
         this.family = family;
-        computer = new Computer( this, getTerminal(), computerID );
-        computer.setLabel( label );
+        computer = new Computer(this, getTerminal(), computerID);
+        computer.setLabel(label);
         userData = null;
         changed = false;
 
@@ -69,44 +67,36 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         ticksSincePing = 0;
     }
 
-    public ComputerFamily getFamily()
-    {
+    public ComputerFamily getFamily() {
         return family;
     }
 
-    public World getWorld()
-    {
+    public World getWorld() {
         return world;
     }
 
-    public void setWorld( World world )
-    {
+    public void setWorld(World world) {
         this.world = world;
     }
 
-    public BlockPos getPosition()
-    {
+    public BlockPos getPosition() {
         return position;
     }
 
-    public void setPosition( BlockPos pos )
-    {
+    public void setPosition(BlockPos pos) {
         position = pos;
     }
 
-    public IAPIEnvironment getAPIEnvironment()
-    {
+    public IAPIEnvironment getAPIEnvironment() {
         return computer.getAPIEnvironment();
     }
 
-    public Computer getComputer()
-    {
+    public Computer getComputer() {
         return computer;
     }
 
     @Override
-    public void update()
-    {
+    public void update() {
         super.update();
 
         TileEntity tileEntity = world.getTileEntity(position.x, position.y, position.z);
@@ -122,125 +112,97 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         ticksSincePing++;
     }
 
-    public void keepAlive()
-    {
+    public void keepAlive() {
         ticksSincePing = 0;
     }
 
-    public boolean hasTimedOut()
-    {
+    public boolean hasTimedOut() {
         return ticksSincePing > 100;
     }
 
-    public void unload()
-    {
+    public void unload() {
         computer.unload();
     }
 
-    public CompoundTag getUserData()
-    {
-        if( userData == null )
-        {
+    public CompoundTag getUserData() {
+        if (userData == null) {
             userData = new CompoundTag();
         }
         return userData;
     }
 
-    public void updateUserData()
-    {
+    public void updateUserData() {
         changed = true;
     }
 
-    public void broadcastState( boolean force )
-    {
-        if( hasOutputChanged() || force )
-        {
+    public void broadcastState(boolean force) {
+        if (hasOutputChanged() || force) {
             // Send computer state to all clients
-            NetworkHandler.sendToAllPlayers( createComputerPacket() );
+            NetworkHandler.sendToAllPlayers(createComputerPacket());
         }
 
-        if( hasTerminalChanged() || force )
-        {
-            if(!Helper.isSinglePlayer())
-            {
+        if (hasTerminalChanged() || force) {
+            if (!Helper.isSinglePlayer()) {
                 MinecraftServer server = MinecraftServer.getInstance();
                 // Send terminal state to clients who are currently interacting with the computer.
 
                 NetworkMessage packet = null;
-                for( Player player : server.playerList.playerEntities )
-                {
-                    if( isInteracting( player ) )
-                    {
-                        if( packet == null )
-                        {
+                for (Player player : server.playerList.playerEntities) {
+                    if (isInteracting(player)) {
+                        if (packet == null) {
                             packet = createTerminalPacket();
                         }
-                        NetworkHandler.sendToPlayer( player, packet );
+                        NetworkHandler.sendToPlayer(player, packet);
                     }
                 }
             } else {
                 final Player player = Minecraft.getMinecraft().thePlayer;
-                if( isInteracting( player ) )
-                {
-                    NetworkHandler.sendToPlayer( player, createTerminalPacket() );
+                if (isInteracting(player)) {
+                    NetworkHandler.sendToPlayer(player, createTerminalPacket());
                 }
             }
         }
     }
 
-    public boolean hasOutputChanged()
-    {
+    public boolean hasOutputChanged() {
         return changedLastFrame;
     }
 
-    private NetworkMessage createComputerPacket()
-    {
-        return new ComputerDataClientMessage( this );
+    private NetworkMessage createComputerPacket() {
+        return new ComputerDataClientMessage(this);
     }
 
-    protected boolean isInteracting( Player player )
-    {
-        return getContainer( player ) != null;
+    protected boolean isInteracting(Player player) {
+        return getContainer(player) != null;
     }
 
-    protected NetworkMessage createTerminalPacket()
-    {
-        return new ComputerTerminalClientMessage( getInstanceID(), write() );
+    protected NetworkMessage createTerminalPacket() {
+        return new ComputerTerminalClientMessage(getInstanceID(), write());
     }
 
-    protected NetworkMessage createOpenComputerGuiPacket(Class<? extends Screen> screen)
-    {
+    protected NetworkMessage createOpenComputerGuiPacket(Class<? extends Screen> screen) {
         final TerminalState state = write();
-        return new OpenComputerGuiClientMessage( screen, getInstanceID(), getFamily(), state.width, state.height );
+        return new OpenComputerGuiClientMessage(screen, getInstanceID(), getFamily(), state.width, state.height);
     }
 
     @Nullable
-    public IContainerComputer getContainer( Player player )
-    {
-        if( player == null )
-        {
+    public IContainerComputer getContainer(Player player) {
+        if (player == null) {
             return null;
         }
 
-        final IContainerComputer computerContainer = ((IComputerPlayer)player).getCurrentContainerComputer();
-
-        if(computerContainer == null)
-        {
-            return null;
-        }
+        final IContainerComputer computerContainer = ((IComputerPlayer) player).getCurrentContainerComputer();
 
         return computerContainer;
     }
 
     @Override
-    public int getInstanceID()
-    {
+    public int getInstanceID() {
         return instanceID;
     }
 
     @Override
-    public void turnOn()
-    {
+    public void turnOn() {
         // Turn on
         computer.turnOn();
     }
@@ -248,195 +210,163 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
     // IComputer
 
     @Override
-    public void shutdown()
-    {
+    public void shutdown() {
         // Shutdown
         computer.shutdown();
     }
 
     @Override
-    public void reboot()
-    {
+    public void reboot() {
         // Reboot
         computer.reboot();
     }
 
     @Override
-    public void queueEvent( String event  )
-    {
+    public void queueEvent(String event) {
         // Queue event
-        computer.queueEvent( event, null );
+        computer.queueEvent(event, null);
     }
 
     @Override
-    public void queueEvent( String event, Object[] arguments )
-    {
+    public void queueEvent(String event, Object[] arguments) {
         // Queue event
-        computer.queueEvent( event, arguments );
+        computer.queueEvent(event, arguments);
     }
 
     @Override
-    public boolean isOn()
-    {
+    public boolean isOn() {
         return computer.isOn();
     }
 
     @Override
-    public boolean isCursorDisplayed()
-    {
+    public boolean isCursorDisplayed() {
         return computer.isOn() && computer.isBlinking();
     }
 
-    public void sendComputerState( Player player )
-    {
+    public void sendComputerState(Player player) {
         // Send state to client
-        NetworkHandler.sendToPlayer( player, createComputerPacket() );
+        NetworkHandler.sendToPlayer(player, createComputerPacket());
     }
 
-    public void sendTerminalState( Player player )
-    {
+    public void sendTerminalState(Player player) {
         // Send terminal state to client
-        NetworkHandler.sendToPlayer( player, createTerminalPacket() );
+        NetworkHandler.sendToPlayer(player, createTerminalPacket());
     }
 
-    public void sendOpenComputerGui( Player player, Class<? extends Screen> screen  )
-    {
-        NetworkHandler.sendToPlayer( player, createOpenComputerGuiPacket(screen) );
+    public void sendOpenComputerGui(Player player, Class<? extends Screen> screen) {
+        NetworkHandler.sendToPlayer(player, createOpenComputerGuiPacket(screen));
     }
 
-    public <C extends TileEntity> void sendOpenContainerComputerGui(Player player, C tileEntity, Class<? extends ScreenContainerAbstract> screen, OpenGuiContainerMessage.MenuAbstractSupplier<MenuAbstract, C> menu )
-    {
+    public <C extends TileEntity> void sendOpenContainerComputerGui(Player player, C tileEntity, Class<? extends ScreenContainerAbstract> screen, OpenGuiContainerMessage.MenuAbstractSupplier<MenuAbstract, C> menu) {
         final TerminalState state = write();
         OpenContainerComputerGuiClientMessage.SendToPlayer(player, tileEntity, screen, menu,
             getInstanceID(), getFamily(), state.width, state.height
         );
     }
 
-    public void broadcastDelete()
-    {
+    public void broadcastDelete() {
         // Send deletion to client
-        if( Helper.isServerEnvironment() )
-        {
-            NetworkHandler.sendToAllPlayers( new ComputerDeletedClientMessage( getInstanceID() ) );
+        if (Helper.isServerEnvironment()) {
+            NetworkHandler.sendToAllPlayers(new ComputerDeletedClientMessage(getInstanceID()));
         }
     }
 
-    public int getID()
-    {
+    public int getID() {
         return computer.getID();
     }
 
-    public void setID( int id )
-    {
-        computer.setID( id );
+    public void setID(int id) {
+        computer.setID(id);
     }
 
-    public String getLabel()
-    {
+    public String getLabel() {
         return computer.getLabel();
     }
 
-    public void setLabel( String label )
-    {
-        computer.setLabel( label );
+    public void setLabel(String label) {
+        computer.setLabel(label);
     }
 
-    public int getRedstoneOutput( ComputerSide side )
-    {
+    public int getRedstoneOutput(ComputerSide side) {
         return computer.getEnvironment()
-            .getExternalRedstoneOutput( side );
+            .getExternalRedstoneOutput(side);
     }
 
-    public void setRedstoneInput( ComputerSide side, int level )
-    {
+    public void setRedstoneInput(ComputerSide side, int level) {
         computer.getEnvironment()
-            .setRedstoneInput( side, level );
+            .setRedstoneInput(side, level);
     }
 
-    public int getBundledRedstoneOutput( ComputerSide side )
-    {
+    public int getBundledRedstoneOutput(ComputerSide side) {
         return computer.getEnvironment()
-            .getExternalBundledRedstoneOutput( side );
+            .getExternalBundledRedstoneOutput(side);
     }
 
-    public void setBundledRedstoneInput( ComputerSide side, int combination )
-    {
+    public void setBundledRedstoneInput(ComputerSide side, int combination) {
         computer.getEnvironment()
-            .setBundledRedstoneInput( side, combination );
+            .setBundledRedstoneInput(side, combination);
     }
 
-    public void addAPI( ILuaAPI api )
-    {
-        computer.addApi( api );
+    public void addAPI(ILuaAPI api) {
+        computer.addApi(api);
     }
 
     // IComputerEnvironment implementation
 
-    public void setPeripheral( ComputerSide side, IPeripheral peripheral )
-    {
+    public void setPeripheral(ComputerSide side, IPeripheral peripheral) {
         computer.getEnvironment()
-            .setPeripheral( side, peripheral );
+            .setPeripheral(side, peripheral);
     }
 
-    public IPeripheral getPeripheral( ComputerSide side )
-    {
+    public IPeripheral getPeripheral(ComputerSide side) {
         return computer.getEnvironment()
-            .getPeripheral( side );
+            .getPeripheral(side);
     }
 
     @Override
-    public int getDay()
-    {
+    public int getDay() {
         return (int) ((world.getWorldTime() + 6000) / 24000) + 1;
     }
 
     @Override
-    public double getTimeOfDay()
-    {
+    public double getTimeOfDay() {
         return (world.getWorldTime() + 6000) % 24000 / 1000.0;
     }
 
     @Override
-    public long getComputerSpaceLimit()
-    {
+    public long getComputerSpaceLimit() {
         return ComputerCraft.computerSpaceLimit;
     }
 
     @Nonnull
     @Override
-    public String getHostString()
-    {
-        return String.format( "ComputerCraft %s (Minecraft %s)", ComputerCraftAPI.getInstalledVersion(), "1.16.4" );
+    public String getHostString() {
+        return String.format("ComputerCraft %s (Minecraft %s)", ComputerCraftAPI.getInstalledVersion(), "1.16.4");
     }
 
     @Nonnull
     @Override
-    public String getUserAgent()
-    {
+    public String getUserAgent() {
         return ComputerCraft.MOD_ID + "/" + ComputerCraftAPI.getInstalledVersion();
     }
 
     @Override
-    public int assignNewID()
-    {
-        return ComputerCraftAPI.createUniqueNumberedSaveDir( world, "computer" );
+    public int assignNewID() {
+        return ComputerCraftAPI.createUniqueNumberedSaveDir(world, "computer");
     }
 
     @Override
-    public IWritableMount createSaveDirMount( String subPath, long capacity )
-    {
-        return ComputerCraftAPI.createSaveDirMount( world, subPath, capacity );
+    public IWritableMount createSaveDirMount(String subPath, long capacity) {
+        return ComputerCraftAPI.createSaveDirMount(world, subPath, capacity);
     }
 
     @Override
-    public IMount createResourceMount( String domain, String subPath )
-    {
-        return ComputerCraftAPI.createResourceMount( domain, subPath );
+    public IMount createResourceMount(String domain, String subPath) {
+        return ComputerCraftAPI.createResourceMount(domain, subPath);
     }
 
     @Override
-    public InputStream createResourceFile(String domain, String subPath )
-    {
-        return ComputerCraftAPIImpl.getResourceFile( domain, subPath );
+    public InputStream createResourceFile(String domain, String subPath) {
+        return ComputerCraftAPIImpl.getResourceFile(domain, subPath);
     }
 }

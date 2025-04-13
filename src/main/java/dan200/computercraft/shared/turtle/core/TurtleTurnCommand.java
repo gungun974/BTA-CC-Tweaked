@@ -16,37 +16,32 @@ import dan200.computercraft.shared.util.DirectionUtil;
 
 import javax.annotation.Nonnull;
 
-public class TurtleTurnCommand implements ITurtleCommand
-{
+public class TurtleTurnCommand implements ITurtleCommand {
     private final TurnDirection direction;
 
-    public TurtleTurnCommand( TurnDirection direction )
-    {
+    public TurtleTurnCommand(TurnDirection direction) {
         this.direction = direction;
     }
 
     @Nonnull
     @Override
-    public TurtleCommandResult execute( @Nonnull ITurtleAccess turtle )
-    {
-        TurtleActionEvent event = new TurtleActionEvent( turtle, TurtleAction.TURN );
-        if( TurtleEvent.post( event ) )
-        {
-            return TurtleCommandResult.failure( event.getFailureMessage() );
+    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+        TurtleActionEvent event = new TurtleActionEvent(turtle, TurtleAction.TURN);
+        if (TurtleEvent.post(event)) {
+            return TurtleCommandResult.failure(event.getFailureMessage());
         }
 
-        switch( direction )
-        {
+        switch (direction) {
             case LEFT:
                 turtle.setDirection(DirectionUtil.rotateYCounterclockwise(turtle.getDirection()));
-                turtle.playAnimation( TurtleAnimation.TURN_LEFT );
+                turtle.playAnimation(TurtleAnimation.TURN_LEFT);
                 return TurtleCommandResult.success();
             case RIGHT:
-                turtle.setDirection( DirectionUtil.rotateYClockwise(turtle.getDirection()));
-                turtle.playAnimation( TurtleAnimation.TURN_RIGHT );
+                turtle.setDirection(DirectionUtil.rotateYClockwise(turtle.getDirection()));
+                turtle.playAnimation(TurtleAnimation.TURN_RIGHT);
                 return TurtleCommandResult.success();
             default:
-                return TurtleCommandResult.failure( "Unknown direction" );
+                return TurtleCommandResult.failure("Unknown direction");
         }
     }
 }

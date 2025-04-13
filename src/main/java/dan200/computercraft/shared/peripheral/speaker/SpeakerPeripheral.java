@@ -27,33 +27,29 @@ import static dan200.computercraft.api.lua.LuaValues.checkFinite;
  *
  * @cc.module speaker
  */
-public abstract class SpeakerPeripheral implements IPeripheral
-{
+public abstract class SpeakerPeripheral implements IPeripheral {
     private final AtomicInteger notesThisTick = new AtomicInteger();
     private long clock = 0;
     private long lastPlayTime = 0;
 
-    public void update()
-    {
+    public void update() {
         clock++;
-        notesThisTick.set( 0 );
+        notesThisTick.set(0);
     }
 
-    public boolean madeSound( long ticks )
-    {
+    public boolean madeSound(long ticks) {
         return clock - lastPlayTime <= ticks;
     }
 
     @Nonnull
     @Override
-    public String getType()
-    {
+    public String getType() {
         return "speaker";
     }
 
     /**
      * Plays a sound through the speaker.
-     *
+     * <p>
      * This plays sounds similar to the {@code /playsound} command in Minecraft. It takes the namespaced path of a sound (e.g. {@code
      * minecraft:block.note_block.harp}) with an optional volume and speed multiplier, and plays it through the speaker.
      *
@@ -65,18 +61,15 @@ public abstract class SpeakerPeripheral implements IPeripheral
      * @throws LuaException If the sound name couldn't be decoded.
      */
     @LuaFunction
-    public final boolean playSound( ILuaContext context, String name, Optional<Double> volumeA, Optional<Double> pitchA ) throws LuaException
-    {
-        float volume = (float) checkFinite( 1, volumeA.orElse( 1.0 ) );
-        float pitch = (float) checkFinite( 2, pitchA.orElse( 1.0 ) );
+    public final boolean playSound(ILuaContext context, String name, Optional<Double> volumeA, Optional<Double> pitchA) throws LuaException {
+        float volume = (float) checkFinite(1, volumeA.orElse(1.0));
+        float pitch = (float) checkFinite(2, pitchA.orElse(1.0));
 
-        return playSound( context, name, volume, pitch, false );
+        return playSound(context, name, volume, pitch, false);
     }
 
-    private synchronized boolean playSound( ILuaContext context, String name, float volume, float pitch, boolean isNote ) throws LuaException
-    {
-        if( clock - lastPlayTime < TileSpeaker.MIN_TICKS_BETWEEN_SOUNDS && (!isNote || clock - lastPlayTime != 0 || notesThisTick.get() >= ComputerCraft.maxNotesPerTick) )
-        {
+    private synchronized boolean playSound(ILuaContext context, String name, float volume, float pitch, boolean isNote) throws LuaException {
+        if (clock - lastPlayTime < TileSpeaker.MIN_TICKS_BETWEEN_SOUNDS && (!isNote || clock - lastPlayTime != 0 || notesThisTick.get() >= ComputerCraft.maxNotesPerTick)) {
             // Rate limiting occurs when we've already played a sound within the last tick, or we've
             // played more notes than allowable within the current tick.
             return false;
@@ -85,15 +78,15 @@ public abstract class SpeakerPeripheral implements IPeripheral
         World world = getWorld();
         Vec3 pos = getPosition();
 
-        context.issueMainThreadTask( () -> {
+        context.issueMainThreadTask(() -> {
             if (!Helper.isServerEnvironment() && !Helper.isSinglePlayer()) {
                 return null;
             }
 
-            world.playSoundEffect(null, SoundCategory.WORLD_SOUNDS, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, name, Math.min( volume, 3.0f ), pitch);
+            world.playSoundEffect(null, SoundCategory.WORLD_SOUNDS, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, name, Math.min(volume, 3.0f), pitch);
 
             return null;
-        } );
+        });
 
         lastPlayTime = clock;
         return true;
@@ -105,9 +98,9 @@ public abstract class SpeakerPeripheral implements IPeripheral
 
     /**
      * Plays a note block note through the speaker.
-     *
+     * <p>
      * This takes the name of a note to play, as well as optionally the volume and pitch to play the note at.
-     *
+     * <p>
      * The pitch argument uses semitones as the unit. This directly maps to the number of clicks on a note block. For reference, 0, 12, and 24 map to F#,
      * and 6 and 18 map to C.
      *
@@ -119,36 +112,31 @@ public abstract class SpeakerPeripheral implements IPeripheral
      * @throws LuaException If the instrument doesn't exist.
      */
     @LuaFunction
-    public final synchronized boolean playNote( ILuaContext context, String name, Optional<Double> volumeA, Optional<Double> pitchA ) throws LuaException
-    {
-        float volume = (float) checkFinite( 1, volumeA.orElse( 1.0 ) );
-        float pitch = (float) checkFinite( 2, pitchA.orElse( 1.0 ) );
+    public final synchronized boolean playNote(ILuaContext context, String name, Optional<Double> volumeA, Optional<Double> pitchA) throws LuaException {
+        float volume = (float) checkFinite(1, volumeA.orElse(1.0));
+        float pitch = (float) checkFinite(2, pitchA.orElse(1.0));
 
         BlockLogicNote.Instrument instrument = null;
-        for( BlockLogicNote.Instrument testInstrument : BlockLogicNote.Instrument.instrumentMap.values() )
-        {
-            if( testInstrument.soundKey
-                .equalsIgnoreCase( name ) )
-            {
+        for (BlockLogicNote.Instrument testInstrument : BlockLogicNote.Instrument.instrumentMap.values()) {
+            if (testInstrument.soundKey
+                .equalsIgnoreCase(name)) {
                 instrument = testInstrument;
                 break;
             }
         }
 
         // Check if the note exists
-        if( instrument == null )
-        {
-            throw new LuaException( "Invalid instrument, \"" + name + "\"!" );
+        if (instrument == null) {
+            throw new LuaException("Invalid instrument, \"" + name + "\"!");
         }
 
         // If the resource location for note block notes changes, this method call will need to be updated
-        boolean success = playSound( context,
+        boolean success = playSound(context,
             "note." + BlockLogicNote.Instrument.getInstrumentFromIndex(instrument.index).soundKey,
             volume,
-            (float) Math.pow( 2.0, (pitch - 12.0) / 12.0 ),
-            true );
-        if( success )
-        {
+            (float) Math.pow(2.0, (pitch - 12.0) / 12.0),
+            true);
+        if (success) {
             notesThisTick.incrementAndGet();
         }
         return success;

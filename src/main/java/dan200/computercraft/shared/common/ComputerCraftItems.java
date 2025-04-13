@@ -8,8 +8,6 @@ import dan200.computercraft.shared.media.items.ItemTreasureDisk;
 import dan200.computercraft.shared.peripheral.modem.wired.ItemBlockCable;
 import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
 import dan200.computercraft.shared.turtle.items.ItemTurtle;
-import net.minecraft.core.block.Block;
-import net.minecraft.core.item.Item;
 import net.minecraft.core.item.block.ItemBlock;
 import net.minecraft.core.util.collection.NamespaceID;
 import turniplabs.halplibe.helper.ItemBuilder;
@@ -18,30 +16,21 @@ import static dan200.computercraft.ComputerCraft.MOD_ID;
 
 public class ComputerCraftItems {
 
-    public static ItemBlockComputer COMPUTER_NORMAL;
-    public static ItemBlockComputer COMPUTER_ADVANCED;
-
-    public static ItemPocketComputer POCKET_COMPUTER_NORMAL;
-    public static ItemPocketComputer POCKET_COMPUTER_ADVANCED;
-
-    public static ItemTurtle TURTLE_NORMAL;
-    public static ItemTurtle TURTLE_ADVANCED;
-
-    public static ItemBlock<?> DISK_DRIVE;
-
-    public static ItemBlock<?> PRINTER;
-
-    public static ItemBlock<?> MONITOR_NORMAL;
-    public static ItemBlock<?> MONITOR_ADVANCED;
-
-    public static ItemBlock<?> WIRELESS_MODEM_NORMAL;
-    public static ItemBlock<?> WIRELESS_MODEM_ADVANCED;
-
-    public static ItemBlock<?> SPEAKER;
-
     public static final ItemDisk DISK;
     public static final ItemTreasureDisk TREASURE_DISK;
-
+    public static ItemBlockComputer COMPUTER_NORMAL;
+    public static ItemBlockComputer COMPUTER_ADVANCED;
+    public static ItemPocketComputer POCKET_COMPUTER_NORMAL;
+    public static ItemPocketComputer POCKET_COMPUTER_ADVANCED;
+    public static ItemTurtle TURTLE_NORMAL;
+    public static ItemTurtle TURTLE_ADVANCED;
+    public static ItemBlock<?> DISK_DRIVE;
+    public static ItemBlock<?> PRINTER;
+    public static ItemBlock<?> MONITOR_NORMAL;
+    public static ItemBlock<?> MONITOR_ADVANCED;
+    public static ItemBlock<?> WIRELESS_MODEM_NORMAL;
+    public static ItemBlock<?> WIRELESS_MODEM_ADVANCED;
+    public static ItemBlock<?> SPEAKER;
     public static ItemPrintout PRINTED_PAGE;
     public static ItemPrintout PRINTED_PAGES;
     public static ItemPrintout PRINTED_BOOK;
@@ -49,18 +38,14 @@ public class ComputerCraftItems {
     public static ItemBlockCable.Cable CABLE;
     public static ItemBlockCable.WiredModem WIRED_MODEM;
 
-    public ComputerCraftItems() {
-
-    }
-
     static {
         POCKET_COMPUTER_NORMAL = new ItemBuilder(MOD_ID)
             .setKey("item.pocket_computer_normal")
-            .build((new ItemPocketComputer( NamespaceID.getPermanent(MOD_ID, "pocket_computer_normal"), 16540, ComputerFamily.NORMAL )));
+            .build((new ItemPocketComputer(NamespaceID.getPermanent(MOD_ID, "pocket_computer_normal"), 16540, ComputerFamily.NORMAL)));
 
         POCKET_COMPUTER_ADVANCED = new ItemBuilder(MOD_ID)
             .setKey("item.pocket_computer_advanced")
-            .build((new ItemPocketComputer( NamespaceID.getPermanent(MOD_ID, "pocket_computer_advanced"), 16541, ComputerFamily.ADVANCED )));
+            .build((new ItemPocketComputer(NamespaceID.getPermanent(MOD_ID, "pocket_computer_advanced"), 16541, ComputerFamily.ADVANCED)));
 
         DISK = new ItemBuilder(MOD_ID)
             .setKey("item.disk")
@@ -89,5 +74,9 @@ public class ComputerCraftItems {
         WIRED_MODEM = new ItemBuilder(MOD_ID)
             .setKey("item.wired_modem")
             .build((new ItemBlockCable.WiredModem(NamespaceID.getPermanent(MOD_ID, "wired_modem"), 16546)));
+    }
+
+    public ComputerCraftItems() {
+
     }
 }

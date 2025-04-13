@@ -24,8 +24,7 @@ import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_WIDTH;
 //import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_HEIGHT;
 //import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_WIDTH;
 
-public class WidgetTerminal extends Gui implements GuiElement
-{
+public class WidgetTerminal extends Gui implements GuiElement {
     private static final float TERMINATE_TIME = 0.5f;
 
     private final Minecraft client;
@@ -36,7 +35,7 @@ public class WidgetTerminal extends Gui implements GuiElement
     private final int rightMargin;
     private final int topMargin;
     private final int bottomMargin;
-    private final BitSet keysDown = new BitSet( 256 );
+    private final BitSet keysDown = new BitSet(256);
     private boolean focused;
     private float terminateTimer = -1;
     private float rebootTimer = -1;
@@ -45,9 +44,8 @@ public class WidgetTerminal extends Gui implements GuiElement
     private int lastMouseX = -1;
     private int lastMouseY = -1;
 
-    public WidgetTerminal( Minecraft client, Supplier<ClientComputer> computer, int termWidth, int termHeight, int leftMargin, int rightMargin,
-                           int topMargin, int bottomMargin )
-    {
+    public WidgetTerminal(Minecraft client, Supplier<ClientComputer> computer, int termWidth, int termHeight, int leftMargin, int rightMargin,
+                          int topMargin, int bottomMargin) {
         this.client = client;
         this.computer = computer;
         this.termWidth = termWidth;
@@ -59,28 +57,13 @@ public class WidgetTerminal extends Gui implements GuiElement
     }
 
     @Override
-    public void setX(int i) {
-
-    }
-
-    @Override
-    public void setY(int i) {
-
-    }
-
-    @Override
-    public void setWidth(int i) {
-
-    }
-
-    @Override
-    public void setHeight(int i) {
-
-    }
-
-    @Override
     public int getX() {
         return 0;
+    }
+
+    @Override
+    public void setX(int i) {
+
     }
 
     @Override
@@ -89,8 +72,18 @@ public class WidgetTerminal extends Gui implements GuiElement
     }
 
     @Override
+    public void setY(int i) {
+
+    }
+
+    @Override
     public int getWidth() {
         return termWidth * FONT_WIDTH;
+    }
+
+    @Override
+    public void setWidth(int i) {
+
     }
 
     @Override
@@ -98,23 +91,25 @@ public class WidgetTerminal extends Gui implements GuiElement
         return termHeight * FONT_HEIGHT;
     }
 
-    public void mouseClicked(double mouseX, double mouseY, int button )
-    {
+    @Override
+    public void setHeight(int i) {
+
+    }
+
+    public void mouseClicked(double mouseX, double mouseY, int button) {
         ClientComputer computer = this.computer.get();
-        if( computer == null || !computer.isColour() || button < 0 || button > 2 )
-        {
+        if (computer == null || !computer.isColour() || button < 0 || button > 2) {
             return;
         }
 
         Terminal term = computer.getTerminal();
-        if( term != null )
-        {
+        if (term != null) {
             int charX = (int) (mouseX / FONT_WIDTH);
             int charY = (int) (mouseY / FONT_HEIGHT);
-            charX = Math.min( Math.max( charX, 0 ), term.getWidth() - 1 );
-            charY = Math.min( Math.max( charY, 0 ), term.getHeight() - 1 );
+            charX = Math.min(Math.max(charX, 0), term.getWidth() - 1);
+            charY = Math.min(Math.max(charY, 0), term.getHeight() - 1);
 
-            computer.mouseClick( button + 1, charX + 1, charY + 1 );
+            computer.mouseClick(button + 1, charX + 1, charY + 1);
 
             lastMouseButton = button;
             lastMouseX = charX;
@@ -123,25 +118,21 @@ public class WidgetTerminal extends Gui implements GuiElement
 
     }
 
-    public void mouseReleased(double mouseX, double mouseY, int button )
-    {
+    public void mouseReleased(double mouseX, double mouseY, int button) {
         ClientComputer computer = this.computer.get();
-        if( computer == null || !computer.isColour() || button < 0 || button > 2 )
-        {
+        if (computer == null || !computer.isColour() || button < 0 || button > 2) {
             return;
         }
 
         Terminal term = computer.getTerminal();
-        if( term != null )
-        {
+        if (term != null) {
             int charX = (int) (mouseX / FONT_WIDTH);
             int charY = (int) (mouseY / FONT_HEIGHT);
-            charX = Math.min( Math.max( charX, 0 ), term.getWidth() - 1 );
-            charY = Math.min( Math.max( charY, 0 ), term.getHeight() - 1 );
+            charX = Math.min(Math.max(charX, 0), term.getWidth() - 1);
+            charY = Math.min(Math.max(charY, 0), term.getHeight() - 1);
 
-            if( lastMouseButton == button )
-            {
-                computer.mouseUp( lastMouseButton + 1, charX + 1, charY + 1 );
+            if (lastMouseButton == button) {
+                computer.mouseUp(lastMouseButton + 1, charX + 1, charY + 1);
                 lastMouseButton = -1;
             }
 
@@ -151,25 +142,21 @@ public class WidgetTerminal extends Gui implements GuiElement
 
     }
 
-    public void mouseDragged(double mouseX, double mouseY, int button )
-    {
+    public void mouseDragged(double mouseX, double mouseY, int button) {
         ClientComputer computer = this.computer.get();
-        if( computer == null || !computer.isColour() || button < 0 || button > 2 )
-        {
+        if (computer == null || !computer.isColour() || button < 0 || button > 2) {
             return;
         }
 
         Terminal term = computer.getTerminal();
-        if( term != null )
-        {
+        if (term != null) {
             int charX = (int) (mouseX / FONT_WIDTH);
             int charY = (int) (mouseY / FONT_HEIGHT);
-            charX = Math.min( Math.max( charX, 0 ), term.getWidth() - 1 );
-            charY = Math.min( Math.max( charY, 0 ), term.getHeight() - 1 );
+            charX = Math.min(Math.max(charX, 0), term.getWidth() - 1);
+            charY = Math.min(Math.max(charY, 0), term.getHeight() - 1);
 
-            if( button == lastMouseButton && (charX != lastMouseX || charY != lastMouseY) )
-            {
-                computer.mouseDrag( button + 1, charX + 1, charY + 1 );
+            if (button == lastMouseButton && (charX != lastMouseX || charY != lastMouseY)) {
+                computer.mouseDrag(button + 1, charX + 1, charY + 1);
                 lastMouseX = charX;
                 lastMouseY = charY;
             }
@@ -177,23 +164,20 @@ public class WidgetTerminal extends Gui implements GuiElement
 
     }
 
-    public boolean mouseScrolled( double mouseX, double mouseY, double delta )
-    {
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         ClientComputer computer = this.computer.get();
-        if( computer == null || !computer.isColour() || delta == 0 )
-        {
+        if (computer == null || !computer.isColour() || delta == 0) {
             return false;
         }
 
         Terminal term = computer.getTerminal();
-        if( term != null )
-        {
+        if (term != null) {
             int charX = (int) (mouseX / FONT_WIDTH);
             int charY = (int) (mouseY / FONT_HEIGHT);
-            charX = Math.min( Math.max( charX, 0 ), term.getWidth() - 1 );
-            charY = Math.min( Math.max( charY, 0 ), term.getHeight() - 1 );
+            charX = Math.min(Math.max(charX, 0), term.getWidth() - 1);
+            charY = Math.min(Math.max(charY, 0), term.getHeight() - 1);
 
-            computer.mouseScroll( delta < 0 ? 1 : -1, charX + 1, charY + 1 );
+            computer.mouseScroll(delta < 0 ? 1 : -1, charX + 1, charY + 1);
 
             lastMouseX = charX;
             lastMouseY = charY;
@@ -201,32 +185,26 @@ public class WidgetTerminal extends Gui implements GuiElement
 
         return true;
     }
-//
-    public void keyPressed(int key, int scancode, int modifiers )
-    {
-        if( key == Keyboard.KEY_ESCAPE)
-        {
+
+    //
+    public void keyPressed(int key, int scancode, int modifiers) {
+        if (key == Keyboard.KEY_ESCAPE) {
             return;
         }
-        if( (modifiers & GLFW.GLFW_MOD_CONTROL) != 0 )
-        {
-            switch( key )
-            {
+        if ((modifiers & GLFW.GLFW_MOD_CONTROL) != 0) {
+            switch (key) {
                 case GLFW.GLFW_KEY_T:
-                    if( terminateTimer < 0 )
-                    {
+                    if (terminateTimer < 0) {
                         terminateTimer = 0;
                     }
                     return;
                 case GLFW.GLFW_KEY_S:
-                    if( shutdownTimer < 0 )
-                    {
+                    if (shutdownTimer < 0) {
                         shutdownTimer = 0;
                     }
                     return;
                 case GLFW.GLFW_KEY_R:
-                    if( rebootTimer < 0 )
-                    {
+                    if (rebootTimer < 0) {
                         rebootTimer = 0;
                     }
                     return;
@@ -234,34 +212,26 @@ public class WidgetTerminal extends Gui implements GuiElement
                 case GLFW.GLFW_KEY_V:
                     // Ctrl+V for paste
                     String clipboard = client.readFromClipboard();
-                    if( clipboard != null )
-                    {
+                    if (clipboard != null) {
                         // Clip to the first occurrence of \r or \n
-                        int newLineIndex1 = clipboard.indexOf( "\r" );
-                        int newLineIndex2 = clipboard.indexOf( "\n" );
-                        if( newLineIndex1 >= 0 && newLineIndex2 >= 0 )
-                        {
-                            clipboard = clipboard.substring( 0, Math.min( newLineIndex1, newLineIndex2 ) );
-                        }
-                        else if( newLineIndex1 >= 0 )
-                        {
-                            clipboard = clipboard.substring( 0, newLineIndex1 );
-                        }
-                        else if( newLineIndex2 >= 0 )
-                        {
-                            clipboard = clipboard.substring( 0, newLineIndex2 );
+                        int newLineIndex1 = clipboard.indexOf("\r");
+                        int newLineIndex2 = clipboard.indexOf("\n");
+                        if (newLineIndex1 >= 0 && newLineIndex2 >= 0) {
+                            clipboard = clipboard.substring(0, Math.min(newLineIndex1, newLineIndex2));
+                        } else if (newLineIndex1 >= 0) {
+                            clipboard = clipboard.substring(0, newLineIndex1);
+                        } else if (newLineIndex2 >= 0) {
+                            clipboard = clipboard.substring(0, newLineIndex2);
                         }
 
                         // Filter the string
                         //clipboard = SharedConstants.stripInvalidChars( clipboard );
-                        if( !clipboard.isEmpty() )
-                        {
+                        if (!clipboard.isEmpty()) {
                             // Clip to 512 characters and queue the event
-                            if( clipboard.length() > 512 )
-                            {
-                                clipboard = clipboard.substring( 0, 512 );
+                            if (clipboard.length() > 512) {
+                                clipboard = clipboard.substring(0, 512);
                             }
-                            queueEvent( "paste", clipboard );
+                            queueEvent("paste", clipboard);
                         }
 
                         return;
@@ -269,35 +239,29 @@ public class WidgetTerminal extends Gui implements GuiElement
             }
         }
 
-        if( key >= 0 && terminateTimer < 0 && rebootTimer < 0 && shutdownTimer < 0 )
-        {
+        if (key >= 0 && terminateTimer < 0 && rebootTimer < 0 && shutdownTimer < 0) {
             // Queue the "key" event and add to the down set
-            boolean repeat = keysDown.get( key );
-            keysDown.set( key );
+            boolean repeat = keysDown.get(key);
+            keysDown.set(key);
             IComputer computer = this.computer.get();
-            if( computer != null )
-            {
-                computer.keyDown( key, repeat );
+            if (computer != null) {
+                computer.keyDown(key, repeat);
             }
         }
 
     }
 
-    public void keyReleased(int key, int scancode, int modifiers )
-    {
+    public void keyReleased(int key, int scancode, int modifiers) {
         // Queue the "key_up" event and remove from the down set
-        if( key >= 0 && keysDown.get( key ) )
-        {
-            keysDown.set( key, false );
+        if (key >= 0 && keysDown.get(key)) {
+            keysDown.set(key, false);
             IComputer computer = this.computer.get();
-            if( computer != null )
-            {
-                computer.keyUp( key );
+            if (computer != null) {
+                computer.keyUp(key);
             }
         }
 
-        switch( key )
-        {
+        switch (key) {
             case GLFW.GLFW_KEY_T:
                 terminateTimer = -1;
                 break;
@@ -315,16 +279,16 @@ public class WidgetTerminal extends Gui implements GuiElement
 
     }
 
-    public void charTyped(char ch )
-    {
-        if( ch >= 32 && ch <= 126 || ch >= 160 && ch <= 255 ) // printable chars in byte range
+    public void charTyped(char ch) {
+        if (ch >= 32 && ch <= 126 || ch >= 160 && ch <= 255) // printable chars in byte range
         {
             // Queue the "char" event
-            queueEvent( "char", Character.toString( ch ) );
+            queueEvent("char", Character.toString(ch));
         }
 
     }
-//
+
+    //
 //    @Override
 //    public boolean changeFocus( boolean reversed )
 //    {
@@ -363,67 +327,52 @@ public class WidgetTerminal extends Gui implements GuiElement
 //        return true;
 //    }
 //
-    private void queueEvent( String event, Object... args )
-    {
+    private void queueEvent(String event, Object... args) {
         ClientComputer computer = this.computer.get();
-        if( computer != null )
-        {
-            computer.queueEvent( event, args );
+        if (computer != null) {
+            computer.queueEvent(event, args);
         }
     }
 
-    public void update()
-    {
-        if( terminateTimer >= 0 && terminateTimer < TERMINATE_TIME && (terminateTimer += 0.05f) > TERMINATE_TIME )
-        {
-            queueEvent( "terminate" );
+    public void update() {
+        if (terminateTimer >= 0 && terminateTimer < TERMINATE_TIME && (terminateTimer += 0.05f) > TERMINATE_TIME) {
+            queueEvent("terminate");
         }
 
-        if( shutdownTimer >= 0 && shutdownTimer < TERMINATE_TIME && (shutdownTimer += 0.05f) > TERMINATE_TIME )
-        {
+        if (shutdownTimer >= 0 && shutdownTimer < TERMINATE_TIME && (shutdownTimer += 0.05f) > TERMINATE_TIME) {
             ClientComputer computer = this.computer.get();
-            if( computer != null )
-            {
+            if (computer != null) {
                 computer.shutdown();
             }
         }
 
-        if( rebootTimer >= 0 && rebootTimer < TERMINATE_TIME && (rebootTimer += 0.05f) > TERMINATE_TIME )
-        {
+        if (rebootTimer >= 0 && rebootTimer < TERMINATE_TIME && (rebootTimer += 0.05f) > TERMINATE_TIME) {
             ClientComputer computer = this.computer.get();
-            if( computer != null )
-            {
+            if (computer != null) {
                 computer.reboot();
             }
         }
     }
 
-    private void queueEvent( String event )
-    {
+    private void queueEvent(String event) {
         ClientComputer computer = this.computer.get();
-        if( computer != null )
-        {
-            computer.queueEvent( event );
+        if (computer != null) {
+            computer.queueEvent(event);
         }
     }
 
-    public void draw( int originX, int originY )
-    {
-        synchronized( computer )
-        {
+    public void draw(int originX, int originY) {
+        synchronized (computer) {
             // Draw the screen contents
             ClientComputer computer = this.computer.get();
             Terminal terminal = computer != null ? computer.getTerminal() : null;
-            if( terminal != null )
-            {
-                FixedWidthFontRenderer.drawTerminal( originX, originY, terminal, !computer.isColour(), topMargin, bottomMargin, leftMargin,
-                    rightMargin );
-            }
-            else
-            {
-                FixedWidthFontRenderer.drawEmptyTerminal( originX - leftMargin,
+            if (terminal != null) {
+                FixedWidthFontRenderer.drawTerminal(originX, originY, terminal, !computer.isColour(), topMargin, bottomMargin, leftMargin,
+                    rightMargin);
+            } else {
+                FixedWidthFontRenderer.drawEmptyTerminal(originX - leftMargin,
                     originY - rightMargin, termWidth * FONT_WIDTH + leftMargin + rightMargin,
-                    termHeight * FONT_HEIGHT + topMargin + bottomMargin );
+                    termHeight * FONT_HEIGHT + topMargin + bottomMargin);
             }
         }
     }

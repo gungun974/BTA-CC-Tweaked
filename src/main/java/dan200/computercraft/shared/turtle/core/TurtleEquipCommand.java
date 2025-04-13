@@ -19,81 +19,66 @@ import net.minecraft.core.player.inventory.container.Container;
 
 import javax.annotation.Nonnull;
 
-public class TurtleEquipCommand implements ITurtleCommand
-{
+public class TurtleEquipCommand implements ITurtleCommand {
     private final TurtleSide side;
 
-    public TurtleEquipCommand( TurtleSide side )
-    {
+    public TurtleEquipCommand(TurtleSide side) {
         this.side = side;
     }
 
     @Nonnull
     @Override
-    public TurtleCommandResult execute( @Nonnull ITurtleAccess turtle )
-    {
+    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
         // Determine the upgrade to equipLeft
         ITurtleUpgrade newUpgrade;
         ItemStack newUpgradeStack;
         Container inventory = turtle.getInventory();
-        ItemStack selectedStack = inventory.getItem( turtle.getSelectedSlot() );
-        if( selectedStack != null )
-        {
+        ItemStack selectedStack = inventory.getItem(turtle.getSelectedSlot());
+        if (selectedStack != null) {
             newUpgradeStack = selectedStack.copy();
-            newUpgrade = TurtleUpgrades.get( newUpgradeStack );
-            if( newUpgrade == null || !TurtleUpgrades.suitableForFamily( ((TurtleBrain) turtle).getFamily(), newUpgrade ) )
-            {
-                return TurtleCommandResult.failure( "Not a valid upgrade" );
+            newUpgrade = TurtleUpgrades.get(newUpgradeStack);
+            if (newUpgrade == null || !TurtleUpgrades.suitableForFamily(((TurtleBrain) turtle).getFamily(), newUpgrade)) {
+                return TurtleCommandResult.failure("Not a valid upgrade");
             }
-        }
-        else
-        {
+        } else {
             newUpgradeStack = null;
             newUpgrade = null;
         }
 
         // Determine the upgrade to replace
         ItemStack oldUpgradeStack;
-        ITurtleUpgrade oldUpgrade = turtle.getUpgrade( side );
-        if( oldUpgrade != null )
-        {
+        ITurtleUpgrade oldUpgrade = turtle.getUpgrade(side);
+        if (oldUpgrade != null) {
             ItemStack craftingItem = oldUpgrade.getCraftingItem();
             oldUpgradeStack = craftingItem != null ? craftingItem.copy() : null;
-        }
-        else
-        {
+        } else {
             oldUpgradeStack = null;
         }
 
-        TurtleActionEvent event = new TurtleActionEvent( turtle, TurtleAction.EQUIP );
-        if( TurtleEvent.post( event ) )
-        {
-            return TurtleCommandResult.failure( event.getFailureMessage() );
+        TurtleActionEvent event = new TurtleActionEvent(turtle, TurtleAction.EQUIP);
+        if (TurtleEvent.post(event)) {
+            return TurtleCommandResult.failure(event.getFailureMessage());
         }
 
         // Do the swapping:
-        if( newUpgradeStack != null )
-        {
+        if (newUpgradeStack != null) {
             // Consume new upgrades item
-            InventoryUtil.takeItems( 1, ItemStorage.wrap( inventory ), turtle.getSelectedSlot(), 1, turtle.getSelectedSlot() );
+            InventoryUtil.takeItems(1, ItemStorage.wrap(inventory), turtle.getSelectedSlot(), 1, turtle.getSelectedSlot());
         }
-        if( oldUpgradeStack != null )
-        {
+        if (oldUpgradeStack != null) {
             // Store old upgrades item
-            ItemStack remainder = InventoryUtil.storeItems( oldUpgradeStack, ItemStorage.wrap( inventory ), turtle.getSelectedSlot() );
-            if( remainder != null )
-            {
+            ItemStack remainder = InventoryUtil.storeItems(oldUpgradeStack, ItemStorage.wrap(inventory), turtle.getSelectedSlot());
+            if (remainder != null) {
                 // If there's no room for the items, drop them
                 BlockPos position = turtle.getPosition();
-                WorldUtil.dropItemStack( remainder, turtle.getWorld(), position, turtle.getDirection() );
+                WorldUtil.dropItemStack(remainder, turtle.getWorld(), position, turtle.getDirection());
             }
         }
-        turtle.setUpgrade( side, newUpgrade );
+        turtle.setUpgrade(side, newUpgrade);
 
         // Animate
-        if( newUpgrade != null || oldUpgrade != null )
-        {
-            turtle.playAnimation( TurtleAnimation.WAIT );
+        if (newUpgrade != null || oldUpgrade != null) {
+            turtle.playAnimation(TurtleAnimation.WAIT);
         }
 
         return TurtleCommandResult.success();

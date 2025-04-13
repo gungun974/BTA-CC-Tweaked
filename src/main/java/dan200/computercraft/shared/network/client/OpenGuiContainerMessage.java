@@ -22,16 +22,10 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 
 public class OpenGuiContainerMessage<A> implements NetworkMessage {
-    private int windowId = 0;
-
     protected A container;
     protected Class<?> screen;
+    private int windowId = 0;
     private MenuAbstractSupplier<MenuAbstract, A> menu;
-
-    @FunctionalInterface
-    public interface MenuAbstractSupplier<T extends MenuAbstract, B> {
-        T get(Container inventory, B container);
-    }
 
     public OpenGuiContainerMessage(Player player, A container, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, A> menu) {
         this.container = container;
@@ -40,6 +34,9 @@ public class OpenGuiContainerMessage<A> implements NetworkMessage {
         if (Helper.isServerEnvironment()) {
             serverSetWindow(player);
         }
+    }
+
+    public OpenGuiContainerMessage() {
     }
 
     public static <C extends TileEntity> void SendToPlayer(Player player, C tileEntity, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, C> menu) {
@@ -74,9 +71,6 @@ public class OpenGuiContainerMessage<A> implements NetworkMessage {
             player.craftingInventory.containerId = this.windowId;
             player.craftingInventory.addSlotListener((PlayerServer) player);
         }
-    }
-
-    public OpenGuiContainerMessage() {
     }
 
     @Override
@@ -135,5 +129,10 @@ public class OpenGuiContainerMessage<A> implements NetworkMessage {
     @Environment(EnvType.CLIENT)
     private void doSinglePlayer() {
         Minecraft.getMinecraft().displayScreen(getScreenInstance(Minecraft.getMinecraft().thePlayer.inventory));
+    }
+
+    @FunctionalInterface
+    public interface MenuAbstractSupplier<T extends MenuAbstract, B> {
+        T get(Container inventory, B container);
     }
 }

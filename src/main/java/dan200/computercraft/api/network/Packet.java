@@ -18,8 +18,7 @@ import java.util.Objects;
  * @see IPacketReceiver#receiveDifferentDimension(Packet)
  * @see IPacketReceiver#receiveSameDimension(Packet, double)
  */
-public class Packet
-{
+public class Packet {
     private final int channel;
     private final int replyChannel;
     private final Object payload;
@@ -35,9 +34,8 @@ public class Packet
      *                     call.
      * @param sender       The object which sent this packet.
      */
-    public Packet( int channel, int replyChannel, @Nullable Object payload, @Nonnull IPacketSender sender )
-    {
-        Objects.requireNonNull( sender, "sender cannot be null" );
+    public Packet(int channel, int replyChannel, @Nullable Object payload, @Nonnull IPacketSender sender) {
+        Objects.requireNonNull(sender, "sender cannot be null");
 
         this.channel = channel;
         this.replyChannel = replyChannel;
@@ -50,8 +48,7 @@ public class Packet
      *
      * @return This packet's channel.
      */
-    public int getChannel()
-    {
+    public int getChannel() {
         return channel;
     }
 
@@ -60,8 +57,7 @@ public class Packet
      *
      * @return This channel to reply on.
      */
-    public int getReplyChannel()
-    {
+    public int getReplyChannel() {
         return replyChannel;
     }
 
@@ -71,8 +67,7 @@ public class Packet
      * @return The packet's payload
      */
     @Nullable
-    public Object getPayload()
-    {
+    public Object getPayload() {
         return payload;
     }
 
@@ -82,14 +77,12 @@ public class Packet
      * @return The sending object.
      */
     @Nonnull
-    public IPacketSender getSender()
-    {
+    public IPacketSender getSender() {
         return sender;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int result;
         result = channel;
         result = 31 * result + replyChannel;
@@ -99,31 +92,25 @@ public class Packet
     }
 
     @Override
-    public boolean equals( Object o )
-    {
-        if( this == o )
-        {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if( o == null || getClass() != o.getClass() )
-        {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
         Packet packet = (Packet) o;
 
-        if( channel != packet.channel )
-        {
+        if (channel != packet.channel) {
             return false;
         }
-        if( replyChannel != packet.replyChannel )
-        {
+        if (replyChannel != packet.replyChannel) {
             return false;
         }
-        if( !Objects.equals( payload, packet.payload ) )
-        {
+        if (!Objects.equals(payload, packet.payload)) {
             return false;
         }
-        return sender.equals( packet.sender );
+        return sender.equals(packet.sender);
     }
 }

@@ -13,34 +13,30 @@ import net.minecraft.core.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-public class GuiPrintout extends Screen
-{
+public class GuiPrintout extends Screen {
     private final boolean book;
     private final int pages;
     private final TextBuffer[] text;
     private final TextBuffer[] colours;
     private int page;
 
-    public GuiPrintout(ItemStack stack )
-    {
+    public GuiPrintout(ItemStack stack) {
         super();
 
-        String[] text = ItemPrintout.getText( stack );
+        String[] text = ItemPrintout.getText(stack);
         this.text = new TextBuffer[text.length];
-        for( int i = 0; i < this.text.length; i++ )
-        {
-            this.text[i] = new TextBuffer( text[i] );
+        for (int i = 0; i < this.text.length; i++) {
+            this.text[i] = new TextBuffer(text[i]);
         }
 
-        String[] colours = ItemPrintout.getColours( stack );
+        String[] colours = ItemPrintout.getColours(stack);
         this.colours = new TextBuffer[colours.length];
-        for( int i = 0; i < this.colours.length; i++ )
-        {
-            this.colours[i] = new TextBuffer( colours[i] );
+        for (int i = 0; i < this.colours.length; i++) {
+            this.colours[i] = new TextBuffer(colours[i]);
         }
 
         page = 0;
-        pages = Math.max( this.text.length / ItemPrintout.LINES_PER_PAGE, 1 );
+        pages = Math.max(this.text.length / ItemPrintout.LINES_PER_PAGE, 1);
         book = ((ItemPrintout) stack
             .getItem()).getType() == ItemPrintout.Type.BOOK;
     }
@@ -91,8 +87,8 @@ public class GuiPrintout extends Screen
         int x = (width - PrintoutRenderer.X_SIZE) / 2;
         int y = (height - PrintoutRenderer.Y_SIZE) / 2;
 
-        PrintoutRenderer.drawBorder( x, y, zLevel, page, pages, book );
-        PrintoutRenderer.drawText( x + PrintoutRenderer.X_TEXT_MARGIN, y + PrintoutRenderer.Y_TEXT_MARGIN, 0.02f, ItemPrintout.LINES_PER_PAGE * page, text, colours );
+        PrintoutRenderer.drawBorder(x, y, zLevel, page, pages, book);
+        PrintoutRenderer.drawText(x + PrintoutRenderer.X_TEXT_MARGIN, y + PrintoutRenderer.Y_TEXT_MARGIN, 0.02f, ItemPrintout.LINES_PER_PAGE * page, text, colours);
     }
 
     @Override

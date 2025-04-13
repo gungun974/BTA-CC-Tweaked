@@ -10,18 +10,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = Entity.class, remap = false)
-public class EntityMixin
-{
+public class EntityMixin {
     @Inject(
         method = "dropItem(Lnet/minecraft/core/item/ItemStack;F)Lnet/minecraft/core/entity/EntityItem;",
         at = @At("HEAD"),
         cancellable = true
     )
-    private void dropStack(ItemStack stack, float verticalOffset, CallbackInfoReturnable<EntityItem> cir)
-    {
-        if( DropConsumer.onLivingDrops( (Entity) (Object) this, stack ) )
-        {
-            cir.setReturnValue( null );
+    private void dropStack(ItemStack stack, float verticalOffset, CallbackInfoReturnable<EntityItem> cir) {
+        if (DropConsumer.onLivingDrops((Entity) (Object) this, stack)) {
+            cir.setReturnValue(null);
         }
     }
 }

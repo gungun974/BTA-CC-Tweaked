@@ -6,7 +6,10 @@ import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.items.ItemBlockComputer;
 import dan200.computercraft.shared.peripheral.diskdrive.BlockDiskDrive;
 import dan200.computercraft.shared.peripheral.diskdrive.TileDiskDrive;
-import dan200.computercraft.shared.peripheral.modem.wired.*;
+import dan200.computercraft.shared.peripheral.modem.wired.BlockCable;
+import dan200.computercraft.shared.peripheral.modem.wired.BlockWiredModemFull;
+import dan200.computercraft.shared.peripheral.modem.wired.TileCable;
+import dan200.computercraft.shared.peripheral.modem.wired.TileWiredModemFull;
 import dan200.computercraft.shared.peripheral.modem.wireless.BlockWirelessModem;
 import dan200.computercraft.shared.peripheral.modem.wireless.TileWirelessModem;
 import dan200.computercraft.shared.peripheral.monitor.BlockMonitor;
@@ -21,7 +24,6 @@ import dan200.computercraft.shared.turtle.items.ItemTurtle;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
-import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.item.block.ItemBlock;
@@ -55,14 +57,12 @@ public class ComputerCraftBlocks {
 
     public static final Block<?> CABLE;
 
-    public ComputerCraftBlocks() {}
-
     static {
         final IconCoordinate a = TextureRegistry.getTexture("computercraft:block/computer_normal_front");
 
         try {
             TextureRegistry.initializeAllFiles("computercraft", a.parentAtlas, false);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -100,7 +100,7 @@ public class ComputerCraftBlocks {
             .setTileEntity(TileSpeaker::new)
             .setBlockItem(block -> {
                 ComputerCraftItems.SPEAKER = new ItemBlock<>(block);
-                return (ItemBlock<?>) ComputerCraftItems.SPEAKER;
+                return ComputerCraftItems.SPEAKER;
             })
             .build("speaker", 10001, b -> new BlockSpeaker(b));
 
@@ -113,7 +113,7 @@ public class ComputerCraftBlocks {
             .setTileEntity(() -> new TileWirelessModem(false))
             .setBlockItem(block -> {
                 ComputerCraftItems.WIRELESS_MODEM_NORMAL = new ItemBlock<>(block);
-                return (ItemBlock<?>) ComputerCraftItems.WIRELESS_MODEM_NORMAL;
+                return ComputerCraftItems.WIRELESS_MODEM_NORMAL;
             })
             .build("wireless_modem_normal", 10002, b -> new BlockWirelessModem(b, false));
 
@@ -124,7 +124,7 @@ public class ComputerCraftBlocks {
             .setTileEntity(() -> new TileWirelessModem(true))
             .setBlockItem(block -> {
                 ComputerCraftItems.WIRELESS_MODEM_ADVANCED = new ItemBlock<>(block);
-                return (ItemBlock<?>) ComputerCraftItems.WIRELESS_MODEM_ADVANCED;
+                return ComputerCraftItems.WIRELESS_MODEM_ADVANCED;
             })
             .build("wireless_modem_advanced", 10011, b -> new BlockWirelessModem(b, true));
 
@@ -219,5 +219,8 @@ public class ComputerCraftBlocks {
                 return ComputerCraftItems.MONITOR_ADVANCED;
             })
             .build("monitor_advanced", 10007, b -> new BlockMonitor(b, true));
+    }
+
+    public ComputerCraftBlocks() {
     }
 }

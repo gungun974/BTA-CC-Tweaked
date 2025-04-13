@@ -19,42 +19,10 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class DiskItemModel extends ItemModelStandard {
-    public DiskItemModel(Item item, String namespace) {
-        super(item, namespace);
-    }
-
     public static final IconCoordinate DISK_COLOUR = TextureRegistry.getTexture("computercraft:item/disk_colour");
 
-    @Override
-    public void renderItemInWorld(Tessellator tessellator, Entity entity, ItemStack itemStack, float brightness, float alpha, boolean worldTransform) {
-        GL11.glEnable(3042);
-        GL11.glBlendFunc(770, 771);
-        if (this.useColor) {
-            int color = this.getColor(itemStack);
-            float r = (float)(color >> 16 & 0xFF) / 255.0F;
-            float g = (float)(color >> 8 & 0xFF) / 255.0F;
-            float b = (float)(color & 0xFF) / 255.0F;
-            GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
-        } else {
-            GL11.glColor4f(brightness, brightness, brightness, alpha);
-        }
-
-        IconCoordinate tex = this.getIcon(entity, itemStack);
-
-        draw3DModel(tessellator, worldTransform, tex);
-
-        int diskColour = ComputerCraftItems.DISK.getColour(itemStack);
-
-        if (diskColour != -1) {
-            float r = (float)(diskColour >> 16 & 0xFF) / 255.0F;
-            float g = (float)(diskColour >> 8 & 0xFF) / 255.0F;
-            float b = (float)(diskColour & 0xFF) / 255.0F;
-            GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
-            draw3DModel(tessellator, worldTransform, DISK_COLOUR);
-        }
-
-        GL11.glDisable(32826);
-        GL11.glDisable(3042);
+    public DiskItemModel(Item item, String namespace) {
+        super(item, namespace);
     }
 
     private static void draw3DModel(Tessellator tessellator, boolean worldTransform, IconCoordinate tex) {
@@ -68,39 +36,39 @@ public class DiskItemModel extends ItemModelStandard {
         float vDiff = vMin - vMax;
         float width = 1.0F;
         float foon = 0.5F / (float) tex.parentAtlas.getHeight();
-        float goon = 0.0625F * (16.0F / (float)tileWidth);
+        float goon = 0.0625F * (16.0F / (float) tileWidth);
         GL11.glEnable(32826);
         float thickness = 0.0625F;
-        float pixelWidth = 1.0F / (float)tileWidth;
+        float pixelWidth = 1.0F / (float) tileWidth;
         if (worldTransform) {
             GL11.glTranslatef(-0.5F, -0.5F, 0.03125F);
         }
 
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 0.0F, 1.0F);
-        tessellator.addVertexWithUV(0.0, 0.0, 0.0, (double)uMax, (double)vMax);
-        tessellator.addVertexWithUV(1.0, 0.0, 0.0, (double)uMin, (double)vMax);
-        tessellator.addVertexWithUV(1.0, 1.0, 0.0, (double)uMin, (double)vMin);
-        tessellator.addVertexWithUV(0.0, 1.0, 0.0, (double)uMax, (double)vMin);
+        tessellator.addVertexWithUV(0.0, 0.0, 0.0, uMax, vMax);
+        tessellator.addVertexWithUV(1.0, 0.0, 0.0, uMin, vMax);
+        tessellator.addVertexWithUV(1.0, 1.0, 0.0, uMin, vMin);
+        tessellator.addVertexWithUV(0.0, 1.0, 0.0, uMax, vMin);
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(0.0F, 0.0F, -1.0F);
-        tessellator.addVertexWithUV(0.0, 1.0, -0.0625, (double)uMax, (double)vMin);
-        tessellator.addVertexWithUV(1.0, 1.0, -0.0625, (double)uMin, (double)vMin);
-        tessellator.addVertexWithUV(1.0, 0.0, -0.0625, (double)uMin, (double)vMax);
-        tessellator.addVertexWithUV(0.0, 0.0, -0.0625, (double)uMax, (double)vMax);
+        tessellator.addVertexWithUV(0.0, 1.0, -0.0625, uMax, vMin);
+        tessellator.addVertexWithUV(1.0, 1.0, -0.0625, uMin, vMin);
+        tessellator.addVertexWithUV(1.0, 0.0, -0.0625, uMin, vMax);
+        tessellator.addVertexWithUV(0.0, 0.0, -0.0625, uMax, vMax);
         tessellator.draw();
         tessellator.startDrawingQuads();
         tessellator.setNormal(-1.0F, 0.0F, 0.0F);
 
         for (int i = 0; i < tileWidth; i++) {
-            float texProgress = (float)i * pixelWidth;
+            float texProgress = (float) i * pixelWidth;
             float u = uMax + uDiff * texProgress - foon;
-            float x = 1.0F * texProgress;
-            tessellator.addVertexWithUV((double)x, 0.0, -0.0625, (double)u, (double)vMax);
-            tessellator.addVertexWithUV((double)x, 0.0, 0.0, (double)u, (double)vMax);
-            tessellator.addVertexWithUV((double)x, 1.0, 0.0, (double)u, (double)vMin);
-            tessellator.addVertexWithUV((double)x, 1.0, -0.0625, (double)u, (double)vMin);
+            float x = texProgress;
+            tessellator.addVertexWithUV(x, 0.0, -0.0625, u, vMax);
+            tessellator.addVertexWithUV(x, 0.0, 0.0, u, vMax);
+            tessellator.addVertexWithUV(x, 1.0, 0.0, u, vMin);
+            tessellator.addVertexWithUV(x, 1.0, -0.0625, u, vMin);
         }
 
         tessellator.draw();
@@ -108,13 +76,13 @@ public class DiskItemModel extends ItemModelStandard {
         tessellator.setNormal(1.0F, 0.0F, 0.0F);
 
         for (int i = 0; i < tileWidth; i++) {
-            float texProgress = (float)i * pixelWidth;
+            float texProgress = (float) i * pixelWidth;
             float u = uMax + uDiff * texProgress - foon;
-            float x = 1.0F * texProgress + goon;
-            tessellator.addVertexWithUV((double)x, 1.0, -0.0625, (double)u, (double)vMin);
-            tessellator.addVertexWithUV((double)x, 1.0, 0.0, (double)u, (double)vMin);
-            tessellator.addVertexWithUV((double)x, 0.0, 0.0, (double)u, (double)vMax);
-            tessellator.addVertexWithUV((double)x, 0.0, -0.0625, (double)u, (double)vMax);
+            float x = texProgress + goon;
+            tessellator.addVertexWithUV(x, 1.0, -0.0625, u, vMin);
+            tessellator.addVertexWithUV(x, 1.0, 0.0, u, vMin);
+            tessellator.addVertexWithUV(x, 0.0, 0.0, u, vMax);
+            tessellator.addVertexWithUV(x, 0.0, -0.0625, u, vMax);
         }
 
         tessellator.draw();
@@ -122,13 +90,13 @@ public class DiskItemModel extends ItemModelStandard {
         tessellator.setNormal(0.0F, 1.0F, 0.0F);
 
         for (int i = 0; i < tileWidth; i++) {
-            float texProgress = (float)i * pixelWidth;
+            float texProgress = (float) i * pixelWidth;
             float v = vMax + vDiff * texProgress - foon;
-            float y = 1.0F * texProgress + goon;
-            tessellator.addVertexWithUV(0.0, (double)y, 0.0, (double)uMax, (double)v);
-            tessellator.addVertexWithUV(1.0, (double)y, 0.0, (double)uMin, (double)v);
-            tessellator.addVertexWithUV(1.0, (double)y, -0.0625, (double)uMin, (double)v);
-            tessellator.addVertexWithUV(0.0, (double)y, -0.0625, (double)uMax, (double)v);
+            float y = texProgress + goon;
+            tessellator.addVertexWithUV(0.0, y, 0.0, uMax, v);
+            tessellator.addVertexWithUV(1.0, y, 0.0, uMin, v);
+            tessellator.addVertexWithUV(1.0, y, -0.0625, uMin, v);
+            tessellator.addVertexWithUV(0.0, y, -0.0625, uMax, v);
         }
 
         tessellator.draw();
@@ -136,16 +104,48 @@ public class DiskItemModel extends ItemModelStandard {
         tessellator.setNormal(0.0F, -1.0F, 0.0F);
 
         for (int i = 0; i < tileWidth; i++) {
-            float texProgress = (float)i * pixelWidth;
+            float texProgress = (float) i * pixelWidth;
             float v = vMax + vDiff * texProgress - foon;
-            float y = 1.0F * texProgress;
-            tessellator.addVertexWithUV(1.0, (double)y, 0.0, (double)uMin, (double)v);
-            tessellator.addVertexWithUV(0.0, (double)y, 0.0, (double)uMax, (double)v);
-            tessellator.addVertexWithUV(0.0, (double)y, -0.0625, (double)uMax, (double)v);
-            tessellator.addVertexWithUV(1.0, (double)y, -0.0625, (double)uMin, (double)v);
+            float y = texProgress;
+            tessellator.addVertexWithUV(1.0, y, 0.0, uMin, v);
+            tessellator.addVertexWithUV(0.0, y, 0.0, uMax, v);
+            tessellator.addVertexWithUV(0.0, y, -0.0625, uMax, v);
+            tessellator.addVertexWithUV(1.0, y, -0.0625, uMin, v);
         }
 
         tessellator.draw();
+    }
+
+    @Override
+    public void renderItemInWorld(Tessellator tessellator, Entity entity, ItemStack itemStack, float brightness, float alpha, boolean worldTransform) {
+        GL11.glEnable(3042);
+        GL11.glBlendFunc(770, 771);
+        if (this.useColor) {
+            int color = this.getColor(itemStack);
+            float r = (float) (color >> 16 & 0xFF) / 255.0F;
+            float g = (float) (color >> 8 & 0xFF) / 255.0F;
+            float b = (float) (color & 0xFF) / 255.0F;
+            GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
+        } else {
+            GL11.glColor4f(brightness, brightness, brightness, alpha);
+        }
+
+        IconCoordinate tex = this.getIcon(entity, itemStack);
+
+        draw3DModel(tessellator, worldTransform, tex);
+
+        int diskColour = ComputerCraftItems.DISK.getColour(itemStack);
+
+        if (diskColour != -1) {
+            float r = (float) (diskColour >> 16 & 0xFF) / 255.0F;
+            float g = (float) (diskColour >> 8 & 0xFF) / 255.0F;
+            float b = (float) (diskColour & 0xFF) / 255.0F;
+            GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
+            draw3DModel(tessellator, worldTransform, DISK_COLOUR);
+        }
+
+        GL11.glDisable(32826);
+        GL11.glDisable(3042);
     }
 
     @Override
@@ -162,9 +162,9 @@ public class DiskItemModel extends ItemModelStandard {
             textureIndex.parentAtlas.bind();
             if (this.useColor) {
                 int color = this.getColor(itemStack);
-                float r = (float)(color >> 16 & 0xFF) / 255.0F;
-                float g = (float)(color >> 8 & 0xFF) / 255.0F;
-                float b = (float)(color & 0xFF) / 255.0F;
+                float r = (float) (color >> 16 & 0xFF) / 255.0F;
+                float g = (float) (color >> 8 & 0xFF) / 255.0F;
+                float b = (float) (color & 0xFF) / 255.0F;
                 GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
             } else {
                 GL11.glColor4f(brightness, brightness, brightness, alpha);
@@ -175,9 +175,9 @@ public class DiskItemModel extends ItemModelStandard {
             int diskColour = ComputerCraftItems.DISK.getColour(itemStack);
 
             if (diskColour != -1) {
-                float r = (float)(diskColour >> 16 & 0xFF) / 255.0F;
-                float g = (float)(diskColour >> 8 & 0xFF) / 255.0F;
-                float b = (float)(diskColour & 0xFF) / 255.0F;
+                float r = (float) (diskColour >> 16 & 0xFF) / 255.0F;
+                float g = (float) (diskColour >> 8 & 0xFF) / 255.0F;
+                float b = (float) (diskColour & 0xFF) / 255.0F;
                 GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
                 this.renderTexturedQuad(tessellator, x, y, DISK_COLOUR);
             }
@@ -204,9 +204,9 @@ public class DiskItemModel extends ItemModelStandard {
         tex.parentAtlas.bind();
         if (this.useColor) {
             int color = this.getColor(itemstack);
-            float r = (float)(color >> 16 & 0xFF) / 255.0F;
-            float g = (float)(color >> 8 & 0xFF) / 255.0F;
-            float b = (float)(color & 0xFF) / 255.0F;
+            float r = (float) (color >> 16 & 0xFF) / 255.0F;
+            float g = (float) (color >> 8 & 0xFF) / 255.0F;
+            float b = (float) (color & 0xFF) / 255.0F;
             GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0F);
         } else {
             GL11.glColor4f(brightness, brightness, brightness, 1.0F);
@@ -221,12 +221,12 @@ public class DiskItemModel extends ItemModelStandard {
         if (mc.gameSettings.items3D.value) {
             GL11.glPushMatrix();
             GL11.glScaled(1.0, 1.0, 1.0);
-            GL11.glRotated((double)yaw, 0.0, 1.0, 0.0);
-            GL11.glTranslated(-0.5, 0.0, -0.05 * (double)(renderCount - 1));
+            GL11.glRotated(yaw, 0.0, 1.0, 0.0);
+            GL11.glTranslated(-0.5, 0.0, -0.05 * (double) (renderCount - 1));
 
             for (int i = 0; i < renderCount; i++) {
                 GL11.glPushMatrix();
-                GL11.glTranslated(0.0, 0.0, 0.1 * (double)i);
+                GL11.glTranslated(0.0, 0.0, 0.1 * (double) i);
                 this.renderItem(tessellator, renderDispatcher.itemRenderer, itemstack, entity, brightness, false);
                 GL11.glPopMatrix();
             }
@@ -249,9 +249,9 @@ public class DiskItemModel extends ItemModelStandard {
                 int diskColour = ComputerCraftItems.DISK.getColour(itemstack);
 
                 if (diskColour != -1) {
-                    float r = (float)(diskColour >> 16 & 0xFF) / 255.0F;
-                    float g = (float)(diskColour >> 8 & 0xFF) / 255.0F;
-                    float b = (float)(diskColour & 0xFF) / 255.0F;
+                    float r = (float) (diskColour >> 16 & 0xFF) / 255.0F;
+                    float g = (float) (diskColour >> 8 & 0xFF) / 255.0F;
+                    float b = (float) (diskColour & 0xFF) / 255.0F;
                     GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0f);
                     this.renderFlat(tessellator, DISK_COLOUR);
                 }

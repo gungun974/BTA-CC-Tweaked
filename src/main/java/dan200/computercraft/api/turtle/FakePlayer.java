@@ -5,19 +5,9 @@
  */
 package dan200.computercraft.api.turtle;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
-
-import javax.annotation.Nullable;
-import javax.crypto.Cipher;
-import java.util.Collection;
-import java.util.OptionalInt;
-import java.util.UUID;
-
 /**
  * A wrapper for {@link ServerPlayerEntity} which denotes a "fake" player.
- *
+ * <p>
  * Please note that this does not implement any of the traditional fake player behaviour. It simply exists to prevent me passing in normal players.
  */
 public class FakePlayer// extends ServerPlayerEntity

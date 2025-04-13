@@ -8,14 +8,11 @@ package dan200.computercraft.shared.turtle.core;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import net.minecraft.core.util.helper.Direction;
 
-public enum MoveDirection
-{
+public enum MoveDirection {
     FORWARD, BACK, UP, DOWN;
 
-    public Direction toWorldDir(ITurtleAccess turtle )
-    {
-        switch( this )
-        {
+    public Direction toWorldDir(ITurtleAccess turtle) {
+        switch (this) {
             case FORWARD:
             default:
                 return turtle.getDirection();

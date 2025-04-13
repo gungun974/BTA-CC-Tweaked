@@ -6,11 +6,8 @@
 package dan200.computercraft.shared.peripheral.modem.wired;
 
 import dan200.computercraft.BlockPos;
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.shared.common.ComputerCraftItems;
-import dan200.computercraft.shared.peripheral.modem.ModemShapes;
-import dan200.computercraft.shared.peripheral.modem.wireless.BlockWirelessModem;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.block.entity.TileEntity;
@@ -27,16 +24,13 @@ import net.minecraft.core.world.WorldSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BlockCable extends BlockLogic
-{
-    public BlockCable( Block<?> block, Material material )
-    {
-        super( block, material );
+public class BlockCable extends BlockLogic {
+    public BlockCable(Block<?> block, Material material) {
+        super(block, material);
         this.setBlockBounds(0.125, 0.0, 0.125, 0.875, 0.1875, 0.875);
     }
 
-    public static boolean canConnectIn( TileCable state, Direction direction )
-    {
+    public static boolean canConnectIn(TileCable state, Direction direction) {
         return state.blockStateCable && state.blockStateModem
             .getFacing() != direction;
     }
@@ -57,36 +51,50 @@ public class BlockCable extends BlockLogic
 //        return state.with( CONNECTIONS.get( side ), doesConnectVisually( state, world, pos, side ) );
 //    }
 
-    public static boolean doesConnectVisually(TileCable state, World world, BlockPos pos, Direction direction )
-    {
-        if( !state.blockStateCable )
-        {
+    public static boolean doesConnectVisually(TileCable state, World world, BlockPos pos, Direction direction) {
+        if (!state.blockStateCable) {
             return false;
         }
-        if( state.blockStateModem
-            .getFacing() == direction )
-        {
+        if (state.blockStateModem
+            .getFacing() == direction) {
             return true;
         }
-        return ComputerCraftAPI.getWiredElementAt( world, pos.offset( direction ), direction.getOpposite() ) != null;
+        return ComputerCraftAPI.getWiredElementAt(world, pos.offset(direction), direction.getOpposite()) != null;
+    }
+
+    public static void correctConnections(World world, BlockPos pos, TileCable state) {
+        if (state.blockStateCable) {
+            state.blockStateNorth = doesConnectVisually(state, world, pos, Direction.NORTH);
+            state.blockStateSouth = doesConnectVisually(state, world, pos, Direction.SOUTH);
+            state.blockStateEast = doesConnectVisually(state, world, pos, Direction.EAST);
+            state.blockStateWest = doesConnectVisually(state, world, pos, Direction.WEST);
+            state.blockStateUp = doesConnectVisually(state, world, pos, Direction.UP);
+            state.blockStateDown = doesConnectVisually(state, world, pos, Direction.DOWN);
+        } else {
+            state.blockStateNorth = false;
+            state.blockStateSouth = false;
+            state.blockStateEast = false;
+            state.blockStateWest = false;
+            state.blockStateUp = false;
+            state.blockStateDown = false;
+        }
     }
 
     @Override
     public boolean canPlaceBlockAt(World world, int x, int y, int z) {
-       TileCable state = (TileCable) world.getTileEntity(x, y, z);
+        TileCable state = (TileCable) world.getTileEntity(x, y, z);
 
-       if (state == null) {
-           return super.canPlaceBlockAt(world, x, y, z);
-       }
+        if (state == null) {
+            return super.canPlaceBlockAt(world, x, y, z);
+        }
 
         Direction facing = state.blockStateModem
             .getFacing();
-        if( facing == null )
-        {
+        if (facing == null) {
             return true;
         }
 
-        return world.isBlockNormalCube(x + facing.getOffsetX(), y+ facing.getOffsetY(), z+ facing.getOffsetZ());
+        return world.isBlockNormalCube(x + facing.getOffsetX(), y + facing.getOffsetY(), z + facing.getOffsetZ());
     }
 
     @Override
@@ -103,7 +111,7 @@ public class BlockCable extends BlockLogic
             return;
         }
 
-        AABB shape = CableShapes.getShape( state );
+        AABB shape = CableShapes.getShape(state);
 
         if (shape.getSize() == 0) {
             setBlockBounds(0, 0, 0, 1, 1, 1);
@@ -123,13 +131,11 @@ public class BlockCable extends BlockLogic
 
     @Override
     public void onBlockPlacedByWorld(World world, int x, int y, int z) {
-        TileEntity tile = world.getTileEntity( x, y, z );
-        if( tile instanceof TileCable )
-        {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile instanceof TileCable) {
             TileCable cable = (TileCable) tile;
 
-            if( cable.hasCable() )
-            {
+            if (cable.hasCable()) {
                 cable.connectionsChanged();
             }
         }
@@ -137,13 +143,11 @@ public class BlockCable extends BlockLogic
 
     @Override
     public void onBlockPlacedByMob(World world, int x, int y, int z, @NotNull Side side, Mob mob, double xPlaced, double yPlaced) {
-        TileEntity tile = world.getTileEntity( x, y, z );
-        if( tile instanceof TileCable )
-        {
+        TileEntity tile = world.getTileEntity(x, y, z);
+        if (tile instanceof TileCable) {
             TileCable cable = (TileCable) tile;
 
-            if( cable.hasCable() )
-            {
+            if (cable.hasCable()) {
                 cable.connectionsChanged();
             }
         }
@@ -173,37 +177,14 @@ public class BlockCable extends BlockLogic
 
     }
 
-    public static void correctConnections(World world, BlockPos pos, TileCable state )
-    {
-        if( state.blockStateCable )
-        {
-            state.blockStateNorth = doesConnectVisually( state, world, pos, Direction.NORTH );
-            state.blockStateSouth = doesConnectVisually( state, world, pos, Direction.SOUTH );
-            state.blockStateEast = doesConnectVisually( state, world, pos, Direction.EAST );
-            state.blockStateWest = doesConnectVisually( state, world, pos, Direction.WEST );
-            state.blockStateUp = doesConnectVisually( state, world, pos, Direction.UP );
-            state.blockStateDown = doesConnectVisually( state, world, pos, Direction.DOWN);
-        }
-        else
-        {
-            state.blockStateNorth = false;
-            state.blockStateSouth = false;
-            state.blockStateEast = false;
-            state.blockStateWest = false;
-            state.blockStateUp = false;
-            state.blockStateDown = false;
-        }
-    }
-
     public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
-        return ((TileCable)world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
+        return ((TileCable) world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
     }
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockId) {
         TileEntity entity = (world.getTileEntity(x, y, z));
-        if( !(entity instanceof TileCable) )
-        {
+        if (!(entity instanceof TileCable)) {
             return;
         }
 

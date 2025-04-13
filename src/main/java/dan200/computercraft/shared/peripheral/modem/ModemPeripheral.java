@@ -25,122 +25,107 @@ import java.util.Set;
  *
  * @cc.module modem
  */
-public abstract class ModemPeripheral implements IPeripheral, IPacketSender, IPacketReceiver
-{
-    private final Set<IComputerAccess> computers = new HashSet<>( 1 );
+public abstract class ModemPeripheral implements IPeripheral, IPacketSender, IPacketReceiver {
+    private final Set<IComputerAccess> computers = new HashSet<>(1);
     private final ModemState state;
     private IPacketNetwork network;
 
-    protected ModemPeripheral( ModemState state )
-    {
+    protected ModemPeripheral(ModemState state) {
         this.state = state;
     }
 
-    public ModemState getModemState()
-    {
+    private static int parseChannel(int channel) throws LuaException {
+        if (channel < 0 || channel > 65535) {
+            throw new LuaException("Expected number in range 0-65535");
+        }
+        return channel;
+    }
+
+    public ModemState getModemState() {
         return state;
     }
 
-    public void destroy()
-    {
-        setNetwork( null );
+    public void destroy() {
+        setNetwork(null);
     }
 
     @Override
-    public void receiveSameDimension( @Nonnull Packet packet, double distance )
-    {
-        if( packet.getSender() == this || !state.isOpen( packet.getChannel() ) )
-        {
+    public void receiveSameDimension(@Nonnull Packet packet, double distance) {
+        if (packet.getSender() == this || !state.isOpen(packet.getChannel())) {
             return;
         }
 
-        synchronized( computers )
-        {
-            for( IComputerAccess computer : computers )
-            {
-                computer.queueEvent( "modem_message",
+        synchronized (computers) {
+            for (IComputerAccess computer : computers) {
+                computer.queueEvent("modem_message",
                     computer.getAttachmentName(),
                     packet.getChannel(),
                     packet.getReplyChannel(),
                     packet.getPayload(),
-                    distance );
+                    distance);
             }
         }
     }
 
     @Override
-    public void receiveDifferentDimension( @Nonnull Packet packet )
-    {
-        if( packet.getSender() == this || !state.isOpen( packet.getChannel() ) )
-        {
+    public void receiveDifferentDimension(@Nonnull Packet packet) {
+        if (packet.getSender() == this || !state.isOpen(packet.getChannel())) {
             return;
         }
 
-        synchronized( computers )
-        {
-            for( IComputerAccess computer : computers )
-            {
-                computer.queueEvent( "modem_message", computer.getAttachmentName(), packet.getChannel(), packet.getReplyChannel(), packet.getPayload() );
+        synchronized (computers) {
+            for (IComputerAccess computer : computers) {
+                computer.queueEvent("modem_message", computer.getAttachmentName(), packet.getChannel(), packet.getReplyChannel(), packet.getPayload());
             }
         }
     }
 
     @Nonnull
     @Override
-    public String getType()
-    {
+    public String getType() {
         return "modem";
     }
 
     @Override
-    public synchronized void attach( @Nonnull IComputerAccess computer )
-    {
-        synchronized( computers )
-        {
-            computers.add( computer );
+    public synchronized void attach(@Nonnull IComputerAccess computer) {
+        synchronized (computers) {
+            computers.add(computer);
         }
 
-        setNetwork( getNetwork() );
+        setNetwork(getNetwork());
     }
 
     protected abstract IPacketNetwork getNetwork();
 
-    private synchronized void setNetwork( IPacketNetwork network )
-    {
-        if( this.network == network )
-        {
+    private synchronized void setNetwork(IPacketNetwork network) {
+        if (this.network == network) {
             return;
         }
 
         // Leave old network
-        if( this.network != null )
-        {
-            this.network.removeReceiver( this );
+        if (this.network != null) {
+            this.network.removeReceiver(this);
         }
 
         // Set new network
         this.network = network;
 
         // Join new network
-        if( this.network != null )
-        {
-            this.network.addReceiver( this );
+        if (this.network != null) {
+            this.network.addReceiver(this);
         }
     }
 
     @Override
-    public synchronized void detach( @Nonnull IComputerAccess computer )
-    {
+    public synchronized void detach(@Nonnull IComputerAccess computer) {
         boolean empty;
-        synchronized( computers )
-        {
-            computers.remove( computer );
+        synchronized (computers) {
+            computers.remove(computer);
             empty = computers.isEmpty();
         }
 
-        if( empty )
-        {
-            setNetwork( null );
+        if (empty) {
+            setNetwork(null);
         }
     }
 
@@ -152,18 +137,8 @@ public abstract class ModemPeripheral implements IPeripheral, IPacketSender, IPa
      * @throws LuaException If there are too many open channels.
      */
     @LuaFunction
-    public final void open( int channel ) throws LuaException
-    {
-        state.open( parseChannel( channel ) );
-    }
-
-    private static int parseChannel( int channel ) throws LuaException
-    {
-        if( channel < 0 || channel > 65535 )
-        {
-            throw new LuaException( "Expected number in range 0-65535" );
-        }
-        return channel;
+    public final void open(int channel) throws LuaException {
+        state.open(parseChannel(channel));
     }
 
     /**
@@ -174,9 +149,8 @@ public abstract class ModemPeripheral implements IPeripheral, IPacketSender, IPa
      * @throws LuaException If the channel is out of range.
      */
     @LuaFunction
-    public final boolean isOpen( int channel ) throws LuaException
-    {
-        return state.isOpen( parseChannel( channel ) );
+    public final boolean isOpen(int channel) throws LuaException {
+        return state.isOpen(parseChannel(channel));
     }
 
     /**
@@ -186,17 +160,15 @@ public abstract class ModemPeripheral implements IPeripheral, IPacketSender, IPa
      * @throws LuaException If the channel is out of range.
      */
     @LuaFunction
-    public final void close( int channel ) throws LuaException
-    {
-        state.close( parseChannel( channel ) );
+    public final void close(int channel) throws LuaException {
+        state.close(parseChannel(channel));
     }
 
     /**
      * Close all open channels.
      */
     @LuaFunction
-    public final void closeAll()
-    {
+    public final void closeAll() {
         state.closeAll();
     }
 
@@ -211,57 +183,46 @@ public abstract class ModemPeripheral implements IPeripheral, IPacketSender, IPa
      * @throws LuaException If the channel is out of range.
      */
     @LuaFunction
-    public final void transmit( int channel, int replyChannel, Object payload ) throws LuaException
-    {
-        parseChannel( channel );
-        parseChannel( replyChannel );
+    public final void transmit(int channel, int replyChannel, Object payload) throws LuaException {
+        parseChannel(channel);
+        parseChannel(replyChannel);
 
         World world = getWorld();
         Vec3 position = getPosition();
         IPacketNetwork network = this.network;
 
-        if( world == null || position == null || network == null )
-        {
+        if (world == null || position == null || network == null) {
             return;
         }
 
-        Packet packet = new Packet( channel, replyChannel, payload, this );
-        if( isInterdimensional() )
-        {
-            network.transmitInterdimensional( packet );
-        }
-        else
-        {
-            network.transmitSameDimension( packet, getRange() );
+        Packet packet = new Packet(channel, replyChannel, payload, this);
+        if (isInterdimensional()) {
+            network.transmitInterdimensional(packet);
+        } else {
+            network.transmitSameDimension(packet, getRange());
         }
     }
 
     /**
      * Determine if this is a wired or wireless modem.
-     *
+     * <p>
      * Some methods (namely those dealing with wired networks and remote peripherals) are only available on wired modems.
      *
      * @return {@code true} if this is a wireless modem.
      */
     @LuaFunction
-    public final boolean isWireless()
-    {
+    public final boolean isWireless() {
         IPacketNetwork network = this.network;
         return network != null && network.isWireless();
     }
 
     @Nonnull
     @Override
-    public String getSenderID()
-    {
-        synchronized( computers )
-        {
-            if( computers.size() != 1 )
-            {
+    public String getSenderID() {
+        synchronized (computers) {
+            if (computers.size() != 1) {
                 return "unknown";
-            }
-            else
-            {
+            } else {
                 IComputerAccess computer = computers.iterator()
                     .next();
                 return computer.getID() + "_" + computer.getAttachmentName();

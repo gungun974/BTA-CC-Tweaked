@@ -12,21 +12,20 @@ import java.util.Map;
 
 /**
  * A wired network is composed of one of more {@link IWiredNode}s, a set of connections between them, and a series of peripherals.
- *
+ * <p>
  * Networks from a connected graph. This means there is some path between all nodes on the network. Further more, if there is some path between two nodes
  * then they must be on the same network. {@link IWiredNetwork} will automatically handle the merging and splitting of networks (and thus changing of
  * available nodes and peripherals) as connections change.
- *
+ * <p>
  * This does mean one can not rely on the network remaining consistent between subsequent operations. Consequently, it is generally preferred to use the
  * methods provided by {@link IWiredNode}.
  *
  * @see IWiredNode#getNetwork()
  */
-public interface IWiredNetwork
-{
+public interface IWiredNetwork {
     /**
      * Create a connection between two nodes.
-     *
+     * <p>
      * This should only be used on the server thread.
      *
      * @param left  The first node to connect
@@ -37,11 +36,11 @@ public interface IWiredNetwork
      * @see IWiredNode#connectTo(IWiredNode)
      * @see IWiredNetwork#connect(IWiredNode, IWiredNode)
      */
-    boolean connect( @Nonnull IWiredNode left, @Nonnull IWiredNode right );
+    boolean connect(@Nonnull IWiredNode left, @Nonnull IWiredNode right);
 
     /**
      * Destroy a connection between this node and another.
-     *
+     * <p>
      * This should only be used on the server thread.
      *
      * @param left  The first node in the connection.
@@ -52,11 +51,11 @@ public interface IWiredNetwork
      * @see IWiredNode#disconnectFrom(IWiredNode)
      * @see IWiredNetwork#connect(IWiredNode, IWiredNode)
      */
-    boolean disconnect( @Nonnull IWiredNode left, @Nonnull IWiredNode right );
+    boolean disconnect(@Nonnull IWiredNode left, @Nonnull IWiredNode right);
 
     /**
      * Sever all connections this node has, removing it from this network.
-     *
+     * <p>
      * This should only be used on the server thread. You should only call this on nodes that your network element owns.
      *
      * @param node The node to remove
@@ -64,11 +63,11 @@ public interface IWiredNetwork
      * @throws IllegalArgumentException If the node is not in the network.
      * @see IWiredNode#remove()
      */
-    boolean remove( @Nonnull IWiredNode node );
+    boolean remove(@Nonnull IWiredNode node);
 
     /**
      * Update the peripherals a node provides.
-     *
+     * <p>
      * This should only be used on the server thread. You should only call this on nodes that your network element owns.
      *
      * @param node        The node to attach peripherals for.
@@ -76,5 +75,5 @@ public interface IWiredNetwork
      * @throws IllegalArgumentException If the node is not in the network.
      * @see IWiredNode#updatePeripherals(Map)
      */
-    void updatePeripherals( @Nonnull IWiredNode node, @Nonnull Map<String, IPeripheral> peripherals );
+    void updatePeripherals(@Nonnull IWiredNode node, @Nonnull Map<String, IPeripheral> peripherals);
 }

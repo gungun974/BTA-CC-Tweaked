@@ -15,13 +15,12 @@ import net.minecraft.core.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class InventoryUtil
-{
-    private InventoryUtil() {}
+public final class InventoryUtil {
+    private InventoryUtil() {
+    }
     // Methods for comparing things:
 
-    public static boolean areItemsStackable(@Nullable ItemStack a, @Nullable ItemStack b)
-    {
+    public static boolean areItemsStackable(@Nullable ItemStack a, @Nullable ItemStack b) {
         if (a == null) {
             return false;
         }
@@ -33,12 +32,10 @@ public final class InventoryUtil
 
     // Methods for finding inventories:
 
-    public static Container getInventory(World world, BlockPos pos, Direction side )
-    {
+    public static Container getInventory(World world, BlockPos pos, Direction side) {
         // Look for tile with inventory
-        int y = (int) pos.getY();
-        if( y >= 0 && y < World.HEIGHT_BLOCKS )
-        {
+        int y = pos.getY();
+        if (y >= 0 && y < World.HEIGHT_BLOCKS) {
             // Check if block is InventoryProvider
 //            if( block instanceof InventoryProvider )
 //            {
@@ -47,13 +44,10 @@ public final class InventoryUtil
             // Check if block is BlockEntity w/ Inventory
 //            if( block.hasBlockEntity() )
 //            {
-                TileEntity tileEntity = world.getTileEntity( pos.x, pos.y, pos.z );
+            TileEntity tileEntity = world.getTileEntity(pos.x, pos.y, pos.z);
 
-                Container inventory = getInventory( tileEntity );
-                if( inventory != null )
-                {
-                    return inventory;
-                }
+            Container inventory = getInventory(tileEntity);
+            return inventory;
 //            }
         }
 
@@ -76,15 +70,13 @@ public final class InventoryUtil
         return null;
     }
 
-    public static Container getInventory( TileEntity tileEntity )
-    {
+    public static Container getInventory(TileEntity tileEntity) {
 //        World world = tileEntity.worldObj;
 //        BlockPos pos = new BlockPos(tileEntity.x, tileEntity.y, tileEntity.z);
         //BlockState blockState = world.getBlockState( pos );
         //Block block = blockState.getBlock();
 
-        if( tileEntity instanceof Container )
-        {
+        if (tileEntity instanceof Container) {
             Container inventory = (Container) tileEntity;
 //            if( inventory instanceof ChestBlockEntity && block instanceof ChestBlock )
 //            {
@@ -96,89 +88,73 @@ public final class InventoryUtil
         return null;
     }
 
-    public static ItemStack storeItems( @Nonnull ItemStack itemstack, ItemStorage inventory, int begin )
-    {
-        return storeItems( itemstack, inventory, 0, inventory.size(), begin );
+    public static ItemStack storeItems(@Nonnull ItemStack itemstack, ItemStorage inventory, int begin) {
+        return storeItems(itemstack, inventory, 0, inventory.size(), begin);
     }
 
     // Methods for placing into inventories:
 
-    public static ItemStack storeItems( ItemStack stack, ItemStorage inventory, int start, int range, int begin )
-    {
-        if( stack == null )
-        {
+    public static ItemStack storeItems(ItemStack stack, ItemStorage inventory, int start, int range, int begin) {
+        if (stack == null) {
             return null;
         }
 
         // Inspect the slots in order and try to find empty or stackable slots
         ItemStack remainder = stack.copy();
-        for( int i = 0; i < range; i++ )
-        {
+        for (int i = 0; i < range; i++) {
             int slot = start + (i + begin - start) % range;
-            if( remainder == null )
-            {
+            if (remainder == null) {
                 break;
             }
-            remainder = inventory.store( slot, remainder, false );
+            remainder = inventory.store(slot, remainder, false);
         }
-        return areItemsEqual( stack, remainder ) ? stack : remainder;
+        return areItemsEqual(stack, remainder) ? stack : remainder;
     }
 
-    public static boolean areItemsEqual( ItemStack a,ItemStack b )
-    {
-        return a == b || ItemStack.areItemStacksEqual( a, b );
+    public static boolean areItemsEqual(ItemStack a, ItemStack b) {
+        return a == b || ItemStack.areItemStacksEqual(a, b);
     }
 
-    public static ItemStack storeItems( @Nonnull ItemStack itemstack, ItemStorage inventory )
-    {
-        return storeItems( itemstack, inventory, 0, inventory.size(), 0 );
+    public static ItemStack storeItems(@Nonnull ItemStack itemstack, ItemStorage inventory) {
+        return storeItems(itemstack, inventory, 0, inventory.size(), 0);
     }
 
     // Methods for taking out of inventories
 
     @Nonnull
-    public static ItemStack takeItems( int count, ItemStorage inventory, int begin )
-    {
-        return takeItems( count, inventory, 0, inventory.size(), begin );
+    public static ItemStack takeItems(int count, ItemStorage inventory, int begin) {
+        return takeItems(count, inventory, 0, inventory.size(), begin);
     }
 
-    public static ItemStack takeItems( int count, ItemStorage inventory, int start, int range, int begin )
-    {
+    public static ItemStack takeItems(int count, ItemStorage inventory, int start, int range, int begin) {
         ItemStack partialStack = null;
-        for( int i = 0; i < range; i++ )
-        {
+        for (int i = 0; i < range; i++) {
             int slot = start + (i + begin - start) % range;
 
-            if( count <= 0 )
-            {
+            if (count <= 0) {
                 break;
             }
 
             // If this doesn't slot, abort.
-            ItemStack extracted = inventory.take( slot, count, partialStack, false );
-            if( extracted == null )
-            {
+            ItemStack extracted = inventory.take(slot, count, partialStack, false);
+            if (extracted == null) {
                 continue;
             }
 
             count -= extracted.stackSize;
-            if( partialStack == null )
-            {
+            if (partialStack == null) {
                 // If we've extracted for this first time, then limit the count to the maximum stack size.
                 partialStack = extracted;
-                count = Math.min( count, extracted.getMaxStackSize() );
-            }
-            else
-            {
-                partialStack.stackSize +=  extracted.stackSize ;
+                count = Math.min(count, extracted.getMaxStackSize());
+            } else {
+                partialStack.stackSize += extracted.stackSize;
             }
         }
 
         return partialStack;
     }
 
-    public static ItemStack takeItems( int count, ItemStorage inventory )
-    {
-        return takeItems( count, inventory, 0, inventory.size(), 0 );
+    public static ItemStack takeItems(int count, ItemStorage inventory) {
+        return takeItems(count, inventory, 0, inventory.size(), 0);
     }
 }

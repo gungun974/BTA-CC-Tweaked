@@ -16,41 +16,12 @@ import java.nio.channels.Channel;
 import java.nio.channels.SeekableByteChannel;
 import java.util.Optional;
 
-public abstract class HandleGeneric
-{
+public abstract class HandleGeneric {
     private TrackingCloseable closeable;
 
-    protected HandleGeneric( @Nonnull TrackingCloseable closeable )
-    {
+    protected HandleGeneric(@Nonnull TrackingCloseable closeable) {
         this.closeable = closeable;
     }
-
-    protected void checkOpen() throws LuaException
-    {
-        TrackingCloseable closeable = this.closeable;
-        if( closeable == null || !closeable.isOpen() ) throw new LuaException( "attempt to use a closed file" );
-    }
-
-    protected final void close()
-    {
-        IoUtil.closeQuietly( closeable );
-        closeable = null;
-    }
-
-    /**
-     * Close this file, freeing any resources it uses.
-     *
-     * Once a file is closed it may no longer be read or written to.
-     *
-     * @throws LuaException If the file has already been closed.
-     */
-    @LuaFunction( "close" )
-    public final void doClose() throws LuaException
-    {
-        checkOpen();
-        close();
-    }
-
 
     /**
      * Shared implementation for various file handle types.
@@ -62,51 +33,63 @@ public abstract class HandleGeneric
      * @throws LuaException If the arguments were invalid
      * @see <a href="https://www.lua.org/manual/5.1/manual.html#pdf-file:seek">{@code file:seek} in the Lua manual.</a>
      */
-    protected static Object[] handleSeek( SeekableByteChannel channel, Optional<String> whence, Optional<Long> offset ) throws LuaException
-    {
-        long actualOffset = offset.orElse( 0L );
-        try
-        {
-            switch( whence.orElse( "cur" ) )
-            {
+    protected static Object[] handleSeek(SeekableByteChannel channel, Optional<String> whence, Optional<Long> offset) throws LuaException {
+        long actualOffset = offset.orElse(0L);
+        try {
+            switch (whence.orElse("cur")) {
                 case "set":
-                    channel.position( actualOffset );
+                    channel.position(actualOffset);
                     break;
                 case "cur":
-                    channel.position( channel.position() + actualOffset );
+                    channel.position(channel.position() + actualOffset);
                     break;
                 case "end":
-                    channel.position( channel.size() + actualOffset );
+                    channel.position(channel.size() + actualOffset);
                     break;
                 default:
-                    throw new LuaException( "bad argument #1 to 'seek' (invalid option '" + whence + "'" );
+                    throw new LuaException("bad argument #1 to 'seek' (invalid option '" + whence + "'");
             }
 
-            return new Object[] { channel.position() };
-        }
-        catch( IllegalArgumentException e )
-        {
-            return new Object[] { null, "Position is negative" };
-        }
-        catch( IOException e )
-        {
+            return new Object[]{channel.position()};
+        } catch (IllegalArgumentException e) {
+            return new Object[]{null, "Position is negative"};
+        } catch (IOException e) {
             return null;
         }
     }
 
-    protected static SeekableByteChannel asSeekable( Channel channel )
-    {
-        if( !(channel instanceof SeekableByteChannel) ) return null;
+    protected static SeekableByteChannel asSeekable(Channel channel) {
+        if (!(channel instanceof SeekableByteChannel)) return null;
 
         SeekableByteChannel seekable = (SeekableByteChannel) channel;
-        try
-        {
-            seekable.position( seekable.position() );
+        try {
+            seekable.position(seekable.position());
             return seekable;
-        }
-        catch( IOException | UnsupportedOperationException e )
-        {
+        } catch (IOException | UnsupportedOperationException e) {
             return null;
         }
+    }
+
+    protected void checkOpen() throws LuaException {
+        TrackingCloseable closeable = this.closeable;
+        if (closeable == null || !closeable.isOpen()) throw new LuaException("attempt to use a closed file");
+    }
+
+    protected final void close() {
+        IoUtil.closeQuietly(closeable);
+        closeable = null;
+    }
+
+    /**
+     * Close this file, freeing any resources it uses.
+     * <p>
+     * Once a file is closed it may no longer be read or written to.
+     *
+     * @throws LuaException If the file has already been closed.
+     */
+    @LuaFunction("close")
+    public final void doClose() throws LuaException {
+        checkOpen();
+        close();
     }
 }

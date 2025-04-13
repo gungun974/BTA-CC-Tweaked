@@ -16,8 +16,7 @@ import turniplabs.halplibe.helper.network.UniversalPacket;
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 
-public class OpenContainerComputerGuiClientMessage<A> extends OpenGuiContainerMessage<A>
-{
+public class OpenContainerComputerGuiClientMessage<A> extends OpenGuiContainerMessage<A> {
     private int instanceId;
     private ComputerFamily family;
     private int width;
@@ -29,8 +28,7 @@ public class OpenContainerComputerGuiClientMessage<A> extends OpenGuiContainerMe
         ComputerFamily family,
         int width,
         int height
-    )
-    {
+    ) {
         super(player, container, screen, menu);
         this.instanceId = instanceId;
         this.family = family;
@@ -42,10 +40,10 @@ public class OpenContainerComputerGuiClientMessage<A> extends OpenGuiContainerMe
     }
 
     public static <C extends TileEntity> void SendToPlayer(Player player, C tileEntity, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, C> menu,
-       int instanceId,
-       ComputerFamily family,
-       int width,
-       int height
+                                                           int instanceId,
+                                                           ComputerFamily family,
+                                                           int width,
+                                                           int height
     ) {
         OpenContainerComputerGuiClientMessage<C> message = new OpenContainerComputerGuiClientMessage<>(player, tileEntity, screen, menu,
             instanceId,
@@ -78,17 +76,16 @@ public class OpenContainerComputerGuiClientMessage<A> extends OpenGuiContainerMe
     }
 
     @Override
-    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
-    {
+    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
         super.encodeToUniversalPacket(buf);
-        buf.writeInt( instanceId );
+        buf.writeInt(instanceId);
         buf.writeEnumConstant(family);
-        buf.writeInt( width );
-        buf.writeInt( height );
+        buf.writeInt(width);
+        buf.writeInt(height);
     }
 
     @Override
-    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf ) {
+    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
         super.decodeFromUniversalPacket(buf);
         instanceId = buf.readInt();
         family = buf.readEnumConstant(ComputerFamily.class);

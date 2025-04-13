@@ -28,7 +28,7 @@ public class BlockModelComputer<T extends BlockLogic> extends BlockModelHorizont
 
             ComputerCraft.log.info("hoi");
 
-            switch (currentState){
+            switch (currentState) {
                 case ON:
                     return TextureRegistry.getTexture(originalFront.namespaceId.namespace() + ":block/" + originalFront.namespaceId.value() + "_on");
                 case BLINKING:
@@ -51,7 +51,7 @@ public class BlockModelComputer<T extends BlockLogic> extends BlockModelHorizont
 
             final ComputerState currentState = ComputerState.class.getEnumConstants()[(currentMetadata >> 3) & 0b11];
 
-            switch (currentState){
+            switch (currentState) {
                 case ON:
                     return TextureRegistry.getTexture(originalFront.namespaceId.namespace() + ":block/" + originalFront.namespaceId.value() + "_on");
                 case BLINKING:

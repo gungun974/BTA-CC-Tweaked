@@ -20,44 +20,39 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TurtleInspectCommand implements ITurtleCommand
-{
+public class TurtleInspectCommand implements ITurtleCommand {
     private final InteractDirection direction;
 
-    public TurtleInspectCommand( InteractDirection direction )
-    {
+    public TurtleInspectCommand(InteractDirection direction) {
         this.direction = direction;
     }
 
     @Nonnull
     @Override
-    public TurtleCommandResult execute( @Nonnull ITurtleAccess turtle )
-    {
+    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
         // Get world direction from direction
-        Direction direction = this.direction.toWorldDir( turtle );
+        Direction direction = this.direction.toWorldDir(turtle);
 
         // Check if thing in front is air or not
         World world = turtle.getWorld();
         BlockPos oldPosition = turtle.getPosition();
-        BlockPos newPosition = oldPosition.offset( direction );
+        BlockPos newPosition = oldPosition.offset(direction);
 
-        if( world.isAirBlock( newPosition.x, newPosition.y, newPosition.z ) )
-        {
-            return TurtleCommandResult.failure( "No block to inspect" );
+        if (world.isAirBlock(newPosition.x, newPosition.y, newPosition.z)) {
+            return TurtleCommandResult.failure("No block to inspect");
         }
 
-        Block block = world.getBlock( newPosition.x, newPosition.y, newPosition.z );
-        int metadata = world.getBlockMetadata( newPosition.x, newPosition.y, newPosition.z );
+        Block block = world.getBlock(newPosition.x, newPosition.y, newPosition.z);
+        int metadata = world.getBlockMetadata(newPosition.x, newPosition.y, newPosition.z);
 
-        Map<String, Object> table = BlockData.fill( new HashMap<>(), block.id(), metadata );
+        Map<String, Object> table = BlockData.fill(new HashMap<>(), block.id(), metadata);
 
         // Fire the event, exiting if it is cancelled
-        TurtleBlockEvent.Inspect event = new TurtleBlockEvent.Inspect( turtle, world, newPosition, block.id(), metadata, table );
-        if( TurtleEvent.post( event ) )
-        {
-            return TurtleCommandResult.failure( event.getFailureMessage() );
+        TurtleBlockEvent.Inspect event = new TurtleBlockEvent.Inspect(turtle, world, newPosition, block.id(), metadata, table);
+        if (TurtleEvent.post(event)) {
+            return TurtleCommandResult.failure(event.getFailureMessage());
         }
 
-        return TurtleCommandResult.success( new Object[] { table } );
+        return TurtleCommandResult.success(new Object[]{table});
     }
 }

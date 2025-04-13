@@ -6,8 +6,6 @@
 package dan200.computercraft.shared.recipe;
 
 import com.google.gson.*;
-import dan200.computercraft.ComputerCraft;
-import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.data.registry.recipe.HasJsonAdapter;
 import net.minecraft.core.data.registry.recipe.RecipeSymbol;
@@ -17,7 +15,6 @@ import net.minecraft.core.data.registry.recipe.adapter.RecipeJsonAdapter;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCraftingShaped;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.item.Items;
 import net.minecraft.core.player.inventory.container.ContainerCrafting;
 
 import java.lang.reflect.Type;
@@ -47,6 +44,24 @@ public class ImpostorShapedRecipe extends RecipeEntryCraftingShaped implements H
     }
 
     private static class ImpostorShapedRecipeJsonAdapter implements RecipeJsonAdapter<ImpostorShapedRecipe> {
+        private static void convertUpgradeId(ItemStack result, String key) {
+            if (result.getData().containsKey(key)) {
+                String currentKey = result.getData().getString(key);
+
+                Integer itemId = Item.nameToIdMap.get(currentKey);
+
+                if (itemId != null) {
+                    result.getData().putInt(key, itemId);
+                } else {
+                    @Deprecated
+                    Integer blockId = Blocks.keyToIdMap.get(currentKey);
+                    if (blockId != null) {
+                        result.getData().putInt(key, blockId);
+                    }
+                }
+            }
+        }
+
         public ImpostorShapedRecipe deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject obj = json.getAsJsonObject();
             RecipeEntryCraftingShaped recipeEntryCraftingShaped = (new RecipeCraftingShapedJsonAdapter()).deserialize(json, typeOfT, context);
@@ -67,27 +82,8 @@ public class ImpostorShapedRecipe extends RecipeEntryCraftingShaped implements H
             );
         }
 
-        private static void convertUpgradeId(ItemStack result, String key) {
-            if (result.getData().containsKey(key)) {
-                String currentKey = result.getData().getString(key);
-
-                Integer itemId = Item.nameToIdMap.get(currentKey);
-
-                if (itemId != null) {
-                    result.getData().putInt(key, itemId);
-                }
-                else {
-                    @Deprecated
-                    Integer blockId = Blocks.keyToIdMap.get(currentKey);
-                    if (blockId != null) {
-                        result.getData().putInt(key, blockId);
-                    }
-                }
-            }
-        }
-
         public JsonElement serialize(ImpostorShapedRecipe src, Type typeOfSrc, JsonSerializationContext context) {
-            return (new RecipeCraftingShapedJsonAdapter()).serialize( src, typeOfSrc, context);
+            return (new RecipeCraftingShapedJsonAdapter()).serialize(src, typeOfSrc, context);
         }
     }
 }

@@ -14,12 +14,11 @@ import net.minecraft.core.item.ItemStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface ITurtleItem extends IComputerItem, IColouredItem
-{
+public interface ITurtleItem extends IComputerItem, IColouredItem {
     @Nullable
-    ITurtleUpgrade getUpgrade( @Nonnull ItemStack stack, @Nonnull TurtleSide side );
+    ITurtleUpgrade getUpgrade(@Nonnull ItemStack stack, @Nonnull TurtleSide side);
 
-    int getFuelLevel( @Nonnull ItemStack stack );
+    int getFuelLevel(@Nonnull ItemStack stack);
 
-    int getOverlay( @Nonnull ItemStack stack );
+    int getOverlay(@Nonnull ItemStack stack);
 }

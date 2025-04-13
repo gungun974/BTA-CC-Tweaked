@@ -33,12 +33,11 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
 
     @Nullable
     protected ItemStack getItemStack(TileEntity entity) {
-        if( !(entity instanceof TileComputerBase) )
-        {
+        if (!(entity instanceof TileComputerBase)) {
             return null;
         }
 
-        return ComputerItemFactory.create( (TileComputerBase) entity );
+        return ComputerItemFactory.create((TileComputerBase) entity);
 
     }
 
@@ -77,7 +76,7 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
             }
 
             if (heldItem instanceof ItemToolShears && (this.block.hasTag(BlockTags.SHEARS_DO_SILK_TOUCH) || this.block.hasTag(BlockTags.MINEABLE_BY_SHEARS))) {
-                ItemToolShears heldShears = (ItemToolShears)heldItem;
+                ItemToolShears heldShears = (ItemToolShears) heldItem;
                 this.dropBlockWithCause(world, EnumDropCause.SILK_TOUCH, x, y, z, meta, tileEntity, player);
                 heldShears.onBlockSheared(player, heldItemStack);
                 return;
@@ -103,8 +102,7 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
     @Override
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
         TileEntity entity = (world.getTileEntity(x, y, z));
-        if( !(entity instanceof TileComputerBase) )
-        {
+        if (!(entity instanceof TileComputerBase)) {
             return;
         }
 
@@ -123,58 +121,51 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
 
     public boolean getSignal(WorldSource world, int x, int y, int z, Side side) {
         TileEntity entity = (world.getTileEntity(x, y, z));
-        if( !(entity instanceof TileComputerBase) )
-        {
+        if (!(entity instanceof TileComputerBase)) {
             return false;
         }
 
         TileComputerBase computerEntity = (TileComputerBase) entity;
         ServerComputer computer = computerEntity.getServerComputer();
-        if( computer == null )
-        {
+        if (computer == null) {
             return false;
         }
 
-        ComputerSide localSide = computerEntity.remapToLocalSide( side.getOpposite().getDirection() );
-        return computer.getRedstoneOutput( localSide ) > 0;
+        ComputerSide localSide = computerEntity.remapToLocalSide(side.getOpposite().getDirection());
+        return computer.getRedstoneOutput(localSide) > 0;
     }
 
     @Override
-    public boolean getBundledRedstoneConnectivity(World world, BlockPos pos, Direction side )
-    {
+    public boolean getBundledRedstoneConnectivity(World world, BlockPos pos, Direction side) {
         return true;
     }
 
     @Override
-    public int getBundledRedstoneOutput( World world, BlockPos pos, Direction side )
-    {
+    public int getBundledRedstoneOutput(World world, BlockPos pos, Direction side) {
         TileEntity entity = (world.getTileEntity(pos.x, pos.y, pos.z));
-        if( !(entity instanceof TileComputerBase) )
-        {
+        if (!(entity instanceof TileComputerBase)) {
             return 0;
         }
 
         TileComputerBase computerEntity = (TileComputerBase) entity;
         ServerComputer computer = computerEntity.getServerComputer();
-        if( computer == null )
-        {
+        if (computer == null) {
             return 0;
         }
 
-        ComputerSide localSide = computerEntity.remapToLocalSide( side );
-        return computer.getBundledRedstoneOutput( localSide );
+        ComputerSide localSide = computerEntity.remapToLocalSide(side);
+        return computer.getBundledRedstoneOutput(localSide);
     }
 
 
     public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
-        return ((TileComputerBase)world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
+        return ((TileComputerBase) world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
     }
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockId) {
         TileEntity entity = (world.getTileEntity(x, y, z));
-        if( !(entity instanceof TileComputerBase) )
-        {
+        if (!(entity instanceof TileComputerBase)) {
             return;
         }
 

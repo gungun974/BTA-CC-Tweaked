@@ -12,38 +12,31 @@ import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 
-public class RequestComputerMessage implements NetworkMessage
-{
+public class RequestComputerMessage implements NetworkMessage {
     private int instance;
 
-    public RequestComputerMessage( int instance )
-    {
+    public RequestComputerMessage(int instance) {
         this.instance = instance;
     }
 
-    public RequestComputerMessage()
-    {
+    public RequestComputerMessage() {
     }
 
     @Override
-    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
-    {
-        buf.writeInt( instance );
+    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+        buf.writeInt(instance);
     }
 
     @Override
-    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf )
-    {
+    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
         instance = buf.readInt();
     }
 
     @Override
-    public void handle(NetworkContext context)
-    {
-        ServerComputer computer = ComputerCraft.serverComputerRegistry.get( instance );
-        if( computer != null )
-        {
-            computer.sendComputerState( context.player );
+    public void handle(NetworkContext context) {
+        ServerComputer computer = ComputerCraft.serverComputerRegistry.get(instance);
+        if (computer != null) {
+            computer.sendComputerState(context.player);
         }
     }
 }

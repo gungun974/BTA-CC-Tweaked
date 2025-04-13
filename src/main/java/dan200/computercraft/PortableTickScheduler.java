@@ -6,21 +6,18 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
-public final class PortableTickScheduler
-{
-    private static final Set<PortableTickSchedule> toTickAtStart = Collections.newSetFromMap( new MapMaker().weakKeys()
-        .makeMap() );
-    private static final Set<PortableTickSchedule> toTickAtEnd = Collections.newSetFromMap( new MapMaker().weakKeys()
-        .makeMap() );
+public final class PortableTickScheduler {
+    private static final Set<PortableTickSchedule> toTickAtStart = Collections.newSetFromMap(new MapMaker().weakKeys()
+        .makeMap());
+    private static final Set<PortableTickSchedule> toTickAtEnd = Collections.newSetFromMap(new MapMaker().weakKeys()
+        .makeMap());
 
-    public PortableTickScheduler()
-    {
+    public PortableTickScheduler() {
     }
 
     private void handleTick(Set<PortableTickSchedule> toTick) {
         Iterator<PortableTickSchedule> iterator = toTick.iterator();
-        while( iterator.hasNext() )
-        {
+        while (iterator.hasNext()) {
             PortableTickSchedule scheduled = iterator.next();
 
             if (scheduled.skipTick > 0) {
@@ -55,11 +52,11 @@ public final class PortableTickScheduler
     }
 
     public void scheduleStartTick(Runnable task, int atTick) {
-        toTickAtStart.add( new PortableTickSchedule(task, atTick) );
+        toTickAtStart.add(new PortableTickSchedule(task, atTick));
     }
 
     public void scheduleEndTick(Runnable task, int atTick) {
-        toTickAtEnd.add( new PortableTickSchedule(task, atTick) );
+        toTickAtEnd.add(new PortableTickSchedule(task, atTick));
     }
 
     private static class PortableTickSchedule {
@@ -67,8 +64,8 @@ public final class PortableTickScheduler
         public int skipTick;
 
         public PortableTickSchedule(Runnable task, int skipTick) {
-           this.task = task;
-           this.skipTick = skipTick;
+            this.task = task;
+            this.skipTick = skipTick;
         }
     }
 }

@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public final class ResourceMount implements IMount
-{
+public final class ResourceMount implements IMount {
     /**
      * Only cache files smaller than 1MiB.
      */
@@ -47,17 +46,17 @@ public final class ResourceMount implements IMount
      * seeking within ROM files, and reduces the amount we need to access disk for computer startup.
      */
     private static final Cache<FileEntry, byte[]> CONTENTS_CACHE = CacheBuilder.newBuilder()
-        .concurrencyLevel( 4 )
-        .expireAfterAccess( 60, TimeUnit.SECONDS )
-        .maximumWeight( MAX_CACHE_SIZE )
+        .concurrencyLevel(4)
+        .expireAfterAccess(60, TimeUnit.SECONDS)
+        .maximumWeight(MAX_CACHE_SIZE)
         .weakKeys()
-        .<FileEntry, byte[]>weigher( ( k, v ) -> v.length )
+        .<FileEntry, byte[]>weigher((k, v) -> v.length)
         .build();
 
     /**
      * Maintain a cache of currently loaded resource mounts. This cache is invalidated when currentManager changes.
      */
-    private static final Map<Identifier, ResourceMount> MOUNT_CACHE = new HashMap<>( 2 );
+    private static final Map<Identifier, ResourceMount> MOUNT_CACHE = new HashMap<>(2);
 
     private final String namespace;
     private final String subPath;
@@ -66,96 +65,84 @@ public final class ResourceMount implements IMount
     @Nullable
     private FileEntry root;
 
-    public static ResourceMount get( String namespace, String subPath, ResourceManager manager )
-    {
-        Identifier path = new Identifier( namespace, subPath );
-        synchronized( MOUNT_CACHE )
-        {
-            ResourceMount mount = MOUNT_CACHE.get( path );
-            if( mount == null ) MOUNT_CACHE.put( path, mount = new ResourceMount( namespace, subPath, manager ) );
+    private ResourceMount(String namespace, String subPath, ResourceManager manager) {
+        this.namespace = namespace;
+        this.subPath = subPath;
+        load(manager);
+    }
+
+    public static ResourceMount get(String namespace, String subPath, ResourceManager manager) {
+        Identifier path = new Identifier(namespace, subPath);
+        synchronized (MOUNT_CACHE) {
+            ResourceMount mount = MOUNT_CACHE.get(path);
+            if (mount == null) MOUNT_CACHE.put(path, mount = new ResourceMount(namespace, subPath, manager));
             return mount;
         }
     }
 
-    private ResourceMount( String namespace, String subPath, ResourceManager manager )
-    {
-        this.namespace = namespace;
-        this.subPath = subPath;
-        load( manager );
-    }
-
-    private void load( ResourceManager manager )
-    {
+    private void load(ResourceManager manager) {
         boolean hasAny = false;
         String existingNamespace = null;
 
-        FileEntry newRoot = new FileEntry( new Identifier( namespace, subPath ) );
-        for( Identifier file : manager.findResources( namespace, subPath ) )
-        {
+        FileEntry newRoot = new FileEntry(new Identifier(namespace, subPath));
+        for (Identifier file : manager.findResources(namespace, subPath)) {
             existingNamespace = file.getNamespace();
 
-            if( !file.getNamespace().equals( namespace ) ) continue;
+            if (!file.getNamespace().equals(namespace)) continue;
 
-            String localPath = FileSystem.toLocal( file.getPath(), subPath );
-            create( newRoot, localPath );
+            String localPath = FileSystem.toLocal(file.getPath(), subPath);
+            create(newRoot, localPath);
             hasAny = true;
         }
 
         this.manager = manager;
         root = hasAny ? newRoot : null;
 
-        if( !hasAny )
-        {
-            ComputerCraft.log.warn( "Cannot find any files under /data/{}/{} for resource mount.", namespace, subPath );
-            if( existingNamespace != null )
-            {
-                ComputerCraft.log.warn( "There are files under /data/{}/{} though. Did you get the wrong namespace?", existingNamespace, subPath );
+        if (!hasAny) {
+            ComputerCraft.log.warn("Cannot find any files under /data/{}/{} for resource mount.", namespace, subPath);
+            if (existingNamespace != null) {
+                ComputerCraft.log.warn("There are files under /data/{}/{} though. Did you get the wrong namespace?", existingNamespace, subPath);
             }
         }
     }
 
-    private FileEntry get( String path )
-    {
+    private FileEntry get(String path) {
         FileEntry lastEntry = root;
         int lastIndex = 0;
 
-        while( lastEntry != null && lastIndex < path.length() )
-        {
-            int nextIndex = path.indexOf( '/', lastIndex );
-            if( nextIndex < 0 ) nextIndex = path.length();
+        while (lastEntry != null && lastIndex < path.length()) {
+            int nextIndex = path.indexOf('/', lastIndex);
+            if (nextIndex < 0) nextIndex = path.length();
 
-            lastEntry = lastEntry.children == null ? null : lastEntry.children.get( path.substring( lastIndex, nextIndex ) );
+            lastEntry = lastEntry.children == null ? null : lastEntry.children.get(path.substring(lastIndex, nextIndex));
             lastIndex = nextIndex + 1;
         }
 
         return lastEntry;
     }
 
-    private void create( FileEntry lastEntry, String path )
-    {
+    private void create(FileEntry lastEntry, String path) {
         int lastIndex = 0;
-        while( lastIndex < path.length() )
-        {
-            int nextIndex = path.indexOf( '/', lastIndex );
-            if( nextIndex < 0 ) nextIndex = path.length();
+        while (lastIndex < path.length()) {
+            int nextIndex = path.indexOf('/', lastIndex);
+            if (nextIndex < 0) nextIndex = path.length();
 
-            String part = path.substring( lastIndex, nextIndex );
-            if( lastEntry.children == null ) lastEntry.children = new HashMap<>();
+            String part = path.substring(lastIndex, nextIndex);
+            if (lastEntry.children == null) lastEntry.children = new HashMap<>();
 
-            FileEntry nextEntry = lastEntry.children.get( part );
-            if( nextEntry == null )
-            {
+            FileEntry nextEntry = lastEntry.children.get(part);
+            if (nextEntry == null) {
                 Identifier childPath;
 //                try
 //                {
-                    childPath = new Identifier( namespace, subPath + "/" + path );
+                childPath = new Identifier(namespace, subPath + "/" + path);
 //                }
 //                catch( InvalidIdentifierException e )
 //                {
 //                    ComputerCraft.log.warn( "Cannot create resource location for {} ({})", part, e.getMessage() );
 //                    return;
 //                }
-                lastEntry.children.put( part, nextEntry = new FileEntry( childPath ) );
+                lastEntry.children.put(part, nextEntry = new FileEntry(childPath));
             }
 
             lastEntry = nextEntry;
@@ -164,115 +151,94 @@ public final class ResourceMount implements IMount
     }
 
     @Override
-    public boolean exists( @Nonnull String path )
-    {
-        return get( path ) != null;
+    public boolean exists(@Nonnull String path) {
+        return get(path) != null;
     }
 
     @Override
-    public boolean isDirectory( @Nonnull String path )
-    {
-        FileEntry file = get( path );
+    public boolean isDirectory(@Nonnull String path) {
+        FileEntry file = get(path);
         return file != null && file.isDirectory();
     }
 
     @Override
-    public void list( @Nonnull String path, @Nonnull List<String> contents ) throws IOException
-    {
-        FileEntry file = get( path );
-        if( file == null || !file.isDirectory() ) throw new IOException( "/" + path + ": Not a directory" );
+    public void list(@Nonnull String path, @Nonnull List<String> contents) throws IOException {
+        FileEntry file = get(path);
+        if (file == null || !file.isDirectory()) throw new IOException("/" + path + ": Not a directory");
 
-        file.list( contents );
+        file.list(contents);
     }
 
     @Override
-    public long getSize( @Nonnull String path ) throws IOException
-    {
-        FileEntry file = get( path );
-        if( file != null )
-        {
-            if( file.size != -1 ) return file.size;
-            if( file.isDirectory() ) return file.size = 0;
+    public long getSize(@Nonnull String path) throws IOException {
+        FileEntry file = get(path);
+        if (file != null) {
+            if (file.size != -1) return file.size;
+            if (file.isDirectory()) return file.size = 0;
 
-            byte[] contents = CONTENTS_CACHE.getIfPresent( file );
-            if( contents != null ) return file.size = contents.length;
+            byte[] contents = CONTENTS_CACHE.getIfPresent(file);
+            if (contents != null) return file.size = contents.length;
 
-            try
-            {
-                Resource resource = manager.getResource( file.identifier );
+            try {
+                Resource resource = manager.getResource(file.identifier);
                 InputStream s = resource.getInputStream();
                 int total = 0, read = 0;
-                do
-                {
+                do {
                     total += read;
-                    read = s.read( TEMP_BUFFER );
-                } while( read > 0 );
+                    read = s.read(TEMP_BUFFER);
+                } while (read > 0);
 
                 return file.size = total;
-            }
-            catch( IOException e )
-            {
+            } catch (IOException e) {
                 return file.size = 0;
             }
         }
 
-        throw new IOException( "/" + path + ": No such file" );
+        throw new IOException("/" + path + ": No such file");
     }
 
     @Nonnull
     @Override
-    public ReadableByteChannel openForRead( @Nonnull String path ) throws IOException
-    {
-        FileEntry file = get( path );
-        if( file != null && !file.isDirectory() )
-        {
-            byte[] contents = CONTENTS_CACHE.getIfPresent( file );
-            if( contents != null ) return new ArrayByteChannel( contents );
+    public ReadableByteChannel openForRead(@Nonnull String path) throws IOException {
+        FileEntry file = get(path);
+        if (file != null && !file.isDirectory()) {
+            byte[] contents = CONTENTS_CACHE.getIfPresent(file);
+            if (contents != null) return new ArrayByteChannel(contents);
 
-            try
-            {
-                InputStream stream = manager.getResource( file.identifier ).getInputStream();
-                if( stream.available() > MAX_CACHED_SIZE ) return Channels.newChannel( stream );
+            try {
+                InputStream stream = manager.getResource(file.identifier).getInputStream();
+                if (stream.available() > MAX_CACHED_SIZE) return Channels.newChannel(stream);
 
-                try
-                {
-                    contents = ByteStreams.toByteArray( stream );
-                }
-                finally
-                {
-                    IoUtil.closeQuietly( stream );
+                try {
+                    contents = ByteStreams.toByteArray(stream);
+                } finally {
+                    IoUtil.closeQuietly(stream);
                 }
 
-                CONTENTS_CACHE.put( file, contents );
-                return new ArrayByteChannel( contents );
-            }
-            catch( FileNotFoundException ignored )
-            {
+                CONTENTS_CACHE.put(file, contents);
+                return new ArrayByteChannel(contents);
+            } catch (FileNotFoundException ignored) {
             }
         }
 
-        throw new IOException( "/" + path + ": No such file" );
+        throw new IOException("/" + path + ": No such file");
     }
 
-    private static class FileEntry
-    {
+    private static class FileEntry {
         final Identifier identifier;
         Map<String, FileEntry> children;
         long size = -1;
 
-        FileEntry( Identifier identifier )
-        {
+        FileEntry(Identifier identifier) {
             this.identifier = identifier;
         }
 
-        boolean isDirectory()
-        {
+        boolean isDirectory() {
             return children != null;
         }
 
-        void list( List<String> contents )
-        {
-            if( children != null ) contents.addAll( children.keySet() );
+        void list(List<String> contents) {
+            if (children != null) contents.addAll(children.keySet());
         }
     }
 

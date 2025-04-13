@@ -14,14 +14,13 @@ import java.util.Optional;
 
 /**
  * This interface is used to create peripheral implementations for blocks.
- *
+ * <p>
  * If you have a {@link BlockEntity} which acts as a peripheral, you may alternatively expose the {@link IPeripheral} capability.
  *
  * @see dan200.computercraft.api.ComputerCraftAPI#registerPeripheralProvider(IPeripheralProvider)
  */
 @FunctionalInterface
-public interface IPeripheralProvider
-{
+public interface IPeripheralProvider {
     /**
      * Produce an peripheral implementation from a block location.
      *
@@ -32,5 +31,5 @@ public interface IPeripheralProvider
      * @see dan200.computercraft.api.ComputerCraftAPI#registerPeripheralProvider(IPeripheralProvider)
      */
     @Nonnull
-    IPeripheral getPeripheral(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side );
+    IPeripheral getPeripheral(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side);
 }

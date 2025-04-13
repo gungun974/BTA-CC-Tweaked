@@ -1,6 +1,5 @@
 package dan200.computercraft.fabric.mixin;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.media.items.ItemDisk;
@@ -20,28 +19,24 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
-import java.util.Objects;
 
 @Mixin(value = MenuInventoryCreative.class, remap = false)
-public class MenuInventoryCreativeMixin
-{
+public class MenuInventoryCreativeMixin {
     @Shadow
     public static List<ItemStack> creativeItems;
 
     @Shadow
     public static int creativeItemsCount;
-
-    @Shadow
-    protected List<ItemStack> searchedItems;
     @Unique
     private static int extraCount = 0;
+    @Shadow
+    protected List<ItemStack> searchedItems;
 
     @Redirect(
         method = "<clinit>",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/core/block/Block;hasTag(Lnet/minecraft/core/data/tag/Tag;)Z")
     )
-    private static boolean addBlocks(Block<?> block, Tag<Block<?>> tag)
-    {
+    private static boolean addBlocks(Block<?> block, Tag<Block<?>> tag) {
         if (block.id() == ComputerCraftBlocks.TURTLE_NORMAL.id() || block.id() == ComputerCraftBlocks.TURTLE_ADVANCED.id()) {
             int before = creativeItems.size();
             ((ItemTurtle) block.asItem()).addToCreativeMenu(creativeItems);
@@ -55,8 +50,7 @@ public class MenuInventoryCreativeMixin
         method = "<clinit>",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/core/item/Item;hasTag(Lnet/minecraft/core/data/tag/Tag;)Z")
     )
-    private static boolean addItems(Item item, Tag<Item> tag)
-    {
+    private static boolean addItems(Item item, Tag<Item> tag) {
         if (item.id == ComputerCraftItems.POCKET_COMPUTER_NORMAL.id || item.id == ComputerCraftItems.POCKET_COMPUTER_ADVANCED.id) {
             int before = creativeItems.size();
             ((ItemPocketComputer) item).addToCreativeMenu(creativeItems);
@@ -76,8 +70,7 @@ public class MenuInventoryCreativeMixin
         method = "<clinit>",
         at = @At(value = "FIELD", target = "Lnet/minecraft/core/player/inventory/menu/MenuInventoryCreative;creativeItemsCount:I", shift = At.Shift.AFTER)
     )
-    private static void addUpItemCount(CallbackInfo ci)
-    {
+    private static void addUpItemCount(CallbackInfo ci) {
         creativeItemsCount += extraCount;
     }
 }

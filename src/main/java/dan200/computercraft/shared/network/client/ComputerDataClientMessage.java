@@ -15,41 +15,35 @@ import javax.annotation.Nonnull;
 /**
  * Provides additional data about a client computer, such as its ID and current state.
  */
-public class ComputerDataClientMessage extends ComputerClientMessage
-{
+public class ComputerDataClientMessage extends ComputerClientMessage {
     private ComputerState state;
     private CompoundTag userData;
 
-    public ComputerDataClientMessage( ServerComputer computer )
-    {
-        super( computer.getInstanceID() );
+    public ComputerDataClientMessage(ServerComputer computer) {
+        super(computer.getInstanceID());
         state = computer.getState();
         userData = computer.getUserData();
     }
 
-    public ComputerDataClientMessage()
-    {
+    public ComputerDataClientMessage() {
     }
 
     @Override
-    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
-    {
-        super.encodeToUniversalPacket( buf );
-        buf.writeEnumConstant( state );
-        buf.writeCompoundTag( userData );
+    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+        super.encodeToUniversalPacket(buf);
+        buf.writeEnumConstant(state);
+        buf.writeCompoundTag(userData);
     }
 
     @Override
-    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf )
-    {
-        super.decodeFromUniversalPacket( buf );
-        state = buf.readEnumConstant( ComputerState.class );
+    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+        super.decodeFromUniversalPacket(buf);
+        state = buf.readEnumConstant(ComputerState.class);
         userData = buf.readCompoundTag();
     }
 
     @Override
-    public void handle(NetworkContext context)
-    {
-        getComputer().setState( state, userData );
+    public void handle(NetworkContext context) {
+        getComputer().setState(state, userData);
     }
 }

@@ -14,16 +14,13 @@ import net.minecraft.client.GLAllocation;
 import net.minecraft.client.render.tessellator.Tessellator;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL31;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-@Environment( EnvType.CLIENT )
-public final class ClientMonitor extends ClientTerminal
-{
+@Environment(EnvType.CLIENT)
+public final class ClientMonitor extends ClientTerminal {
     private static final Set<ClientMonitor> allMonitors = new HashSet<>();
 
     private final TileMonitor origin;
@@ -36,19 +33,15 @@ public final class ClientMonitor extends ClientTerminal
     public int displayList;
     public boolean displayListCompiled = false;
 
-    public ClientMonitor( boolean colour, TileMonitor origin )
-    {
-        super( colour );
+    public ClientMonitor(boolean colour, TileMonitor origin) {
+        super(colour);
         this.origin = origin;
     }
 
-    @Environment( EnvType.CLIENT )
-    public static void destroyAll()
-    {
-        synchronized( allMonitors )
-        {
-            for( Iterator<ClientMonitor> iterator = allMonitors.iterator(); iterator.hasNext(); )
-            {
+    @Environment(EnvType.CLIENT)
+    public static void destroyAll() {
+        synchronized (allMonitors) {
+            for (Iterator<ClientMonitor> iterator = allMonitors.iterator(); iterator.hasNext(); ) {
                 ClientMonitor monitor = iterator.next();
                 monitor.deleteBuffers();
 
@@ -57,8 +50,7 @@ public final class ClientMonitor extends ClientTerminal
         }
     }
 
-    public TileMonitor getOrigin()
-    {
+    public TileMonitor getOrigin() {
         return origin;
     }
 
@@ -68,11 +60,9 @@ public final class ClientMonitor extends ClientTerminal
      * @param renderer The renderer to use. This can be fetched from {@link MonitorRenderer#current()}.
      * @return If a buffer was created. This will return {@code false} if we already have an appropriate buffer, or this mode does not require one.
      */
-    @Environment( EnvType.CLIENT )
-    public boolean createBuffer( MonitorRenderer renderer, float xMargin, float yMargin )
-    {
-        switch( renderer )
-        {
+    @Environment(EnvType.CLIENT)
+    public boolean createBuffer(MonitorRenderer renderer, float xMargin, float yMargin) {
+        switch (renderer) {
 //            case TBO:
 //                if( tboBuffer != 0 )
 //                {
@@ -95,8 +85,7 @@ public final class ClientMonitor extends ClientTerminal
 //                return true;
 
             case DisplayList:
-                if( this.displayListCompiled)
-                {
+                if (this.displayListCompiled) {
                     return false;
                 }
 
@@ -114,7 +103,7 @@ public final class ClientMonitor extends ClientTerminal
                     yMargin,
                     yMargin,
                     xMargin,
-                    xMargin );
+                    xMargin);
 
                 GL11.glEndList();
                 this.displayListCompiled = true;
@@ -127,18 +116,15 @@ public final class ClientMonitor extends ClientTerminal
         }
     }
 
-    private void deleteBuffers()
-    {
+    private void deleteBuffers() {
 
-        if( tboBuffer != 0 )
-        {
+        if (tboBuffer != 0) {
             GL15.glDeleteBuffers(tboBuffer);
             tboBuffer = 0;
         }
 
-        if( tboTexture != 0 )
-        {
-            GL15.glDeleteTextures( tboTexture );
+        if (tboTexture != 0) {
+            GL15.glDeleteTextures(tboTexture);
             tboTexture = 0;
         }
 
@@ -149,22 +135,17 @@ public final class ClientMonitor extends ClientTerminal
         }
     }
 
-    private void addMonitor()
-    {
-        synchronized( allMonitors )
-        {
-            allMonitors.add( this );
+    private void addMonitor() {
+        synchronized (allMonitors) {
+            allMonitors.add(this);
         }
     }
 
-    @Environment( EnvType.CLIENT )
-    public void destroy()
-    {
-        if( tboBuffer != 0/* || buffer != null*/ )
-        {
-            synchronized( allMonitors )
-            {
-                allMonitors.remove( this );
+    @Environment(EnvType.CLIENT)
+    public void destroy() {
+        if (tboBuffer != 0/* || buffer != null*/) {
+            synchronized (allMonitors) {
+                allMonitors.remove(this);
             }
 
             deleteBuffers();

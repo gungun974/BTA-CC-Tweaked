@@ -12,22 +12,19 @@ import javax.annotation.Nonnull;
 
 /**
  * A base class for {@link IPocketUpgrade}s.
- *
+ * <p>
  * One does not have to use this, but it does provide a convenient template.
  */
-public abstract class AbstractPocketUpgrade implements IPocketUpgrade
-{
+public abstract class AbstractPocketUpgrade implements IPocketUpgrade {
     private final int id;
     private final ItemStack stack;
 
-    protected AbstractPocketUpgrade( int id, IItemConvertible item )
-    {
+    protected AbstractPocketUpgrade(int id, IItemConvertible item) {
         this.id = id;
-        stack = new ItemStack( item );
+        stack = new ItemStack(item);
     }
 
-    protected AbstractPocketUpgrade( int id, ItemStack stack )
-    {
+    protected AbstractPocketUpgrade(int id, ItemStack stack) {
         this.id = id;
         this.stack = stack;
     }
@@ -35,15 +32,13 @@ public abstract class AbstractPocketUpgrade implements IPocketUpgrade
 
     @Nonnull
     @Override
-    public final int getUpgradeID()
-    {
+    public final int getUpgradeID() {
         return id;
     }
 
     @Nonnull
     @Override
-    public final ItemStack getCraftingItem()
-    {
+    public final ItemStack getCraftingItem() {
         return stack;
     }
 }

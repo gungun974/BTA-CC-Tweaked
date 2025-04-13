@@ -18,46 +18,38 @@ import net.minecraft.core.world.World;
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class TurtleCompareCommand implements ITurtleCommand
-{
+public class TurtleCompareCommand implements ITurtleCommand {
     private final InteractDirection direction;
 
-    public TurtleCompareCommand( InteractDirection direction )
-    {
+    public TurtleCompareCommand(InteractDirection direction) {
         this.direction = direction;
     }
 
     @Nonnull
     @Override
-    public TurtleCommandResult execute( @Nonnull ITurtleAccess turtle )
-    {
+    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
         // Get world direction from direction
-        Direction direction = this.direction.toWorldDir( turtle );
+        Direction direction = this.direction.toWorldDir(turtle);
 
         // Get currently selected stack
         ItemStack selectedStack = turtle.getInventory()
-            .getItem( turtle.getSelectedSlot() );
+            .getItem(turtle.getSelectedSlot());
 
         // Get stack representing thing in front
         World world = turtle.getWorld();
         BlockPos oldPosition = turtle.getPosition();
-        BlockPos newPosition = oldPosition.offset( direction );
+        BlockPos newPosition = oldPosition.offset(direction);
 
         ItemStack lookAtStack = null;
-        if( !world.isAirBlock( newPosition.x, newPosition.y, newPosition.z ) )
-        {
-            Block<?> lookAtBlock = world.getBlock( newPosition.x, newPosition.y, newPosition.z );
+        if (!world.isAirBlock(newPosition.x, newPosition.y, newPosition.z)) {
+            Block<?> lookAtBlock = world.getBlock(newPosition.x, newPosition.y, newPosition.z);
             // See if the block drops anything with the same ID as itself
             // (try 5 times to try and beat random number generators)
-            for( int i = 0; i < 5 && lookAtStack == null; i++ )
-            {
+            for (int i = 0; i < 5 && lookAtStack == null; i++) {
                 ItemStack[] drops = Objects.requireNonNull(lookAtBlock).getBreakResult(world, EnumDropCause.PICK_BLOCK, newPosition.x, newPosition.y, newPosition.z, world.getBlockMetadata(newPosition.x, newPosition.y, newPosition.z), world.getTileEntity(newPosition.x, newPosition.y, newPosition.z));
-                if( drops != null )
-                {
-                    for( ItemStack drop : drops )
-                    {
-                        if(drop.getItem().equals(lookAtBlock.asItem()))
-                        {
+                if (drops != null) {
+                    for (ItemStack drop : drops) {
+                        if (drop.getItem().equals(lookAtBlock.asItem())) {
                             lookAtStack = drop;
                             break;
                         }
@@ -66,9 +58,8 @@ public class TurtleCompareCommand implements ITurtleCommand
             }
 
             // Last resort: roll our own (which will probably be wrong)
-            if( lookAtStack == null )
-            {
-                lookAtStack = new ItemStack( lookAtBlock );
+            if (lookAtStack == null) {
+                lookAtStack = new ItemStack(lookAtBlock);
             }
         }
 

@@ -13,31 +13,28 @@ import java.util.Objects;
 
 /**
  * An action done by a turtle which is normally done by a player.
- *
+ * <p>
  * {@link #getPlayer()} may be used to modify the player's attributes or perform permission checks.
  */
-public abstract class TurtlePlayerEvent extends TurtleActionEvent
-{
+public abstract class TurtlePlayerEvent extends TurtleActionEvent {
     private final FakePlayer player;
 
-    protected TurtlePlayerEvent( @Nonnull ITurtleAccess turtle, @Nonnull TurtleAction action, @Nonnull FakePlayer player )
-    {
-        super( turtle, action );
+    protected TurtlePlayerEvent(@Nonnull ITurtleAccess turtle, @Nonnull TurtleAction action, @Nonnull FakePlayer player) {
+        super(turtle, action);
 
-        Objects.requireNonNull( player, "player cannot be null" );
+        Objects.requireNonNull(player, "player cannot be null");
         this.player = player;
     }
 
     /**
      * A fake player, representing this turtle.
-     *
+     * <p>
      * This may be used for triggering permission checks.
      *
      * @return A {@link FakePlayer} representing this turtle.
      */
     @Nonnull
-    public FakePlayer getPlayer()
-    {
+    public FakePlayer getPlayer() {
         return player;
     }
 }

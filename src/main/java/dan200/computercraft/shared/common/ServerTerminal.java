@@ -11,92 +11,74 @@ import dan200.computercraft.shared.network.client.TerminalState;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ServerTerminal implements ITerminal
-{
+public class ServerTerminal implements ITerminal {
     private final boolean colour;
-    private final AtomicBoolean terminalChanged = new AtomicBoolean( false );
+    private final AtomicBoolean terminalChanged = new AtomicBoolean(false);
+    protected int selectedSlot = 0;
     private Terminal terminal;
     private boolean terminalChangedLastFrame = false;
 
-    public ServerTerminal( boolean colour )
-    {
+    public ServerTerminal(boolean colour) {
         this.colour = colour;
         terminal = null;
     }
 
-    public ServerTerminal( boolean colour, int terminalWidth, int terminalHeight )
-    {
+    public ServerTerminal(boolean colour, int terminalWidth, int terminalHeight) {
         this.colour = colour;
-        terminal = new Terminal( terminalWidth, terminalHeight, this::markTerminalChanged );
+        terminal = new Terminal(terminalWidth, terminalHeight, this::markTerminalChanged);
     }
 
-    protected void markTerminalChanged()
-    {
-        terminalChanged.set( true );
+    protected void markTerminalChanged() {
+        terminalChanged.set(true);
     }
 
-    protected void resize( int width, int height )
-    {
-        if( terminal == null )
-        {
-            terminal = new Terminal( width, height, this::markTerminalChanged );
+    protected void resize(int width, int height) {
+        if (terminal == null) {
+            terminal = new Terminal(width, height, this::markTerminalChanged);
             markTerminalChanged();
-        }
-        else
-        {
-            terminal.resize( width, height );
+        } else {
+            terminal.resize(width, height);
         }
     }
 
-    public void delete()
-    {
-        if( terminal != null )
-        {
+    public void delete() {
+        if (terminal != null) {
             terminal = null;
             markTerminalChanged();
         }
     }
 
-    protected int selectedSlot = 0;
-
-    public void update()
-    {
-        terminalChangedLastFrame = terminalChanged.getAndSet( false );
+    public void update() {
+        terminalChangedLastFrame = terminalChanged.getAndSet(false);
     }
 
-    public boolean hasTerminalChanged()
-    {
+    public boolean hasTerminalChanged() {
         return terminalChangedLastFrame;
     }
 
     @Override
-    public Terminal getTerminal()
-    {
+    public Terminal getTerminal() {
         return terminal;
     }
 
     @Override
-    public boolean isColour()
-    {
+    public boolean isColour() {
         return colour;
     }
 
 
-    public TerminalState write()
-    {
-        return new TerminalState( colour, terminal, selectedSlot );
+    public TerminalState write() {
+        return new TerminalState(colour, terminal, selectedSlot);
     }
 
-    public void writeDescription( CompoundTag nbt )
-    {
-        nbt.putBoolean( "colour", colour );
-        if( terminal != null )
-        {
+    public void writeDescription(CompoundTag nbt) {
+        nbt.putBoolean("colour", colour);
+        if (terminal != null) {
             CompoundTag terminal = new CompoundTag();
-            terminal.putInt( "term_width", this.terminal.getWidth() );
-            terminal.putInt( "term_height", this.terminal.getHeight() );
-            this.terminal.writeToNBT( terminal );
-            nbt.put( "terminal", terminal );
+            terminal.putInt("term_width", this.terminal.getWidth());
+            terminal.putInt("term_height", this.terminal.getHeight());
+            this.terminal.writeToNBT(terminal);
+            nbt.put("terminal", terminal);
         }
     }
 }

@@ -8,29 +8,23 @@ package dan200.computercraft.shared.common;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
 
-public abstract class TileGeneric extends TileEntity
-{
-    public void onChunkUnloaded()
-    {
+public abstract class TileGeneric extends TileEntity {
+    public void onChunkUnloaded() {
     }
 
-    public boolean isUsable( Player player, boolean ignoreRange )
-    {
-        if( player == null || !player.isAlive() || worldObj == null || worldObj.getTileEntity( x, y ,z ) != this )
-        {
+    public boolean isUsable(Player player, boolean ignoreRange) {
+        if (player == null || !player.isAlive() || worldObj == null || worldObj.getTileEntity(x, y, z) != this) {
             return false;
         }
-        if( ignoreRange )
-        {
+        if (ignoreRange) {
             return true;
         }
 
-        double range = getInteractRange( player );
-        return player.world == worldObj && player.distanceToSqr( x + 0.5, y + 0.5, z + 0.5 ) <= range * range;
+        double range = getInteractRange(player);
+        return player.world == worldObj && player.distanceToSqr(x + 0.5, y + 0.5, z + 0.5) <= range * range;
     }
 
-    protected double getInteractRange( Player player )
-    {
+    protected double getInteractRange(Player player) {
         return 8.0;
     }
 }

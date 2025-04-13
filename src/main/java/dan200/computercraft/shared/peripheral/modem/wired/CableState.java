@@ -1,7 +1,5 @@
 package dan200.computercraft.shared.peripheral.modem.wired;
 
-import net.minecraft.core.util.helper.Direction;
-
 public class CableState {
 //    public Direction modemOrientation; // 3 bits
 //

@@ -31,16 +31,14 @@ import static dan200.computercraft.core.apis.http.websocket.Websocket.MESSAGE_EV
  * @cc.module http.Websocket
  * @see dan200.computercraft.core.apis.HTTPAPI#websocket On how to open a websocket.
  */
-public class WebsocketHandle implements Closeable
-{
+public class WebsocketHandle implements Closeable {
     private final Websocket websocket;
     private final Options options;
     private boolean closed = false;
 
     private Channel channel;
 
-    public WebsocketHandle( Websocket websocket, Options options, Channel channel )
-    {
+    public WebsocketHandle(Websocket websocket, Options options, Channel channel) {
         this.websocket = websocket;
         this.options = options;
         this.channel = channel;
@@ -57,14 +55,13 @@ public class WebsocketHandle implements Closeable
      * @cc.treturn [2] nil If the websocket was closed while waiting, or if we timed out.
      */
     @LuaFunction
-    public final MethodResult receive( Optional<Double> timeout ) throws LuaException
-    {
+    public final MethodResult receive(Optional<Double> timeout) throws LuaException {
         checkOpen();
         int timeoutId = timeout.isPresent()
-            ? websocket.environment().startTimer( Math.round( checkFinite( 0, timeout.get() ) / 0.05 ) )
+            ? websocket.environment().startTimer(Math.round(checkFinite(0, timeout.get()) / 0.05))
             : -1;
 
-        return new ReceiveCallback( timeoutId ).pull;
+        return new ReceiveCallback(timeoutId).pull;
     }
 
     /**
@@ -76,24 +73,21 @@ public class WebsocketHandle implements Closeable
      * @throws LuaException If the websocket has been closed.
      */
     @LuaFunction
-    public final void send( Object message, Optional<Boolean> binary ) throws LuaException
-    {
+    public final void send(Object message, Optional<Boolean> binary) throws LuaException {
         checkOpen();
 
-        String text = StringUtil.toString( message );
-        if( options.websocketMessage != 0 && text.length() > options.websocketMessage )
-        {
-            throw new LuaException( "Message is too large" );
+        String text = StringUtil.toString(message);
+        if (options.websocketMessage != 0 && text.length() > options.websocketMessage) {
+            throw new LuaException("Message is too large");
         }
 
-        websocket.environment().addTrackingChange( TrackingField.WEBSOCKET_OUTGOING, text.length() );
+        websocket.environment().addTrackingChange(TrackingField.WEBSOCKET_OUTGOING, text.length());
 
         Channel channel = this.channel;
-        if( channel != null )
-        {
-            channel.writeAndFlush( binary.orElse( false )
-                ? new BinaryWebSocketFrame( Unpooled.wrappedBuffer( LuaValues.encode( text ) ) )
-                : new TextWebSocketFrame( text ) );
+        if (channel != null) {
+            channel.writeAndFlush(binary.orElse(false)
+                ? new BinaryWebSocketFrame(Unpooled.wrappedBuffer(LuaValues.encode(text)))
+                : new TextWebSocketFrame(text));
         }
     }
 
@@ -101,57 +95,45 @@ public class WebsocketHandle implements Closeable
      * Close this websocket. This will terminate the connection, meaning messages can no longer be sent or received
      * along it.
      */
-    @LuaFunction( "close" )
-    public final void doClose()
-    {
+    @LuaFunction("close")
+    public final void doClose() {
         close();
         websocket.close();
     }
 
-    private void checkOpen() throws LuaException
-    {
-        if( closed ) throw new LuaException( "attempt to use a closed file" );
+    private void checkOpen() throws LuaException {
+        if (closed) throw new LuaException("attempt to use a closed file");
     }
 
     @Override
-    public void close()
-    {
+    public void close() {
         closed = true;
 
         Channel channel = this.channel;
-        if( channel != null )
-        {
+        if (channel != null) {
             channel.close();
             this.channel = null;
         }
     }
 
-    private final class ReceiveCallback implements ILuaCallback
-    {
-        final MethodResult pull = MethodResult.pullEvent( null, this );
+    private final class ReceiveCallback implements ILuaCallback {
+        final MethodResult pull = MethodResult.pullEvent(null, this);
         private final int timeoutId;
 
-        ReceiveCallback( int timeoutId )
-        {
+        ReceiveCallback(int timeoutId) {
             this.timeoutId = timeoutId;
         }
 
         @Nonnull
         @Override
-        public MethodResult resume( Object[] event )
-        {
-            if( event.length >= 3 && Objects.equal( event[0], MESSAGE_EVENT ) && Objects.equal( event[1], websocket.address() ) )
-            {
-                return MethodResult.of( Arrays.copyOfRange( event, 2, event.length ) );
-            }
-            else if( event.length >= 2 && Objects.equal( event[0], CLOSE_EVENT ) && Objects.equal( event[1], websocket.address() ) && closed )
-            {
+        public MethodResult resume(Object[] event) {
+            if (event.length >= 3 && Objects.equal(event[0], MESSAGE_EVENT) && Objects.equal(event[1], websocket.address())) {
+                return MethodResult.of(Arrays.copyOfRange(event, 2, event.length));
+            } else if (event.length >= 2 && Objects.equal(event[0], CLOSE_EVENT) && Objects.equal(event[1], websocket.address()) && closed) {
                 // If the socket is closed abort.
                 return MethodResult.of();
-            }
-            else if( event.length >= 2 && timeoutId != -1 && Objects.equal( event[0], TIMER_EVENT )
-                && event[1] instanceof Number && ((Number) event[1]).intValue() == timeoutId )
-            {
+            } else if (event.length >= 2 && timeoutId != -1 && Objects.equal(event[0], TIMER_EVENT)
+                && event[1] instanceof Number && ((Number) event[1]).intValue() == timeoutId) {
                 // If we received a matching timer event then abort.
                 return MethodResult.of();
             }

@@ -13,21 +13,17 @@ import net.minecraft.core.block.entity.TileEntitySign;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SignInspectHandler
-{
+public class SignInspectHandler {
     @Subscribe
-    public void onTurtleInspect( TurtleBlockEvent.Inspect event )
-    {
-        TileEntity be = event.getWorld().getTileEntity( event.getPos().x, event.getPos().y, event.getPos().z );
-        if( be instanceof TileEntitySign)
-        {
+    public void onTurtleInspect(TurtleBlockEvent.Inspect event) {
+        TileEntity be = event.getWorld().getTileEntity(event.getPos().x, event.getPos().y, event.getPos().z);
+        if (be instanceof TileEntitySign) {
             TileEntitySign sbe = (TileEntitySign) be;
             Map<Integer, String> textTable = new HashMap<>();
-            for( int k = 0; k < 4; k++ )
-            {
-                textTable.put( k + 1, sbe.signText[k] );
+            for (int k = 0; k < 4; k++) {
+                textTable.put(k + 1, sbe.signText[k]);
             }
-            event.getData().put( "text", textTable );
+            event.getData().put("text", textTable);
         }
     }
 }

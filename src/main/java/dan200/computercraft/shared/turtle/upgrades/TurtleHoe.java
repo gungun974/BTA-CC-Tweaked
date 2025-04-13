@@ -21,16 +21,13 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public class TurtleHoe extends TurtleTool
-{
-    public TurtleHoe( int id, Item item )
-    {
-        super( id, item );
+public class TurtleHoe extends TurtleTool {
+    public TurtleHoe(int id, Item item) {
+        super(id, item);
     }
 
-    public TurtleHoe(int id, ItemStack craftItem, ItemStack toolItem )
-    {
-        super( id, craftItem, toolItem );
+    public TurtleHoe(int id, ItemStack craftItem, ItemStack toolItem) {
+        super(id, craftItem, toolItem);
     }
 
     @Override
@@ -40,25 +37,20 @@ public class TurtleHoe extends TurtleTool
 
     @Nonnull
     @Override
-    public TurtleCommandResult useTool( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction direction )
-    {
-        if( verb == TurtleVerb.DIG )
-        {
+    public TurtleCommandResult useTool(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction direction) {
+        if (verb == TurtleVerb.DIG) {
             ItemStack hoe = item.copy();
-            ItemStack remainder = TurtlePlaceCommand.deploy( hoe, turtle, direction, null, null );
-            if( remainder != hoe )
-            {
+            ItemStack remainder = TurtlePlaceCommand.deploy(hoe, turtle, direction, null, null);
+            if (remainder != hoe) {
                 return TurtleCommandResult.success();
             }
         }
-        return super.useTool( turtle, side, verb, direction );
+        return super.useTool(turtle, side, verb, direction);
     }
 
     @Override
-    protected boolean canBreakBlock(World world, BlockPos pos )
-    {
-        if( !super.canBreakBlock( world, pos ) )
-        {
+    protected boolean canBreakBlock(World world, BlockPos pos) {
+        if (!super.canBreakBlock(world, pos)) {
             return false;
         }
 

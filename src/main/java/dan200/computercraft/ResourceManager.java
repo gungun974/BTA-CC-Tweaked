@@ -72,7 +72,7 @@ public class ResourceManager {
         }
 
         public InputStream getInputStream() {
-                return ComputerCraft.class.getResourceAsStream( "/assets/" + identifier.namespace + "/" + identifier.subPath);
+            return ComputerCraft.class.getResourceAsStream("/assets/" + identifier.namespace + "/" + identifier.subPath);
         }
     }
 }

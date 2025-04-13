@@ -9,16 +9,13 @@ import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class TurtleAxe extends TurtleTool
-{
-    public TurtleAxe( int id, Item item )
-    {
-        super( id, item );
+public class TurtleAxe extends TurtleTool {
+    public TurtleAxe(int id, Item item) {
+        super(id, item);
     }
 
-    public TurtleAxe(int id, ItemStack craftItem, ItemStack toolItem )
-    {
-        super( id, craftItem, toolItem );
+    public TurtleAxe(int id, ItemStack craftItem, ItemStack toolItem) {
+        super(id, craftItem, toolItem);
     }
 
     @Override
@@ -27,8 +24,7 @@ public class TurtleAxe extends TurtleTool
     }
 
     @Override
-    protected int getDamageMultiplier()
-    {
+    protected int getDamageMultiplier() {
         return 6;
     }
 }

@@ -10,14 +10,10 @@ import net.minecraft.core.item.Item;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-public final class DataHelpers
-{
-    private DataHelpers()
-    { }
+public final class DataHelpers {
+    private DataHelpers() {
+    }
 
 //    @Nonnull
 //    public static Map<String, Boolean> getTags( @Nonnull Collection<Identifier> tags )
@@ -28,14 +24,12 @@ public final class DataHelpers
 //    }
 
     @Nullable
-    public static int getId( @Nonnull Block block )
-    {
+    public static int getId(@Nonnull Block block) {
         return block.id();
     }
 
     @Nullable
-    public static int getId( @Nonnull Item item )
-    {
+    public static int getId(@Nonnull Item item) {
         return item.id;
     }
 }

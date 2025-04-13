@@ -6,7 +6,6 @@
 package dan200.computercraft.shared.pocket.recipes;
 
 import com.google.gson.*;
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.pocket.IPocketUpgrade;
 import dan200.computercraft.fabric.mixin.ContainerCraftingAccessor;
 import dan200.computercraft.shared.PocketUpgrades;
@@ -25,21 +24,19 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-public final class PocketComputerUpgradeRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> implements HasJsonAdapter
-{
+public final class PocketComputerUpgradeRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> implements HasJsonAdapter {
     public PocketComputerUpgradeRecipe() {
     }
 
     @Nonnull
     @Override
-    public ItemStack getOutput()
-    {
+    public ItemStack getOutput() {
         return Objects.requireNonNull(PocketComputerItemFactory.create(-1, null, -1, ComputerFamily.NORMAL, null));
     }
 
     @Override
     public boolean matches(ContainerCrafting inventory) {
-        return getCraftingResult( inventory ) != null;
+        return getCraftingResult(inventory) != null;
     }
 
     @Override
@@ -58,13 +55,10 @@ public final class PocketComputerUpgradeRecipe extends RecipeEntryCrafting<Recip
         int height = inventory.getContainerSize() / width;
 
         computer:
-        for( int y = 0; y < height; y++ )
-        {
-            for( int x = 0; x < width; x++ )
-            {
-                ItemStack item = inventory.getItem( x + y * width );
-                if( item != null && item.getItem() instanceof ItemPocketComputer )
-                {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                ItemStack item = inventory.getItem(x + y * width);
+                if (item != null && item.getItem() instanceof ItemPocketComputer) {
                     computer = item;
                     computerX = x;
                     computerY = y;
@@ -73,54 +67,44 @@ public final class PocketComputerUpgradeRecipe extends RecipeEntryCrafting<Recip
             }
         }
 
-        if( computer == null )
-        {
+        if (computer == null) {
             return null;
         }
 
         ItemPocketComputer itemComputer = (ItemPocketComputer) computer.getItem();
-        if( ItemPocketComputer.getUpgrade( computer ) != null )
-        {
+        if (ItemPocketComputer.getUpgrade(computer) != null) {
             return null;
         }
 
         // Check for upgrades around the item
         IPocketUpgrade upgrade = null;
-        for( int y = 0; y < height; y++ )
-        {
-            for( int x = 0; x < width; x++ )
-            {
-                ItemStack item = inventory.getItem( x + y * width );
-                if( x == computerX && y == computerY )
-                {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                ItemStack item = inventory.getItem(x + y * width);
+                if (x == computerX && y == computerY) {
                     continue;
                 }
 
-                if( x == computerX && y == computerY - 1 )
-                {
-                    upgrade = PocketUpgrades.get( item );
-                    if( upgrade == null )
-                    {
+                if (x == computerX && y == computerY - 1) {
+                    upgrade = PocketUpgrades.get(item);
+                    if (upgrade == null) {
                         return null;
                     }
-                }
-                else if( item != null )
-                {
+                } else if (item != null) {
                     return null;
                 }
             }
         }
 
-        if( upgrade == null )
-        {
+        if (upgrade == null) {
             return null;
         }
 
         // Construct the new stack
         ComputerFamily family = itemComputer.getFamily();
-        int computerID = itemComputer.getComputerID( computer );
-        String label = itemComputer.getLabel( computer );
-        int colour = itemComputer.getColour( computer );
+        int computerID = itemComputer.getComputerID(computer);
+        String label = itemComputer.getLabel(computer);
+        int colour = itemComputer.getColour(computer);
         return Objects.requireNonNull(PocketComputerItemFactory.create(computerID, label, colour, family, upgrade));
     }
 
@@ -133,7 +117,7 @@ public final class PocketComputerUpgradeRecipe extends RecipeEntryCrafting<Recip
     public ItemStack[] onCraftResult(ContainerCrafting containerCrafting) {
         ItemStack[] returnStack = new ItemStack[9];
 
-        for(int i = 0; i < containerCrafting.getContainerSize(); ++i) {
+        for (int i = 0; i < containerCrafting.getContainerSize(); ++i) {
             ItemStack itemStack = containerCrafting.getItem(i);
             if (itemStack != null) {
                 containerCrafting.removeItem(i, 1);

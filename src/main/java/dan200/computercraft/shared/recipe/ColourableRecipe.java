@@ -20,38 +20,28 @@ import net.minecraft.core.util.helper.DyeColor;
 
 import java.lang.reflect.Type;
 
-public final class ColourableRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> implements HasJsonAdapter
-{
-    public ColourableRecipe()
-    {
+public final class ColourableRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> implements HasJsonAdapter {
+    public ColourableRecipe() {
     }
 
     @Override
     public boolean matches(ContainerCrafting inv) {
         boolean hasColourable = false;
         boolean hasDye = false;
-        for( int i = 0; i < inv.getContainerSize(); i++ )
-        {
-            ItemStack stack = inv.getItem( i );
-            if( stack == null )
-            {
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack stack = inv.getItem(i);
+            if (stack == null) {
                 continue;
             }
 
-            if( stack.getItem() instanceof IColouredItem)
-            {
-                if( hasColourable )
-                {
+            if (stack.getItem() instanceof IColouredItem) {
+                if (hasColourable) {
                     return false;
                 }
                 hasColourable = true;
-            }
-            else if( ColourUtils.getStackColour( stack ) != null )
-            {
+            } else if (ColourUtils.getStackColour(stack) != null) {
                 hasDye = true;
-            }
-            else
-            {
+            } else {
                 return false;
             }
         }
@@ -70,28 +60,25 @@ public final class ColourableRecipe extends RecipeEntryCrafting<RecipeSymbol[], 
 
         ColourTracker tracker = new ColourTracker();
 
-        for( int i = 0; i < inv.getContainerSize(); i++ )
-        {
-            ItemStack stack = inv.getItem( i );
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack stack = inv.getItem(i);
 
-            if( stack == null )
-            {
+            if (stack == null) {
                 continue;
             }
 
-            if( stack.getItem() instanceof IColouredItem)
-            {
+            if (stack.getItem() instanceof IColouredItem) {
                 colourable = stack;
                 continue;
             }
 
-            DyeColor dye = ColourUtils.getStackColour( stack );
-            if( dye != null ) tracker.addColour( dye );
+            DyeColor dye = ColourUtils.getStackColour(stack);
+            if (dye != null) tracker.addColour(dye);
         }
 
-        if( colourable == null ) return null;
+        if (colourable == null) return null;
 
-        ItemStack stack = ((IColouredItem) colourable.getItem()).withColour( colourable, tracker.getColour() );
+        ItemStack stack = ((IColouredItem) colourable.getItem()).withColour(colourable, tracker.getColour());
         stack.stackSize = 1;
         return stack;
     }
@@ -105,7 +92,7 @@ public final class ColourableRecipe extends RecipeEntryCrafting<RecipeSymbol[], 
     public ItemStack[] onCraftResult(ContainerCrafting containerCrafting) {
         ItemStack[] returnStack = new ItemStack[9];
 
-        for(int i = 0; i < containerCrafting.getContainerSize(); ++i) {
+        for (int i = 0; i < containerCrafting.getContainerSize(); ++i) {
             ItemStack itemStack = containerCrafting.getItem(i);
             if (itemStack != null) {
                 containerCrafting.removeItem(i, 1);

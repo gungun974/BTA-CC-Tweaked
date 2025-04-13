@@ -15,28 +15,25 @@ import java.util.Objects;
 /**
  * An event fired when a turtle is performing a known action.
  */
-public class TurtleActionEvent extends TurtleEvent
-{
+public class TurtleActionEvent extends TurtleEvent {
     private final TurtleAction action;
     private String failureMessage;
     private boolean cancelled = false;
 
-    public TurtleActionEvent( @Nonnull ITurtleAccess turtle, @Nonnull TurtleAction action )
-    {
-        super( turtle );
+    public TurtleActionEvent(@Nonnull ITurtleAccess turtle, @Nonnull TurtleAction action) {
+        super(turtle);
 
-        Objects.requireNonNull( action, "action cannot be null" );
+        Objects.requireNonNull(action, "action cannot be null");
         this.action = action;
     }
 
-    public TurtleAction getAction()
-    {
+    public TurtleAction getAction() {
         return action;
     }
 
     /**
      * Sets the cancellation state of this action.
-     *
+     * <p>
      * If {@code cancel} is {@code true}, this action will not be carried out.
      *
      * @param cancel The new canceled value.
@@ -44,22 +41,20 @@ public class TurtleActionEvent extends TurtleEvent
      * @deprecated Use {@link #setCanceled(boolean, String)} instead.
      */
     @Deprecated
-    public void setCanceled( boolean cancel )
-    {
-        setCanceled( cancel, null );
+    public void setCanceled(boolean cancel) {
+        setCanceled(cancel, null);
     }
 
     /**
      * Set the cancellation state of this action, setting a failure message if required.
-     *
+     * <p>
      * If {@code cancel} is {@code true}, this action will not be carried out.
      *
      * @param cancel         The new canceled value.
      * @param failureMessage The message to return to the user explaining the failure.
      * @see TurtleCommandResult#failure(String)
      */
-    public void setCanceled( boolean cancel, @Nullable String failureMessage )
-    {
+    public void setCanceled(boolean cancel, @Nullable String failureMessage) {
         cancelled = true;
         this.failureMessage = cancel ? failureMessage : null;
     }
@@ -72,13 +67,11 @@ public class TurtleActionEvent extends TurtleEvent
      * @see #setCanceled(boolean, String)
      */
     @Nullable
-    public String getFailureMessage()
-    {
+    public String getFailureMessage() {
         return failureMessage;
     }
 
-    public boolean isCancelled()
-    {
+    public boolean isCancelled() {
         return cancelled;
     }
 }

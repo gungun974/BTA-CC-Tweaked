@@ -11,8 +11,6 @@ import dan200.computercraft.Peripherals;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.util.IDAssigner;
-import dan200.computercraft.shared.util.NBTUtil;
-import net.minecraft.core.block.Block;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
 
@@ -23,11 +21,10 @@ import java.util.Map;
 
 /**
  * Represents a local peripheral exposed on the wired network.
- *
+ * <p>
  * This is responsible for getting the peripheral in world, tracking id and type and determining whether it has changed.
  */
-public final class WiredModemLocalPeripheral
-{
+public final class WiredModemLocalPeripheral {
     private static final String NBT_PERIPHERAL_TYPE = "PeripheralType";
     private static final String NBT_PERIPHERAL_ID = "PeripheralId";
 
@@ -44,47 +41,38 @@ public final class WiredModemLocalPeripheral
      * @param direction The direction so search in
      * @return Whether the peripheral changed.
      */
-    public boolean attach(@Nonnull World world, @Nonnull BlockPos origin, @Nonnull Direction direction )
-    {
+    public boolean attach(@Nonnull World world, @Nonnull BlockPos origin, @Nonnull Direction direction) {
         IPeripheral oldPeripheral = peripheral;
-        IPeripheral peripheral = this.peripheral = getPeripheralFrom( world, origin, direction );
+        IPeripheral peripheral = this.peripheral = getPeripheralFrom(world, origin, direction);
 
-        if( peripheral == null )
-        {
+        if (peripheral == null) {
             return oldPeripheral != null;
-        }
-        else
-        {
+        } else {
             String type = peripheral.getType();
             int id = this.id;
 
-            if( id > 0 && this.type == null )
-            {
+            if (id > 0 && this.type == null) {
                 // If we had an ID but no type, then just set the type.
                 this.type = type;
-            }
-            else if( id < 0 || !type.equals( this.type ) )
-            {
+            } else if (id < 0 || !type.equals(this.type)) {
                 this.type = type;
-                this.id = IDAssigner.getNextId( "peripheral." + type );
+                this.id = IDAssigner.getNextId("peripheral." + type);
             }
 
-            return oldPeripheral == null || !oldPeripheral.equals( peripheral );
+            return oldPeripheral == null || !oldPeripheral.equals(peripheral);
         }
     }
 
     @Nullable
-    private IPeripheral getPeripheralFrom( World world, BlockPos pos, Direction direction )
-    {
-        final BlockPos offset = pos.offset( direction );
+    private IPeripheral getPeripheralFrom(World world, BlockPos pos, Direction direction) {
+        final BlockPos offset = pos.offset(direction);
 
-        final int block = world.getBlockId( offset.x, offset.y, offset.z );
-        if( block == ComputerCraftBlocks.WIRED_MODEM_FULL.id() || block == ComputerCraftBlocks.CABLE.id() )
-        {
+        final int block = world.getBlockId(offset.x, offset.y, offset.z);
+        if (block == ComputerCraftBlocks.WIRED_MODEM_FULL.id() || block == ComputerCraftBlocks.CABLE.id()) {
             return null;
         }
 
-        IPeripheral peripheral = Peripherals.getPeripheral( world, offset, direction.getOpposite() );
+        IPeripheral peripheral = Peripherals.getPeripheral(world, offset, direction.getOpposite());
         return peripheral instanceof WiredModemPeripheral ? null : peripheral;
     }
 
@@ -93,10 +81,8 @@ public final class WiredModemLocalPeripheral
      *
      * @return Whether the peripheral changed
      */
-    public boolean detach()
-    {
-        if( peripheral == null )
-        {
+    public boolean detach() {
+        if (peripheral == null) {
             return false;
         }
         peripheral = null;
@@ -104,51 +90,41 @@ public final class WiredModemLocalPeripheral
     }
 
     @Nullable
-    public String getConnectedName()
-    {
+    public String getConnectedName() {
         return peripheral != null ? type + "_" + id : null;
     }
 
     @Nullable
-    public IPeripheral getPeripheral()
-    {
+    public IPeripheral getPeripheral() {
         return peripheral;
     }
 
-    public boolean hasPeripheral()
-    {
+    public boolean hasPeripheral() {
         return peripheral != null;
     }
 
-    public void extendMap( @Nonnull Map<String, IPeripheral> peripherals )
-    {
-        if( peripheral != null )
-        {
-            peripherals.put( type + "_" + id, peripheral );
+    public void extendMap(@Nonnull Map<String, IPeripheral> peripherals) {
+        if (peripheral != null) {
+            peripherals.put(type + "_" + id, peripheral);
         }
     }
 
-    public Map<String, IPeripheral> toMap()
-    {
-        return peripheral == null ? Collections.emptyMap() : Collections.singletonMap( type + "_" + id, peripheral );
+    public Map<String, IPeripheral> toMap() {
+        return peripheral == null ? Collections.emptyMap() : Collections.singletonMap(type + "_" + id, peripheral);
     }
 
-    public void write(@Nonnull CompoundTag tag, @Nonnull String suffix )
-    {
-        if( id >= 0 )
-        {
-            tag.putInt( NBT_PERIPHERAL_ID + suffix, id );
+    public void write(@Nonnull CompoundTag tag, @Nonnull String suffix) {
+        if (id >= 0) {
+            tag.putInt(NBT_PERIPHERAL_ID + suffix, id);
         }
-        if( type != null )
-        {
-            tag.putString( NBT_PERIPHERAL_TYPE + suffix, type );
+        if (type != null) {
+            tag.putString(NBT_PERIPHERAL_TYPE + suffix, type);
         }
     }
 
-    public void read( @Nonnull CompoundTag tag, @Nonnull String suffix )
-    {
-        id = tag.containsKey( NBT_PERIPHERAL_ID + suffix ) ? tag.getInteger( NBT_PERIPHERAL_ID + suffix ) : -1;
+    public void read(@Nonnull CompoundTag tag, @Nonnull String suffix) {
+        id = tag.containsKey(NBT_PERIPHERAL_ID + suffix) ? tag.getInteger(NBT_PERIPHERAL_ID + suffix) : -1;
 
-        type = tag.containsKey( NBT_PERIPHERAL_TYPE + suffix ) ? tag.getString( NBT_PERIPHERAL_TYPE + suffix ) : null;
+        type = tag.containsKey(NBT_PERIPHERAL_TYPE + suffix) ? tag.getString(NBT_PERIPHERAL_TYPE + suffix) : null;
     }
 }

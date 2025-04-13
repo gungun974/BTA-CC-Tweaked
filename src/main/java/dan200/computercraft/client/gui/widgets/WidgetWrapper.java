@@ -7,15 +7,13 @@ package dan200.computercraft.client.gui.widgets;
 
 import net.minecraft.client.gui.GuiElement;
 
-public class WidgetWrapper implements GuiElement
-{
+public class WidgetWrapper implements GuiElement {
     private final int x;
     private final int y;
     private final int width;
     private final int height;
 
-    public WidgetWrapper( int x, int y, int width, int height )
-    {
+    public WidgetWrapper(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -81,39 +79,35 @@ public class WidgetWrapper implements GuiElement
 //        return dx >= 0 && dx < width && dy >= 0 && dy < height;
 //    }
 
+    public int getX() {
+        return x;
+    }
+
     @Override
     public void setX(int i) {
+    }
+
+    public int getY() {
+        return y;
     }
 
     @Override
     public void setY(int i) {
     }
 
+    public int getWidth() {
+        return width;
+    }
+
     @Override
     public void setWidth(int i) {
     }
 
+    public int getHeight() {
+        return height;
+    }
+
     @Override
     public void setHeight(int i) {
-    }
-
-    public int getX()
-    {
-        return x;
-    }
-
-    public int getY()
-    {
-        return y;
-    }
-
-    public int getWidth()
-    {
-        return width;
-    }
-
-    public int getHeight()
-    {
-        return height;
     }
 }

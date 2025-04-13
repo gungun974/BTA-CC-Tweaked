@@ -9,15 +9,15 @@ import net.minecraft.core.player.inventory.slot.Slot;
 import java.util.List;
 
 public class MenuDiskDrive extends MenuAbstract {
-    public TileDiskDrive diskDrive;
     private final int diskDriveSlotsStart;
     private final int inventorySlotsStart;
     private final int hotbarSlotsStart;
+    public TileDiskDrive diskDrive;
 
     public MenuDiskDrive(Container container, TileDiskDrive diskDrive) {
         this.diskDrive = diskDrive;
 
-        addSlot( new Slot( this.diskDrive, 0, 8 + 4 * 18, 35 ) );
+        addSlot(new Slot(this.diskDrive, 0, 8 + 4 * 18, 35));
 
         for (int j = 0; j < 3; j++) {
             for (int i1 = 0; i1 < 9; i1++) {

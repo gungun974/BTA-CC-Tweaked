@@ -5,8 +5,6 @@
  */
 package dan200.computercraft.shared.peripheral.diskdrive;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.container.ScreenContainerAbstract;
 import net.minecraft.core.lang.I18n;
 import net.minecraft.core.player.inventory.container.ContainerInventory;

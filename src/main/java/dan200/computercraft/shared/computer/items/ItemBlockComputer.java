@@ -8,7 +8,6 @@ import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.enums.EnumBlockSoundEffectType;
 import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.item.block.ItemBlock;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -21,31 +20,27 @@ public class ItemBlockComputer extends ItemComputerBase {
         super(block);
     }
 
-    public ItemStack create( int id, String label )
-    {
-        ItemStack result = new ItemStack( this );
+    public ItemStack create(int id, String label) {
+        ItemStack result = new ItemStack(this);
 
-       CompoundTag tag = result.getData();
+        CompoundTag tag = result.getData();
 
-        if( id >= 0 )
-        {
+        if (id >= 0) {
             tag
-                .putInt( NBT_ID, id );
+                .putInt(NBT_ID, id);
         }
 
-       result.setData(tag);
+        result.setData(tag);
 
-        if( label != null )
-        {
-            result.setCustomName( label );
+        if (label != null) {
+            result.setCustomName(label);
         }
         return result;
     }
 
     @Override
-    public ItemStack withFamily(@Nonnull ItemStack stack, @Nonnull ComputerFamily family )
-    {
-        ItemStack result = ComputerItemFactory.create( getComputerID( stack ), null, family );
+    public ItemStack withFamily(@Nonnull ItemStack stack, @Nonnull ComputerFamily family) {
+        ItemStack result = ComputerItemFactory.create(getComputerID(stack), null, family);
         if (stack.hasCustomName() && result != null) {
             result.setCustomName(stack.getCustomName());
         }
@@ -72,11 +67,10 @@ public class ItemBlockComputer extends ItemComputerBase {
                             this.block.onBlockPlacedByMob(world, x, y, z, side, player, xPlaced, yPlaced);
                         }
 
-                        world.playBlockSoundEffect(player, (double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), this.block, EnumBlockSoundEffectType.PLACE);
+                        world.playBlockSoundEffect(player, (float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F, this.block, EnumBlockSoundEffectType.PLACE);
 
                         TileEntity entity = (world.getTileEntity(x, y, z));
-                        if( !(entity instanceof TileComputerBase) )
-                        {
+                        if (!(entity instanceof TileComputerBase)) {
                             return false;
                         }
 

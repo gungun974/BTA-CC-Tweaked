@@ -5,19 +5,14 @@
  */
 package dan200.computercraft.shared.peripheral.generic.data;
 
-import com.google.common.collect.ImmutableMap;
-
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.Map;
 
-public class BlockData
-{
+public class BlockData {
     @Nonnull
-    public static <T extends Map<? super String, Object>> T fill( @Nonnull T data, int id, int metadata )
-    {
-        data.put( "id", id );
-        data.put( "metadata", metadata );
+    public static <T extends Map<? super String, Object>> T fill(@Nonnull T data, int id, int metadata) {
+        data.put("id", id);
+        data.put("metadata", metadata);
 
 //        Map<Object, Object> stateTable = new HashMap<>();
 //        for( ImmutableMap.Entry<Property<?>, ? extends Comparable<?>> entry : state.getEntries().entrySet() )

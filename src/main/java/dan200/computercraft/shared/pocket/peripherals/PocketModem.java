@@ -17,21 +17,18 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class PocketModem extends AbstractPocketUpgrade
-{
+public class PocketModem extends AbstractPocketUpgrade {
     private final boolean advanced;
 
-    public PocketModem( boolean advanced, int id )
-    {
-        super( id, advanced ? ComputerCraftItems.WIRELESS_MODEM_ADVANCED : ComputerCraftItems.WIRELESS_MODEM_NORMAL );
+    public PocketModem(boolean advanced, int id) {
+        super(id, advanced ? ComputerCraftItems.WIRELESS_MODEM_ADVANCED : ComputerCraftItems.WIRELESS_MODEM_NORMAL);
         this.advanced = advanced;
     }
 
     @Nullable
     @Override
-    public IPeripheral createPeripheral( @Nonnull IPocketAccess access )
-    {
-        return new PocketModemPeripheral( advanced );
+    public IPeripheral createPeripheral(@Nonnull IPocketAccess access) {
+        return new PocketModemPeripheral(advanced);
     }
 
     @Override
@@ -43,10 +40,8 @@ public class PocketModem extends AbstractPocketUpgrade
     }
 
     @Override
-    public void update( @Nonnull IPocketAccess access, @Nullable IPeripheral peripheral )
-    {
-        if( !(peripheral instanceof PocketModemPeripheral) )
-        {
+    public void update(@Nonnull IPocketAccess access, @Nullable IPeripheral peripheral) {
+        if (!(peripheral instanceof PocketModemPeripheral)) {
             return;
         }
 
@@ -54,15 +49,13 @@ public class PocketModem extends AbstractPocketUpgrade
 
         PocketModemPeripheral modem = (PocketModemPeripheral) peripheral;
 
-        if( entity != null )
-        {
-            modem.setLocation( entity.world, Vec3.getPermanentVec3(entity.x, entity.y + entity.getHeadHeight(), entity.z));
+        if (entity != null) {
+            modem.setLocation(entity.world, Vec3.getPermanentVec3(entity.x, entity.y + entity.getHeadHeight(), entity.z));
         }
 
         ModemState state = modem.getModemState();
-        if( state.pollChanged() )
-        {
-            access.setLight( state.isOpen() ? 0xBA0000 : -1 );
+        if (state.pollChanged()) {
+            access.setLight(state.isOpen() ? 0xBA0000 : -1);
         }
     }
 }

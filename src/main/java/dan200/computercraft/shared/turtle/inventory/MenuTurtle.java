@@ -12,31 +12,28 @@ import java.util.List;
 public class MenuTurtle extends MenuAbstract {
     public static final int PLAYER_START_Y = 134;
     public static final int TURTLE_START_X = 175;
-
-    public TileTurtle turtle;
     private final int turtleSlotsStart;
     private final int inventorySlotsStart;
     private final int hotbarSlotsStart;
+    public TileTurtle turtle;
 
     public MenuTurtle(Container container, TileTurtle diskDrive) {
         this.turtle = diskDrive;
 
-        for( int y = 0; y < 4; y++ )
-        {
-            for( int x = 0; x < 4; x++ )
-            {
-                addSlot( new Slot( turtle, x + y * 4, TURTLE_START_X + 1 + x * 18, PLAYER_START_Y + 1 + y * 18 ) );
+        for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 4; x++) {
+                addSlot(new Slot(turtle, x + y * 4, TURTLE_START_X + 1 + x * 18, PLAYER_START_Y + 1 + y * 18));
             }
         }
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlot( new Slot( container, x + y * 9 + 9, 8 + x * 18, PLAYER_START_Y + 1 + y * 18 ) );
+                addSlot(new Slot(container, x + y * 9 + 9, 8 + x * 18, PLAYER_START_Y + 1 + y * 18));
             }
         }
 
         for (int x = 0; x < 9; x++) {
-            addSlot( new Slot( container, x, 8 + x * 18, PLAYER_START_Y + 3 * 18 + 5 ) );
+            addSlot(new Slot(container, x, 8 + x * 18, PLAYER_START_Y + 3 * 18 + 5));
         }
 
         this.turtleSlotsStart = 0;

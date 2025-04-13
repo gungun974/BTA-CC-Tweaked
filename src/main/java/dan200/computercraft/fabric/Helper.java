@@ -30,13 +30,14 @@ public class Helper {
         if (block == null) return null;
         return block.getLogic();
     }
+
     public static <T> @Nullable T getBlockLogic(final World world, final int x, final int y, final int z, final Class<T> logicClass) {
-       final Block<?> block = world.getBlock(x, y, z);
-       if (block == null) return null;
-       final BlockLogic logic = block.getLogic();
-       if (logicClass.isAssignableFrom(logic.getClass())) {
-           return logicClass.cast(logic);
-       }
-       return null;
+        final Block<?> block = world.getBlock(x, y, z);
+        if (block == null) return null;
+        final BlockLogic logic = block.getLogic();
+        if (logicClass.isAssignableFrom(logic.getClass())) {
+            return logicClass.cast(logic);
+        }
+        return null;
     }
 }

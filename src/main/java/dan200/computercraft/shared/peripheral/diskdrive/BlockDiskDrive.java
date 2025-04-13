@@ -5,26 +5,17 @@
  */
 package dan200.computercraft.shared.peripheral.diskdrive;
 
-import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogicRotatable;
-import net.minecraft.core.block.entity.TileEntityActivator;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.entity.player.Player;
-import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-public class BlockDiskDrive extends BlockLogicRotatable
-{
+public class BlockDiskDrive extends BlockLogicRotatable {
     //static final EnumProperty<DiskDriveState> STATE = EnumProperty.of( "state", DiskDriveState.class );
 
-    public BlockDiskDrive( Block<?> block )
-    {
+    public BlockDiskDrive(Block<?> block) {
         super(block, Material.stone);
         block.withEntity(TileDiskDrive::new);
     }
@@ -61,6 +52,6 @@ public class BlockDiskDrive extends BlockLogicRotatable
 //    }
 
     public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
-        return ((TileDiskDrive)world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
+        return ((TileDiskDrive) world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
     }
 }

@@ -11,14 +11,13 @@ import javax.annotation.Nonnull;
 
 /**
  * An object on a {@link IWiredNetwork} capable of sending packets.
- *
+ * <p>
  * Unlike a regular {@link IPacketSender}, this must be associated with the node you are attempting to to send the packet from.
  */
-public interface IWiredSender extends IPacketSender
-{
+public interface IWiredSender extends IPacketSender {
     /**
      * The node in the network representing this object.
-     *
+     * <p>
      * This should be used as a proxy for the main network. One should send packets and register receivers through this object.
      *
      * @return The node for this element.

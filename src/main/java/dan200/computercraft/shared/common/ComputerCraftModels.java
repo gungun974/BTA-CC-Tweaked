@@ -22,7 +22,6 @@ import net.minecraft.client.render.TileEntityRenderDispatcher;
 import net.minecraft.client.render.block.color.BlockColorDispatcher;
 import net.minecraft.client.render.block.model.BlockModelDispatcher;
 import net.minecraft.client.render.block.model.BlockModelHorizontalRotation;
-import net.minecraft.client.render.block.model.BlockModelRotatable;
 import net.minecraft.client.render.item.model.ItemModelDispatcher;
 import net.minecraft.client.render.item.model.ItemModelStandard;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
@@ -97,13 +96,13 @@ public class ComputerCraftModels implements ModelEntrypoint {
         );
 
         ModelHelper.setBlockModel(ComputerCraftBlocks.MONITOR_NORMAL, () -> new BlockModelMonitor<>(ComputerCraftBlocks.MONITOR_NORMAL, "computercraft:block/monitor_normal")
-            .setTex(0, "computercraft:block/monitor_normal_4", Side.SOUTH, Side.EAST, Side.WEST )
+            .setTex(0, "computercraft:block/monitor_normal_4", Side.SOUTH, Side.EAST, Side.WEST)
             .setTex(0, "computercraft:block/monitor_normal_0", Side.TOP, Side.BOTTOM)
             .setTex(0, "computercraft:block/monitor_normal_15", Side.NORTH)
         );
 
         ModelHelper.setBlockModel(ComputerCraftBlocks.MONITOR_ADVANCED, () -> new BlockModelMonitor<>(ComputerCraftBlocks.MONITOR_ADVANCED, "computercraft:block/monitor_advanced")
-            .setTex(0, "computercraft:block/monitor_advanced_4", Side.SOUTH, Side.EAST, Side.WEST )
+            .setTex(0, "computercraft:block/monitor_advanced_4", Side.SOUTH, Side.EAST, Side.WEST)
             .setTex(0, "computercraft:block/monitor_advanced_0", Side.TOP, Side.BOTTOM)
             .setTex(0, "computercraft:block/monitor_advanced_15", Side.NORTH)
         );
@@ -178,7 +177,8 @@ public class ComputerCraftModels implements ModelEntrypoint {
     }
 
     @Override
-    public void initEntityModels(EntityRenderDispatcher dispatcher) {}
+    public void initEntityModels(EntityRenderDispatcher dispatcher) {
+    }
 
     @Override
     public void initTileEntityModels(TileEntityRenderDispatcher dispatcher) {
@@ -190,5 +190,6 @@ public class ComputerCraftModels implements ModelEntrypoint {
     }
 
     @Override
-    public void initBlockColors(BlockColorDispatcher dispatcher) {}
+    public void initBlockColors(BlockColorDispatcher dispatcher) {
+    }
 }

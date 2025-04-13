@@ -19,7 +19,6 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import dan200.computercraft.api.pocket.IPocketUpgrade;
 import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
-//import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
@@ -29,66 +28,57 @@ import javax.annotation.Nullable;
 
 /**
  * The static entry point to the ComputerCraft API.
- *
+ * <p>
  * Members in this class must be called after mod_ComputerCraft has been initialised, but may be called before it is fully loaded.
  */
-public final class ComputerCraftAPI
-{
+public final class ComputerCraftAPI {
     private static IComputerCraftAPI instance;
 
     @Nonnull
     @Deprecated
-    public static String getAPIVersion()
-    {
+    public static String getAPIVersion() {
         return getInstalledVersion();
     }
 
     @Nonnull
-    public static String getInstalledVersion()
-    {
+    public static String getInstalledVersion() {
         return getInstance().getInstalledVersion();
     }
 
     @Nonnull
-    private static IComputerCraftAPI getInstance()
-    {
-        if( instance != null )
-        {
+    private static IComputerCraftAPI getInstance() {
+        if (instance != null) {
             return instance;
         }
 
-        try
-        {
-            return instance = (IComputerCraftAPI) Class.forName( "dan200.computercraft.ComputerCraftAPIImpl" )
-                .getField( "INSTANCE" )
-                .get( null );
-        }
-        catch( ReflectiveOperationException e )
-        {
-            throw new IllegalStateException( "Cannot find ComputerCraft API", e );
+        try {
+            return instance = (IComputerCraftAPI) Class.forName("dan200.computercraft.ComputerCraftAPIImpl")
+                .getField("INSTANCE")
+                .get(null);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("Cannot find ComputerCraft API", e);
         }
     }
 
     /**
      * Creates a numbered directory in a subfolder of the save directory for a given world, and returns that number.
-     *
+     * <p>
      * Use in conjunction with createSaveDirMount() to create a unique place for your peripherals or media items to store files.
      *
      * @param world         The world for which the save dir should be created. This should be the server side world object.
      * @param parentSubPath The folder path within the save directory where the new directory should be created. eg: "computercraft/disk"
      * @return The numerical value of the name of the new folder, or -1 if the folder could not be created for some reason.
-     *
+     * <p>
      * eg: if createUniqueNumberedSaveDir( world, "computer/disk" ) was called returns 42, then "computer/disk/42" is now available for writing.
      * @see #createSaveDirMount(World, String, long)
      */
-    public static int createUniqueNumberedSaveDir( @Nonnull World world, @Nonnull String parentSubPath )
-    {
-        return getInstance().createUniqueNumberedSaveDir( world, parentSubPath );
+    public static int createUniqueNumberedSaveDir(@Nonnull World world, @Nonnull String parentSubPath) {
+        return getInstance().createUniqueNumberedSaveDir(world, parentSubPath);
     }
 
     /**
      * Creates a file system mount that maps to a subfolder of the save directory for a given world, and returns it.
-     *
+     * <p>
      * Use in conjunction with IComputerAccess.mount() or IComputerAccess.mountWritable() to mount a folder from the users save directory onto a computers
      * file system.
      *
@@ -105,17 +95,16 @@ public final class ComputerCraftAPI
      * @see IWritableMount
      */
     @Nullable
-    public static IWritableMount createSaveDirMount( @Nonnull World world, @Nonnull String subPath, long capacity )
-    {
-        return getInstance().createSaveDirMount( world, subPath, capacity );
+    public static IWritableMount createSaveDirMount(@Nonnull World world, @Nonnull String subPath, long capacity) {
+        return getInstance().createSaveDirMount(world, subPath, capacity);
     }
 
     /**
      * Creates a file system mount to a resource folder, and returns it.
-     *
+     * <p>
      * Use in conjunction with {@link IComputerAccess#mount} or {@link IComputerAccess#mountWritable} to mount a resource folder onto a computer's file
      * system.
-     *
+     * <p>
      * The files in this mount will be a combination of files in all mod jar, and data packs that contain
      * resources with the same domain and path. For instance, ComputerCraft's resources are stored in
      * "/data/computercraft/lua/rom". We construct a mount for that with
@@ -129,9 +118,8 @@ public final class ComputerCraftAPI
      * @see IMount
      */
     @Nullable
-    public static IMount createResourceMount( @Nonnull String domain, @Nonnull String subPath )
-    {
-        return getInstance().createResourceMount( domain, subPath );
+    public static IMount createResourceMount(@Nonnull String domain, @Nonnull String subPath) {
+        return getInstance().createResourceMount(domain, subPath);
     }
 
     /**
@@ -141,9 +129,8 @@ public final class ComputerCraftAPI
      * @see IPeripheral
      * @see IPeripheralProvider
      */
-    public static void registerPeripheralProvider( @Nonnull IPeripheralProvider provider )
-    {
-        getInstance().registerPeripheralProvider( provider );
+    public static void registerPeripheralProvider(@Nonnull IPeripheralProvider provider) {
+        getInstance().registerPeripheralProvider(provider);
     }
 
     /**
@@ -152,9 +139,8 @@ public final class ComputerCraftAPI
      * @param source The method source to register.
      * @see GenericSource
      */
-    public static void registerGenericSource( @Nonnull GenericSource source )
-    {
-        getInstance().registerGenericSource( source );
+    public static void registerGenericSource(@Nonnull GenericSource source) {
+        getInstance().registerGenericSource(source);
     }
 
     /**
@@ -164,9 +150,8 @@ public final class ComputerCraftAPI
      * @param upgrade The turtle upgrade to register.
      * @see ITurtleUpgrade
      */
-    public static void registerTurtleUpgrade( @Nonnull ITurtleUpgrade upgrade )
-    {
-        getInstance().registerTurtleUpgrade( upgrade );
+    public static void registerTurtleUpgrade(@Nonnull ITurtleUpgrade upgrade) {
+        getInstance().registerTurtleUpgrade(upgrade);
     }
 
     /**
@@ -175,9 +160,8 @@ public final class ComputerCraftAPI
      * @param provider The bundled redstone provider to register.
      * @see IBundledRedstoneProvider
      */
-    public static void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider )
-    {
-        getInstance().registerBundledRedstoneProvider( provider );
+    public static void registerBundledRedstoneProvider(@Nonnull IBundledRedstoneProvider provider) {
+        getInstance().registerBundledRedstoneProvider(provider);
     }
 
     /**
@@ -190,9 +174,8 @@ public final class ComputerCraftAPI
      * capable of emitting bundled redstone at the location, -1 will be returned.
      * @see IBundledRedstoneProvider
      */
-    public static int getBundledRedstoneOutput( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
-    {
-        return getInstance().getBundledRedstoneOutput( world, pos, side );
+    public static int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side) {
+        return getInstance().getBundledRedstoneOutput(world, pos, side);
     }
 
     /**
@@ -201,14 +184,12 @@ public final class ComputerCraftAPI
      * @param provider The media provider to register.
      * @see IMediaProvider
      */
-    public static void registerMediaProvider( @Nonnull IMediaProvider provider )
-    {
-        getInstance().registerMediaProvider( provider );
+    public static void registerMediaProvider(@Nonnull IMediaProvider provider) {
+        getInstance().registerMediaProvider(provider);
     }
 
-    public static void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade )
-    {
-        getInstance().registerPocketUpgrade( upgrade );
+    public static void registerPocketUpgrade(@Nonnull IPocketUpgrade upgrade) {
+        getInstance().registerPocketUpgrade(upgrade);
     }
 
     /**
@@ -216,14 +197,12 @@ public final class ComputerCraftAPI
      *
      * @return The global wireless network, or {@code null} if it could not be fetched.
      */
-    public static IPacketNetwork getWirelessNetwork()
-    {
+    public static IPacketNetwork getWirelessNetwork() {
         return getInstance().getWirelessNetwork();
     }
 
-    public static void registerAPIFactory( @Nonnull ILuaAPIFactory factory )
-    {
-        getInstance().registerAPIFactory( factory );
+    public static void registerAPIFactory(@Nonnull ILuaAPIFactory factory) {
+        getInstance().registerAPIFactory(factory);
     }
 
     /**
@@ -234,9 +213,8 @@ public final class ComputerCraftAPI
      * @see IWiredElement#getNode()
      */
     @Nonnull
-    public static IWiredNode createWiredNodeForElement( @Nonnull IWiredElement element )
-    {
-        return getInstance().createWiredNodeForElement( element );
+    public static IWiredNode createWiredNodeForElement(@Nonnull IWiredElement element) {
+        return getInstance().createWiredNodeForElement(element);
     }
 
     /**
@@ -249,47 +227,45 @@ public final class ComputerCraftAPI
      * @see IWiredElement#getNode()
      */
     @Nullable
-    public static IWiredElement getWiredElementAt( @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
-    {
-        return getInstance().getWiredElementAt( world, pos, side );
+    public static IWiredElement getWiredElementAt(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side) {
+        return getInstance().getWiredElementAt(world, pos, side);
     }
 
-    public interface IComputerCraftAPI
-    {
+    public interface IComputerCraftAPI {
         @Nonnull
         String getInstalledVersion();
 
-        int createUniqueNumberedSaveDir( @Nonnull World world, @Nonnull String parentSubPath );
+        int createUniqueNumberedSaveDir(@Nonnull World world, @Nonnull String parentSubPath);
 
         @Nullable
-        IWritableMount createSaveDirMount( @Nonnull World world, @Nonnull String subPath, long capacity );
+        IWritableMount createSaveDirMount(@Nonnull World world, @Nonnull String subPath, long capacity);
 
         @Nullable
-        IMount createResourceMount( @Nonnull String domain, @Nonnull String subPath );
+        IMount createResourceMount(@Nonnull String domain, @Nonnull String subPath);
 
-        void registerPeripheralProvider( @Nonnull IPeripheralProvider provider );
+        void registerPeripheralProvider(@Nonnull IPeripheralProvider provider);
 
-        void registerGenericSource( @Nonnull GenericSource source );
+        void registerGenericSource(@Nonnull GenericSource source);
 
-        void registerTurtleUpgrade( @Nonnull ITurtleUpgrade upgrade );
+        void registerTurtleUpgrade(@Nonnull ITurtleUpgrade upgrade);
 
-        void registerBundledRedstoneProvider( @Nonnull IBundledRedstoneProvider provider );
+        void registerBundledRedstoneProvider(@Nonnull IBundledRedstoneProvider provider);
 
-        int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side );
+        int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side);
 
-        void registerMediaProvider( @Nonnull IMediaProvider provider );
+        void registerMediaProvider(@Nonnull IMediaProvider provider);
 
-        void registerPocketUpgrade( @Nonnull IPocketUpgrade upgrade );
+        void registerPocketUpgrade(@Nonnull IPocketUpgrade upgrade);
 
         @Nonnull
         IPacketNetwork getWirelessNetwork();
 
-        void registerAPIFactory( @Nonnull ILuaAPIFactory factory );
+        void registerAPIFactory(@Nonnull ILuaAPIFactory factory);
 
         @Nonnull
-        IWiredNode createWiredNodeForElement( @Nonnull IWiredElement element );
+        IWiredNode createWiredNodeForElement(@Nonnull IWiredElement element);
 
         @Nullable
-        IWiredElement getWiredElementAt(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side );
+        IWiredElement getWiredElementAt(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side);
     }
 }

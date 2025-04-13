@@ -7,19 +7,16 @@ package dan200.computercraft.shared.network.client;
 
 import dan200.computercraft.ComputerCraft;
 
-public class ComputerDeletedClientMessage extends ComputerClientMessage
-{
-    public ComputerDeletedClientMessage( int instanceId )
-    {
-        super( instanceId );
+public class ComputerDeletedClientMessage extends ComputerClientMessage {
+    public ComputerDeletedClientMessage(int instanceId) {
+        super(instanceId);
     }
 
-    public ComputerDeletedClientMessage()
-    {
+    public ComputerDeletedClientMessage() {
     }
 
     @Override
     public void handle(NetworkContext context) {
-        ComputerCraft.clientComputerRegistry.remove( getInstanceId() );
+        ComputerCraft.clientComputerRegistry.remove(getInstanceId());
     }
 }

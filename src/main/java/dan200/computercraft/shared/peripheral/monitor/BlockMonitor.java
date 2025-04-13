@@ -6,7 +6,6 @@
 package dan200.computercraft.shared.peripheral.monitor;
 
 import dan200.computercraft.fabric.Helper;
-import dan200.computercraft.shared.computer.blocks.TileComputerBase;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.block.entity.TileEntity;
@@ -18,11 +17,10 @@ import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockMonitor extends BlockLogic
-{
-    @Override
-    public void onBlockPlacedOnSide(World world, int x, int y, int z, @NotNull Side side, double xPlaced, double yPlaced) {
-        world.setBlockMetadataWithNotify(x, y, z, facingToMeta(side.getDirection()) + orientationToMeta(Direction.NORTH));
+public class BlockMonitor extends BlockLogic {
+    public BlockMonitor(Block<?> block, boolean advanced) {
+        super(block, Material.stone);
+        block.withEntity(() -> new TileMonitor(advanced));
     }
 
     public static int facingToMeta(Direction direction) {
@@ -85,37 +83,30 @@ public class BlockMonitor extends BlockLogic
         return MonitorEdgeState.values()[(meta >> 4) & 0b1111];
     }
 
-    public BlockMonitor(Block<?> block, boolean advanced)
-    {
-        super(block, Material.stone);
-        block.withEntity(() -> new TileMonitor(advanced));
+    @Override
+    public void onBlockPlacedOnSide(World world, int x, int y, int z, @NotNull Side side, double xPlaced, double yPlaced) {
+        world.setBlockMetadataWithNotify(x, y, z, facingToMeta(side.getDirection()) + orientationToMeta(Direction.NORTH));
     }
 
     @Override
     public void onBlockPlacedByMob(World world, int x, int y, int z, @NotNull Side side, Mob mob, double xPlaced, double yPlaced) {
         float pitch = mob.xRot;
         Direction orientation;
-        if( pitch > 66.5f )
-        {
+        if (pitch > 66.5f) {
             // If the player is looking down, place it facing upwards
             orientation = Direction.UP;
-        }
-        else if( pitch < -66.5f )
-        {
+        } else if (pitch < -66.5f) {
             // If they're looking up, place it down.
             orientation = Direction.DOWN;
-        }
-        else
-        {
+        } else {
             orientation = Direction.NORTH;
         }
 
         Direction direction = mob.getHorizontalPlacementDirection(side).getOpposite();
         world.setBlockMetadataWithNotify(x, y, z, facingToMeta(direction) + orientationToMeta(orientation));
 
-        TileEntity entity = world.getTileEntity( x, y, z );
-        if( entity instanceof TileMonitor && !Helper.isClientWorld())
-        {
+        TileEntity entity = world.getTileEntity(x, y, z);
+        if (entity instanceof TileMonitor && !Helper.isClientWorld()) {
             TileMonitor monitor = (TileMonitor) entity;
             // Defer the block update if we're being placed by another TE. See #691
 //            if( livingEntity == null || livingEntity instanceof FakePlayer )
@@ -129,15 +120,14 @@ public class BlockMonitor extends BlockLogic
     }
 
     public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
-        return ((TileMonitor)world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
+        return ((TileMonitor) world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
     }
 
     @Override
     public void onBlockRemoved(World world, int x, int y, int z, int data) {
         super.onBlockRemoved(world, x, y, z, data);
-        TileEntity entity = world.getTileEntity( x, y, z );
-        if( entity instanceof TileMonitor && !Helper.isClientWorld())
-        {
+        TileEntity entity = world.getTileEntity(x, y, z);
+        if (entity instanceof TileMonitor && !Helper.isClientWorld()) {
             world.setBlockAndMetadataRaw(x, y, z, this.id(), data);
             TileMonitor monitor = (TileMonitor) entity;
             monitor.markDestroyed();

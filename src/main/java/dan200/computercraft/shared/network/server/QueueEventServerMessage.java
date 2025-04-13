@@ -20,43 +20,37 @@ import javax.annotation.Nullable;
  * @see dan200.computercraft.shared.computer.core.ClientComputer#queueEvent(String)
  * @see ServerComputer#queueEvent(String)
  */
-public class QueueEventServerMessage extends ComputerServerMessage
-{
+public class QueueEventServerMessage extends ComputerServerMessage {
     private String event;
     private Object[] args;
 
-    public QueueEventServerMessage( int instanceId, @Nonnull String event, @Nullable Object[] args )
-    {
-        super( instanceId );
+    public QueueEventServerMessage(int instanceId, @Nonnull String event, @Nullable Object[] args) {
+        super(instanceId);
         this.event = event;
         this.args = args;
     }
 
-    public QueueEventServerMessage()
-    {
+    public QueueEventServerMessage() {
     }
 
     @Override
-    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
-    {
-        super.encodeToUniversalPacket( buf );
-        buf.writeString( event );
-        buf.writeCompoundTag( args == null ? null : NBTUtil.encodeObjects( args ) );
+    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+        super.encodeToUniversalPacket(buf);
+        buf.writeString(event);
+        buf.writeCompoundTag(args == null ? null : NBTUtil.encodeObjects(args));
     }
 
     @Override
-    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf )
-    {
-        super.decodeFromUniversalPacket( buf );
+    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+        super.decodeFromUniversalPacket(buf);
         event = buf.readString();
 
         CompoundTag args = buf.readCompoundTag();
-        this.args = args == null ? null : NBTUtil.decodeObjects( args );
+        this.args = args == null ? null : NBTUtil.decodeObjects(args);
     }
 
     @Override
-    protected void handle( @Nonnull ServerComputer computer, @Nonnull IContainerComputer container )
-    {
-        computer.queueEvent( event, args );
+    protected void handle(@Nonnull ServerComputer computer, @Nonnull IContainerComputer container) {
+        computer.queueEvent(event, args);
     }
 }

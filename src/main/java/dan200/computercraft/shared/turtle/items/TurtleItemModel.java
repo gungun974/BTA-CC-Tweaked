@@ -206,9 +206,9 @@ public class TurtleItemModel extends ItemModelBlock {
         int colour = IColouredItem.getColourBasic(itemStack);
 
         if (colour != -1) {
-            float r = (float)(colour >> 16 & 0xFF) / 255.0F;
-            float g = (float)(colour >> 8 & 0xFF) / 255.0F;
-            float b = (float)(colour & 0xFF) / 255.0F;
+            float r = (float) (colour >> 16 & 0xFF) / 255.0F;
+            float g = (float) (colour >> 8 & 0xFF) / 255.0F;
+            float b = (float) (colour & 0xFF) / 255.0F;
             GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
 
             Minecraft.getMinecraft().textureManager.loadTexture("/assets/computercraft/textures/block/turtle_colour.png").bind();
@@ -216,20 +216,20 @@ public class TurtleItemModel extends ItemModelBlock {
             tessellator.startDrawingQuads();
 
             (new BlockAORenderer(AABB.getTemporaryBB(2 / 16f, 2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f, 13 / 16f)))
-                .setBottomUV(5.75/ 16f, 8.5/ 16f, 2.75/ 16f, 5.75/ 16f)
-                .setTopUV( 8.75/ 16f, 5.75/ 16f, 5.75/ 16f, 8.5/ 16f )
-                .setNorthUV( 11.5/ 16f, 11.5/ 16f, 8.5/ 16f, 8.5/ 16f )
-                .setSouthUV( 5.75/ 16f, 11.5/ 16f, 2.75/ 16f, 8.5/ 16f )
-                .setWestUV( 8.5/ 16f, 11.5/ 16f, 5.75/ 16f, 8.555/ 16f )
-                .setEastUV( 2.75/ 16f, 11.5/ 16f, 0, 8.5/ 16f )
+                .setBottomUV(5.75 / 16f, 8.5 / 16f, 2.75 / 16f, 5.75 / 16f)
+                .setTopUV(8.75 / 16f, 5.75 / 16f, 5.75 / 16f, 8.5 / 16f)
+                .setNorthUV(11.5 / 16f, 11.5 / 16f, 8.5 / 16f, 8.5 / 16f)
+                .setSouthUV(5.75 / 16f, 11.5 / 16f, 2.75 / 16f, 8.5 / 16f)
+                .setWestUV(8.5 / 16f, 11.5 / 16f, 5.75 / 16f, 8.555 / 16f)
+                .setEastUV(2.75 / 16f, 11.5 / 16f, 0, 8.5 / 16f)
                 .render(tessellator, Side.NORTH);
 
             (new BlockAORenderer(AABB.getTemporaryBB(3 / 16f, 6 / 16f, 13 / 16f, 13 / 16f, 13 / 16f, 15 / 16f)))
-                .setBottomUV( 11.75/ 16f, 6.25/ 16f, 9.25/ 16f, 5.75/ 16f )
-                .setTopUV( 14.25/ 16f, 5.75/ 16f, 11.75/ 16f, 6.25 / 16f)
-                .setSouthUV( 11.75/ 16f, 8/ 16f, 9.25/ 16f, 6.25 / 16f)
-                .setWestUV( 12.25/ 16f, 8/ 16f, 11.75/ 16f, 6.25 / 16f)
-                .setEastUV( 9.25/ 16f, 8/ 16f, 8.75/ 16f, 6.25 / 16f)
+                .setBottomUV(11.75 / 16f, 6.25 / 16f, 9.25 / 16f, 5.75 / 16f)
+                .setTopUV(14.25 / 16f, 5.75 / 16f, 11.75 / 16f, 6.25 / 16f)
+                .setSouthUV(11.75 / 16f, 8 / 16f, 9.25 / 16f, 6.25 / 16f)
+                .setWestUV(12.25 / 16f, 8 / 16f, 11.75 / 16f, 6.25 / 16f)
+                .setEastUV(9.25 / 16f, 8 / 16f, 8.75 / 16f, 6.25 / 16f)
                 .render(tessellator, Side.NORTH);
 
             tessellator.draw();

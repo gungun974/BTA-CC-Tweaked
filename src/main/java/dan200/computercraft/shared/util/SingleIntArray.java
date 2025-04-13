@@ -11,21 +11,18 @@ package dan200.computercraft.shared.util;
 public interface SingleIntArray// extends PropertyDelegate
 {
     //@Override
-    default int get( int property )
-    {
+    default int get(int property) {
         return property == 0 ? get() : 0;
     }
 
     int get();
 
     //@Override
-    default void set( int property, int value )
-    {
+    default void set(int property, int value) {
     }
 
     //@Override
-    default int size()
-    {
+    default int size() {
         return 1;
     }
 }

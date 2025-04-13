@@ -9,37 +9,31 @@ import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 
-public class ComputerTerminalClientMessage extends ComputerClientMessage
-{
+public class ComputerTerminalClientMessage extends ComputerClientMessage {
     protected TerminalState state;
 
-    public ComputerTerminalClientMessage( int instanceId, TerminalState state )
-    {
-        super( instanceId );
+    public ComputerTerminalClientMessage(int instanceId, TerminalState state) {
+        super(instanceId);
         this.state = state;
     }
 
-    public ComputerTerminalClientMessage()
-    {
+    public ComputerTerminalClientMessage() {
     }
 
     @Override
-    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
-    {
-        super.encodeToUniversalPacket( buf );
-        state.write( buf );
+    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+        super.encodeToUniversalPacket(buf);
+        state.write(buf);
     }
 
     @Override
-    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf )
-    {
-        super.decodeFromUniversalPacket( buf );
-        state = new TerminalState( buf );
+    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+        super.decodeFromUniversalPacket(buf);
+        state = new TerminalState(buf);
     }
 
     @Override
-    public void handle(NetworkContext context)
-    {
-        getComputer().read( state );
+    public void handle(NetworkContext context) {
+        getComputer().read(state);
     }
 }

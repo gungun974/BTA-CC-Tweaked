@@ -1,10 +1,8 @@
 package dan200.computercraft.shared.turtle.blocks;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
-import dan200.computercraft.shared.common.IColouredItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -12,7 +10,6 @@ import net.minecraft.client.render.block.model.BlockModel;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.client.render.tileentity.TileEntityRenderer;
 import net.minecraft.core.block.Block;
-import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.AABB;
 import net.minecraft.core.util.phys.Vec3;
 import org.lwjgl.opengl.GL11;
@@ -20,6 +17,25 @@ import org.lwjgl.opengl.GL11;
 @Environment(EnvType.CLIENT)
 public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
     private final Minecraft mc = Minecraft.getMinecraft();
+
+    private static void drawBase(Tessellator tessellator, TileTurtle tileEntity, float angle) {
+        (new BlockAORenderer(AABB.getTemporaryBB(2 / 16f, 2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f, 13 / 16f)))
+            .setBottomUV(5.75 / 16, 2.75 / 16, 2.75 / 16, 0)
+            .setTopUV(8.75 / 16, 0, 5.75 / 16, 2.75 / 16)
+            .setNorthUV(11.5 / 16, 5.75 / 16, 8.5 / 16, 2.75 / 16)
+            .setSouthUV(5.75 / 16, 5.75 / 16, 2.75 / 16, 2.75 / 16)
+            .setWestUV(8.5 / 16, 5.75 / 16, 5.75 / 16, 2.75 / 16)
+            .setEastUV(2.75 / 16, 5.75 / 16, 0, 2.75 / 16)
+            .render(tessellator, tileEntity, angle, 1f, 1f, 1f);
+
+        (new BlockAORenderer(AABB.getTemporaryBB(3 / 16f, 6 / 16f, 13 / 16f, 13 / 16f, 13 / 16f, 15 / 16f)))
+            .setBottomUV(11.75 / 16, 0.5 / 16, 9.25 / 16, 0)
+            .setTopUV(14.25 / 16, 0, 11.75 / 16, 0.5 / 16)
+            .setSouthUV(11.75 / 16, 2.25 / 16, 9.25 / 16, 0.5 / 16)
+            .setWestUV(12.25 / 16, 2.25 / 16, 11.75 / 16, 0.5 / 16)
+            .setEastUV(9.25 / 16, 2.25 / 16, 8.75 / 16, 0.5 / 16)
+            .render(tessellator, tileEntity, angle, 1f, 1f, 1f);
+    }
 
     public void doRender(Tessellator tessellator, TileTurtle tileEntity, double x, double y, double z, float partialTick) {
         Block<?> block = tileEntity.getBlock();
@@ -50,29 +66,29 @@ public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
             BlockModel.renderBlocks.cache.setupCache(block, tileEntity.worldObj, tileEntity.x, tileEntity.y, tileEntity.z);
 
             if (colour != -1) {
-                float r = (float)(colour >> 16 & 0xFF) / 255.0F;
-                float g = (float)(colour >> 8 & 0xFF) / 255.0F;
-                float b = (float)(colour & 0xFF) / 255.0F;
+                float r = (float) (colour >> 16 & 0xFF) / 255.0F;
+                float g = (float) (colour >> 8 & 0xFF) / 255.0F;
+                float b = (float) (colour & 0xFF) / 255.0F;
 
                 this.loadTexture("/assets/computercraft/textures/block/turtle_colour.png");
 
                 tessellator.startDrawingQuads();
 
                 (new BlockAORenderer(AABB.getTemporaryBB(2 / 16f, 2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f, 13 / 16f)))
-                    .setBottomUV(5.75/ 16f, 8.5/ 16f, 2.75/ 16f, 5.75/ 16f)
-                    .setTopUV( 8.75/ 16f, 5.75/ 16f, 5.75/ 16f, 8.5/ 16f )
-                    .setNorthUV( 11.5/ 16f, 11.5/ 16f, 8.5/ 16f, 8.5/ 16f )
-                    .setSouthUV( 5.75/ 16f, 11.5/ 16f, 2.75/ 16f, 8.5/ 16f )
-                    .setWestUV( 8.5/ 16f, 11.5/ 16f, 5.75/ 16f, 8.555/ 16f )
-                    .setEastUV( 2.75/ 16f, 11.5/ 16f, 0, 8.5/ 16f )
+                    .setBottomUV(5.75 / 16f, 8.5 / 16f, 2.75 / 16f, 5.75 / 16f)
+                    .setTopUV(8.75 / 16f, 5.75 / 16f, 5.75 / 16f, 8.5 / 16f)
+                    .setNorthUV(11.5 / 16f, 11.5 / 16f, 8.5 / 16f, 8.5 / 16f)
+                    .setSouthUV(5.75 / 16f, 11.5 / 16f, 2.75 / 16f, 8.5 / 16f)
+                    .setWestUV(8.5 / 16f, 11.5 / 16f, 5.75 / 16f, 8.555 / 16f)
+                    .setEastUV(2.75 / 16f, 11.5 / 16f, 0, 8.5 / 16f)
                     .render(tessellator, tileEntity, angle, r, g, b);
 
                 (new BlockAORenderer(AABB.getTemporaryBB(3 / 16f, 6 / 16f, 13 / 16f, 13 / 16f, 13 / 16f, 15 / 16f)))
-                    .setBottomUV( 11.75/ 16f, 6.25/ 16f, 9.25/ 16f, 5.75/ 16f )
-                    .setTopUV( 14.25/ 16f, 5.75/ 16f, 11.75/ 16f, 6.25 / 16f)
-                    .setSouthUV( 11.75/ 16f, 8/ 16f, 9.25/ 16f, 6.25 / 16f)
-                    .setWestUV( 12.25/ 16f, 8/ 16f, 11.75/ 16f, 6.25 / 16f)
-                    .setEastUV( 9.25/ 16f, 8/ 16f, 8.75/ 16f, 6.25 / 16f)
+                    .setBottomUV(11.75 / 16f, 6.25 / 16f, 9.25 / 16f, 5.75 / 16f)
+                    .setTopUV(14.25 / 16f, 5.75 / 16f, 11.75 / 16f, 6.25 / 16f)
+                    .setSouthUV(11.75 / 16f, 8 / 16f, 9.25 / 16f, 6.25 / 16f)
+                    .setWestUV(12.25 / 16f, 8 / 16f, 11.75 / 16f, 6.25 / 16f)
+                    .setEastUV(9.25 / 16f, 8 / 16f, 8.75 / 16f, 6.25 / 16f)
                     .render(tessellator, tileEntity, angle, r, g, b);
 
                 tessellator.draw();
@@ -107,25 +123,5 @@ public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
             GL11.glPopMatrix();
             GL11.glDisable(32826);
         }
-    }
-
-
-    private static void drawBase(Tessellator tessellator, TileTurtle tileEntity, float angle) {
-        (new BlockAORenderer(AABB.getTemporaryBB(2 / 16f, 2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f, 13 / 16f)))
-            .setBottomUV(5.75 / 16, 2.75 / 16, 2.75 / 16, 0)
-            .setTopUV(8.75 / 16, 0, 5.75 / 16, 2.75 / 16)
-            .setNorthUV(11.5 / 16, 5.75 / 16, 8.5 / 16, 2.75 / 16)
-            .setSouthUV(5.75 / 16, 5.75 / 16, 2.75 / 16, 2.75 / 16)
-            .setWestUV(8.5 / 16, 5.75 / 16, 5.75 / 16, 2.75 / 16)
-            .setEastUV(2.75 / 16, 5.75 / 16, 0, 2.75 / 16)
-            .render(tessellator, tileEntity, angle, 1f, 1f, 1f);
-
-        (new BlockAORenderer(AABB.getTemporaryBB(3 / 16f, 6 / 16f, 13 / 16f, 13 / 16f, 13 / 16f, 15 / 16f)))
-            .setBottomUV(11.75 / 16, 0.5 / 16, 9.25 / 16, 0)
-            .setTopUV(14.25 / 16, 0, 11.75 / 16, 0.5 / 16)
-            .setSouthUV(11.75 / 16, 2.25 / 16, 9.25 / 16, 0.5 / 16)
-            .setWestUV(12.25 / 16, 2.25 / 16, 11.75 / 16, 0.5 / 16)
-            .setEastUV(9.25 / 16, 2.25 / 16, 8.75 / 16, 0.5 / 16)
-            .render(tessellator, tileEntity, angle, 1f, 1f, 1f);
     }
 }

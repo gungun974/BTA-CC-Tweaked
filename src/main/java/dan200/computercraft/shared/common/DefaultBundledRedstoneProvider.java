@@ -14,25 +14,20 @@ import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 
-public class DefaultBundledRedstoneProvider implements IBundledRedstoneProvider
-{
-    @Override
-    public int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
-    {
-        return getDefaultBundledRedstoneOutput( world, pos, side );
-    }
-
-    public static int getDefaultBundledRedstoneOutput( World world, BlockPos pos, Direction side )
-    {
+public class DefaultBundledRedstoneProvider implements IBundledRedstoneProvider {
+    public static int getDefaultBundledRedstoneOutput(World world, BlockPos pos, Direction side) {
         BlockLogic block = Helper.getBlockLogic(world, pos.x, pos.y, pos.z);
-        if( block instanceof IBundledRedstoneBlock )
-        {
+        if (block instanceof IBundledRedstoneBlock) {
             IBundledRedstoneBlock generic = (IBundledRedstoneBlock) block;
-            if( generic.getBundledRedstoneConnectivity( world, pos, side ) )
-            {
-                return generic.getBundledRedstoneOutput( world, pos, side );
+            if (generic.getBundledRedstoneConnectivity(world, pos, side)) {
+                return generic.getBundledRedstoneOutput(world, pos, side);
             }
         }
         return -1;
+    }
+
+    @Override
+    public int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side) {
+        return getDefaultBundledRedstoneOutput(world, pos, side);
     }
 }

@@ -6,14 +6,14 @@
 package dan200.computercraft.shared.peripheral.monitor;
 
 
-import java.io.InputStream;
-import java.nio.FloatBuffer;
-
 import dan200.computercraft.client.gui.FixedWidthFontRenderer;
 import dan200.computercraft.shared.util.Palette;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
+
+import java.io.InputStream;
+import java.nio.FloatBuffer;
 
 class MonitorTextureBufferShader {
     static final int TEXTURE_INDEX = GL13.GL_TEXTURE3;

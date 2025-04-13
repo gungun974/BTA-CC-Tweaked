@@ -13,8 +13,7 @@ import net.minecraft.client.render.tessellator.Tessellator;
 import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_HEIGHT;
 import static dan200.computercraft.shared.media.items.ItemPrintout.LINES_PER_PAGE;
 
-public final class PrintoutRenderer
-{
+public final class PrintoutRenderer {
     /**
      * Width of a page.
      */
@@ -43,12 +42,11 @@ public final class PrintoutRenderer
     private static final int COVER_Y = Y_SIZE;
     private static final int COVER_X = X_SIZE + 4 * X_FOLD_SIZE;
 
-    private PrintoutRenderer() {}
+    private PrintoutRenderer() {
+    }
 
-    public static void drawText( int x, int y, float z, int start, TextBuffer[] text, TextBuffer[] colours )
-    {
-        for( int line = 0; line < LINES_PER_PAGE && line < text.length; line++ )
-        {
+    public static void drawText(int x, int y, float z, int start, TextBuffer[] text, TextBuffer[] colours) {
+        for (int line = 0; line < LINES_PER_PAGE && line < text.length; line++) {
             FixedWidthFontRenderer.drawString(
                 x,
                 y + line * FONT_HEIGHT,
@@ -59,43 +57,39 @@ public final class PrintoutRenderer
                 Palette.DEFAULT,
                 false,
                 0,
-                0 );
+                0);
         }
     }
 
-    public static void drawText( int x, int y, int z, int start, String[] text, String[] colours )
-    {
-        for( int line = 0; line < LINES_PER_PAGE && line < text.length; line++ )
-        {
+    public static void drawText(int x, int y, int z, int start, String[] text, String[] colours) {
+        for (int line = 0; line < LINES_PER_PAGE && line < text.length; line++) {
             FixedWidthFontRenderer.drawString(
                 x,
                 y + line * FONT_HEIGHT,
                 z,
-                new TextBuffer( text[start + line] ),
-                new TextBuffer( colours[start + line] ),
+                new TextBuffer(text[start + line]),
+                new TextBuffer(colours[start + line]),
                 null,
                 Palette.DEFAULT,
                 false,
                 0,
-                0 );
+                0);
         }
     }
 
-    public static void drawBorder( float x, float y, float z, int page, int pages, boolean isBook )
-    {
+    public static void drawBorder(float x, float y, float z, int page, int pages, boolean isBook) {
         int leftPages = page;
         int rightPages = pages - page - 1;
 
-        if( isBook )
-        {
+        if (isBook) {
             // Border
-            float offset = offsetAt( pages );
+            float offset = offsetAt(pages);
             float left = x - 4 - offset;
             float right = x + X_SIZE + offset - 4;
 
             // Left and right border
-            drawTexture( left - 4, y - 8, z, COVER_X, 0, COVER_SIZE, Y_SIZE + COVER_SIZE * 2 );
-            drawTexture( right, y - 8, z, COVER_X + COVER_SIZE, 0, COVER_SIZE, Y_SIZE + COVER_SIZE * 2 );
+            drawTexture(left - 4, y - 8, z, COVER_X, 0, COVER_SIZE, Y_SIZE + COVER_SIZE * 2);
+            drawTexture(right, y - 8, z, COVER_X + COVER_SIZE, 0, COVER_SIZE, Y_SIZE + COVER_SIZE * 2);
 
             // Draw centre panel (just stretched texture, sorry).
             drawTexture(
@@ -107,67 +101,61 @@ public final class PrintoutRenderer
                 COVER_X + COVER_SIZE / 2.0f,
                 COVER_SIZE,
                 COVER_SIZE,
-                Y_SIZE );
+                Y_SIZE);
 
             float borderX = left;
-            while( borderX < right )
-            {
-                double thisWidth = Math.min( right - borderX, X_SIZE );
-                drawTexture( borderX, y - 8, z, 0, COVER_Y, (float) thisWidth, COVER_SIZE );
-                drawTexture( borderX, y + Y_SIZE - 4, z, 0, COVER_Y + COVER_SIZE, (float) thisWidth, COVER_SIZE );
+            while (borderX < right) {
+                double thisWidth = Math.min(right - borderX, X_SIZE);
+                drawTexture(borderX, y - 8, z, 0, COVER_Y, (float) thisWidth, COVER_SIZE);
+                drawTexture(borderX, y + Y_SIZE - 4, z, 0, COVER_Y + COVER_SIZE, (float) thisWidth, COVER_SIZE);
                 borderX += thisWidth;
             }
         }
 
         // Left half
-        drawTexture( x, y, z+ 0.02f, X_FOLD_SIZE * 2, 0, X_SIZE / 2.0f, Y_SIZE );
-        for( int n = 0; n <= leftPages; n++ )
-        {
-            drawTexture( x - offsetAt( n ), y, z - 1e-3f * n+ 0.02f,
+        drawTexture(x, y, z + 0.02f, X_FOLD_SIZE * 2, 0, X_SIZE / 2.0f, Y_SIZE);
+        for (int n = 0; n <= leftPages; n++) {
+            drawTexture(x - offsetAt(n), y, z - 1e-3f * n + 0.02f,
                 // Use the left "bold" fold for the outermost page
-                n == leftPages ? 0 : X_FOLD_SIZE, 0, X_FOLD_SIZE, Y_SIZE );
+                n == leftPages ? 0 : X_FOLD_SIZE, 0, X_FOLD_SIZE, Y_SIZE);
         }
 
         // Right half
-        drawTexture( x + X_SIZE / 2.0f, y, z+ 0.02f, X_FOLD_SIZE * 2 + X_SIZE / 2.0f, 0, X_SIZE / 2.0f, Y_SIZE );
-        for( int n = 0; n <= rightPages; n++ )
-        {
-            drawTexture(x + (X_SIZE - X_FOLD_SIZE) + offsetAt( n ), y, z - 1e-3f * n+ 0.02f,
+        drawTexture(x + X_SIZE / 2.0f, y, z + 0.02f, X_FOLD_SIZE * 2 + X_SIZE / 2.0f, 0, X_SIZE / 2.0f, Y_SIZE);
+        for (int n = 0; n <= rightPages; n++) {
+            drawTexture(x + (X_SIZE - X_FOLD_SIZE) + offsetAt(n), y, z - 1e-3f * n + 0.02f,
                 // Two folds, then the main page. Use the right "bold" fold for the outermost page.
-                X_FOLD_SIZE * 2 + X_SIZE + (n == rightPages ? X_FOLD_SIZE : 0), 0, X_FOLD_SIZE, Y_SIZE );
+                X_FOLD_SIZE * 2 + X_SIZE + (n == rightPages ? X_FOLD_SIZE : 0), 0, X_FOLD_SIZE, Y_SIZE);
         }
     }
 
-    public static float offsetAt( int page )
-    {
-        return (float) (32 * (1 - Math.pow( 1.2, -page )));
+    public static float offsetAt(int page) {
+        return (float) (32 * (1 - Math.pow(1.2, -page)));
     }
 
-    private static void drawTexture( float x, float y, float z, float u, float v, float width, float height )
-    {
+    private static void drawTexture(float x, float y, float z, float u, float v, float width, float height) {
         Tessellator tessellator = Tessellator.instance;
 
         tessellator.startDrawingQuads();
 
-        tessellator.addVertexWithUV( x, y + height, z, u / BG_SIZE, (v + height) / BG_SIZE );
-        tessellator.addVertexWithUV( x + width, y + height, z, (u + width) / BG_SIZE, (v + height) / BG_SIZE );
-        tessellator.addVertexWithUV(  x + width, y, z , (u + width) / BG_SIZE, v / BG_SIZE );
-        tessellator.addVertexWithUV(  x, y, z , u / BG_SIZE, v / BG_SIZE );
+        tessellator.addVertexWithUV(x, y + height, z, u / BG_SIZE, (v + height) / BG_SIZE);
+        tessellator.addVertexWithUV(x + width, y + height, z, (u + width) / BG_SIZE, (v + height) / BG_SIZE);
+        tessellator.addVertexWithUV(x + width, y, z, (u + width) / BG_SIZE, v / BG_SIZE);
+        tessellator.addVertexWithUV(x, y, z, u / BG_SIZE, v / BG_SIZE);
 
         tessellator.draw();
     }
 
-    private static void drawTexture( float x, float y, float z, float width, float height, float u, float v,
-                                     float tWidth, float tHeight )
-    {
+    private static void drawTexture(float x, float y, float z, float width, float height, float u, float v,
+                                    float tWidth, float tHeight) {
         Tessellator tessellator = Tessellator.instance;
 
         tessellator.startDrawingQuads();
 
-        tessellator.addVertexWithUV( x, y + height, z, u / BG_SIZE, (v + tHeight) / BG_SIZE );
-        tessellator.addVertexWithUV( x + width, y + height, z, (u + tWidth) / BG_SIZE, (v + tHeight) / BG_SIZE );
-        tessellator.addVertexWithUV( x + width, y, z, (u + tWidth) / BG_SIZE, v / BG_SIZE );
-        tessellator.addVertexWithUV( x, y, z, u / BG_SIZE, v / BG_SIZE );
+        tessellator.addVertexWithUV(x, y + height, z, u / BG_SIZE, (v + tHeight) / BG_SIZE);
+        tessellator.addVertexWithUV(x + width, y + height, z, (u + tWidth) / BG_SIZE, (v + tHeight) / BG_SIZE);
+        tessellator.addVertexWithUV(x + width, y, z, (u + tWidth) / BG_SIZE, v / BG_SIZE);
+        tessellator.addVertexWithUV(x, y, z, u / BG_SIZE, v / BG_SIZE);
 
         tessellator.draw();
     }

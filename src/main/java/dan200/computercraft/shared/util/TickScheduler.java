@@ -17,36 +17,29 @@ import java.util.Set;
 /**
  * We use this when modems and other peripherals change a block in a different thread.
  */
-public final class TickScheduler
-{
-    private static final Set<TileEntity> toTick = Collections.newSetFromMap( new MapMaker().weakKeys()
-        .makeMap() );
+public final class TickScheduler {
+    private static final Set<TileEntity> toTick = Collections.newSetFromMap(new MapMaker().weakKeys()
+        .makeMap());
 
-    private TickScheduler()
-    {
+    private TickScheduler() {
     }
 
-    public static void schedule( TileGeneric tile )
-    {
+    public static void schedule(TileGeneric tile) {
         World world = tile.worldObj;
-        if( world != null && !world.isClientSide )
-        {
-            toTick.add( tile );
+        if (world != null && !world.isClientSide) {
+            toTick.add(tile);
         }
     }
 
-    public static void tick()
-    {
+    public static void tick() {
         Iterator<TileEntity> iterator = toTick.iterator();
-        while( iterator.hasNext() )
-        {
+        while (iterator.hasNext()) {
             TileEntity tile = iterator.next();
             iterator.remove();
 
             World world = tile.worldObj;
 
-            if( world != null && world.isChunkLoaded( tile.x, tile.z ) && world.getTileEntity( tile.x, tile.y, tile.z ) == tile )
-            {
+            if (world != null && world.isChunkLoaded(tile.x, tile.z) && world.getTileEntity(tile.x, tile.y, tile.z) == tile) {
                 /*
                 world.getBlockTickScheduler()
                     .schedule( pos,

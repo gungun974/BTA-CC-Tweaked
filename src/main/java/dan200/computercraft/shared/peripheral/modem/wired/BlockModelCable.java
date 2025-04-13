@@ -28,13 +28,15 @@ public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T>
 
     public static final IconCoordinate WIRED_MODEM_FACE_PERIPHERAL = TextureRegistry.getTexture("computercraft:block/wired_modem_face_peripheral");
     public static final IconCoordinate WIRED_MODEM_FACE_PERIPHERAL_ON = TextureRegistry.getTexture("computercraft:block/wired_modem_face_peripheral_on");
-
+    IconCoordinate currentCoordinate = CABLE_SIDE;
 
     public BlockModelCable(Block<T> block) {
         super(block);
     }
 
-    IconCoordinate currentCoordinate = CABLE_SIDE;
+    private static void setBounds(AABB bounds, AABB shape) {
+        bounds.set(shape.minX, shape.minY, shape.minZ, shape.maxX, shape.maxY, shape.maxZ);
+    }
 
     public boolean render(Tessellator tessellator, int x, int y, int z) {
         AABB bounds = this.block.getBlockBoundsFromState(renderBlocks.blockAccess, x, y, z);
@@ -298,10 +300,10 @@ public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T>
     @Override
     public void renderBlockOnInventory(Tessellator tessellator, int metadata, float brightness, float alpha, @Nullable Integer lightmapCoordinate) {
         if (renderBlocks.useInventoryTint) {
-            int color = ((BlockColor) BlockColorDispatcher.getInstance().getDispatch(this.block)).getFallbackColor(metadata);
-            float r = (float)(color >> 16 & 255) / 255.0F;
-            float g = (float)(color >> 8 & 255) / 255.0F;
-            float b = (float)(color & 255) / 255.0F;
+            int color = BlockColorDispatcher.getInstance().getDispatch(this.block).getFallbackColor(metadata);
+            float r = (float) (color >> 16 & 255) / 255.0F;
+            float g = (float) (color >> 8 & 255) / 255.0F;
+            float b = (float) (color & 255) / 255.0F;
             GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
         } else {
             GL11.glColor4f(brightness, brightness, brightness, alpha);
@@ -380,11 +382,6 @@ public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T>
 
         GL11.glTranslatef(0.5F, yOffset, 0.5F);
     }
-
-    private static void setBounds(AABB bounds, AABB shape) {
-        bounds.set(shape.minX, shape.minY, shape.minZ, shape.maxX, shape.maxY, shape.maxZ);
-    }
-
 
     public IconCoordinate getBlockTextureFromSideAndMetadata(Side side, int data) {
         return currentCoordinate;

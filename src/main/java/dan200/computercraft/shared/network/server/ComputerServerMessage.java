@@ -15,51 +15,43 @@ import javax.annotation.Nonnull;
 
 /**
  * A packet, which performs an action on a {@link ServerComputer}.
- *
+ * <p>
  * This requires that the sending player is interacting with that computer via a {@link IContainerComputer}.
  */
-public abstract class ComputerServerMessage implements NetworkMessage
-{
+public abstract class ComputerServerMessage implements NetworkMessage {
     private int instanceId;
 
-    public ComputerServerMessage( int instanceId )
-    {
+    public ComputerServerMessage(int instanceId) {
         this.instanceId = instanceId;
     }
 
-    public ComputerServerMessage()
-    {
+    public ComputerServerMessage() {
     }
 
     @Override
-    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
-    {
-        buf.writeInt( instanceId );
+    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+        buf.writeInt(instanceId);
     }
 
     @Override
-    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf )
-    {
+    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
         instanceId = buf.readInt();
     }
 
     @Override
-    public void handle( NetworkContext context )
-    {
-        ServerComputer computer = ComputerCraft.serverComputerRegistry.get( instanceId );
-        if( computer == null )
-        {
+    public void handle(NetworkContext context) {
+        ServerComputer computer = ComputerCraft.serverComputerRegistry.get(instanceId);
+        if (computer == null) {
             return;
         }
 
-        IContainerComputer container = computer.getContainer( context.player );
-        if( container == null )
-        {
+        IContainerComputer container = computer.getContainer(context.player);
+        if (container == null) {
             return;
         }
 
-        handle( computer, container );
+        handle(computer, container);
     }
 
-    protected abstract void handle( @Nonnull ServerComputer computer, @Nonnull IContainerComputer container );
+    protected abstract void handle(@Nonnull ServerComputer computer, @Nonnull IContainerComputer container);
 }

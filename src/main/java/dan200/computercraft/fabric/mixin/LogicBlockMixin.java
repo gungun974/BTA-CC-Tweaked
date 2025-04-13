@@ -14,8 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = BlockLogic.class, remap = false)
-public class LogicBlockMixin
-{
+public class LogicBlockMixin {
     @Inject(
         method = "dropBlockWithCause",
         at = @At(
@@ -26,8 +25,7 @@ public class LogicBlockMixin
         ),
         cancellable = true
     )
-    private void dropStack(World world, EnumDropCause cause, int x, int y, int z, int meta, TileEntity tileEntity, Player player, CallbackInfo ci)
-    {
+    private void dropStack(World world, EnumDropCause cause, int x, int y, int z, int meta, TileEntity tileEntity, Player player, CallbackInfo ci) {
         ItemStack[] drops = ((BlockLogic) ((Object) this)).getBreakResult(world, cause, x, y, z, meta, tileEntity);
 
         boolean shouldCancel = false;

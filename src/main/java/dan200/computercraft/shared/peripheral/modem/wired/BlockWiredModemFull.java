@@ -14,22 +14,19 @@ import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
-public class BlockWiredModemFull extends BlockLogic
-{
-    public BlockWiredModemFull(Block<?> block, Material material )
-    {
-        super( block, material );
+public class BlockWiredModemFull extends BlockLogic {
+    public BlockWiredModemFull(Block<?> block, Material material) {
+        super(block, material);
     }
 
     public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
-        return ((TileWiredModemFull)world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
+        return ((TileWiredModemFull) world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
     }
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int blockId) {
         TileEntity entity = (world.getTileEntity(x, y, z));
-        if( !(entity instanceof TileWiredModemFull) )
-        {
+        if (!(entity instanceof TileWiredModemFull)) {
             return;
         }
 

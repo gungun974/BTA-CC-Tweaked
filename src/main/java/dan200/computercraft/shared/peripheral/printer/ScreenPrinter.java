@@ -5,8 +5,6 @@
  */
 package dan200.computercraft.shared.peripheral.printer;
 
-import dan200.computercraft.shared.peripheral.diskdrive.MenuDiskDrive;
-import dan200.computercraft.shared.peripheral.diskdrive.TileDiskDrive;
 import net.minecraft.client.gui.container.ScreenContainerAbstract;
 import net.minecraft.core.lang.I18n;
 import net.minecraft.core.player.inventory.container.ContainerInventory;

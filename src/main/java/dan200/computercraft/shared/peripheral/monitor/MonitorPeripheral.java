@@ -19,9 +19,9 @@ import javax.annotation.Nullable;
 /**
  * Monitors are a block which act as a terminal, displaying information on one side. This allows them to be read and interacted with in-world without
  * opening a GUI.
- *
+ * <p>
  * Monitors act as @{term.Redirect|terminal redirects} and so expose the same methods, as well as several additional ones, which are documented below.
- *
+ * <p>
  * Like computers, monitors come in both normal (no colour) and advanced (colour) varieties.
  *
  * @cc.module monitor
@@ -33,44 +33,37 @@ import javax.annotation.Nullable;
  *     monitor.write("Hello, world!")
  *     </pre>
  */
-public class MonitorPeripheral extends TermMethods implements IPeripheral
-{
+public class MonitorPeripheral extends TermMethods implements IPeripheral {
     private final TileMonitor monitor;
 
-    public MonitorPeripheral( TileMonitor monitor )
-    {
+    public MonitorPeripheral(TileMonitor monitor) {
         this.monitor = monitor;
     }
 
     @Nonnull
     @Override
-    public String getType()
-    {
+    public String getType() {
         return "monitor";
     }
 
     @Override
-    public void attach( @Nonnull IComputerAccess computer )
-    {
-        monitor.addComputer( computer );
+    public void attach(@Nonnull IComputerAccess computer) {
+        monitor.addComputer(computer);
     }
 
     @Override
-    public void detach( @Nonnull IComputerAccess computer )
-    {
-        monitor.removeComputer( computer );
+    public void detach(@Nonnull IComputerAccess computer) {
+        monitor.removeComputer(computer);
     }
 
     @Nullable
     @Override
-    public Object getTarget()
-    {
+    public Object getTarget() {
         return monitor;
     }
 
     @Override
-    public boolean equals( IPeripheral other )
-    {
+    public boolean equals(IPeripheral other) {
         return other instanceof MonitorPeripheral && monitor == ((MonitorPeripheral) other).monitor;
     }
 
@@ -81,8 +74,7 @@ public class MonitorPeripheral extends TermMethods implements IPeripheral
      * @throws LuaException If the monitor cannot be found.
      */
     @LuaFunction
-    public final double getTextScale() throws LuaException
-    {
+    public final double getTextScale() throws LuaException {
         return getMonitor().getTextScale() / 2.0;
     }
 
@@ -94,42 +86,35 @@ public class MonitorPeripheral extends TermMethods implements IPeripheral
      * @see #getTextScale()
      */
     @LuaFunction
-    public final void setTextScale( double scaleArg ) throws LuaException
-    {
-        int scale = (int) (LuaValues.checkFinite( 0, scaleArg ) * 2.0);
-        if( scale < 1 || scale > 10 )
-        {
-            throw new LuaException( "Expected number in range 0.5-5" );
+    public final void setTextScale(double scaleArg) throws LuaException {
+        int scale = (int) (LuaValues.checkFinite(0, scaleArg) * 2.0);
+        if (scale < 1 || scale > 10) {
+            throw new LuaException("Expected number in range 0.5-5");
         }
-        getMonitor().setTextScale( scale );
+        getMonitor().setTextScale(scale);
     }
 
     @Nonnull
-    private ServerMonitor getMonitor() throws LuaException
-    {
+    private ServerMonitor getMonitor() throws LuaException {
         ServerMonitor monitor = this.monitor.getCachedServerMonitor();
-        if( monitor == null )
-        {
-            throw new LuaException( "Monitor has been detached" );
+        if (monitor == null) {
+            throw new LuaException("Monitor has been detached");
         }
         return monitor;
     }
 
     @Nonnull
     @Override
-    public Terminal getTerminal() throws LuaException
-    {
+    public Terminal getTerminal() throws LuaException {
         Terminal terminal = getMonitor().getTerminal();
-        if( terminal == null )
-        {
-            throw new LuaException( "Monitor has been detached" );
+        if (terminal == null) {
+            throw new LuaException("Monitor has been detached");
         }
         return terminal;
     }
 
     @Override
-    public boolean isColour() throws LuaException
-    {
+    public boolean isColour() throws LuaException {
         return getMonitor().isColour();
     }
 }

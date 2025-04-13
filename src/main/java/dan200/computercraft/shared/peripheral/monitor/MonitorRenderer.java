@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,8 +20,7 @@ import java.util.List;
  * @see TileEntityMonitorRenderer
  * @see ClientMonitor
  */
-public enum MonitorRenderer
-{
+public enum MonitorRenderer {
     /**
      * Determine the best monitor backend.
      */
@@ -42,7 +42,7 @@ public enum MonitorRenderer
     private static boolean textureBuffer = false;
     private static boolean shaderMod = false;
     //TODO find out which shader mods do better with VBOs and add them here.
-    private static List<String> shaderModIds = Arrays.asList( "optifabric" );
+    private static final List<String> shaderModIds = Collections.singletonList("optifabric");
 
     /**
      * Get the current renderer to use.
@@ -50,11 +50,9 @@ public enum MonitorRenderer
      * @return The current renderer. Will not return {@link MonitorRenderer#BEST}.
      */
     @Nonnull
-    public static MonitorRenderer current()
-    {
+    public static MonitorRenderer current() {
         MonitorRenderer current = ComputerCraft.monitorRenderer;
-        switch( current )
-        {
+        switch (current) {
             case BEST:
                 return best();
 //            case TBO:
@@ -72,15 +70,12 @@ public enum MonitorRenderer
         }
     }
 
-    private static MonitorRenderer best()
-    {
-        if( !initialised )
-        {
+    private static MonitorRenderer best() {
+        if (!initialised) {
             checkCapabilities();
             checkForShaderMods();
-            if( textureBuffer && shaderMod )
-            {
-                ComputerCraft.log.warn( "Shader mod detected. Enabling DisplayList renderer for compatibility." );
+            if (textureBuffer && shaderMod) {
+                ComputerCraft.log.warn("Shader mod detected. Enabling DisplayList renderer for compatibility.");
             }
 
             initialised = true;
@@ -90,15 +85,13 @@ public enum MonitorRenderer
 //        return textureBuffer && !shaderMod ? TBO : DisplayList;
     }
 
-    private static void checkCapabilities()
-    {
+    private static void checkCapabilities() {
         textureBuffer = GL.getCapabilities().OpenGL31;
     }
 
-    private static void checkForShaderMods()
-    {
+    private static void checkForShaderMods() {
         shaderMod = FabricLoader.getInstance().getAllMods().stream()
-            .map( modContainer -> modContainer.getMetadata().getId() )
-            .anyMatch( id -> shaderModIds.contains( id ) );
+            .map(modContainer -> modContainer.getMetadata().getId())
+            .anyMatch(id -> shaderModIds.contains(id));
     }
 }

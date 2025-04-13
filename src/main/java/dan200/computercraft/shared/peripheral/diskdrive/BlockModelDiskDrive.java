@@ -1,6 +1,5 @@
 package dan200.computercraft.shared.peripheral.diskdrive;
 
-import dan200.computercraft.shared.computer.core.ComputerState;
 import net.minecraft.client.render.block.model.BlockModelHorizontalRotation;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
@@ -25,7 +24,7 @@ public class BlockModelDiskDrive<T extends BlockLogic> extends BlockModelHorizon
 
             final DiskDriveState currentState = DiskDriveState.class.getEnumConstants()[(currentMetadata >> 3) & 0b11];
 
-            switch (currentState){
+            switch (currentState) {
                 case FULL:
                     return TextureRegistry.getTexture(originalFront.namespaceId.namespace() + ":block/" + originalFront.namespaceId.value() + "_accepted");
                 case INVALID:

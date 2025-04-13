@@ -23,8 +23,7 @@ import net.minecraft.core.util.helper.DyeColor;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 
-public class DiskRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> implements HasJsonAdapter
-{
+public class DiskRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> implements HasJsonAdapter {
     public DiskRecipe() {
 
     }
@@ -34,30 +33,21 @@ public class DiskRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> i
         boolean paperFound = false;
         boolean redstoneFound = false;
 
-        for( int i = 0; i < inv.getContainerSize(); i++ )
-        {
-            ItemStack stack = inv.getItem( i );
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack stack = inv.getItem(i);
 
-            if( stack != null )
-            {
-                if(stack.getItem().equals(Items.PAPER) )
-                {
-                    if( paperFound )
-                    {
+            if (stack != null) {
+                if (stack.getItem().equals(Items.PAPER)) {
+                    if (paperFound) {
                         return false;
                     }
                     paperFound = true;
-                }
-                else if( stack.getItem().equals(Items.DUST_REDSTONE) )
-                {
-                    if( redstoneFound )
-                    {
+                } else if (stack.getItem().equals(Items.DUST_REDSTONE)) {
+                    if (redstoneFound) {
                         return false;
                     }
                     redstoneFound = true;
-                }
-                else if( ColourUtils.getStackColour( stack ) == null )
-                {
+                } else if (ColourUtils.getStackColour(stack) == null) {
                     return false;
                 }
             }
@@ -75,23 +65,20 @@ public class DiskRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> i
     public ItemStack getCraftingResult(ContainerCrafting inv) {
         ColourTracker tracker = new ColourTracker();
 
-        for( int i = 0; i < inv.getContainerSize(); i++ )
-        {
-            ItemStack stack = inv.getItem( i );
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack stack = inv.getItem(i);
 
-            if( stack == null )
-            {
+            if (stack == null) {
                 continue;
             }
 
-            if(!stack.getItem().equals(Items.PAPER) && !stack.getItem().equals(Items.DUST_REDSTONE))
-            {
-                DyeColor dye = ColourUtils.getStackColour( stack );
-                if( dye != null ) tracker.addColour( dye );
+            if (!stack.getItem().equals(Items.PAPER) && !stack.getItem().equals(Items.DUST_REDSTONE)) {
+                DyeColor dye = ColourUtils.getStackColour(stack);
+                if (dye != null) tracker.addColour(dye);
             }
         }
 
-        return ItemDisk.createFromIDAndColour( -1, null, tracker.hasColour() ? tracker.getColour() : Colour.BLUE.getHex() );
+        return ItemDisk.createFromIDAndColour(-1, null, tracker.hasColour() ? tracker.getColour() : Colour.BLUE.getHex());
     }
 
     @Override
@@ -103,7 +90,7 @@ public class DiskRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> i
     public ItemStack[] onCraftResult(ContainerCrafting containerCrafting) {
         ItemStack[] returnStack = new ItemStack[9];
 
-        for(int i = 0; i < containerCrafting.getContainerSize(); ++i) {
+        for (int i = 0; i < containerCrafting.getContainerSize(); ++i) {
             ItemStack itemStack = containerCrafting.getItem(i);
             if (itemStack != null) {
                 containerCrafting.removeItem(i, 1);
@@ -118,9 +105,8 @@ public class DiskRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> i
 
     @Nonnull
     @Override
-    public ItemStack getOutput()
-    {
-        return ItemDisk.createFromIDAndColour( -1, null, Colour.BLUE.getHex() );
+    public ItemStack getOutput() {
+        return ItemDisk.createFromIDAndColour(-1, null, Colour.BLUE.getHex());
     }
 
 

@@ -11,29 +11,23 @@ import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 
-public class ComputerTracker
-{
+public class ComputerTracker {
     private final WeakReference<Computer> computer;
     private final int computerId;
-
+    private final Object2LongOpenHashMap<TrackingField> fields;
     private long tasks;
     private long totalTime;
     private long maxTime;
-
     private long serverCount;
     private long serverTime;
 
-    private final Object2LongOpenHashMap<TrackingField> fields;
-
-    public ComputerTracker( Computer computer )
-    {
-        this.computer = new WeakReference<>( computer );
+    public ComputerTracker(Computer computer) {
+        this.computer = new WeakReference<>(computer);
         computerId = computer.getID();
         fields = new Object2LongOpenHashMap<>();
     }
 
-    ComputerTracker( ComputerTracker timings )
-    {
+    ComputerTracker(ComputerTracker timings) {
         computer = timings.computer;
         computerId = timings.computerId;
 
@@ -44,79 +38,66 @@ public class ComputerTracker
         serverCount = timings.serverCount;
         serverTime = timings.serverTime;
 
-        fields = new Object2LongOpenHashMap<>( timings.fields );
+        fields = new Object2LongOpenHashMap<>(timings.fields);
     }
 
     @Nullable
-    public Computer getComputer()
-    {
+    public Computer getComputer() {
         return computer.get();
     }
 
-    public int getComputerId()
-    {
+    public int getComputerId() {
         return computerId;
     }
 
-    public long getTasks()
-    {
+    public long getTasks() {
         return tasks;
     }
 
-    public long getTotalTime()
-    {
+    public long getTotalTime() {
         return totalTime;
     }
 
-    public long getMaxTime()
-    {
+    public long getMaxTime() {
         return maxTime;
     }
 
-    public long getAverage()
-    {
+    public long getAverage() {
         return totalTime / tasks;
     }
 
-    void addTaskTiming( long time )
-    {
+    void addTaskTiming(long time) {
         tasks++;
         totalTime += time;
-        if( time > maxTime ) maxTime = time;
+        if (time > maxTime) maxTime = time;
     }
 
-    void addMainTiming( long time )
-    {
+    void addMainTiming(long time) {
         serverCount++;
         serverTime += time;
     }
 
-    void addValue( TrackingField field, long change )
-    {
-        synchronized( fields )
-        {
-            fields.addTo( field, change );
+    void addValue(TrackingField field, long change) {
+        synchronized (fields) {
+            fields.addTo(field, change);
         }
     }
 
-    public long get( TrackingField field )
-    {
-        if( field == TrackingField.TASKS ) return tasks;
-        if( field == TrackingField.MAX_TIME ) return maxTime;
-        if( field == TrackingField.TOTAL_TIME ) return totalTime;
-        if( field == TrackingField.AVERAGE_TIME ) return tasks == 0 ? 0 : totalTime / tasks;
+    public long get(TrackingField field) {
+        if (field == TrackingField.TASKS) return tasks;
+        if (field == TrackingField.MAX_TIME) return maxTime;
+        if (field == TrackingField.TOTAL_TIME) return totalTime;
+        if (field == TrackingField.AVERAGE_TIME) return tasks == 0 ? 0 : totalTime / tasks;
 
-        if( field == TrackingField.SERVER_COUNT ) return serverCount;
-        if( field == TrackingField.SERVER_TIME ) return serverTime;
+        if (field == TrackingField.SERVER_COUNT) return serverCount;
+        if (field == TrackingField.SERVER_TIME) return serverTime;
 
-        synchronized( fields )
-        {
-            return fields.getLong( field );
+        synchronized (fields) {
+            return fields.getLong(field);
         }
     }
 
-    public String getFormatted( TrackingField field )
-    {
-        return field.format( get( field ) );
+    public String getFormatted(TrackingField field) {
+        return field.format(get(field));
     }
 }

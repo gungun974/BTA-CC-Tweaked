@@ -12,14 +12,13 @@ import javax.annotation.Nullable;
 
 /**
  * The interface that defines a peripheral.
- *
+ * <p>
  * In order to expose a peripheral for your block or tile entity, you register a {@link IPeripheralProvider}. This <em>cannot</em> be implemented {@link
  * IPeripheral} directly on the tile.
- *
+ * <p>
  * Peripherals should provide a series of methods to the user, either using {@link LuaFunction} or by implementing {@link IDynamicPeripheral}.
  */
-public interface IPeripheral
-{
+public interface IPeripheral {
     /**
      * Should return a string that uniquely identifies this type of peripheral. This can be queried from lua by calling {@code peripheral.getType()}
      *
@@ -30,37 +29,35 @@ public interface IPeripheral
 
     /**
      * Is called when when a computer is attaching to the peripheral.
-     *
+     * <p>
      * This will occur when a peripheral is placed next to an active computer, when a computer is turned on next to a peripheral, when a turtle travels into
      * a square next to a peripheral, or when a wired modem adjacent to this peripheral is does any of the above.
-     *
+     * <p>
      * Between calls to attach and {@link #detach}, the attached computer can make method calls on the peripheral using {@code peripheral.call()}. This
      * method can be used to keep track of which computers are attached to the peripheral, or to take action when attachment occurs.
-     *
+     * <p>
      * Be aware that will be called from both the server thread and ComputerCraft Lua thread, and so must be thread-safe and reentrant.
      *
      * @param computer The interface to the computer that is being attached. Remember that multiple computers can be attached to a peripheral at once.
      * @see #detach
      */
-    default void attach( @Nonnull IComputerAccess computer )
-    {
+    default void attach(@Nonnull IComputerAccess computer) {
     }
 
     /**
      * Called when a computer is detaching from the peripheral.
-     *
+     * <p>
      * This will occur when a computer shuts down, when the peripheral is removed while attached to computers, when a turtle moves away from a block
      * attached to a peripheral, or when a wired modem adjacent to this peripheral is detached.
-     *
+     * <p>
      * This method can be used to keep track of which computers are attached to the peripheral, or to take action when detachment occurs.
-     *
+     * <p>
      * Be aware that this will be called from both the server and ComputerCraft Lua thread, and must be thread-safe and reentrant.
      *
      * @param computer The interface to the computer that is being detached. Remember that multiple computers can be attached to a peripheral at once.
      * @see #attach
      */
-    default void detach( @Nonnull IComputerAccess computer )
-    {
+    default void detach(@Nonnull IComputerAccess computer) {
     }
 
     /**
@@ -69,19 +66,18 @@ public interface IPeripheral
      * @return The object this peripheral targets
      */
     @Nullable
-    default Object getTarget()
-    {
+    default Object getTarget() {
         return null;
     }
 
     /**
      * Determine whether this peripheral is equivalent to another one.
-     *
+     * <p>
      * The minimal example should at least check whether they are the same object. However, you may wish to check if they point to the same block or tile
      * entity.
      *
      * @param other The peripheral to compare against. This may be {@code null}.
      * @return Whether these peripherals are equivalent.
      */
-    boolean equals( @Nullable IPeripheral other );
+    boolean equals(@Nullable IPeripheral other);
 }

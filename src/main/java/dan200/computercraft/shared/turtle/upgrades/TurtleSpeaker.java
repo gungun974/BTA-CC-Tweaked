@@ -22,17 +22,14 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public class TurtleSpeaker extends AbstractTurtleUpgrade
-{
-    public TurtleSpeaker( int id )
-    {
-        super( id, TurtleUpgradeType.PERIPHERAL, ComputerCraftItems.SPEAKER );
+public class TurtleSpeaker extends AbstractTurtleUpgrade {
+    public TurtleSpeaker(int id) {
+        super(id, TurtleUpgradeType.PERIPHERAL, ComputerCraftItems.SPEAKER);
     }
 
     @Override
-    public IPeripheral createPeripheral( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side )
-    {
-        return new TurtleSpeaker.Peripheral( turtle );
+    public IPeripheral createPeripheral(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side) {
+        return new TurtleSpeaker.Peripheral(turtle);
     }
 
     @Override
@@ -60,11 +57,9 @@ public class TurtleSpeaker extends AbstractTurtleUpgrade
     }
 
     @Override
-    public void update( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide turtleSide )
-    {
-        IPeripheral turtlePeripheral = turtle.getPeripheral( turtleSide );
-        if( turtlePeripheral instanceof Peripheral )
-        {
+    public void update(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide turtleSide) {
+        IPeripheral turtlePeripheral = turtle.getPeripheral(turtleSide);
+        if (turtlePeripheral instanceof Peripheral) {
             Peripheral peripheral = (Peripheral) turtlePeripheral;
             peripheral.update();
         }
@@ -75,31 +70,26 @@ public class TurtleSpeaker extends AbstractTurtleUpgrade
         return "upgrade.computercraft.speaker.adjective";
     }
 
-    private static class Peripheral extends SpeakerPeripheral
-    {
+    private static class Peripheral extends SpeakerPeripheral {
         ITurtleAccess turtle;
 
-        Peripheral( ITurtleAccess turtle )
-        {
+        Peripheral(ITurtleAccess turtle) {
             this.turtle = turtle;
         }
 
         @Override
-        public World getWorld()
-        {
+        public World getWorld() {
             return turtle.getWorld();
         }
 
         @Override
-        public Vec3 getPosition()
-        {
+        public Vec3 getPosition() {
             BlockPos pos = turtle.getPosition();
-            return Vec3.getPermanentVec3( pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5 );
+            return Vec3.getPermanentVec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
         }
 
         @Override
-        public boolean equals( IPeripheral other )
-        {
+        public boolean equals(IPeripheral other) {
             return this == other || (other instanceof Peripheral && turtle == ((Peripheral) other).turtle);
         }
     }

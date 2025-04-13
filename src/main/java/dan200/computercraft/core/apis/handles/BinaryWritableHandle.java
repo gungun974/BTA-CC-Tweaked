@@ -24,28 +24,24 @@ import java.util.Optional;
  *
  * @cc.module fs.BinaryWriteHandle
  */
-public class BinaryWritableHandle extends HandleGeneric
-{
-    private final WritableByteChannel writer;
+public class BinaryWritableHandle extends HandleGeneric {
     final SeekableByteChannel seekable;
-    private final ByteBuffer single = ByteBuffer.allocate( 1 );
+    private final WritableByteChannel writer;
+    private final ByteBuffer single = ByteBuffer.allocate(1);
 
-    protected BinaryWritableHandle( WritableByteChannel writer, SeekableByteChannel seekable, TrackingCloseable closeable )
-    {
-        super( closeable );
+    protected BinaryWritableHandle(WritableByteChannel writer, SeekableByteChannel seekable, TrackingCloseable closeable) {
+        super(closeable);
         this.writer = writer;
         this.seekable = seekable;
     }
 
-    public static BinaryWritableHandle of( WritableByteChannel channel, TrackingCloseable closeable )
-    {
-        SeekableByteChannel seekable = asSeekable( channel );
-        return seekable == null ? new BinaryWritableHandle( channel, null, closeable ) : new Seekable( seekable, closeable );
+    public static BinaryWritableHandle of(WritableByteChannel channel, TrackingCloseable closeable) {
+        SeekableByteChannel seekable = asSeekable(channel);
+        return seekable == null ? new BinaryWritableHandle(channel, null, closeable) : new Seekable(seekable, closeable);
     }
 
-    public static BinaryWritableHandle of( WritableByteChannel channel )
-    {
-        return of( channel, new TrackingCloseable.Impl( channel ) );
+    public static BinaryWritableHandle of(WritableByteChannel channel) {
+        return of(channel, new TrackingCloseable.Impl(channel));
     }
 
     /**
@@ -57,33 +53,24 @@ public class BinaryWritableHandle extends HandleGeneric
      * @cc.tparam [2] string The string to write.
      */
     @LuaFunction
-    public final void write( IArguments arguments ) throws LuaException
-    {
+    public final void write(IArguments arguments) throws LuaException {
         checkOpen();
-        try
-        {
-            Object arg = arguments.get( 0 );
-            if( arg instanceof Number )
-            {
+        try {
+            Object arg = arguments.get(0);
+            if (arg instanceof Number) {
                 int number = ((Number) arg).intValue();
                 single.clear();
-                single.put( (byte) number );
+                single.put((byte) number);
                 single.flip();
 
-                writer.write( single );
+                writer.write(single);
+            } else if (arg instanceof String) {
+                writer.write(arguments.getBytes(0));
+            } else {
+                throw LuaValues.badArgumentOf(0, "string or number", arg);
             }
-            else if( arg instanceof String )
-            {
-                writer.write( arguments.getBytes( 0 ) );
-            }
-            else
-            {
-                throw LuaValues.badArgumentOf( 0, "string or number", arg );
-            }
-        }
-        catch( IOException e )
-        {
-            throw new LuaException( e.getMessage() );
+        } catch (IOException e) {
+            throw new LuaException(e.getMessage());
         }
     }
 
@@ -93,34 +80,28 @@ public class BinaryWritableHandle extends HandleGeneric
      * @throws LuaException If the file has been closed.
      */
     @LuaFunction
-    public final void flush() throws LuaException
-    {
+    public final void flush() throws LuaException {
         checkOpen();
-        try
-        {
+        try {
             // Technically this is not needed
-            if( writer instanceof FileChannel ) ((FileChannel) writer).force( false );
-        }
-        catch( IOException ignored )
-        {
+            if (writer instanceof FileChannel) ((FileChannel) writer).force(false);
+        } catch (IOException ignored) {
         }
     }
 
-    public static class Seekable extends BinaryWritableHandle
-    {
-        public Seekable( SeekableByteChannel seekable, TrackingCloseable closeable )
-        {
-            super( seekable, seekable, closeable );
+    public static class Seekable extends BinaryWritableHandle {
+        public Seekable(SeekableByteChannel seekable, TrackingCloseable closeable) {
+            super(seekable, seekable, closeable);
         }
 
         /**
          * Seek to a new position within the file, changing where bytes are written to. The new position is an offset
          * given by {@code offset}, relative to a start position determined by {@code whence}:
-         *
+         * <p>
          * - {@code "set"}: {@code offset} is relative to the beginning of the file.
          * - {@code "cur"}: Relative to the current position. This is the default.
          * - {@code "end"}: Relative to the end of the file.
-         *
+         * <p>
          * In case of success, {@code seek} returns the new file position from the beginning of the file.
          *
          * @param whence Where the offset is relative to.
@@ -132,10 +113,9 @@ public class BinaryWritableHandle extends HandleGeneric
          * @cc.treturn string The reason seeking failed.
          */
         @LuaFunction
-        public final Object[] seek( Optional<String> whence, Optional<Long> offset ) throws LuaException
-        {
+        public final Object[] seek(Optional<String> whence, Optional<Long> offset) throws LuaException {
             checkOpen();
-            return handleSeek( seekable, whence, offset );
+            return handleSeek(seekable, whence, offset);
         }
     }
 }

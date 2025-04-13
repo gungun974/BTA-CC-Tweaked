@@ -13,16 +13,13 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public class TurtleSword extends TurtleTool
-{
-    public TurtleSword( int id, Item item )
-    {
-        super( id, item );
+public class TurtleSword extends TurtleTool {
+    public TurtleSword(int id, Item item) {
+        super(id, item);
     }
 
-    public TurtleSword(int id, ItemStack craftItem, ItemStack toolItem )
-    {
-        super( id, craftItem, toolItem );
+    public TurtleSword(int id, ItemStack craftItem, ItemStack toolItem) {
+        super(id, craftItem, toolItem);
     }
 
     @Override
@@ -31,16 +28,13 @@ public class TurtleSword extends TurtleTool
     }
 
     @Override
-    protected int getDamageMultiplier()
-    {
+    protected int getDamageMultiplier() {
         return 9;
     }
 
     @Override
-    protected boolean canBreakBlock(World world, BlockPos pos )
-    {
-        if( !super.canBreakBlock( world, pos ) )
-        {
+    protected boolean canBreakBlock(World world, BlockPos pos) {
+        if (!super.canBreakBlock(world, pos)) {
             return false;
         }
 

@@ -23,8 +23,7 @@ import javax.annotation.Nullable;
  *
  * @see ComputerCraftAPI#registerTurtleUpgrade(ITurtleUpgrade)
  */
-public interface ITurtleUpgrade extends IUpgradeBase
-{
+public interface ITurtleUpgrade extends IUpgradeBase {
     /**
      * Return whether this turtle adds a tool or a peripheral to the turtle.
      *
@@ -36,7 +35,7 @@ public interface ITurtleUpgrade extends IUpgradeBase
 
     /**
      * Will only be called for peripheral upgrades. Creates a peripheral for a turtle being placed using this upgrade.
-     *
+     * <p>
      * The peripheral created will be stored for the lifetime of the upgrade and will be passed as an argument to {@link #update(ITurtleAccess,
      * TurtleSide)}. It will be attached, detached and have methods called in the same manner as a Computer peripheral.
      *
@@ -45,8 +44,7 @@ public interface ITurtleUpgrade extends IUpgradeBase
      * @return The newly created peripheral. You may return {@code null} if this upgrade is a Tool and this method is not expected to be called.
      */
     @Nullable
-    default IPeripheral createPeripheral( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side )
-    {
+    default IPeripheral createPeripheral(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side) {
         return null;
     }
 
@@ -63,22 +61,21 @@ public interface ITurtleUpgrade extends IUpgradeBase
      * this method is not expected to be called.
      */
     @Nonnull
-    default TurtleCommandResult useTool( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction direction )
-    {
+    default TurtleCommandResult useTool(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction direction) {
         return TurtleCommandResult.failure();
     }
 
     /**
      * Called to draw the turtle tile upgrade
      */
-    @Environment( EnvType.CLIENT )
+    @Environment(EnvType.CLIENT)
     void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @Nonnull TurtleSide side, float partialTick);
 
     /**
      * Called to draw the turtle item upgrade
      */
-    @Environment( EnvType.CLIENT )
-    void drawItemUpgrade(Tessellator tessellator, TextureManager textureManager, @Nonnull TurtleSide side );
+    @Environment(EnvType.CLIENT)
+    void drawItemUpgrade(Tessellator tessellator, TextureManager textureManager, @Nonnull TurtleSide side);
 
     /**
      * Called once per tick for each turtle which has the upgrade equipped.
@@ -86,7 +83,6 @@ public interface ITurtleUpgrade extends IUpgradeBase
      * @param turtle Access to the turtle that the upgrade resides on.
      * @param side   Which side of the turtle (left or right) the upgrade resides on.
      */
-    default void update( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side )
-    {
+    default void update(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side) {
     }
 }

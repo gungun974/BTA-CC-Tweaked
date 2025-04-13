@@ -11,7 +11,6 @@ import net.minecraft.core.block.BlockLogicFullyRotatable;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.entity.Mob;
 import net.minecraft.core.enums.PlacementMode;
-import net.minecraft.core.util.helper.Axis;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.AABB;
@@ -19,8 +18,7 @@ import net.minecraft.core.world.World;
 import net.minecraft.core.world.WorldSource;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockWirelessModem extends BlockLogicFullyRotatable
-{
+public class BlockWirelessModem extends BlockLogicFullyRotatable {
     public BlockWirelessModem(Block<?> block, boolean advanced) {
         super(block, Material.stone);
         block.withEntity(() -> new TileWirelessModem(advanced));
@@ -47,6 +45,6 @@ public class BlockWirelessModem extends BlockLogicFullyRotatable
 
     @Override
     public AABB getBlockBoundsFromState(WorldSource world, int x, int y, int z) {
-        return ModemShapes.getBounds( BlockWirelessModem.metaToDirection(world.getBlockMetadata(x, y, z)).getOpposite());
+        return ModemShapes.getBounds(BlockWirelessModem.metaToDirection(world.getBlockMetadata(x, y, z)).getOpposite());
     }
 }

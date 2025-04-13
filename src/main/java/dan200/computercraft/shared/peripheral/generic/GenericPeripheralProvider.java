@@ -6,7 +6,6 @@
 package dan200.computercraft.shared.peripheral.generic;
 
 import dan200.computercraft.BlockPos;
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.asm.NamedMethod;
 import dan200.computercraft.core.asm.PeripheralMethod;
@@ -19,29 +18,25 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenericPeripheralProvider
-{
+public class GenericPeripheralProvider {
     @Nullable
-    public static IPeripheral getPeripheral(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side )
-    {
-        TileEntity tile = world.getTileEntity( pos.x, pos.y, pos.z );
-        if( tile == null ) return null;
+    public static IPeripheral getPeripheral(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side) {
+        TileEntity tile = world.getTileEntity(pos.x, pos.y, pos.z);
+        if (tile == null) return null;
 
-        ArrayList<SaturatedMethod> saturated = new ArrayList<>( 0 );
+        ArrayList<SaturatedMethod> saturated = new ArrayList<>(0);
 
-        List<NamedMethod<PeripheralMethod>> tileMethods = PeripheralMethod.GENERATOR.getMethods( tile.getClass() );
+        List<NamedMethod<PeripheralMethod>> tileMethods = PeripheralMethod.GENERATOR.getMethods(tile.getClass());
 
-        if( !tileMethods.isEmpty() ) addSaturated( saturated, tile, tileMethods );
+        if (!tileMethods.isEmpty()) addSaturated(saturated, tile, tileMethods);
 
-        return saturated.isEmpty() ? null : new GenericPeripheral( tile, saturated );
+        return saturated.isEmpty() ? null : new GenericPeripheral(tile, saturated);
     }
 
-    private static void addSaturated( ArrayList<SaturatedMethod> saturated, Object target, List<NamedMethod<PeripheralMethod>> methods )
-    {
-        saturated.ensureCapacity( saturated.size() + methods.size() );
-        for( NamedMethod<PeripheralMethod> method : methods )
-        {
-            saturated.add( new SaturatedMethod( target, method ) );
+    private static void addSaturated(ArrayList<SaturatedMethod> saturated, Object target, List<NamedMethod<PeripheralMethod>> methods) {
+        saturated.ensureCapacity(saturated.size() + methods.size());
+        for (NamedMethod<PeripheralMethod> method : methods) {
+            saturated.add(new SaturatedMethod(target, method));
         }
     }
 }

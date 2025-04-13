@@ -2,43 +2,43 @@ package dan200.computercraft.shared.peripheral.modem.wired;
 
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.common.ComputerCraftItems;
-import net.minecraft.client.render.block.color.BlockColor;
-import net.minecraft.client.render.block.color.BlockColorDispatcher;
-import net.minecraft.client.render.block.model.BlockModel;
-import net.minecraft.client.render.block.model.BlockModelDispatcher;
-import net.minecraft.client.render.item.model.ItemModelStandard;
-import net.minecraft.core.Global;
-import net.minecraft.core.block.Block;
-import net.minecraft.core.block.Blocks;
-import net.minecraft.core.item.Item;
-import net.minecraft.core.item.ItemStack;
-
-import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Font;
 import net.minecraft.client.render.ItemRenderer;
 import net.minecraft.client.render.LightmapHelper;
 import net.minecraft.client.render.TextureManager;
+import net.minecraft.client.render.block.color.BlockColor;
+import net.minecraft.client.render.block.color.BlockColorDispatcher;
+import net.minecraft.client.render.block.model.BlockModel;
+import net.minecraft.client.render.block.model.BlockModelDispatcher;
+import net.minecraft.client.render.item.model.ItemModelStandard;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
+import net.minecraft.core.Global;
+import net.minecraft.core.block.Block;
+import net.minecraft.core.block.Blocks;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.item.Item;
+import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.MathHelper;
 import net.minecraft.core.util.helper.Side;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Random;
+
 
 public class CableItemModel extends ItemModelStandard {
-    private Block<?> block;
-    private BlockModel<?> blockModel;
+    private final Block<?> block;
+    private final BlockModel<?> blockModel;
 
     public CableItemModel(Item item) {
-        super(item, (String)null);
+        super(item, null);
         this.block = ComputerCraftBlocks.CABLE;
-        this.blockModel = (BlockModel) BlockModelDispatcher.getInstance().getDispatch(this.block);
+        this.blockModel = BlockModelDispatcher.getInstance().getDispatch(this.block);
         this.icon = this.blockModel.getBlockTextureFromSideAndMetadata(Side.NORTH, 0);
     }
 
@@ -90,11 +90,11 @@ public class CableItemModel extends ItemModelStandard {
     }
 
     public void renderItem(Tessellator tessellator, ItemRenderer renderer, ItemStack itemstack, @Nullable Entity entity, float brightness, boolean handheldTransform) {
-        if (((BlockModel)BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE)).shouldItemRender3d()) {
+        if (BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE).shouldItemRender3d()) {
             GL11.glEnable(3042);
             GL11.glBlendFunc(770, 771);
             TextureRegistry.blockAtlas.bind();
-            ((BlockModel)BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE)).renderBlockOnInventory(tessellator, getModelMetadata(itemstack), brightness, (Integer)null);
+            BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE).renderBlockOnInventory(tessellator, getModelMetadata(itemstack), brightness, null);
             GL11.glDisable(3042);
         } else {
             super.renderItem(tessellator, renderer, itemstack, entity, brightness, handheldTransform);
@@ -103,7 +103,7 @@ public class CableItemModel extends ItemModelStandard {
     }
 
     public void heldTransformThirdPerson(ItemRenderer renderer, Entity entity, ItemStack itemStack) {
-        if (itemStack.itemID < Blocks.blocksList.length && ((BlockModel)BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE)).shouldItemRender3d()) {
+        if (itemStack.itemID < Blocks.blocksList.length && BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE).shouldItemRender3d()) {
             float scale = 0.375F;
             GL11.glTranslatef(0.0F, 0.1875F, -0.3125F);
             GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
@@ -120,11 +120,11 @@ public class CableItemModel extends ItemModelStandard {
             GL11.glEnable(3042);
             GL11.glBlendFunc(770, 771);
             GL11.glEnable(2884);
-            if (((BlockModel)BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE)).shouldItemRender3d()) {
+            if (BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE).shouldItemRender3d()) {
                 GL11.glBlendFunc(770, 771);
                 TextureRegistry.blockAtlas.bind();
                 GL11.glPushMatrix();
-                GL11.glTranslatef((float)(x - 2), (float)(y + 3), -3.0F);
+                GL11.glTranslatef((float) (x - 2), (float) (y + 3), -3.0F);
                 GL11.glScalef(10.0F, 10.0F, 10.0F);
                 GL11.glTranslatef(1.0F, 0.5F, 1.0F);
                 GL11.glScalef(1.0F, 1.0F, -1.0F);
@@ -132,9 +132,9 @@ public class CableItemModel extends ItemModelStandard {
                 GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
                 if (this.useColor) {
                     int color = this.getColor(itemStack);
-                    float r = (float)(color >> 16 & 255) / 255.0F;
-                    float g = (float)(color >> 8 & 255) / 255.0F;
-                    float b = (float)(color & 255) / 255.0F;
+                    float r = (float) (color >> 16 & 255) / 255.0F;
+                    float g = (float) (color >> 8 & 255) / 255.0F;
+                    float b = (float) (color & 255) / 255.0F;
                     GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
                 } else {
                     GL11.glColor4f(brightness, brightness, brightness, alpha);
@@ -148,7 +148,7 @@ public class CableItemModel extends ItemModelStandard {
                 }
 
                 BlockModel.renderBlocks.useInventoryTint = this.useColor;
-                ((BlockModel)BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE)).renderBlockOnInventory(tessellator, getModelMetadata(itemStack), brightness, alpha, (Integer)null);
+                BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE).renderBlockOnInventory(tessellator, getModelMetadata(itemStack), brightness, alpha, null);
                 BlockModel.renderBlocks.useInventoryTint = true;
                 GL11.glPopMatrix();
             } else {
@@ -161,13 +161,13 @@ public class CableItemModel extends ItemModelStandard {
     }
 
     public void renderAsItemEntity(Tessellator tessellator, Entity entity, Random random, ItemStack itemstack, int renderCount, float yaw, float brightness, float partialTick) {
-        if (ComputerCraftBlocks.CABLE != null && ((BlockModel)BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE)).shouldItemRender3d()) {
+        if (ComputerCraftBlocks.CABLE != null && BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE).shouldItemRender3d()) {
             GL11.glRotatef(yaw, 0.0F, 1.0F, 0.0F);
             TextureRegistry.blockAtlas.bind();
             float itemSize = this.blockModel.getItemRenderScale();
             GL11.glScalef(itemSize, itemSize, itemSize);
 
-            for(int i = 0; i < renderCount; ++i) {
+            for (int i = 0; i < renderCount; ++i) {
                 GL11.glPushMatrix();
                 if (i > 0) {
                     float rOffX = (random.nextFloat() * 2.0F - 1.0F) * 0.2F / itemSize;
@@ -189,7 +189,7 @@ public class CableItemModel extends ItemModelStandard {
                     GL11.glTranslatef(0.5f, 0, 0);
                 }
 
-                this.blockModel.renderBlockOnInventory(tessellator, getModelMetadata(itemstack), brightness, (Integer)null);
+                this.blockModel.renderBlockOnInventory(tessellator, getModelMetadata(itemstack), brightness, null);
                 GL11.glPopMatrix();
             }
         } else {
@@ -203,14 +203,14 @@ public class CableItemModel extends ItemModelStandard {
             GL11.glBlendFunc(770, 771);
             GL11.glEnable(2884);
             GL11.glEnable(3042);
-            if (((BlockModel)BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE)).shouldItemRender3d()) {
+            if (BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE).shouldItemRender3d()) {
                 GL11.glBlendFunc(770, 771);
                 TextureRegistry.blockAtlas.bind();
                 if (this.useColor) {
                     int color = this.getColor(itemStack);
-                    float r = (float)(color >> 16 & 255) / 255.0F;
-                    float g = (float)(color >> 8 & 255) / 255.0F;
-                    float b = (float)(color & 255) / 255.0F;
+                    float r = (float) (color >> 16 & 255) / 255.0F;
+                    float g = (float) (color >> 8 & 255) / 255.0F;
+                    float b = (float) (color & 255) / 255.0F;
                     GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
                 } else {
                     GL11.glColor4f(brightness, brightness, brightness, alpha);
@@ -218,7 +218,7 @@ public class CableItemModel extends ItemModelStandard {
 
                 GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
                 BlockModel.renderBlocks.useInventoryTint = this.useColor;
-                ((BlockModel)BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE)).renderBlockOnInventory(tessellator, getModelMetadata(itemStack), brightness, alpha, (Integer)null);
+                BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE).renderBlockOnInventory(tessellator, getModelMetadata(itemStack), brightness, alpha, null);
                 BlockModel.renderBlocks.useInventoryTint = true;
             } else {
                 super.renderItemInWorld(tessellator, entity, itemStack, brightness, alpha, worldTransform);
@@ -230,6 +230,6 @@ public class CableItemModel extends ItemModelStandard {
     }
 
     public int getColor(ItemStack stack) {
-        return ((BlockColor) BlockColorDispatcher.getInstance().getDispatch(this.block)).getFallbackColor(stack.getMetadata());
+        return BlockColorDispatcher.getInstance().getDispatch(this.block).getFallbackColor(stack.getMetadata());
     }
 }

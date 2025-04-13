@@ -18,8 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Random;
 
 @Mixin(value = WorldFeatureDungeon.class, remap = false)
-public class WorldFeatureDungeonMixin
-{
+public class WorldFeatureDungeonMixin {
     @Shadow
     public WeightedRandomBag<WeightedRandomLootObject> chestLoot;
 
@@ -27,15 +26,13 @@ public class WorldFeatureDungeonMixin
         method = "<init>",
         at = @At("TAIL")
     )
-    private void addTreasuresDisks(int blockIdWalls, int blockIdFloor, String mobOverride, CallbackInfo ci)
-    {
+    private void addTreasuresDisks(int blockIdWalls, int blockIdFloor, String mobOverride, CallbackInfo ci) {
         this.chestLoot.addEntry(new WeightedRandomLootObject(new ItemStack(ComputerCraftItems.TREASURE_DISK, 1, 0)), 100.0);
     }
 
 
     @Inject(method = "pickCheckLootItem", at = @At("RETURN"), cancellable = true)
-    private void makeRandomTreasureDisk(Random random, CallbackInfoReturnable<ItemStack> cir)
-    {
+    private void makeRandomTreasureDisk(Random random, CallbackInfoReturnable<ItemStack> cir) {
         ItemStack itemStack = cir.getReturnValue();
 
         if (itemStack != null && itemStack.getItem().equals(ComputerCraftItems.TREASURE_DISK)) {

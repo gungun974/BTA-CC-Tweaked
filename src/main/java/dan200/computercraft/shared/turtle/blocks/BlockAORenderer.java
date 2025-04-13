@@ -4,7 +4,6 @@ import net.minecraft.client.render.LightmapHelper;
 import net.minecraft.client.render.block.model.BlockModel;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.helper.Sides;
 import net.minecraft.core.util.phys.AABB;

@@ -14,46 +14,38 @@ import net.minecraft.core.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class TurtleTransferToCommand implements ITurtleCommand
-{
+public class TurtleTransferToCommand implements ITurtleCommand {
     private final int slot;
     private final int quantity;
 
-    public TurtleTransferToCommand( int slot, int limit )
-    {
+    public TurtleTransferToCommand(int slot, int limit) {
         this.slot = slot;
         quantity = limit;
     }
 
     @Nonnull
     @Override
-    public TurtleCommandResult execute( @Nonnull ITurtleAccess turtle )
-    {
+    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
         // Take stack
-        ItemStack stack = InventoryUtil.takeItems( quantity, turtle.getItemHandler(), turtle.getSelectedSlot(), 1, turtle.getSelectedSlot() );
-        if( stack == null )
-        {
-            turtle.playAnimation( TurtleAnimation.WAIT );
+        ItemStack stack = InventoryUtil.takeItems(quantity, turtle.getItemHandler(), turtle.getSelectedSlot(), 1, turtle.getSelectedSlot());
+        if (stack == null) {
+            turtle.playAnimation(TurtleAnimation.WAIT);
             return TurtleCommandResult.success();
         }
 
         // Store stack
-        ItemStack remainder = InventoryUtil.storeItems( stack, turtle.getItemHandler(), slot, 1, slot );
-        if( remainder != null )
-        {
+        ItemStack remainder = InventoryUtil.storeItems(stack, turtle.getItemHandler(), slot, 1, slot);
+        if (remainder != null) {
             // Put the remainder back
-            InventoryUtil.storeItems( remainder, turtle.getItemHandler(), turtle.getSelectedSlot(), 1, turtle.getSelectedSlot() );
+            InventoryUtil.storeItems(remainder, turtle.getItemHandler(), turtle.getSelectedSlot(), 1, turtle.getSelectedSlot());
         }
 
         // Return true if we moved anything
-        if( remainder != stack )
-        {
-            turtle.playAnimation( TurtleAnimation.WAIT );
+        if (remainder != stack) {
+            turtle.playAnimation(TurtleAnimation.WAIT);
             return TurtleCommandResult.success();
-        }
-        else
-        {
-            return TurtleCommandResult.failure( "No space for items" );
+        } else {
+            return TurtleCommandResult.failure("No space for items");
         }
     }
 }

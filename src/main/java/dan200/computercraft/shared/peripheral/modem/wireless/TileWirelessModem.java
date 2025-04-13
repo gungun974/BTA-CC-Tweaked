@@ -8,11 +8,9 @@ package dan200.computercraft.shared.peripheral.modem.wireless;
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.peripheral.modem.ModemPeripheral;
 import dan200.computercraft.shared.peripheral.modem.ModemState;
-import dan200.computercraft.shared.peripheral.monitor.ClientMonitor;
 import dan200.computercraft.shared.util.TickScheduler;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.phys.Vec3;
@@ -20,24 +18,21 @@ import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileWirelessModem extends TileGeneric implements IPeripheralTile
-{
-    private boolean advanced;
+public class TileWirelessModem extends TileGeneric implements IPeripheralTile {
+    private static final String NBT_ADVANCED = "Advanced";
     private final ModemPeripheral modem;
+    private boolean advanced;
     private boolean hasModemDirection = false;
     private Direction modemDirection = Direction.DOWN;
-    private boolean destroyed = false;
-
-    private static final String NBT_ADVANCED = "Advanced";
+    private final boolean destroyed = false;
 
     public TileWirelessModem() {
         this(false);
     }
 
-    public TileWirelessModem( boolean advanced )
-    {
+    public TileWirelessModem(boolean advanced) {
         this.advanced = advanced;
-        modem = new Peripheral( this );
+        modem = new Peripheral(this);
     }
 
 //    @Override
@@ -68,33 +63,28 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile
 //    }
 
     @Override
-    public void tick()
-    {
+    public void tick() {
         Direction currentDirection = modemDirection;
         refreshDirection();
         // Invalidate the capability if the direction has changed. I'm not 100% happy with this implementation
         //  - ideally we'd do it within refreshDirection or updateContainingBlockInfo, but this seems the _safest_
         //  place.
-        if( modem.getModemState()
-            .pollChanged() )
-        {
+        if (modem.getModemState()
+            .pollChanged()) {
             updateBlockState();
         }
     }
 
-    private void refreshDirection()
-    {
-        if( hasModemDirection )
-        {
+    private void refreshDirection() {
+        if (hasModemDirection) {
             return;
         }
 
         hasModemDirection = true;
-        modemDirection = BlockWirelessModem.metaToDirection(worldObj.getBlockMetadata(x, y , z)).getOpposite();
+        modemDirection = BlockWirelessModem.metaToDirection(worldObj.getBlockMetadata(x, y, z)).getOpposite();
     }
 
-    private void updateBlockState()
-    {
+    private void updateBlockState() {
         final boolean on = modem.getModemState()
             .isOpen();
 
@@ -102,8 +92,7 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile
 
         final boolean isOn = ((currentMetadata >> 3) & 0b1) == 1;
 
-        if( isOn != on )
-        {
+        if (isOn != on) {
             final int newMetadata = (currentMetadata & ~0b1000) | ((on ? 1 : 0) << 3);
 
             if (worldObj != null) {
@@ -114,8 +103,7 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile
 
     @Nonnull
     @Override
-    public IPeripheral getPeripheral( Direction side )
-    {
+    public IPeripheral getPeripheral(Direction side) {
         refreshDirection();
         return side == modemDirection ? modem : null;
     }
@@ -124,37 +112,33 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile
     public void readFromNBT(CompoundTag nbt) {
         super.readFromNBT(nbt);
 
-        advanced = nbt.getBoolean( NBT_ADVANCED );
+        advanced = nbt.getBoolean(NBT_ADVANCED);
     }
 
     @Override
     public void writeToNBT(CompoundTag tag) {
-        tag.putBoolean( NBT_ADVANCED, advanced );
+        tag.putBoolean(NBT_ADVANCED, advanced);
 
         super.writeToNBT(tag);
     }
 
-    private static class Peripheral extends WirelessModemPeripheral
-    {
+    private static class Peripheral extends WirelessModemPeripheral {
         private final TileWirelessModem entity;
 
-        Peripheral( TileWirelessModem entity )
-        {
-            super( new ModemState( () -> TickScheduler.schedule( entity ) ), entity.advanced );
+        Peripheral(TileWirelessModem entity) {
+            super(new ModemState(() -> TickScheduler.schedule(entity)), entity.advanced);
             this.entity = entity;
         }
 
         @Nonnull
         @Override
-        public World getWorld()
-        {
+        public World getWorld() {
             return entity.worldObj;
         }
 
         @Nonnull
         @Override
-        public Vec3 getPosition()
-        {
+        public Vec3 getPosition() {
             return Vec3.getPermanentVec3(
                 entity.x + entity.modemDirection.getOffsetX(),
                 entity.y + entity.modemDirection.getOffsetY(),
@@ -164,14 +148,12 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile
 
         @Nonnull
         @Override
-        public Object getTarget()
-        {
+        public Object getTarget() {
             return entity;
         }
 
         @Override
-        public boolean equals( IPeripheral other )
-        {
+        public boolean equals(IPeripheral other) {
             return this == other || (other instanceof Peripheral && entity == ((Peripheral) other).entity);
         }
     }

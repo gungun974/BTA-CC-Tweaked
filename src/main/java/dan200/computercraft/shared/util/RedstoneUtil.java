@@ -7,16 +7,13 @@ package dan200.computercraft.shared.util;
 
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.fabric.Helper;
-import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
-public final class RedstoneUtil
-{
-    public static void propagateRedstoneOutput(World world, BlockPos pos, Direction side )
-    {
+public final class RedstoneUtil {
+    public static void propagateRedstoneOutput(World world, BlockPos pos, Direction side) {
         BlockLogic block = Helper.getBlockLogic(world, pos.x, pos.y, pos.z);
 
         if (block == null) {

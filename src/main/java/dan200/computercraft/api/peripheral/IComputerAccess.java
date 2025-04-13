@@ -22,8 +22,7 @@ import java.util.Map;
  * The interface passed to peripherals by computers or turtles, providing methods that they can call. This should not be implemented by your classes. Do not
  * interact with computers except via this interface.
  */
-public interface IComputerAccess
-{
+public interface IComputerAccess {
     /**
      * Mount a mount onto the computer's file system in a read only mode.
      *
@@ -40,9 +39,8 @@ public interface IComputerAccess
      * @see IMount
      */
     @Nullable
-    default String mount( @Nonnull String desiredLocation, @Nonnull IMount mount )
-    {
-        return mount( desiredLocation, mount, getAttachmentName() );
+    default String mount(@Nonnull String desiredLocation, @Nonnull IMount mount) {
+        return mount(desiredLocation, mount, getAttachmentName());
     }
 
     /**
@@ -62,7 +60,7 @@ public interface IComputerAccess
      * @see IMount
      */
     @Nullable
-    String mount( @Nonnull String desiredLocation, @Nonnull IMount mount, @Nonnull String driveName );
+    String mount(@Nonnull String desiredLocation, @Nonnull IMount mount, @Nonnull String driveName);
 
     /**
      * Get a string, unique to the computer, by which the computer refers to this peripheral. For directly attached peripherals this will be
@@ -90,9 +88,8 @@ public interface IComputerAccess
      * @see IMount
      */
     @Nullable
-    default String mountWritable( @Nonnull String desiredLocation, @Nonnull IWritableMount mount )
-    {
-        return mountWritable( desiredLocation, mount, getAttachmentName() );
+    default String mountWritable(@Nonnull String desiredLocation, @Nonnull IWritableMount mount) {
+        return mountWritable(desiredLocation, mount, getAttachmentName());
     }
 
     /**
@@ -110,15 +107,15 @@ public interface IComputerAccess
      * @see #unmount(String)
      * @see IMount
      */
-    String mountWritable( @Nonnull String desiredLocation, @Nonnull IWritableMount mount, @Nonnull String driveName );
+    String mountWritable(@Nonnull String desiredLocation, @Nonnull IWritableMount mount, @Nonnull String driveName);
 
     /**
      * Unmounts a directory previously mounted onto the computers file system by {@link #mount(String, IMount)} or {@link #mountWritable(String,
      * IWritableMount)}.
-     *
+     * <p>
      * When a directory is unmounted, it will disappear from the computers file system, and the user will no longer be able to access it. All directories
      * mounted by a mount or mountWritable are automatically unmounted when the peripheral is attached if they have not been explicitly unmounted.
-     *
+     * <p>
      * Note that you cannot unmount another peripheral's mounts.
      *
      * @param location The desired location in the computers file system of the directory to unmount. This must be the location of a directory
@@ -128,11 +125,11 @@ public interface IComputerAccess
      * @see #mount(String, IMount)
      * @see #mountWritable(String, IWritableMount)
      */
-    void unmount( @Nullable String location );
+    void unmount(@Nullable String location);
 
     /**
      * Returns the numerical ID of this computer.
-     *
+     * <p>
      * This is the same number obtained by calling {@code os.getComputerID()} or running the "id" program from lua, and is guaranteed unique. This number
      * will be positive.
      *
@@ -149,16 +146,16 @@ public interface IComputerAccess
      *                  "button", a suitable event would be "button_pressed".
      * @param arguments In addition to a name, you may pass an array of extra arguments to the event, that will be supplied as extra return values to
      *                  os.pullEvent(). Objects in the array will be converted to lua data types in the same fashion as the return values of IPeripheral.callMethod().
-     *
+     *                  <p>
      *                  You may supply {@code null} to indicate that no arguments are to be supplied.
      * @throws NotAttachedException If the peripheral has been detached.
      * @see MethodResult#pullEvent(String, ILuaCallback)
      */
-    void queueEvent( @Nonnull String event, @Nullable Object... arguments );
+    void queueEvent(@Nonnull String event, @Nullable Object... arguments);
 
     /**
      * Get a set of peripherals that this computer access can "see", along with their attachment name.
-     *
+     * <p>
      * This may include other peripherals on the wired network or peripherals on other sides of the computer.
      *
      * @return All reachable peripherals
@@ -178,15 +175,15 @@ public interface IComputerAccess
      * @see #getAvailablePeripherals()
      */
     @Nullable
-    IPeripheral getAvailablePeripheral( @Nonnull String name );
+    IPeripheral getAvailablePeripheral(@Nonnull String name);
 
     /**
      * Get a {@link IWorkMonitor} for tasks your peripheral might execute on the main (server) thread.
-     *
+     * <p>
      * This should be used to ensure your peripheral integrates with ComputerCraft's monitoring and limiting of how much server time each computer consumes.
      * You should not need to use this if you use {@link ILuaContext#issueMainThreadTask(ILuaTask)} - this is intended for mods with their own system for
      * running work on the main thread.
-     *
+     * <p>
      * Please note that the returned implementation is <em>not</em> thread-safe, and should only be used from the main thread.
      *
      * @return The work monitor for the main thread, or {@code null} if this computer does not have one.

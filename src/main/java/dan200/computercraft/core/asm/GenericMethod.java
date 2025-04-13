@@ -22,17 +22,14 @@ import java.util.stream.Collectors;
 /**
  * A generic method is a method belonging to a {@link GenericSource} with a known target.
  */
-public class GenericMethod
-{
+public class GenericMethod {
+    private static final List<GenericSource> sources = new ArrayList<>();
+    private static List<GenericMethod> cache;
     final Method method;
     final LuaFunction annotation;
     final Class<?> target;
 
-    private static final List<GenericSource> sources = new ArrayList<>();
-    private static List<GenericMethod> cache;
-
-    GenericMethod( Method method, LuaFunction annotation, Class<?> target )
-    {
+    GenericMethod(Method method, LuaFunction annotation, Class<?> target) {
         this.method = method;
         this.annotation = annotation;
         this.target = target;
@@ -43,48 +40,43 @@ public class GenericMethod
      *
      * @return All available generic methods.
      */
-    static List<GenericMethod> all()
-    {
-        if( cache != null ) return cache;
+    static List<GenericMethod> all() {
+        if (cache != null) return cache;
         return cache = sources.stream()
-            .flatMap( x -> Arrays.stream( x.getClass().getDeclaredMethods() ) )
-            .map( method ->
+            .flatMap(x -> Arrays.stream(x.getClass().getDeclaredMethods()))
+            .map(method ->
             {
-                LuaFunction annotation = method.getAnnotation( LuaFunction.class );
-                if( annotation == null ) return null;
+                LuaFunction annotation = method.getAnnotation(LuaFunction.class);
+                if (annotation == null) return null;
 
-                if( !Modifier.isStatic( method.getModifiers() ) )
-                {
-                    ComputerCraft.log.error( "GenericSource method {}.{} should be static.", method.getDeclaringClass(), method.getName() );
+                if (!Modifier.isStatic(method.getModifiers())) {
+                    ComputerCraft.log.error("GenericSource method {}.{} should be static.", method.getDeclaringClass(), method.getName());
                     return null;
                 }
 
                 Type[] types = method.getGenericParameterTypes();
-                if( types.length == 0 )
-                {
-                    ComputerCraft.log.error( "GenericSource method {}.{} has no parameters.", method.getDeclaringClass(), method.getName() );
+                if (types.length == 0) {
+                    ComputerCraft.log.error("GenericSource method {}.{} has no parameters.", method.getDeclaringClass(), method.getName());
                     return null;
                 }
 
-                Class<?> target = Reflect.getRawType( method, types[0], false );
-                if( target == null ) return null;
+                Class<?> target = Reflect.getRawType(method, types[0], false);
+                if (target == null) return null;
 
-                return new GenericMethod( method, annotation, target );
-            } )
-            .filter( Objects::nonNull )
-            .collect( Collectors.toList() );
+                return new GenericMethod(method, annotation, target);
+            })
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
     }
 
 
-    public static synchronized void register( @Nonnull GenericSource source )
-    {
-        Objects.requireNonNull( source, "Source cannot be null" );
+    public static synchronized void register(@Nonnull GenericSource source) {
+        Objects.requireNonNull(source, "Source cannot be null");
 
-        if( cache != null )
-        {
-            ComputerCraft.log.warn( "Registering a generic source {} after cache has been built. This source will be ignored.", cache );
+        if (cache != null) {
+            ComputerCraft.log.warn("Registering a generic source {} after cache has been built. This source will be ignored.", cache);
         }
 
-        sources.add( source );
+        sources.add(source);
     }
 }

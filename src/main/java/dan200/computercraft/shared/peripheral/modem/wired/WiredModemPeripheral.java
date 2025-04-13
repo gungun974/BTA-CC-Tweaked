@@ -30,106 +30,89 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public abstract class WiredModemPeripheral extends ModemPeripheral implements IWiredSender
-{
+public abstract class WiredModemPeripheral extends ModemPeripheral implements IWiredSender {
     private final WiredModemElement modem;
 
-    private final Map<IComputerAccess, ConcurrentMap<String, RemotePeripheralWrapper>> peripheralWrappers = new HashMap<>( 1 );
+    private final Map<IComputerAccess, ConcurrentMap<String, RemotePeripheralWrapper>> peripheralWrappers = new HashMap<>(1);
 
-    public WiredModemPeripheral( ModemState state, WiredModemElement modem )
-    {
-        super( state );
+    public WiredModemPeripheral(ModemState state, WiredModemElement modem) {
+        super(state);
         this.modem = modem;
     }
 
     @Override
-    public double getRange()
-    {
+    public double getRange() {
         return 256.0;
     }
 
     //region IPacketSender implementation
     @Override
-    public boolean isInterdimensional()
-    {
+    public boolean isInterdimensional() {
         return false;
     }
 
     @Override
-    protected IPacketNetwork getNetwork()
-    {
+    protected IPacketNetwork getNetwork() {
         return modem.getNode();
     }
 
     @Override
-    public void attach( @Nonnull IComputerAccess computer )
-    {
-        super.attach( computer );
+    public void attach(@Nonnull IComputerAccess computer) {
+        super.attach(computer);
 
         ConcurrentMap<String, RemotePeripheralWrapper> wrappers;
-        synchronized( peripheralWrappers )
-        {
-            wrappers = peripheralWrappers.get( computer );
-            if( wrappers == null )
-            {
-                peripheralWrappers.put( computer, wrappers = new ConcurrentHashMap<>() );
+        synchronized (peripheralWrappers) {
+            wrappers = peripheralWrappers.get(computer);
+            if (wrappers == null) {
+                peripheralWrappers.put(computer, wrappers = new ConcurrentHashMap<>());
             }
         }
 
-        synchronized( modem.getRemotePeripherals() )
-        {
-            for( Map.Entry<String, IPeripheral> entry : modem.getRemotePeripherals()
-                .entrySet() )
-            {
-                attachPeripheralImpl( computer, wrappers, entry.getKey(), entry.getValue() );
+        synchronized (modem.getRemotePeripherals()) {
+            for (Map.Entry<String, IPeripheral> entry : modem.getRemotePeripherals()
+                .entrySet()) {
+                attachPeripheralImpl(computer, wrappers, entry.getKey(), entry.getValue());
             }
         }
     }
 
     @Override
-    public void detach( @Nonnull IComputerAccess computer )
-    {
+    public void detach(@Nonnull IComputerAccess computer) {
         Map<String, RemotePeripheralWrapper> wrappers;
-        synchronized( peripheralWrappers )
-        {
-            wrappers = peripheralWrappers.remove( computer );
+        synchronized (peripheralWrappers) {
+            wrappers = peripheralWrappers.remove(computer);
         }
-        if( wrappers != null )
-        {
-            for( RemotePeripheralWrapper wrapper : wrappers.values() )
-            {
+        if (wrappers != null) {
+            for (RemotePeripheralWrapper wrapper : wrappers.values()) {
                 wrapper.detach();
             }
             wrappers.clear();
         }
 
-        super.detach( computer );
+        super.detach(computer);
     }
     //endregion
 
     //region Peripheral methods
 
-    private void attachPeripheralImpl( IComputerAccess computer, ConcurrentMap<String, RemotePeripheralWrapper> peripherals, String periphName,
-                                       IPeripheral peripheral )
-    {
-        if( !peripherals.containsKey( periphName ) && !periphName.equals( getLocalPeripheral().getConnectedName() ) )
-        {
-            RemotePeripheralWrapper wrapper = new RemotePeripheralWrapper( modem, peripheral, computer, periphName );
-            peripherals.put( periphName, wrapper );
+    private void attachPeripheralImpl(IComputerAccess computer, ConcurrentMap<String, RemotePeripheralWrapper> peripherals, String periphName,
+                                      IPeripheral peripheral) {
+        if (!peripherals.containsKey(periphName) && !periphName.equals(getLocalPeripheral().getConnectedName())) {
+            RemotePeripheralWrapper wrapper = new RemotePeripheralWrapper(modem, peripheral, computer, periphName);
+            peripherals.put(periphName, wrapper);
             wrapper.attach();
         }
     }
 
     @Nonnull
     @Override
-    public World getWorld()
-    {
+    public World getWorld() {
         return modem.getWorld();
     }
 
     /**
      * List all remote peripherals on the wired network.
-     *
+     * <p>
      * If this computer is attached to the network, it _will not_ be included in this list.
      *
      * <blockquote><strong>Important:</strong> This function only appears on wired modems. Check {@link #isWireless}
@@ -139,16 +122,13 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
      * @return Remote peripheral names on the network.
      */
     @LuaFunction
-    public final Collection<String> getNamesRemote( IComputerAccess computer )
-    {
-        return getWrappers( computer ).keySet();
+    public final Collection<String> getNamesRemote(IComputerAccess computer) {
+        return getWrappers(computer).keySet();
     }
 
-    private ConcurrentMap<String, RemotePeripheralWrapper> getWrappers( IComputerAccess computer )
-    {
-        synchronized( peripheralWrappers )
-        {
-            return peripheralWrappers.get( computer );
+    private ConcurrentMap<String, RemotePeripheralWrapper> getWrappers(IComputerAccess computer) {
+        synchronized (peripheralWrappers) {
+            return peripheralWrappers.get(computer);
         }
     }
 
@@ -164,15 +144,13 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
      * @see PeripheralAPI#isPresent
      */
     @LuaFunction
-    public final boolean isPresentRemote( IComputerAccess computer, String name )
-    {
-        return getWrapper( computer, name ) != null;
+    public final boolean isPresentRemote(IComputerAccess computer, String name) {
+        return getWrapper(computer, name) != null;
     }
 
-    private RemotePeripheralWrapper getWrapper( IComputerAccess computer, String remoteName )
-    {
-        ConcurrentMap<String, RemotePeripheralWrapper> wrappers = getWrappers( computer );
-        return wrappers == null ? null : wrappers.get( remoteName );
+    private RemotePeripheralWrapper getWrapper(IComputerAccess computer, String remoteName) {
+        ConcurrentMap<String, RemotePeripheralWrapper> wrappers = getWrappers(computer);
+        return wrappers == null ? null : wrappers.get(remoteName);
     }
 
     /**
@@ -188,10 +166,9 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
      * @see PeripheralAPI#getType
      */
     @LuaFunction
-    public final Object[] getTypeRemote( IComputerAccess computer, String name )
-    {
-        RemotePeripheralWrapper wrapper = getWrapper( computer, name );
-        return wrapper != null ? new Object[] { wrapper.getType() } : null;
+    public final Object[] getTypeRemote(IComputerAccess computer, String name) {
+        RemotePeripheralWrapper wrapper = getWrapper(computer, name);
+        return wrapper != null ? new Object[]{wrapper.getType()} : null;
     }
 
     /**
@@ -207,15 +184,13 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
      * @see PeripheralAPI#getMethods
      */
     @LuaFunction
-    public final Object[] getMethodsRemote( IComputerAccess computer, String name )
-    {
-        RemotePeripheralWrapper wrapper = getWrapper( computer, name );
-        if( wrapper == null )
-        {
+    public final Object[] getMethodsRemote(IComputerAccess computer, String name) {
+        RemotePeripheralWrapper wrapper = getWrapper(computer, name);
+        if (wrapper == null) {
             return null;
         }
 
-        return new Object[] { wrapper.getMethodNames() };
+        return new Object[]{wrapper.getMethodNames()};
     }
 
     /**
@@ -236,17 +211,15 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
      * @see PeripheralAPI#call
      */
     @LuaFunction
-    public final MethodResult callRemote( IComputerAccess computer, ILuaContext context, IArguments arguments ) throws LuaException
-    {
-        String remoteName = arguments.getString( 0 );
-        String methodName = arguments.getString( 1 );
-        RemotePeripheralWrapper wrapper = getWrapper( computer, remoteName );
-        if( wrapper == null )
-        {
-            throw new LuaException( "No peripheral: " + remoteName );
+    public final MethodResult callRemote(IComputerAccess computer, ILuaContext context, IArguments arguments) throws LuaException {
+        String remoteName = arguments.getString(0);
+        String methodName = arguments.getString(1);
+        RemotePeripheralWrapper wrapper = getWrapper(computer, remoteName);
+        if (wrapper == null) {
+            throw new LuaException("No peripheral: " + remoteName);
         }
 
-        return wrapper.callMethod( context, methodName, arguments.drop( 2 ) );
+        return wrapper.callMethod(context, methodName, arguments.drop(2));
     }
     //endregion
 
@@ -261,20 +234,17 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
      * @cc.treturn string|nil The current computer's name on the wired network.
      */
     @LuaFunction
-    public final Object[] getNameLocal()
-    {
+    public final Object[] getNameLocal() {
         String local = getLocalPeripheral().getConnectedName();
-        return local == null ? null : new Object[] { local };
+        return local == null ? null : new Object[]{local};
     }
 
     @Nonnull
     protected abstract WiredModemLocalPeripheral getLocalPeripheral();
 
     @Override
-    public boolean equals( IPeripheral other )
-    {
-        if( other instanceof WiredModemPeripheral )
-        {
+    public boolean equals(IPeripheral other) {
+        if (other instanceof WiredModemPeripheral) {
             WiredModemPeripheral otherModem = (WiredModemPeripheral) other;
             return otherModem.modem == modem;
         }
@@ -283,31 +253,23 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
 
     @Nonnull
     @Override
-    public IWiredNode getNode()
-    {
+    public IWiredNode getNode() {
         return modem.getNode();
     }
 
-    public void attachPeripheral( String name, IPeripheral peripheral )
-    {
-        synchronized( peripheralWrappers )
-        {
-            for( Map.Entry<IComputerAccess, ConcurrentMap<String, RemotePeripheralWrapper>> entry : peripheralWrappers.entrySet() )
-            {
-                attachPeripheralImpl( entry.getKey(), entry.getValue(), name, peripheral );
+    public void attachPeripheral(String name, IPeripheral peripheral) {
+        synchronized (peripheralWrappers) {
+            for (Map.Entry<IComputerAccess, ConcurrentMap<String, RemotePeripheralWrapper>> entry : peripheralWrappers.entrySet()) {
+                attachPeripheralImpl(entry.getKey(), entry.getValue(), name, peripheral);
             }
         }
     }
 
-    public void detachPeripheral( String name )
-    {
-        synchronized( peripheralWrappers )
-        {
-            for( ConcurrentMap<String, RemotePeripheralWrapper> wrappers : peripheralWrappers.values() )
-            {
-                RemotePeripheralWrapper wrapper = wrappers.remove( name );
-                if( wrapper != null )
-                {
+    public void detachPeripheral(String name) {
+        synchronized (peripheralWrappers) {
+            for (ConcurrentMap<String, RemotePeripheralWrapper> wrappers : peripheralWrappers.values()) {
+                RemotePeripheralWrapper wrapper = wrappers.remove(name);
+                if (wrapper != null) {
                     wrapper.detach();
                 }
             }
@@ -315,8 +277,7 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
         }
     }
 
-    private static class RemotePeripheralWrapper implements IComputerAccess
-    {
+    private static class RemotePeripheralWrapper implements IComputerAccess {
         private final WiredModemElement element;
         private final IPeripheral peripheral;
         private final IComputerAccess computer;
@@ -325,125 +286,105 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
         private final String type;
         private final Map<String, PeripheralMethod> methodMap;
 
-        RemotePeripheralWrapper( WiredModemElement element, IPeripheral peripheral, IComputerAccess computer, String name )
-        {
+        RemotePeripheralWrapper(WiredModemElement element, IPeripheral peripheral, IComputerAccess computer, String name) {
             this.element = element;
             this.peripheral = peripheral;
             this.computer = computer;
             this.name = name;
 
-            type = Objects.requireNonNull( peripheral.getType(), "Peripheral type cannot be null" );
-            methodMap = PeripheralAPI.getMethods( peripheral );
+            type = Objects.requireNonNull(peripheral.getType(), "Peripheral type cannot be null");
+            methodMap = PeripheralAPI.getMethods(peripheral);
         }
 
-        public void attach()
-        {
-            peripheral.attach( this );
-            computer.queueEvent( "peripheral", getAttachmentName() );
+        public void attach() {
+            peripheral.attach(this);
+            computer.queueEvent("peripheral", getAttachmentName());
         }
 
-        public void detach()
-        {
-            peripheral.detach( this );
-            computer.queueEvent( "peripheral_detach", getAttachmentName() );
+        public void detach() {
+            peripheral.detach(this);
+            computer.queueEvent("peripheral_detach", getAttachmentName());
         }
 
-        public String getType()
-        {
+        public String getType() {
             return type;
         }
 
-        public Collection<String> getMethodNames()
-        {
+        public Collection<String> getMethodNames() {
             return methodMap.keySet();
         }
 
-        public MethodResult callMethod( ILuaContext context, String methodName, IArguments arguments ) throws LuaException
-        {
-            PeripheralMethod method = methodMap.get( methodName );
-            if( method == null )
-            {
-                throw new LuaException( "No such method " + methodName );
+        public MethodResult callMethod(ILuaContext context, String methodName, IArguments arguments) throws LuaException {
+            PeripheralMethod method = methodMap.get(methodName);
+            if (method == null) {
+                throw new LuaException("No such method " + methodName);
             }
-            return method.apply( peripheral, context, this, arguments );
+            return method.apply(peripheral, context, this, arguments);
         }
 
         // IComputerAccess implementation
 
         @Override
-        public String mount( @Nonnull String desiredLocation, @Nonnull IMount mount )
-        {
-            return computer.mount( desiredLocation, mount, name );
+        public String mount(@Nonnull String desiredLocation, @Nonnull IMount mount) {
+            return computer.mount(desiredLocation, mount, name);
         }
 
         @Override
-        public String mount( @Nonnull String desiredLocation, @Nonnull IMount mount, @Nonnull String driveName )
-        {
-            return computer.mount( desiredLocation, mount, driveName );
+        public String mount(@Nonnull String desiredLocation, @Nonnull IMount mount, @Nonnull String driveName) {
+            return computer.mount(desiredLocation, mount, driveName);
         }
 
         @Nonnull
         @Override
-        public String getAttachmentName()
-        {
+        public String getAttachmentName() {
             return name;
         }
 
         @Override
-        public String mountWritable( @Nonnull String desiredLocation, @Nonnull IWritableMount mount )
-        {
-            return computer.mountWritable( desiredLocation, mount, name );
+        public String mountWritable(@Nonnull String desiredLocation, @Nonnull IWritableMount mount) {
+            return computer.mountWritable(desiredLocation, mount, name);
         }
 
         @Override
-        public String mountWritable( @Nonnull String desiredLocation, @Nonnull IWritableMount mount, @Nonnull String driveName )
-        {
-            return computer.mountWritable( desiredLocation, mount, driveName );
+        public String mountWritable(@Nonnull String desiredLocation, @Nonnull IWritableMount mount, @Nonnull String driveName) {
+            return computer.mountWritable(desiredLocation, mount, driveName);
         }
 
         @Override
-        public void unmount( String location )
-        {
-            computer.unmount( location );
+        public void unmount(String location) {
+            computer.unmount(location);
         }
 
         @Override
-        public int getID()
-        {
+        public int getID() {
             return computer.getID();
         }
 
         @Override
-        public void queueEvent( @Nonnull String event, Object... arguments )
-        {
-            computer.queueEvent( event, arguments );
+        public void queueEvent(@Nonnull String event, Object... arguments) {
+            computer.queueEvent(event, arguments);
         }
 
         @Nonnull
         @Override
-        public Map<String, IPeripheral> getAvailablePeripherals()
-        {
-            synchronized( element.getRemotePeripherals() )
-            {
-                return ImmutableMap.copyOf( element.getRemotePeripherals() );
+        public Map<String, IPeripheral> getAvailablePeripherals() {
+            synchronized (element.getRemotePeripherals()) {
+                return ImmutableMap.copyOf(element.getRemotePeripherals());
             }
         }
 
         @Nullable
         @Override
-        public IPeripheral getAvailablePeripheral( @Nonnull String name )
-        {
-            synchronized( element.getRemotePeripherals() )
-            {
+        public IPeripheral getAvailablePeripheral(@Nonnull String name) {
+            synchronized (element.getRemotePeripherals()) {
                 return element.getRemotePeripherals()
-                    .get( name );
+                    .get(name);
             }
         }
 
         @Nonnull
         @Override
-        public IWorkMonitor getMainThreadMonitor()
-        {
+        public IWorkMonitor getMainThreadMonitor() {
             return computer.getMainThreadMonitor();
         }
     }

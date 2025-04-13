@@ -14,40 +14,35 @@ import javax.annotation.Nullable;
 
 /**
  * A computer or turtle wrapped as a peripheral.
- *
+ * <p>
  * This allows for basic interaction with adjacent computers. Computers wrapped as peripherals will have the type {@code computer} while turtles will be
  * {@code turtle}.
  *
  * @cc.module computer
  */
-public class ComputerPeripheral implements IPeripheral
-{
+public class ComputerPeripheral implements IPeripheral {
     private final String type;
     private final ComputerProxy computer;
 
-    public ComputerPeripheral( String type, ComputerProxy computer )
-    {
+    public ComputerPeripheral(String type, ComputerProxy computer) {
         this.type = type;
         this.computer = computer;
     }
 
     @Nonnull
     @Override
-    public String getType()
-    {
+    public String getType() {
         return type;
     }
 
     @Nonnull
     @Override
-    public Object getTarget()
-    {
+    public Object getTarget() {
         return computer.getTile();
     }
 
     @Override
-    public boolean equals( IPeripheral other )
-    {
+    public boolean equals(IPeripheral other) {
         return other instanceof ComputerPeripheral && computer == ((ComputerPeripheral) other).computer;
     }
 
@@ -55,8 +50,7 @@ public class ComputerPeripheral implements IPeripheral
      * Turn the other computer on.
      */
     @LuaFunction
-    public final void turnOn()
-    {
+    public final void turnOn() {
         computer.turnOn();
     }
 
@@ -64,8 +58,7 @@ public class ComputerPeripheral implements IPeripheral
      * Shutdown the other computer.
      */
     @LuaFunction
-    public final void shutdown()
-    {
+    public final void shutdown() {
         computer.shutdown();
     }
 
@@ -73,8 +66,7 @@ public class ComputerPeripheral implements IPeripheral
      * Reboot or turn on the other computer.
      */
     @LuaFunction
-    public final void reboot()
-    {
+    public final void reboot() {
         computer.reboot();
     }
 
@@ -85,8 +77,7 @@ public class ComputerPeripheral implements IPeripheral
      * @see OSAPI#getComputerID() To get your computer's ID.
      */
     @LuaFunction
-    public final int getID()
-    {
+    public final int getID() {
         return computer.assignID();
     }
 
@@ -96,8 +87,7 @@ public class ComputerPeripheral implements IPeripheral
      * @return If the computer is on.
      */
     @LuaFunction
-    public final boolean isOn()
-    {
+    public final boolean isOn() {
         return computer.isOn();
     }
 
@@ -109,8 +99,7 @@ public class ComputerPeripheral implements IPeripheral
      */
     @Nullable
     @LuaFunction
-    public final String getLabel()
-    {
+    public final String getLabel() {
         return computer.getLabel();
     }
 }

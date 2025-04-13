@@ -63,17 +63,17 @@ public class BlockModelWirelessModem<T extends BlockLogic> extends BlockModelFul
 
 
         if (renderBlocks.useInventoryTint) {
-            int color = ((BlockColor) BlockColorDispatcher.getInstance().getDispatch(this.block)).getFallbackColor(metadata);
-            float r = (float)(color >> 16 & 255) / 255.0F;
-            float g = (float)(color >> 8 & 255) / 255.0F;
-            float b = (float)(color & 255) / 255.0F;
+            int color = BlockColorDispatcher.getInstance().getDispatch(this.block).getFallbackColor(metadata);
+            float r = (float) (color >> 16 & 255) / 255.0F;
+            float g = (float) (color >> 8 & 255) / 255.0F;
+            float b = (float) (color & 255) / 255.0F;
             GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
         } else {
             GL11.glColor4f(brightness, brightness, brightness, alpha);
         }
 
         float yOffset = 0.5F;
-        AABB bounds = ModemShapes.getBounds( BlockWirelessModem.metaToDirection(metadata).getOpposite());
+        AABB bounds = ModemShapes.getBounds(BlockWirelessModem.metaToDirection(metadata).getOpposite());
         GL11.glTranslatef(-0.5F, 0.0F - yOffset, -0.5F);
         this.renderBlockWithBounds(tessellator, bounds, metadata, brightness, alpha, lightmapCoordinate);
         GL11.glTranslatef(0.5F, yOffset, 0.5F);
@@ -100,7 +100,6 @@ public class BlockModelWirelessModem<T extends BlockLogic> extends BlockModelFul
             return this.blockTextures.get(Side.getSideById(index));
         }
     }
-
 
 
 }

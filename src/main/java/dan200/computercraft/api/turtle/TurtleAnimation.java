@@ -7,13 +7,12 @@ package dan200.computercraft.api.turtle;
 
 /**
  * An animation a turtle will play between executing commands.
- *
+ * <p>
  * Each animation takes 8 ticks to complete unless otherwise specified.
  *
  * @see ITurtleAccess#playAnimation(TurtleAnimation)
  */
-public enum TurtleAnimation
-{
+public enum TurtleAnimation {
     /**
      * An animation which does nothing. This takes no time to complete.
      *

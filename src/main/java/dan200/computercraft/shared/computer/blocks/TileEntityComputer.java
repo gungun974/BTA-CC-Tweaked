@@ -11,7 +11,7 @@ import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
 
-public class TileEntityComputer extends TileComputerBase  {
+public class TileEntityComputer extends TileComputerBase {
     private ComputerProxy proxy;
 
     public TileEntityComputer() {
@@ -27,20 +27,17 @@ public class TileEntityComputer extends TileComputerBase  {
     }
 
 
-    public boolean isUsableByPlayer( Player player )
-    {
-        return isUsable( player, false );
+    public boolean isUsableByPlayer(Player player) {
+        return isUsable(player, false);
     }
 
     @Override
-    protected void updateBlockState( ComputerState newState )
-    {
+    protected void updateBlockState(ComputerState newState) {
         final int currentMetadata = getBlockMeta();
 
         final ComputerState currentState = ComputerState.class.getEnumConstants()[(currentMetadata >> 3) & 0b11];
 
-        if( currentState != newState )
-        {
+        if (currentState != newState) {
             final int newMetadata = (currentMetadata & ~0b11000) | (newState.ordinal() << 3);
 
             if (worldObj != null) {
@@ -50,51 +47,42 @@ public class TileEntityComputer extends TileComputerBase  {
     }
 
     @Override
-    public Direction getDirection()
-    {
+    public Direction getDirection() {
         return BlockLogicComputer.getDirectionFromMeta(getBlockMeta());
     }
 
     @Override
-    protected ComputerSide remapLocalSide( ComputerSide localSide )
-    {
+    protected ComputerSide remapLocalSide(ComputerSide localSide) {
         // For legacy reasons, computers invert the meaning of "left" and "right". A computer's front is facing
         // towards you, but a turtle's front is facing the other way.
-        if( localSide == ComputerSide.RIGHT )
-        {
+        if (localSide == ComputerSide.RIGHT) {
             return ComputerSide.LEFT;
         }
-        if( localSide == ComputerSide.LEFT )
-        {
+        if (localSide == ComputerSide.LEFT) {
             return ComputerSide.RIGHT;
         }
         return localSide;
     }
 
     @Override
-    protected ServerComputer createComputer( int instanceID, int id )
-    {
+    protected ServerComputer createComputer(int instanceID, int id) {
         ComputerFamily family = getFamily();
-        ServerComputer computer = new ServerComputer( worldObj,
+        ServerComputer computer = new ServerComputer(worldObj,
             id, label,
             instanceID,
             family,
             ComputerCraft.computerTermWidth,
-            ComputerCraft.computerTermHeight );
-        computer.setPosition( new BlockPos(x, y, z) );
+            ComputerCraft.computerTermHeight);
+        computer.setPosition(new BlockPos(x, y, z));
         return computer;
     }
 
     @Override
-    public ComputerProxy createProxy()
-    {
-        if( proxy == null )
-        {
-            proxy = new ComputerProxy( () -> this )
-            {
+    public ComputerProxy createProxy() {
+        if (proxy == null) {
+            proxy = new ComputerProxy(() -> this) {
                 @Override
-                protected TileComputerBase getTile()
-                {
+                protected TileComputerBase getTile() {
                     return TileEntityComputer.this;
                 }
             };

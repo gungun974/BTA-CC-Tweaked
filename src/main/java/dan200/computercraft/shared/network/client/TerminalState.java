@@ -19,12 +19,11 @@ import java.util.zip.GZIPOutputStream;
 
 /**
  * A snapshot of a terminal's state.
- *
+ * <p>
  * This is somewhat memory inefficient (we build a buffer, only to write it elsewhere), however it means we get a complete and accurate description of a
  * terminal, which avoids a lot of complexities with resizing terminals, dirty states, etc...
  */
-public class TerminalState
-{
+public class TerminalState {
     public final boolean colour;
 
     public final int width;
@@ -39,29 +38,24 @@ public class TerminalState
 
     private ByteBuf compressed;
 
-    public TerminalState( boolean colour, @Nullable Terminal terminal, int selectedSlot )
-    {
-        this( colour, terminal, selectedSlot, true );
+    public TerminalState(boolean colour, @Nullable Terminal terminal, int selectedSlot) {
+        this(colour, terminal, selectedSlot, true);
     }
 
-    public TerminalState( boolean colour, @Nullable Terminal terminal, int selectedSlot, boolean compress )
-    {
+    public TerminalState(boolean colour, @Nullable Terminal terminal, int selectedSlot, boolean compress) {
         this.colour = colour;
         this.selectedSlot = selectedSlot;
         this.compress = compress;
 
-        if( terminal == null )
-        {
+        if (terminal == null) {
             width = height = 0;
             buffer = null;
-        }
-        else
-        {
+        } else {
             width = terminal.getWidth();
             height = terminal.getHeight();
 
             UniversalPacket packet = new UniversalPacket();
-            terminal.write( packet );
+            terminal.write(packet);
 
             buffer = Unpooled.buffer();
 
@@ -93,141 +87,111 @@ public class TerminalState
         }
     }
 
-    public TerminalState( UniversalPacket buf )
-    {
+    public TerminalState(UniversalPacket buf) {
         colour = buf.readBoolean();
         selectedSlot = buf.readByte();
         compress = buf.readBoolean();
 
-        if( buf.readBoolean() )
-        {
+        if (buf.readBoolean()) {
             width = buf.readInt();
             height = buf.readInt();
 
             int length = buf.readInt();
-            buffer = readCompressed( buf, length, compress );
-        }
-        else
-        {
+            buffer = readCompressed(buf, length, compress);
+        } else {
             width = height = 0;
             buffer = null;
         }
     }
 
-    private static ByteBuf readCompressed(UniversalPacket buf, int length, boolean compress )
-    {
-        if( compress )
-        {
+    private static ByteBuf readCompressed(UniversalPacket buf, int length, boolean compress) {
+        if (compress) {
             ByteBuf buffer = Unpooled.buffer();
             InputStream stream = null;
-            try
-            {
-                stream = new GZIPInputStream( buf.readBytesAsStream( length ) );
+            try {
+                stream = new GZIPInputStream(buf.readBytesAsStream(length));
                 byte[] swap = new byte[8192];
-                while( true )
-                {
-                    int bytes = stream.read( swap );
-                    if( bytes == -1 )
-                    {
+                while (true) {
+                    int bytes = stream.read(swap);
+                    if (bytes == -1) {
                         break;
                     }
-                    buffer.writeBytes( swap, 0, bytes );
+                    buffer.writeBytes(swap, 0, bytes);
                 }
-            }
-            catch( IOException e )
-            {
-                throw new UncheckedIOException( e );
-            }
-            finally
-            {
-                IoUtil.closeQuietly( stream );
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            } finally {
+                IoUtil.closeQuietly(stream);
             }
             return buffer;
-        }
-        else
-        {
-            ByteBuf buffer = Unpooled.buffer( length );
-            buf.readBytes( buffer.array(), length );
+        } else {
+            ByteBuf buffer = Unpooled.buffer(length);
+            buf.readBytes(buffer.array(), length);
             return buffer;
         }
     }
 
-    public void write( UniversalPacket buf )
-    {
-        buf.writeBoolean( colour );
+    public void write(UniversalPacket buf) {
+        buf.writeBoolean(colour);
         buf.writeByte((byte) selectedSlot);
-        buf.writeBoolean( compress );
+        buf.writeBoolean(compress);
 
-        buf.writeBoolean( buffer != null );
-        if( buffer != null )
-        {
-            buf.writeInt( width );
-            buf.writeInt( height );
+        buf.writeBoolean(buffer != null);
+        if (buffer != null) {
+            buf.writeInt(width);
+            buf.writeInt(height);
 
             ByteBuf sendBuffer = getCompressed();
 
             int length = sendBuffer.readableBytes();
-            buf.writeInt( length );
+            buf.writeInt(length);
 
             byte[] byteArray = new byte[sendBuffer.readableBytes()];
             sendBuffer.readBytes(byteArray);
             buf.writeBytes(byteArray);
 
-            buf.writeBytes(sendBuffer.readerIndex(), sendBuffer.readableBytes() );
+            buf.writeBytes(sendBuffer.readerIndex(), sendBuffer.readableBytes());
             sendBuffer.release();
             compressed = null;
         }
     }
 
-    private ByteBuf getCompressed()
-    {
-        if( buffer == null )
-        {
-            throw new NullPointerException( "buffer" );
+    private ByteBuf getCompressed() {
+        if (buffer == null) {
+            throw new NullPointerException("buffer");
         }
-        if( !compress )
-        {
+        if (!compress) {
             return buffer;
         }
-        if( compressed != null )
-        {
+        if (compressed != null) {
             return compressed;
         }
 
         ByteBuf compressed = Unpooled.directBuffer();
         OutputStream stream = null;
-        try
-        {
-            stream = new GZIPOutputStream( new ByteBufOutputStream( compressed ) );
-            stream.write( buffer.array(), buffer.arrayOffset(), buffer.readableBytes() );
-        }
-        catch( IOException e )
-        {
-            throw new UncheckedIOException( e );
-        }
-        finally
-        {
-            IoUtil.closeQuietly( stream );
+        try {
+            stream = new GZIPOutputStream(new ByteBufOutputStream(compressed));
+            stream.write(buffer.array(), buffer.arrayOffset(), buffer.readableBytes());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        } finally {
+            IoUtil.closeQuietly(stream);
         }
 
         return this.compressed = compressed;
     }
 
-    public boolean hasTerminal()
-    {
+    public boolean hasTerminal() {
         return buffer != null;
     }
 
-    public int size()
-    {
+    public int size() {
         return buffer == null ? 0 : buffer.readableBytes();
     }
 
-    public void apply( Terminal terminal )
-    {
-        if( buffer == null )
-        {
-            throw new NullPointerException( "buffer" );
+    public void apply(Terminal terminal) {
+        if (buffer == null) {
+            throw new NullPointerException("buffer");
         }
         UniversalPacket packet = new UniversalPacket();
 
@@ -235,6 +199,6 @@ public class TerminalState
         buffer.readBytes(byteArray);
         packet.writeBytes(byteArray);
 
-        terminal.read( packet );
+        terminal.read(packet);
     }
 }

@@ -14,15 +14,12 @@ import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ContainerComputer extends ContainerComputerBase
-{
-    public ContainerComputer( TileComputerBase tile )
-    {
-        super( tile.createServerComputer().getInstanceID(), tile.getFamily() );
+public class ContainerComputer extends ContainerComputerBase {
+    public ContainerComputer(TileComputerBase tile) {
+        super(tile.createServerComputer().getInstanceID(), tile.getFamily());
     }
 
-    public ContainerComputer(ItemPocketComputer item, final World world, ContainerInventory inventory, Entity entity, @Nonnull ItemStack stack)
-    {
-        super( item.createServerComputer(world, inventory, entity, stack).getInstanceID(), item.getFamily() );
+    public ContainerComputer(ItemPocketComputer item, final World world, ContainerInventory inventory, Entity entity, @Nonnull ItemStack stack) {
+        super(item.createServerComputer(world, inventory, entity, stack).getInstanceID(), item.getFamily());
     }
 }

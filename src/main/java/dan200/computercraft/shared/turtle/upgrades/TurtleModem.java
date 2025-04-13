@@ -23,28 +23,24 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public class TurtleModem extends AbstractTurtleUpgrade
-{
+public class TurtleModem extends AbstractTurtleUpgrade {
     private final boolean advanced;
 
-    public TurtleModem( boolean advanced, int id )
-    {
-        super( id,
+    public TurtleModem(boolean advanced, int id) {
+        super(id,
             TurtleUpgradeType.PERIPHERAL,
-            advanced ? ComputerCraftItems.WIRELESS_MODEM_ADVANCED : ComputerCraftItems.WIRELESS_MODEM_NORMAL );
+            advanced ? ComputerCraftItems.WIRELESS_MODEM_ADVANCED : ComputerCraftItems.WIRELESS_MODEM_NORMAL);
         this.advanced = advanced;
     }
 
     @Override
-    public IPeripheral createPeripheral( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side )
-    {
-        return new Peripheral( turtle, advanced );
+    public IPeripheral createPeripheral(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side) {
+        return new Peripheral(turtle, advanced);
     }
 
     @Nonnull
     @Override
-    public TurtleCommandResult useTool( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction dir )
-    {
+    public TurtleCommandResult useTool(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction dir) {
         return TurtleCommandResult.failure();
     }
 
@@ -99,20 +95,16 @@ public class TurtleModem extends AbstractTurtleUpgrade
     }
 
     @Override
-    public void update( @Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side )
-    {
+    public void update(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side) {
         // Advance the modem
-        if( !Helper.isClientWorld())
-        {
-            IPeripheral peripheral = turtle.getPeripheral( side );
-            if( peripheral instanceof Peripheral )
-            {
+        if (!Helper.isClientWorld()) {
+            IPeripheral peripheral = turtle.getPeripheral(side);
+            if (peripheral instanceof Peripheral) {
                 ModemState state = ((Peripheral) peripheral).getModemState();
-                if( state.pollChanged() )
-                {
-                    turtle.getUpgradeNBTData( side )
-                        .putBoolean( "active", state.isOpen() );
-                    turtle.updateUpgradeNBTData( side );
+                if (state.pollChanged()) {
+                    turtle.getUpgradeNBTData(side)
+                        .putBoolean("active", state.isOpen());
+                    turtle.updateUpgradeNBTData(side);
                 }
             }
         }
@@ -126,34 +118,29 @@ public class TurtleModem extends AbstractTurtleUpgrade
         return "upgrade.computercraft.wireless_modem_normal.adjective";
     }
 
-    private static class Peripheral extends WirelessModemPeripheral
-    {
+    private static class Peripheral extends WirelessModemPeripheral {
         private final ITurtleAccess turtle;
 
-        Peripheral( ITurtleAccess turtle, boolean advanced )
-        {
-            super( new ModemState(), advanced );
+        Peripheral(ITurtleAccess turtle, boolean advanced) {
+            super(new ModemState(), advanced);
             this.turtle = turtle;
         }
 
         @Nonnull
         @Override
-        public World getWorld()
-        {
+        public World getWorld() {
             return turtle.getWorld();
         }
 
         @Nonnull
         @Override
-        public Vec3 getPosition()
-        {
+        public Vec3 getPosition() {
             BlockPos turtlePos = turtle.getPosition();
             return Vec3.getPermanentVec3(turtlePos.getX(), turtlePos.getY(), turtlePos.getZ());
         }
 
         @Override
-        public boolean equals( IPeripheral other )
-        {
+        public boolean equals(IPeripheral other) {
             return this == other || (other instanceof Peripheral && ((Peripheral) other).turtle == turtle);
         }
     }

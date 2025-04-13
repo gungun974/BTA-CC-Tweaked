@@ -7,9 +7,8 @@ package dan200.computercraft.core.apis.http.options;
 
 import javax.annotation.Nonnull;
 
-public final class PartialOptions
-{
-    static final PartialOptions DEFAULT = new PartialOptions( null, null, null, null, null );
+public final class PartialOptions {
+    static final PartialOptions DEFAULT = new PartialOptions(null, null, null, null, null);
 
     Action action;
     Long maxUpload;
@@ -19,8 +18,7 @@ public final class PartialOptions
 
     Options options;
 
-    PartialOptions( Action action, Long maxUpload, Long maxDownload, Integer timeout, Integer websocketMessage )
-    {
+    PartialOptions(Action action, Long maxUpload, Long maxDownload, Integer timeout, Integer websocketMessage) {
         this.action = action;
         this.maxUpload = maxUpload;
         this.maxDownload = maxDownload;
@@ -29,9 +27,8 @@ public final class PartialOptions
     }
 
     @Nonnull
-    Options toOptions()
-    {
-        if( options != null ) return options;
+    Options toOptions() {
+        if (options != null) return options;
 
         return options = new Options(
             action == null ? Action.DENY : action,
@@ -42,17 +39,15 @@ public final class PartialOptions
         );
     }
 
-    void merge( @Nonnull PartialOptions other )
-    {
-        if( action == null && other.action != null ) action = other.action;
-        if( maxUpload == null && other.maxUpload != null ) maxUpload = other.maxUpload;
-        if( maxDownload == null && other.maxDownload != null ) maxDownload = other.maxDownload;
-        if( timeout == null && other.timeout != null ) timeout = other.timeout;
-        if( websocketMessage == null && other.websocketMessage != null ) websocketMessage = other.websocketMessage;
+    void merge(@Nonnull PartialOptions other) {
+        if (action == null && other.action != null) action = other.action;
+        if (maxUpload == null && other.maxUpload != null) maxUpload = other.maxUpload;
+        if (maxDownload == null && other.maxDownload != null) maxDownload = other.maxDownload;
+        if (timeout == null && other.timeout != null) timeout = other.timeout;
+        if (websocketMessage == null && other.websocketMessage != null) websocketMessage = other.websocketMessage;
     }
 
-    PartialOptions copy()
-    {
-        return new PartialOptions( action, maxUpload, maxDownload, timeout, websocketMessage );
+    PartialOptions copy() {
+        return new PartialOptions(action, maxUpload, maxDownload, timeout, websocketMessage);
     }
 }

@@ -18,8 +18,7 @@ import net.minecraft.core.item.ItemStack;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 
-public class ComputerUpgradeRecipe extends ComputerFamilyRecipe implements HasJsonAdapter
-{
+public class ComputerUpgradeRecipe extends ComputerFamilyRecipe implements HasJsonAdapter {
     public ComputerUpgradeRecipe(int recipeWidth, int recipeHeight, RecipeSymbol[] input, ItemStack output, boolean consumeContainerItem, boolean allowMirrored, ComputerFamily family) {
         super(recipeWidth, recipeHeight, input, output, consumeContainerItem, allowMirrored, family);
     }
@@ -30,9 +29,8 @@ public class ComputerUpgradeRecipe extends ComputerFamilyRecipe implements HasJs
 
     @Nonnull
     @Override
-    protected ItemStack convert( @Nonnull IComputerItem item, @Nonnull ItemStack stack )
-    {
-        return item.withFamily( stack, getFamily() );
+    protected ItemStack convert(@Nonnull IComputerItem item, @Nonnull ItemStack stack) {
+        return item.withFamily(stack, getFamily());
     }
 
     @Override
@@ -59,9 +57,9 @@ public class ComputerUpgradeRecipe extends ComputerFamilyRecipe implements HasJs
         }
 
         public JsonElement serialize(ComputerUpgradeRecipe src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonElement recipeEntryCraftingShaped = (new RecipeCraftingShapedJsonAdapter()).serialize( src, typeOfSrc, context);
+            JsonElement recipeEntryCraftingShaped = (new RecipeCraftingShapedJsonAdapter()).serialize(src, typeOfSrc, context);
 
-            JsonObject obj =  recipeEntryCraftingShaped.getAsJsonObject();
+            JsonObject obj = recipeEntryCraftingShaped.getAsJsonObject();
 
             obj.add("family", context.serialize(src.getFamily().name()));
 

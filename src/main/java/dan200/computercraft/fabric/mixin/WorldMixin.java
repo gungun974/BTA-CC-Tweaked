@@ -37,9 +37,8 @@ public abstract class WorldMixin {
         cancellable = true
     )
     public void addEntity(Entity entity, CallbackInfoReturnable<Boolean> ci) {
-        if( DropConsumer.onEntitySpawn( entity ) )
-        {
-            ci.setReturnValue( false );
+        if (DropConsumer.onEntitySpawn(entity)) {
+            ci.setReturnValue(false);
         }
     }
 }

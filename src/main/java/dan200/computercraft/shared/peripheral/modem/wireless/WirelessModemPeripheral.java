@@ -13,38 +13,29 @@ import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
 import net.minecraft.core.world.weather.Weathers;
 
-public abstract class WirelessModemPeripheral extends ModemPeripheral
-{
+public abstract class WirelessModemPeripheral extends ModemPeripheral {
     private final boolean advanced;
 
-    public WirelessModemPeripheral( ModemState state, boolean advanced )
-    {
-        super( state );
+    public WirelessModemPeripheral(ModemState state, boolean advanced) {
+        super(state);
         this.advanced = advanced;
     }
 
     @Override
-    public double getRange()
-    {
-        if( advanced )
-        {
+    public double getRange() {
+        if (advanced) {
             return Integer.MAX_VALUE;
-        }
-        else
-        {
+        } else {
             World world = getWorld();
-            if( world != null )
-            {
+            if (world != null) {
                 Vec3 position = getPosition();
                 double minRange = ComputerCraft.modemRange;
                 double maxRange = ComputerCraft.modemHighAltitudeRange;
-                if( world.getCurrentWeather() != null && world.getCurrentWeather().weatherId == Weathers.OVERWORLD_STORM.weatherId)
-                {
+                if (world.getCurrentWeather() != null && world.getCurrentWeather().weatherId == Weathers.OVERWORLD_STORM.weatherId) {
                     minRange = ComputerCraft.modemRangeDuringStorm;
                     maxRange = ComputerCraft.modemHighAltitudeRangeDuringStorm;
                 }
-                if( position.y > 96.0 && maxRange > minRange )
-                {
+                if (position.y > 96.0 && maxRange > minRange) {
                     return minRange + (position.y - 96.0) * ((maxRange - minRange) / ((World.HEIGHT_BLOCKS - 1) - 96.0));
                 }
                 return minRange;
@@ -54,14 +45,12 @@ public abstract class WirelessModemPeripheral extends ModemPeripheral
     }
 
     @Override
-    public boolean isInterdimensional()
-    {
+    public boolean isInterdimensional() {
         return advanced;
     }
 
     @Override
-    protected IPacketNetwork getNetwork()
-    {
+    protected IPacketNetwork getNetwork() {
         return WirelessNetwork.getUniversal();
     }
 }

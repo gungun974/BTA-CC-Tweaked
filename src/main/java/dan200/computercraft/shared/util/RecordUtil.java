@@ -12,13 +12,12 @@ import net.minecraft.core.world.World;
 import turniplabs.halplibe.helper.network.NetworkHandler;
 import turniplabs.halplibe.helper.network.NetworkMessage;
 
-public final class RecordUtil
-{
-    private RecordUtil() {}
+public final class RecordUtil {
+    private RecordUtil() {
+    }
 
-    public static void playRecord(SoundEntry record, String recordInfo, World world, BlockPos pos )
-    {
-        NetworkMessage packet = record != null ? new PlayRecordClientMessage( pos, record, recordInfo ) : new PlayRecordClientMessage( pos );
-        NetworkHandler.sendToAllAround( pos.x, pos.y, pos.z, 64,  world.dimension.id,  packet );
+    public static void playRecord(SoundEntry record, String recordInfo, World world, BlockPos pos) {
+        NetworkMessage packet = record != null ? new PlayRecordClientMessage(pos, record, recordInfo) : new PlayRecordClientMessage(pos);
+        NetworkHandler.sendToAllAround(pos.x, pos.y, pos.z, 64, world.dimension.id, packet);
     }
 }

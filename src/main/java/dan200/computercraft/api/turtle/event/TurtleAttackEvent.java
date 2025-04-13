@@ -5,7 +5,6 @@
  */
 package dan200.computercraft.api.turtle.event;
 
-import dan200.computercraft.api.turtle.FakePlayer;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
@@ -19,19 +18,17 @@ import java.util.Objects;
  *
  * @see TurtleAction#ATTACK
  */
-public class TurtleAttackEvent extends TurtleActionEvent
-{
+public class TurtleAttackEvent extends TurtleActionEvent {
     private final Entity target;
     private final ITurtleUpgrade upgrade;
     private final TurtleSide side;
 
-    public TurtleAttackEvent( @Nonnull ITurtleAccess turtle, @Nonnull Entity target, @Nonnull ITurtleUpgrade upgrade,
-                              @Nonnull TurtleSide side )
-    {
-        super( turtle, TurtleAction.ATTACK );
-        Objects.requireNonNull( target, "target cannot be null" );
-        Objects.requireNonNull( upgrade, "upgrade cannot be null" );
-        Objects.requireNonNull( side, "side cannot be null" );
+    public TurtleAttackEvent(@Nonnull ITurtleAccess turtle, @Nonnull Entity target, @Nonnull ITurtleUpgrade upgrade,
+                             @Nonnull TurtleSide side) {
+        super(turtle, TurtleAction.ATTACK);
+        Objects.requireNonNull(target, "target cannot be null");
+        Objects.requireNonNull(upgrade, "upgrade cannot be null");
+        Objects.requireNonNull(side, "side cannot be null");
         this.target = target;
         this.upgrade = upgrade;
         this.side = side;
@@ -43,8 +40,7 @@ public class TurtleAttackEvent extends TurtleActionEvent
      * @return The entity being attacked.
      */
     @Nonnull
-    public Entity getTarget()
-    {
+    public Entity getTarget() {
         return target;
     }
 
@@ -54,8 +50,7 @@ public class TurtleAttackEvent extends TurtleActionEvent
      * @return The upgrade responsible for attacking.
      */
     @Nonnull
-    public ITurtleUpgrade getUpgrade()
-    {
+    public ITurtleUpgrade getUpgrade() {
         return upgrade;
     }
 
@@ -65,8 +60,7 @@ public class TurtleAttackEvent extends TurtleActionEvent
      * @return The upgrade's side.
      */
     @Nonnull
-    public TurtleSide getSide()
-    {
+    public TurtleSide getSide() {
         return side;
     }
 }

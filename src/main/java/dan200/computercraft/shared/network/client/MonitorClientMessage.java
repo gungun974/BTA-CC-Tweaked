@@ -13,19 +13,16 @@ import org.jetbrains.annotations.NotNull;
 import turniplabs.halplibe.helper.network.NetworkMessage;
 import turniplabs.halplibe.helper.network.UniversalPacket;
 
-public class MonitorClientMessage implements NetworkMessage
-{
+public class MonitorClientMessage implements NetworkMessage {
     private int x;
     private int y;
     private int z;
     private TerminalState state;
 
-    public MonitorClientMessage()
-    {
+    public MonitorClientMessage() {
     }
 
-    public MonitorClientMessage( BlockPos pos, TerminalState state )
-    {
+    public MonitorClientMessage(BlockPos pos, TerminalState state) {
         this.x = pos.x;
         this.y = pos.y;
         this.z = pos.z;
@@ -37,7 +34,7 @@ public class MonitorClientMessage implements NetworkMessage
         packet.writeInt(x);
         packet.writeInt(y);
         packet.writeInt(z);
-        state.write( packet );
+        state.write(packet);
     }
 
     @Override
@@ -45,23 +42,21 @@ public class MonitorClientMessage implements NetworkMessage
         x = packet.readInt();
         y = packet.readInt();
         z = packet.readInt();
-        state.write( packet );
+        state.write(packet);
     }
 
     @Override
     public void handle(NetworkContext context) {
         Player player = context.player;
-        if( player == null || player.world == null )
-        {
+        if (player == null || player.world == null) {
             return;
         }
 
-        TileEntity te = player.world.getTileEntity( x, y, z );
-        if( !(te instanceof TileMonitor) )
-        {
+        TileEntity te = player.world.getTileEntity(x, y, z);
+        if (!(te instanceof TileMonitor)) {
             return;
         }
 
-        ((TileMonitor) te).read( state );
+        ((TileMonitor) te).read(state);
     }
 }

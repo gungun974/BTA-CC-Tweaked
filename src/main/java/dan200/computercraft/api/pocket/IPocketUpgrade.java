@@ -18,11 +18,10 @@ import javax.annotation.Nullable;
  *
  * @see ComputerCraftAPI#registerPocketUpgrade(IPocketUpgrade)
  */
-public interface IPocketUpgrade extends IUpgradeBase
-{
+public interface IPocketUpgrade extends IUpgradeBase {
     /**
      * Creates a peripheral for the pocket computer.
-     *
+     * <p>
      * The peripheral created will be stored for the lifetime of the upgrade, will be passed an argument to {@link #update(IPocketAccess, IPeripheral)} and
      * will be attached, detached and have methods called in the same manner as an ordinary peripheral.
      *
@@ -31,7 +30,7 @@ public interface IPocketUpgrade extends IUpgradeBase
      * @see #update(IPocketAccess, IPeripheral)
      */
     @Nullable
-    IPeripheral createPeripheral( @Nonnull IPocketAccess access );
+    IPeripheral createPeripheral(@Nonnull IPocketAccess access);
 
     /**
      * Called when the pocket computer item stack updates.
@@ -40,8 +39,7 @@ public interface IPocketUpgrade extends IUpgradeBase
      * @param peripheral The peripheral for this upgrade.
      * @see #createPeripheral(IPocketAccess)
      */
-    default void update( @Nonnull IPocketAccess access, @Nullable IPeripheral peripheral )
-    {
+    default void update(@Nonnull IPocketAccess access, @Nullable IPeripheral peripheral) {
     }
 
     /**
@@ -54,8 +52,7 @@ public interface IPocketUpgrade extends IUpgradeBase
      * requiring the player to be sneaking - otherwise they will be unable to access the GUI.
      * @see #createPeripheral(IPocketAccess)
      */
-    default boolean onRightClick( @Nonnull World world, @Nonnull IPocketAccess access, @Nullable IPeripheral peripheral )
-    {
+    default boolean onRightClick(@Nonnull World world, @Nonnull IPocketAccess access, @Nullable IPeripheral peripheral) {
         return false;
     }
 }

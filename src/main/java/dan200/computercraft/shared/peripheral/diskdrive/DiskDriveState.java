@@ -7,20 +7,17 @@ package dan200.computercraft.shared.peripheral.diskdrive;
 
 import javax.annotation.Nonnull;
 
-public enum DiskDriveState
-{
-    EMPTY( "empty" ), FULL( "full" ), INVALID( "invalid" );
+public enum DiskDriveState {
+    EMPTY("empty"), FULL("full"), INVALID("invalid");
 
     private final String name;
 
-    DiskDriveState( String name )
-    {
+    DiskDriveState(String name) {
         this.name = name;
     }
 
     @Nonnull
-    public String asString()
-    {
+    public String asString() {
         return name;
     }
 }

@@ -28,8 +28,7 @@ import static dan200.computercraft.api.lua.LuaValues.checkFinite;
  *
  * @cc.module os
  */
-public class OSAPI implements ILuaAPI
-{
+public class OSAPI implements ILuaAPI {
     private final IAPIEnvironment apiEnvironment;
 
     private final Int2ObjectMap<Alarm> alarms = new Int2ObjectOpenHashMap<>();
@@ -39,75 +38,68 @@ public class OSAPI implements ILuaAPI
 
     private int nextAlarmToken = 0;
 
-    private static class Alarm implements Comparable<Alarm>
-    {
-        final double time;
-        final int day;
-
-        Alarm( double time, int day )
-        {
-            this.time = time;
-            this.day = day;
-        }
-
-        @Override
-        public int compareTo( @Nonnull Alarm o )
-        {
-            double t = day * 24.0 + time;
-            double ot = day * 24.0 + time;
-            return Double.compare( t, ot );
-        }
-    }
-
-    public OSAPI( IAPIEnvironment environment )
-    {
+    public OSAPI(IAPIEnvironment environment) {
         apiEnvironment = environment;
     }
 
-    @Override
-    public String[] getNames()
-    {
-        return new String[] { "os" };
+    private static float getTimeForCalendar(Calendar c) {
+        float time = c.get(Calendar.HOUR_OF_DAY);
+        time += c.get(Calendar.MINUTE) / 60.0f;
+        time += c.get(Calendar.SECOND) / (60.0f * 60.0f);
+        return time;
+    }
+
+    private static int getDayForCalendar(Calendar c) {
+        GregorianCalendar g = c instanceof GregorianCalendar ? (GregorianCalendar) c : new GregorianCalendar();
+        int year = c.get(Calendar.YEAR);
+        int day = 0;
+        for (int y = 1970; y < year; y++) {
+            day += g.isLeapYear(y) ? 366 : 365;
+        }
+        day += c.get(Calendar.DAY_OF_YEAR);
+        return day;
+    }
+
+    private static long getEpochForCalendar(Calendar c) {
+        return c.getTime().getTime();
     }
 
     @Override
-    public void startup()
-    {
+    public String[] getNames() {
+        return new String[]{"os"};
+    }
+
+    @Override
+    public void startup() {
         time = apiEnvironment.getComputerEnvironment().getTimeOfDay();
         day = apiEnvironment.getComputerEnvironment().getDay();
         clock = 0;
 
-        synchronized( alarms )
-        {
+        synchronized (alarms) {
             alarms.clear();
         }
     }
 
     @Override
-    public void update()
-    {
+    public void update() {
         clock++;
 
         // Wait for all of our alarms
-        synchronized( alarms )
-        {
+        synchronized (alarms) {
             double previousTime = time;
             int previousDay = day;
             double time = apiEnvironment.getComputerEnvironment().getTimeOfDay();
             int day = apiEnvironment.getComputerEnvironment().getDay();
 
-            if( time > previousTime || day > previousDay )
-            {
+            if (time > previousTime || day > previousDay) {
                 double now = this.day * 24.0 + this.time;
                 Iterator<Int2ObjectMap.Entry<Alarm>> it = alarms.int2ObjectEntrySet().iterator();
-                while( it.hasNext() )
-                {
+                while (it.hasNext()) {
                     Int2ObjectMap.Entry<Alarm> entry = it.next();
                     Alarm alarm = entry.getValue();
                     double t = alarm.day * 24.0 + alarm.time;
-                    if( now >= t )
-                    {
-                        apiEnvironment.queueEvent( "alarm", entry.getIntKey() );
+                    if (now >= t) {
+                        apiEnvironment.queueEvent("alarm", entry.getIntKey());
                         it.remove();
                     }
                 }
@@ -119,38 +111,10 @@ public class OSAPI implements ILuaAPI
     }
 
     @Override
-    public void shutdown()
-    {
-        synchronized( alarms )
-        {
+    public void shutdown() {
+        synchronized (alarms) {
             alarms.clear();
         }
-    }
-
-    private static float getTimeForCalendar( Calendar c )
-    {
-        float time = c.get( Calendar.HOUR_OF_DAY );
-        time += c.get( Calendar.MINUTE ) / 60.0f;
-        time += c.get( Calendar.SECOND ) / (60.0f * 60.0f);
-        return time;
-    }
-
-    private static int getDayForCalendar( Calendar c )
-    {
-        GregorianCalendar g = c instanceof GregorianCalendar ? (GregorianCalendar) c : new GregorianCalendar();
-        int year = c.get( Calendar.YEAR );
-        int day = 0;
-        for( int y = 1970; y < year; y++ )
-        {
-            day += g.isLeapYear( y ) ? 366 : 365;
-        }
-        day += c.get( Calendar.DAY_OF_YEAR );
-        return day;
-    }
-
-    private static long getEpochForCalendar( Calendar c )
-    {
-        return c.getTime().getTime();
     }
 
     /**
@@ -164,16 +128,15 @@ public class OSAPI implements ILuaAPI
      * @cc.see os.pullEvent To pull the event queued
      */
     @LuaFunction
-    public final void queueEvent( String name, IArguments args )
-    {
-        apiEnvironment.queueEvent( name, args.drop( 1 ).getAll() );
+    public final void queueEvent(String name, IArguments args) {
+        apiEnvironment.queueEvent(name, args.drop(1).getAll());
     }
 
     /**
      * Starts a timer that will run for the specified number of seconds. Once
      * the timer fires, a {@code timer} event will be added to the queue with
      * the ID returned from this function as the first parameter.
-     *
+     * <p>
      * As with @{os.sleep|sleep}, {@code timer} will automatically be rounded up
      * to the nearest multiple of 0.05 seconds, as it waits for a fixed amount
      * of world ticks.
@@ -185,9 +148,8 @@ public class OSAPI implements ILuaAPI
      * @see #cancelTimer To cancel a timer.
      */
     @LuaFunction
-    public final int startTimer( double timer ) throws LuaException
-    {
-        return apiEnvironment.startTimer( Math.round( checkFinite( 0, timer ) / 0.05 ) );
+    public final int startTimer(double timer) throws LuaException {
+        return apiEnvironment.startTimer(Math.round(checkFinite(0, timer) / 0.05));
     }
 
     /**
@@ -198,9 +160,8 @@ public class OSAPI implements ILuaAPI
      * @see #startTimer To start a timer.
      */
     @LuaFunction
-    public final void cancelTimer( int token )
-    {
-        apiEnvironment.cancelTimer( token );
+    public final void cancelTimer(int token) {
+        apiEnvironment.cancelTimer(token);
     }
 
     /**
@@ -215,14 +176,12 @@ public class OSAPI implements ILuaAPI
      * @see #cancelAlarm To cancel an alarm.
      */
     @LuaFunction
-    public final int setAlarm( double time ) throws LuaException
-    {
-        checkFinite( 0, time );
-        if( time < 0.0 || time >= 24.0 ) throw new LuaException( "Number out of range" );
-        synchronized( alarms )
-        {
+    public final int setAlarm(double time) throws LuaException {
+        checkFinite(0, time);
+        if (time < 0.0 || time >= 24.0) throw new LuaException("Number out of range");
+        synchronized (alarms) {
             int day = time > this.time ? this.day : this.day + 1;
-            alarms.put( nextAlarmToken, new Alarm( time, day ) );
+            alarms.put(nextAlarmToken, new Alarm(time, day));
             return nextAlarmToken++;
         }
     }
@@ -235,29 +194,25 @@ public class OSAPI implements ILuaAPI
      * @see #setAlarm To set an alarm.
      */
     @LuaFunction
-    public final void cancelAlarm( int token )
-    {
-        synchronized( alarms )
-        {
-            alarms.remove( token );
+    public final void cancelAlarm(int token) {
+        synchronized (alarms) {
+            alarms.remove(token);
         }
     }
 
     /**
      * Shuts down the computer immediately.
      */
-    @LuaFunction( "shutdown" )
-    public final void doShutdown()
-    {
+    @LuaFunction("shutdown")
+    public final void doShutdown() {
         apiEnvironment.shutdown();
     }
 
     /**
      * Reboots the computer immediately.
      */
-    @LuaFunction( "reboot" )
-    public final void doReboot()
-    {
+    @LuaFunction("reboot")
+    public final void doReboot() {
         apiEnvironment.reboot();
     }
 
@@ -266,9 +221,8 @@ public class OSAPI implements ILuaAPI
      *
      * @return The ID of the computer.
      */
-    @LuaFunction( { "getComputerID", "computerID" } )
-    public final int getComputerID()
-    {
+    @LuaFunction({"getComputerID", "computerID"})
+    public final int getComputerID() {
         return apiEnvironment.getComputerID();
     }
 
@@ -278,11 +232,10 @@ public class OSAPI implements ILuaAPI
      * @return The label of the computer.
      * @cc.treturn string The label of the computer.
      */
-    @LuaFunction( { "getComputerLabel", "computerLabel" } )
-    public final Object[] getComputerLabel()
-    {
+    @LuaFunction({"getComputerLabel", "computerLabel"})
+    public final Object[] getComputerLabel() {
         String label = apiEnvironment.getLabel();
-        return label == null ? null : new Object[] { label };
+        return label == null ? null : new Object[]{label};
     }
 
     /**
@@ -291,9 +244,8 @@ public class OSAPI implements ILuaAPI
      * @param label The new label. May be {@code nil} in order to clear it.
      */
     @LuaFunction
-    public final void setComputerLabel( Optional<String> label )
-    {
-        apiEnvironment.setLabel( StringUtil.normaliseLabel( label.orElse( null ) ) );
+    public final void setComputerLabel(Optional<String> label) {
+        apiEnvironment.setLabel(StringUtil.normaliseLabel(label.orElse(null)));
     }
 
     /**
@@ -302,21 +254,20 @@ public class OSAPI implements ILuaAPI
      * @return The computer's uptime.
      */
     @LuaFunction
-    public final double clock()
-    {
+    public final double clock() {
         return clock * 0.05;
     }
 
     /**
      * Returns the current time depending on the string passed in. This will
      * always be in the range [0.0, 24.0).
-     *
+     * <p>
      * * If called with {@code ingame}, the current world time will be returned.
      * This is the default if nothing is passed.
      * * If called with {@code utc}, returns the hour of the day in UTC time.
      * * If called with {@code local}, returns the hour of the day in the
      * timezone the server is located in.
-     *
+     * <p>
      * This function can also be called with a table returned from {@link #date},
      * which will convert the date fields into a UNIX timestamp (number of
      * seconds since 1 January 1970).
@@ -328,28 +279,26 @@ public class OSAPI implements ILuaAPI
      * @see #date To get a date table that can be converted with this function.
      */
     @LuaFunction
-    public final Object time( IArguments args ) throws LuaException
-    {
-        Object value = args.get( 0 );
-        if( value instanceof Map ) return LuaDateTime.fromTable( (Map<?, ?>) value );
+    public final Object time(IArguments args) throws LuaException {
+        Object value = args.get(0);
+        if (value instanceof Map) return LuaDateTime.fromTable((Map<?, ?>) value);
 
-        String param = args.optString( 0, "ingame" );
-        switch( param.toLowerCase( Locale.ROOT ) )
-        {
+        String param = args.optString(0, "ingame");
+        switch (param.toLowerCase(Locale.ROOT)) {
             case "utc": // Get Hour of day (UTC)
-                return getTimeForCalendar( Calendar.getInstance( TimeZone.getTimeZone( "UTC" ) ) );
+                return getTimeForCalendar(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
             case "local": // Get Hour of day (local time)
-                return getTimeForCalendar( Calendar.getInstance() );
+                return getTimeForCalendar(Calendar.getInstance());
             case "ingame": // Get in-game hour
                 return time;
             default:
-                throw new LuaException( "Unsupported operation" );
+                throw new LuaException("Unsupported operation");
         }
     }
 
     /**
      * Returns the day depending on the locale specified.
-     *
+     * <p>
      * * If called with {@code ingame}, returns the number of days since the
      * world was created. This is the default.
      * * If called with {@code utc}, returns the number of days since 1 January
@@ -362,24 +311,22 @@ public class OSAPI implements ILuaAPI
      * @throws LuaException If an invalid locale is passed.
      */
     @LuaFunction
-    public final int day( Optional<String> args ) throws LuaException
-    {
-        switch( args.orElse( "ingame" ).toLowerCase( Locale.ROOT ) )
-        {
+    public final int day(Optional<String> args) throws LuaException {
+        switch (args.orElse("ingame").toLowerCase(Locale.ROOT)) {
             case "utc":     // Get numbers of days since 1970-01-01 (utc)
-                return getDayForCalendar( Calendar.getInstance( TimeZone.getTimeZone( "UTC" ) ) );
+                return getDayForCalendar(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
             case "local": // Get numbers of days since 1970-01-01 (local time)
-                return getDayForCalendar( Calendar.getInstance() );
+                return getDayForCalendar(Calendar.getInstance());
             case "ingame":// Get game day
                 return day;
             default:
-                throw new LuaException( "Unsupported operation" );
+                throw new LuaException("Unsupported operation");
         }
     }
 
     /**
      * Returns the number of milliseconds since an epoch depending on the locale.
-     *
+     * <p>
      * * If called with {@code ingame}, returns the number of milliseconds since the
      * world was created. This is the default.
      * * If called with {@code utc}, returns the number of milliseconds since 1
@@ -392,40 +339,36 @@ public class OSAPI implements ILuaAPI
      * @throws LuaException If an invalid locale is passed.
      */
     @LuaFunction
-    public final long epoch( Optional<String> args ) throws LuaException
-    {
-        switch( args.orElse( "ingame" ).toLowerCase( Locale.ROOT ) )
-        {
-            case "utc":
-            {
+    public final long epoch(Optional<String> args) throws LuaException {
+        switch (args.orElse("ingame").toLowerCase(Locale.ROOT)) {
+            case "utc": {
                 // Get utc epoch
-                Calendar c = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ) );
-                return getEpochForCalendar( c );
+                Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                return getEpochForCalendar(c);
             }
             case "local":
                 // Get local epoch
                 Calendar c = Calendar.getInstance();
-                return getEpochForCalendar( c );
+                return getEpochForCalendar(c);
             case "ingame":
                 // Get in-game epoch
-                synchronized( alarms )
-                {
+                synchronized (alarms) {
                     return day * 86400000L + (long) (time * 3600000.0);
                 }
             default:
-                throw new LuaException( "Unsupported operation" );
+                throw new LuaException("Unsupported operation");
         }
     }
 
     /**
      * Returns a date string (or table) using a specified format string and
      * optional time to format.
-     *
+     * <p>
      * The format string takes the same formats as C's {@code strftime} function
      * (http://www.cplusplus.com/reference/ctime/strftime/). In extension, it
      * can be prefixed with an exclamation mark ({@code !}) to use UTC time
      * instead of the server's local timezone.
-     *
+     * <p>
      * If the format is exactly {@code *t} (optionally prefixed with {@code !}), a
      * table will be returned instead. This table has fields for the year, month,
      * day, hour, minute, second, day of the week, day of the year, and whether
@@ -438,32 +381,45 @@ public class OSAPI implements ILuaAPI
      * @throws LuaException If an invalid format is passed.
      */
     @LuaFunction
-    public final Object date( Optional<String> formatA, Optional<Long> timeA ) throws LuaException
-    {
-        String format = formatA.orElse( "%c" );
-        long time = timeA.orElseGet( () -> Instant.now().getEpochSecond() );
+    public final Object date(Optional<String> formatA, Optional<Long> timeA) throws LuaException {
+        String format = formatA.orElse("%c");
+        long time = timeA.orElseGet(() -> Instant.now().getEpochSecond());
 
-        Instant instant = Instant.ofEpochSecond( time );
+        Instant instant = Instant.ofEpochSecond(time);
         ZonedDateTime date;
         ZoneOffset offset;
-        if( format.startsWith( "!" ) )
-        {
+        if (format.startsWith("!")) {
             offset = ZoneOffset.UTC;
-            date = ZonedDateTime.ofInstant( instant, offset );
-            format = format.substring( 1 );
-        }
-        else
-        {
+            date = ZonedDateTime.ofInstant(instant, offset);
+            format = format.substring(1);
+        } else {
             ZoneId id = ZoneId.systemDefault();
-            offset = id.getRules().getOffset( instant );
-            date = ZonedDateTime.ofInstant( instant, id );
+            offset = id.getRules().getOffset(instant);
+            date = ZonedDateTime.ofInstant(instant, id);
         }
 
-        if( format.equals( "*t" ) ) return LuaDateTime.toTable( date, offset, instant );
+        if (format.equals("*t")) return LuaDateTime.toTable(date, offset, instant);
 
         DateTimeFormatterBuilder formatter = new DateTimeFormatterBuilder();
-        LuaDateTime.format( formatter, format, offset );
-        return formatter.toFormatter( Locale.ROOT ).format( date );
+        LuaDateTime.format(formatter, format, offset);
+        return formatter.toFormatter(Locale.ROOT).format(date);
+    }
+
+    private static class Alarm implements Comparable<Alarm> {
+        final double time;
+        final int day;
+
+        Alarm(double time, int day) {
+            this.time = time;
+            this.day = day;
+        }
+
+        @Override
+        public int compareTo(@Nonnull Alarm o) {
+            double t = day * 24.0 + time;
+            double ot = day * 24.0 + time;
+            return Double.compare(t, ot);
+        }
     }
 
 }

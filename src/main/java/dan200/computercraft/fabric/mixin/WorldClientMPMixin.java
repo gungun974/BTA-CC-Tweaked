@@ -1,10 +1,7 @@
 package dan200.computercraft.fabric.mixin;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.client.FrameInfo;
-import net.minecraft.client.world.WorldClient;
 import net.minecraft.client.world.WorldClientMP;
-import net.minecraft.core.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

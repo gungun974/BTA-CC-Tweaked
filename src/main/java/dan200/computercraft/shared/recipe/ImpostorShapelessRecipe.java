@@ -5,8 +5,13 @@
  */
 package dan200.computercraft.shared.recipe;
 
-import com.google.gson.*;
-import net.minecraft.core.data.registry.recipe.*;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import net.minecraft.core.data.registry.recipe.HasJsonAdapter;
+import net.minecraft.core.data.registry.recipe.RecipeSymbol;
+import net.minecraft.core.data.registry.recipe.SearchQuery;
 import net.minecraft.core.data.registry.recipe.adapter.RecipeCraftingShapelessJsonAdapter;
 import net.minecraft.core.data.registry.recipe.adapter.RecipeJsonAdapter;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCraftingShapeless;
@@ -42,7 +47,7 @@ public class ImpostorShapelessRecipe extends RecipeEntryCraftingShapeless implem
 
     private static class ImpostorShapelessRecipeJsonAdapter implements RecipeJsonAdapter<ImpostorShapelessRecipe> {
         public ImpostorShapelessRecipe deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            RecipeEntryCraftingShapeless recipeEntryCraftingShapeless  = (new RecipeCraftingShapelessJsonAdapter()).deserialize(json, typeOfT, context);
+            RecipeEntryCraftingShapeless recipeEntryCraftingShapeless = (new RecipeCraftingShapelessJsonAdapter()).deserialize(json, typeOfT, context);
 
             return new ImpostorShapelessRecipe(
                 recipeEntryCraftingShapeless.getInput(),
@@ -51,7 +56,7 @@ public class ImpostorShapelessRecipe extends RecipeEntryCraftingShapeless implem
         }
 
         public JsonElement serialize(ImpostorShapelessRecipe src, Type typeOfSrc, JsonSerializationContext context) {
-            return (new RecipeCraftingShapelessJsonAdapter()).serialize( src, typeOfSrc, context);
+            return (new RecipeCraftingShapelessJsonAdapter()).serialize(src, typeOfSrc, context);
         }
     }
 }

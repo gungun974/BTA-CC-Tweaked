@@ -10,8 +10,7 @@ package dan200.computercraft.api.turtle.event;
  *
  * @see TurtleActionEvent
  */
-public enum TurtleAction
-{
+public enum TurtleAction {
     /**
      * A turtle moves to a new position.
      *

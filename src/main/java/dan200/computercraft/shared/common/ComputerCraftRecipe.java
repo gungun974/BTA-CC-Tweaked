@@ -22,7 +22,7 @@ import turniplabs.halplibe.util.RecipeEntrypoint;
 public class ComputerCraftRecipe implements RecipeEntrypoint {
 
     public static ComputerCraftRecipeNamespace COMPUTER_CRAFT = new ComputerCraftRecipeNamespace();
-    public static RecipeGroup<RecipeEntryCrafting<?,?>> WORKBENCH;
+    public static RecipeGroup<RecipeEntryCrafting<?, ?>> WORKBENCH;
     public static RecipeGroup<ColourableRecipe> COLOUR;
     public static RecipeGroup<ComputerUpgradeRecipe> COMPUTER_UPGRADE;
     public static RecipeGroup<ImpostorShapelessRecipe> IMPOSTOR_SHAPELESS;
@@ -49,7 +49,7 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
         registerNamespaces();
     }
 
-    public void registerNamespaces(){
+    public void registerNamespaces() {
         COMPUTER_CRAFT.register("workbench", WORKBENCH);
         COMPUTER_CRAFT.register("colour", COLOUR);
         COMPUTER_CRAFT.register("computer_upgrade", COMPUTER_UPGRADE);
@@ -63,7 +63,7 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
         Registries.RECIPES.register("computercraft", COMPUTER_CRAFT);
     }
 
-    public void resetGroups(){
+    public void resetGroups() {
         WORKBENCH = new RecipeGroup<RecipeEntryCrafting<?, ?>>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
         COLOUR = new RecipeGroup<ColourableRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
         COMPUTER_UPGRADE = new RecipeGroup<ComputerUpgradeRecipe>(new RecipeSymbol(new ItemStack(Blocks.WORKBENCH)));
@@ -77,7 +77,7 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
         Registries.RECIPES.unregister("computercraft");
     }
 
-    public void load(){
+    public void load() {
         Registries.RECIPE_TYPES.register("computercraft:colour", ColourableRecipe.class);
         Registries.RECIPE_TYPES.register("computercraft:computer_upgrade", ComputerUpgradeRecipe.class);
         Registries.RECIPE_TYPES.register("computercraft:impostor_shapeless", ImpostorShapelessRecipe.class);

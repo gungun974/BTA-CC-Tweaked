@@ -1,7 +1,6 @@
 package dan200.computercraft.shared.network.client;
 
 import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.client.gui.GuiComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
 import net.minecraft.client.Minecraft;
@@ -12,8 +11,7 @@ import turniplabs.halplibe.helper.network.UniversalPacket;
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 
-public class OpenComputerGuiClientMessage implements NetworkMessage
-{
+public class OpenComputerGuiClientMessage implements NetworkMessage {
     protected Class<?> screen;
 
     private int instanceId;
@@ -21,8 +19,7 @@ public class OpenComputerGuiClientMessage implements NetworkMessage
     private int width;
     private int height;
 
-    public OpenComputerGuiClientMessage(Class<? extends Screen> screen, int instanceId, ComputerFamily family, int width, int height )
-    {
+    public OpenComputerGuiClientMessage(Class<? extends Screen> screen, int instanceId, ComputerFamily family, int width, int height) {
         this.screen = screen;
 
         this.instanceId = instanceId;
@@ -31,23 +28,21 @@ public class OpenComputerGuiClientMessage implements NetworkMessage
         this.height = height;
     }
 
-    public OpenComputerGuiClientMessage()
-    {
+    public OpenComputerGuiClientMessage() {
     }
 
     @Override
-    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
-    {
+    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
         buf.writeString(screen.getName());
 
-        buf.writeInt( instanceId );
+        buf.writeInt(instanceId);
         buf.writeEnumConstant(family);
-        buf.writeInt( width );
-        buf.writeInt( height );
+        buf.writeInt(width);
+        buf.writeInt(height);
     }
 
     @Override
-    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf ) {
+    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
         try {
             screen = Class.forName(buf.readString());
         } catch (ClassNotFoundException e) {
@@ -71,8 +66,7 @@ public class OpenComputerGuiClientMessage implements NetworkMessage
     }
 
     @Override
-    public void handle(NetworkContext context)
-    {
+    public void handle(NetworkContext context) {
         ContainerComputerBase container = new ContainerComputerBase(instanceId, family);
 
         Minecraft.getMinecraft().displayScreen(getScreenInstance(container));

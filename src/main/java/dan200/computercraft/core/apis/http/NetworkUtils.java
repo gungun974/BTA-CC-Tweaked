@@ -36,80 +36,66 @@ import java.util.concurrent.TimeUnit;
 /**
  * Just a shared object for executing simple HTTP related tasks.
  */
-public final class NetworkUtils
-{
+public final class NetworkUtils {
     public static final ExecutorService EXECUTOR = new ThreadPoolExecutor(
         4, Integer.MAX_VALUE,
         60L, TimeUnit.SECONDS,
         new SynchronousQueue<>(),
-        ThreadUtils.builder( "Network" )
-            .setPriority( Thread.MIN_PRIORITY + (Thread.NORM_PRIORITY - Thread.MIN_PRIORITY) / 2 )
+        ThreadUtils.builder("Network")
+            .setPriority(Thread.MIN_PRIORITY + (Thread.NORM_PRIORITY - Thread.MIN_PRIORITY) / 2)
             .build()
     );
 
-    public static final EventLoopGroup LOOP_GROUP = new NioEventLoopGroup( 4, ThreadUtils.builder( "Netty" )
-        .setPriority( Thread.MIN_PRIORITY + (Thread.NORM_PRIORITY - Thread.MIN_PRIORITY) / 2 )
+    public static final EventLoopGroup LOOP_GROUP = new NioEventLoopGroup(4, ThreadUtils.builder("Netty")
+        .setPriority(Thread.MIN_PRIORITY + (Thread.NORM_PRIORITY - Thread.MIN_PRIORITY) / 2)
         .build()
     );
-
-    private NetworkUtils()
-    {
-    }
-
     private static final Object sslLock = new Object();
     private static TrustManagerFactory trustManager;
     private static SslContext sslContext;
     private static boolean triedSslContext = false;
+    private NetworkUtils() {
+    }
 
-    private static TrustManagerFactory getTrustManager()
-    {
-        if( trustManager != null ) return trustManager;
-        synchronized( sslLock )
-        {
-            if( trustManager != null ) return trustManager;
+    private static TrustManagerFactory getTrustManager() {
+        if (trustManager != null) return trustManager;
+        synchronized (sslLock) {
+            if (trustManager != null) return trustManager;
 
             TrustManagerFactory tmf = null;
-            try
-            {
-                tmf = TrustManagerFactory.getInstance( TrustManagerFactory.getDefaultAlgorithm() );
-                tmf.init( (KeyStore) null );
-            }
-            catch( Exception e )
-            {
-                ComputerCraft.log.error( "Cannot setup trust manager", e );
+            try {
+                tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                tmf.init((KeyStore) null);
+            } catch (Exception e) {
+                ComputerCraft.log.error("Cannot setup trust manager", e);
             }
 
             return trustManager = tmf;
         }
     }
 
-    public static SslContext getSslContext() throws HTTPRequestException
-    {
-        if( sslContext != null || triedSslContext ) return sslContext;
-        synchronized( sslLock )
-        {
-            if( sslContext != null || triedSslContext ) return sslContext;
-            try
-            {
+    public static SslContext getSslContext() throws HTTPRequestException {
+        if (sslContext != null || triedSslContext) return sslContext;
+        synchronized (sslLock) {
+            if (sslContext != null || triedSslContext) return sslContext;
+            try {
                 return sslContext = SslContextBuilder
                     .forClient()
-                    .trustManager( getTrustManager() )
+                    .trustManager(getTrustManager())
                     .build();
-            }
-            catch( SSLException e )
-            {
-                ComputerCraft.log.error( "Cannot construct SSL context", e );
+            } catch (SSLException e) {
+                ComputerCraft.log.error("Cannot construct SSL context", e);
                 triedSslContext = true;
                 sslContext = null;
 
-                throw new HTTPRequestException( "Cannot create a secure connection" );
+                throw new HTTPRequestException("Cannot create a secure connection");
             }
         }
     }
 
     /**
      * Create a {@link InetSocketAddress} from a {@link URI}.
-     *
+     * <p>
      * Note, this may require a DNS lookup, and so should not be executed on the main CC thread.
      *
      * @param uri The URI to fetch.
@@ -117,14 +103,13 @@ public final class NetworkUtils
      * @return The resolved address.
      * @throws HTTPRequestException If the host is not malformed.
      */
-    public static InetSocketAddress getAddress( URI uri, boolean ssl ) throws HTTPRequestException
-    {
-        return getAddress( uri.getHost(), uri.getPort(), ssl );
+    public static InetSocketAddress getAddress(URI uri, boolean ssl) throws HTTPRequestException {
+        return getAddress(uri.getHost(), uri.getPort(), ssl);
     }
 
     /**
      * Create a {@link InetSocketAddress} from the resolved {@code host} and port.
-     *
+     * <p>
      * Note, this may require a DNS lookup, and so should not be executed on the main CC thread.
      *
      * @param host The host to resolve.
@@ -133,11 +118,10 @@ public final class NetworkUtils
      * @return The resolved address.
      * @throws HTTPRequestException If the host is not malformed.
      */
-    public static InetSocketAddress getAddress( String host, int port, boolean ssl ) throws HTTPRequestException
-    {
-        if( port < 0 ) port = ssl ? 443 : 80;
-        InetSocketAddress socketAddress = new InetSocketAddress( host, port );
-        if( socketAddress.isUnresolved() ) throw new HTTPRequestException( "Unknown host" );
+    public static InetSocketAddress getAddress(String host, int port, boolean ssl) throws HTTPRequestException {
+        if (port < 0) port = ssl ? 443 : 80;
+        InetSocketAddress socketAddress = new InetSocketAddress(host, port);
+        if (socketAddress.isUnresolved()) throw new HTTPRequestException("Unknown host");
         return socketAddress;
     }
 
@@ -149,10 +133,9 @@ public final class NetworkUtils
      * @return The options for this host.
      * @throws HTTPRequestException If the host is not permitted
      */
-    public static Options getOptions( String host, InetSocketAddress address ) throws HTTPRequestException
-    {
-        Options options = AddressRule.apply( ComputerCraft.httpRules, host, address );
-        if( options.action == Action.DENY ) throw new HTTPRequestException( "Domain not permitted" );
+    public static Options getOptions(String host, InetSocketAddress address) throws HTTPRequestException {
+        Options options = AddressRule.apply(ComputerCraft.httpRules, host, address);
+        if (options.action == Action.DENY) throw new HTTPRequestException("Domain not permitted");
         return options;
     }
 
@@ -162,34 +145,23 @@ public final class NetworkUtils
      * @param buffer The buffer to read.
      * @return The resulting bytes.
      */
-    public static byte[] toBytes( ByteBuf buffer )
-    {
+    public static byte[] toBytes(ByteBuf buffer) {
         byte[] bytes = new byte[buffer.readableBytes()];
-        buffer.readBytes( bytes );
+        buffer.readBytes(bytes);
         return bytes;
     }
 
     @Nonnull
-    public static String toFriendlyError( @Nonnull Throwable cause )
-    {
-        if( cause instanceof WebSocketHandshakeException || cause instanceof HTTPRequestException )
-        {
+    public static String toFriendlyError(@Nonnull Throwable cause) {
+        if (cause instanceof WebSocketHandshakeException || cause instanceof HTTPRequestException) {
             return cause.getMessage();
-        }
-        else if( cause instanceof TooLongFrameException )
-        {
+        } else if (cause instanceof TooLongFrameException) {
             return "Message is too large";
-        }
-        else if( cause instanceof ReadTimeoutException || cause instanceof ConnectTimeoutException )
-        {
+        } else if (cause instanceof ReadTimeoutException || cause instanceof ConnectTimeoutException) {
             return "Timed out";
-        }
-        else if( cause instanceof SSLHandshakeException || (cause instanceof DecoderException && cause.getCause() instanceof SSLHandshakeException) )
-        {
+        } else if (cause instanceof SSLHandshakeException || (cause instanceof DecoderException && cause.getCause() instanceof SSLHandshakeException)) {
             return "Could not create a secure connection";
-        }
-        else
-        {
+        } else {
             return "Could not connect";
         }
     }

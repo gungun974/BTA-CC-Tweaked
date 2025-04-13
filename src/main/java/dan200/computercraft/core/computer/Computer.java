@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Represents a computer which may exist in-world or elsewhere.
- *
+ * <p>
  * Note, this class has several (read: far, far too many) responsibilities, so can get a little unwieldy at times.
  *
  * <ul>
@@ -27,91 +27,74 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * <li>Passes main thread tasks to the {@link MainThreadExecutor}.</li>
  * </ul>
  */
-public class Computer
-{
+public class Computer {
     private static final int START_DELAY = 50;
-
-    // Various properties of the computer
-    private int id;
-    private String label = null;
-
     // Read-only fields about the computer
     private final IComputerEnvironment environment;
     private final Terminal terminal;
     private final ComputerExecutor executor;
     private final MainThreadExecutor serverExecutor;
-
+    private final Environment internalEnvironment = new Environment(this);
+    private final AtomicBoolean externalOutputChanged = new AtomicBoolean();
+    // Various properties of the computer
+    private int id;
+    private String label = null;
     // Additional state about the computer and its environment.
     private boolean blinking = false;
-    private final Environment internalEnvironment = new Environment( this );
-    private final AtomicBoolean externalOutputChanged = new AtomicBoolean();
-
     private boolean startRequested;
     private int ticksSinceStart = -1;
 
-    public Computer( IComputerEnvironment environment, Terminal terminal, int id )
-    {
+    public Computer(IComputerEnvironment environment, Terminal terminal, int id) {
         this.id = id;
         this.environment = environment;
         this.terminal = terminal;
 
-        executor = new ComputerExecutor( this );
-        serverExecutor = new MainThreadExecutor( this );
+        executor = new ComputerExecutor(this);
+        serverExecutor = new MainThreadExecutor(this);
     }
 
-    IComputerEnvironment getComputerEnvironment()
-    {
+    IComputerEnvironment getComputerEnvironment() {
         return environment;
     }
 
-    FileSystem getFileSystem()
-    {
+    FileSystem getFileSystem() {
         return executor.getFileSystem();
     }
 
-    Terminal getTerminal()
-    {
+    Terminal getTerminal() {
         return terminal;
     }
 
-    public Environment getEnvironment()
-    {
+    public Environment getEnvironment() {
         return internalEnvironment;
     }
 
-    public IAPIEnvironment getAPIEnvironment()
-    {
+    public IAPIEnvironment getAPIEnvironment() {
         return internalEnvironment;
     }
 
-    public boolean isOn()
-    {
+    public boolean isOn() {
         return executor.isOn();
     }
 
-    public void turnOn()
-    {
+    public void turnOn() {
         startRequested = true;
     }
 
-    public void shutdown()
-    {
-        executor.queueStop( false, false );
+    public void shutdown() {
+        executor.queueStop(false, false);
     }
 
-    public void reboot()
-    {
-        executor.queueStop( true, false );
+    public void reboot() {
+        executor.queueStop(true, false);
     }
 
-    public void unload()
-    {
-        executor.queueStop( false, true );
+    public void unload() {
+        executor.queueStop(false, true);
     }
 
-    public void queueEvent( String event, Object[] args )
-    {
-        executor.queueEvent( event, args );
+    public void queueEvent(String event, Object[] args) {
+        executor.queueEvent(event, args);
     }
 
     /**
@@ -120,59 +103,47 @@ public class Computer
      * @param runnable The task to run
      * @return If the task was successfully queued (namely, whether there is space on it).
      */
-    public boolean queueMainThread( Runnable runnable )
-    {
-        return serverExecutor.enqueue( runnable );
+    public boolean queueMainThread(Runnable runnable) {
+        return serverExecutor.enqueue(runnable);
     }
 
-    public IWorkMonitor getMainThreadMonitor()
-    {
+    public IWorkMonitor getMainThreadMonitor() {
         return serverExecutor;
     }
 
-    public int getID()
-    {
+    public int getID() {
         return id;
     }
 
-    public int assignID()
-    {
-        if( id < 0 )
-        {
+    public void setID(int id) {
+        this.id = id;
+    }
+
+    public int assignID() {
+        if (id < 0) {
             id = environment.assignNewID();
         }
         return id;
     }
 
-    public void setID( int id )
-    {
-        this.id = id;
-    }
-
-    public String getLabel()
-    {
+    public String getLabel() {
         return label;
     }
 
-    public void setLabel( String label )
-    {
-        if( !Objects.equal( label, this.label ) )
-        {
+    public void setLabel(String label) {
+        if (!Objects.equal(label, this.label)) {
             this.label = label;
-            externalOutputChanged.set( true );
+            externalOutputChanged.set(true);
         }
     }
 
-    public void tick()
-    {
+    public void tick() {
         // We keep track of the number of ticks since the last start, only
-        if( ticksSinceStart >= 0 && ticksSinceStart <= START_DELAY ) ticksSinceStart++;
+        if (ticksSinceStart >= 0 && ticksSinceStart <= START_DELAY) ticksSinceStart++;
 
-        if( startRequested && (ticksSinceStart < 0 || ticksSinceStart > START_DELAY) )
-        {
+        if (startRequested && (ticksSinceStart < 0 || ticksSinceStart > START_DELAY)) {
             startRequested = false;
-            if( !executor.isOn() )
-            {
+            if (!executor.isOn()) {
                 ticksSinceStart = 0;
                 executor.queueStart();
             }
@@ -184,36 +155,31 @@ public class Computer
         internalEnvironment.tick();
 
         // Propagate the environment's output to the world.
-        if( internalEnvironment.updateOutput() ) externalOutputChanged.set( true );
+        if (internalEnvironment.updateOutput()) externalOutputChanged.set(true);
 
         // Set output changed if the terminal has changed from blinking to not
         boolean blinking = terminal.getCursorBlink() &&
             terminal.getCursorX() >= 0 && terminal.getCursorX() < terminal.getWidth() &&
             terminal.getCursorY() >= 0 && terminal.getCursorY() < terminal.getHeight();
-        if( blinking != this.blinking )
-        {
+        if (blinking != this.blinking) {
             this.blinking = blinking;
-            externalOutputChanged.set( true );
+            externalOutputChanged.set(true);
         }
     }
 
-    void markChanged()
-    {
-        externalOutputChanged.set( true );
+    void markChanged() {
+        externalOutputChanged.set(true);
     }
 
-    public boolean pollAndResetChanged()
-    {
-        return externalOutputChanged.getAndSet( false );
+    public boolean pollAndResetChanged() {
+        return externalOutputChanged.getAndSet(false);
     }
 
-    public boolean isBlinking()
-    {
+    public boolean isBlinking() {
         return isOn() && blinking;
     }
 
-    public void addApi( ILuaAPI api )
-    {
-        executor.addApi( api );
+    public void addApi(ILuaAPI api) {
+        executor.addApi(api);
     }
 }

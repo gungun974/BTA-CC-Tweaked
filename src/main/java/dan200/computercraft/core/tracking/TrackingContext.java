@@ -15,29 +15,25 @@ import java.util.Map;
 /**
  * Tracks timing information about computers, including how long they ran for
  * and the number of events they handled.
- *
+ * <p>
  * Note that this <em>will</em> track computers which have been deleted (hence
  * the presence of {@link #timingLookup} and {@link #timings}
  */
-public class TrackingContext implements Tracker
-{
-    private boolean tracking = false;
-
+public class TrackingContext implements Tracker {
     private final List<ComputerTracker> timings = new ArrayList<>();
     private final Map<Computer, ComputerTracker> timingLookup = new MapMaker().weakKeys().makeMap();
+    private boolean tracking = false;
 
-    public synchronized void start()
-    {
-        if( !tracking ) Tracking.tracking.incrementAndGet();
+    public synchronized void start() {
+        if (!tracking) Tracking.tracking.incrementAndGet();
         tracking = true;
 
         timings.clear();
         timingLookup.clear();
     }
 
-    public synchronized boolean stop()
-    {
-        if( !tracking ) return false;
+    public synchronized boolean stop() {
+        if (!tracking) return false;
 
         Tracking.tracking.decrementAndGet();
         tracking = false;
@@ -45,72 +41,61 @@ public class TrackingContext implements Tracker
         return true;
     }
 
-    public synchronized List<ComputerTracker> getImmutableTimings()
-    {
-        ArrayList<ComputerTracker> timings = new ArrayList<>( this.timings.size() );
-        for( ComputerTracker timing : this.timings ) timings.add( new ComputerTracker( timing ) );
+    public synchronized List<ComputerTracker> getImmutableTimings() {
+        ArrayList<ComputerTracker> timings = new ArrayList<>(this.timings.size());
+        for (ComputerTracker timing : this.timings) timings.add(new ComputerTracker(timing));
         return timings;
     }
 
-    public synchronized List<ComputerTracker> getTimings()
-    {
-        return new ArrayList<>( timings );
+    public synchronized List<ComputerTracker> getTimings() {
+        return new ArrayList<>(timings);
     }
 
     @Override
-    public void addTaskTiming( Computer computer, long time )
-    {
-        if( !tracking ) return;
+    public void addTaskTiming(Computer computer, long time) {
+        if (!tracking) return;
 
-        synchronized( this )
-        {
-            ComputerTracker computerTimings = timingLookup.get( computer );
-            if( computerTimings == null )
-            {
-                computerTimings = new ComputerTracker( computer );
-                timingLookup.put( computer, computerTimings );
-                timings.add( computerTimings );
+        synchronized (this) {
+            ComputerTracker computerTimings = timingLookup.get(computer);
+            if (computerTimings == null) {
+                computerTimings = new ComputerTracker(computer);
+                timingLookup.put(computer, computerTimings);
+                timings.add(computerTimings);
             }
 
-            computerTimings.addTaskTiming( time );
+            computerTimings.addTaskTiming(time);
         }
     }
 
     @Override
-    public void addServerTiming( Computer computer, long time )
-    {
-        if( !tracking ) return;
+    public void addServerTiming(Computer computer, long time) {
+        if (!tracking) return;
 
-        synchronized( this )
-        {
-            ComputerTracker computerTimings = timingLookup.get( computer );
-            if( computerTimings == null )
-            {
-                computerTimings = new ComputerTracker( computer );
-                timingLookup.put( computer, computerTimings );
-                timings.add( computerTimings );
+        synchronized (this) {
+            ComputerTracker computerTimings = timingLookup.get(computer);
+            if (computerTimings == null) {
+                computerTimings = new ComputerTracker(computer);
+                timingLookup.put(computer, computerTimings);
+                timings.add(computerTimings);
             }
 
-            computerTimings.addMainTiming( time );
+            computerTimings.addMainTiming(time);
         }
     }
 
     @Override
-    public void addValue( Computer computer, TrackingField field, long change )
-    {
-        if( !tracking ) return;
+    public void addValue(Computer computer, TrackingField field, long change) {
+        if (!tracking) return;
 
-        synchronized( this )
-        {
-            ComputerTracker computerTimings = timingLookup.get( computer );
-            if( computerTimings == null )
-            {
-                computerTimings = new ComputerTracker( computer );
-                timingLookup.put( computer, computerTimings );
-                timings.add( computerTimings );
+        synchronized (this) {
+            ComputerTracker computerTimings = timingLookup.get(computer);
+            if (computerTimings == null) {
+                computerTimings = new ComputerTracker(computer);
+                timingLookup.put(computer, computerTimings);
+                timings.add(computerTimings);
             }
 
-            computerTimings.addValue( field, change );
+            computerTimings.addValue(field, change);
         }
     }
 }

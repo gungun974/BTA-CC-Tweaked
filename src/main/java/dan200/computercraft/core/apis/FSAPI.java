@@ -34,31 +34,30 @@ import java.util.function.Function;
  *
  * @cc.module fs
  */
-public class FSAPI implements ILuaAPI
-{
+public class FSAPI implements ILuaAPI {
     private final IAPIEnvironment environment;
     private FileSystem fileSystem = null;
 
-    public FSAPI( IAPIEnvironment env )
-    {
+    public FSAPI(IAPIEnvironment env) {
         environment = env;
     }
 
-    @Override
-    public String[] getNames()
-    {
-        return new String[] { "fs" };
+    private static long getFileTime(FileTime time) {
+        return time == null ? 0 : time.toMillis();
     }
 
     @Override
-    public void startup()
-    {
+    public String[] getNames() {
+        return new String[]{"fs"};
+    }
+
+    @Override
+    public void startup() {
         fileSystem = environment.getFileSystem();
     }
 
     @Override
-    public void shutdown()
-    {
+    public void shutdown() {
         fileSystem = null;
     }
 
@@ -70,16 +69,12 @@ public class FSAPI implements ILuaAPI
      * @throws LuaException If the path doesn't exist.
      */
     @LuaFunction
-    public final String[] list( String path ) throws LuaException
-    {
-        environment.addTrackingChange( TrackingField.FS_OPS );
-        try
-        {
-            return fileSystem.list( path );
-        }
-        catch( FileSystemException e )
-        {
-            throw new LuaException( e.getMessage() );
+    public final String[] list(String path) throws LuaException {
+        environment.addTrackingChange(TrackingField.FS_OPS);
+        try {
+            return fileSystem.list(path);
+        } catch (FileSystemException e) {
+            throw new LuaException(e.getMessage());
         }
     }
 
@@ -94,19 +89,17 @@ public class FSAPI implements ILuaAPI
      * @cc.tparam string ... Additional parts of the path to combine.
      */
     @LuaFunction
-    public final String combine( IArguments arguments ) throws LuaException
-    {
+    public final String combine(IArguments arguments) throws LuaException {
         StringBuilder result = new StringBuilder();
-        result.append( FileSystem.sanitizePath( arguments.getString( 0 ), true ) );
+        result.append(FileSystem.sanitizePath(arguments.getString(0), true));
 
-        for( int i = 1, n = arguments.count(); i < n; i++ )
-        {
-            String part = FileSystem.sanitizePath( arguments.getString( i ), true );
-            if( result.length() != 0 && !part.isEmpty() ) result.append( '/' );
-            result.append( part );
+        for (int i = 1, n = arguments.count(); i < n; i++) {
+            String part = FileSystem.sanitizePath(arguments.getString(i), true);
+            if (result.length() != 0 && !part.isEmpty()) result.append('/');
+            result.append(part);
         }
 
-        return FileSystem.sanitizePath( result.toString(), true );
+        return FileSystem.sanitizePath(result.toString(), true);
     }
 
     /**
@@ -116,9 +109,8 @@ public class FSAPI implements ILuaAPI
      * @return The final part of the path (the file name).
      */
     @LuaFunction
-    public final String getName( String path )
-    {
-        return FileSystem.getName( path );
+    public final String getName(String path) {
+        return FileSystem.getName(path);
     }
 
     /**
@@ -128,9 +120,8 @@ public class FSAPI implements ILuaAPI
      * @return The path with the final part removed (the parent directory).
      */
     @LuaFunction
-    public final String getDir( String path )
-    {
-        return FileSystem.getDirectory( path );
+    public final String getDir(String path) {
+        return FileSystem.getDirectory(path);
     }
 
     /**
@@ -141,15 +132,11 @@ public class FSAPI implements ILuaAPI
      * @throws LuaException If the path doesn't exist.
      */
     @LuaFunction
-    public final long getSize( String path ) throws LuaException
-    {
-        try
-        {
-            return fileSystem.getSize( path );
-        }
-        catch( FileSystemException e )
-        {
-            throw new LuaException( e.getMessage() );
+    public final long getSize(String path) throws LuaException {
+        try {
+            return fileSystem.getSize(path);
+        } catch (FileSystemException e) {
+            throw new LuaException(e.getMessage());
         }
     }
 
@@ -160,14 +147,10 @@ public class FSAPI implements ILuaAPI
      * @return Whether the path exists.
      */
     @LuaFunction
-    public final boolean exists( String path )
-    {
-        try
-        {
-            return fileSystem.exists( path );
-        }
-        catch( FileSystemException e )
-        {
+    public final boolean exists(String path) {
+        try {
+            return fileSystem.exists(path);
+        } catch (FileSystemException e) {
             return false;
         }
     }
@@ -179,14 +162,10 @@ public class FSAPI implements ILuaAPI
      * @return Whether the path is a directory.
      */
     @LuaFunction
-    public final boolean isDir( String path )
-    {
-        try
-        {
-            return fileSystem.isDir( path );
-        }
-        catch( FileSystemException e )
-        {
+    public final boolean isDir(String path) {
+        try {
+            return fileSystem.isDir(path);
+        } catch (FileSystemException e) {
             return false;
         }
     }
@@ -198,14 +177,10 @@ public class FSAPI implements ILuaAPI
      * @return Whether the path cannot be written to.
      */
     @LuaFunction
-    public final boolean isReadOnly( String path )
-    {
-        try
-        {
-            return fileSystem.isReadOnly( path );
-        }
-        catch( FileSystemException e )
-        {
+    public final boolean isReadOnly(String path) {
+        try {
+            return fileSystem.isReadOnly(path);
+        } catch (FileSystemException e) {
             return false;
         }
     }
@@ -217,22 +192,18 @@ public class FSAPI implements ILuaAPI
      * @throws LuaException If the directory couldn't be created.
      */
     @LuaFunction
-    public final void makeDir( String path ) throws LuaException
-    {
-        try
-        {
-            environment.addTrackingChange( TrackingField.FS_OPS );
-            fileSystem.makeDir( path );
-        }
-        catch( FileSystemException e )
-        {
-            throw new LuaException( e.getMessage() );
+    public final void makeDir(String path) throws LuaException {
+        try {
+            environment.addTrackingChange(TrackingField.FS_OPS);
+            fileSystem.makeDir(path);
+        } catch (FileSystemException e) {
+            throw new LuaException(e.getMessage());
         }
     }
 
     /**
      * Moves a file or directory from one path to another.
-     *
+     * <p>
      * Any parent directories are created as needed.
      *
      * @param path The current file or directory to move from.
@@ -240,22 +211,18 @@ public class FSAPI implements ILuaAPI
      * @throws LuaException If the file or directory couldn't be moved.
      */
     @LuaFunction
-    public final void move( String path, String dest ) throws LuaException
-    {
-        try
-        {
-            environment.addTrackingChange( TrackingField.FS_OPS );
-            fileSystem.move( path, dest );
-        }
-        catch( FileSystemException e )
-        {
-            throw new LuaException( e.getMessage() );
+    public final void move(String path, String dest) throws LuaException {
+        try {
+            environment.addTrackingChange(TrackingField.FS_OPS);
+            fileSystem.move(path, dest);
+        } catch (FileSystemException e) {
+            throw new LuaException(e.getMessage());
         }
     }
 
     /**
      * Copies a file or directory to a new path.
-     *
+     * <p>
      * Any parent directories are created as needed.
      *
      * @param path The file or directory to copy.
@@ -263,22 +230,20 @@ public class FSAPI implements ILuaAPI
      * @throws LuaException If the file or directory couldn't be copied.
      */
     @LuaFunction
-    public final void copy( String path, String dest ) throws LuaException
-    {
-        try
-        {
-            environment.addTrackingChange( TrackingField.FS_OPS );
-            fileSystem.copy( path, dest );
-        }
-        catch( FileSystemException e )
-        {
-            throw new LuaException( e.getMessage() );
+    public final void copy(String path, String dest) throws LuaException {
+        try {
+            environment.addTrackingChange(TrackingField.FS_OPS);
+            fileSystem.copy(path, dest);
+        } catch (FileSystemException e) {
+            throw new LuaException(e.getMessage());
         }
     }
 
+    // FIXME: Add individual handle type documentation
+
     /**
      * Deletes a file or directory.
-     *
+     * <p>
      * If the path points to a directory, all of the enclosed files and
      * subdirectories are also deleted.
      *
@@ -286,24 +251,18 @@ public class FSAPI implements ILuaAPI
      * @throws LuaException If the file or directory couldn't be deleted.
      */
     @LuaFunction
-    public final void delete( String path ) throws LuaException
-    {
-        try
-        {
-            environment.addTrackingChange( TrackingField.FS_OPS );
-            fileSystem.delete( path );
-        }
-        catch( FileSystemException e )
-        {
-            throw new LuaException( e.getMessage() );
+    public final void delete(String path) throws LuaException {
+        try {
+            environment.addTrackingChange(TrackingField.FS_OPS);
+            fileSystem.delete(path);
+        } catch (FileSystemException e) {
+            throw new LuaException(e.getMessage());
         }
     }
 
-    // FIXME: Add individual handle type documentation
-
     /**
      * Opens a file for reading or writing at a path.
-     *
+     * <p>
      * The mode parameter can be {@code r} to read, {@code w} to write (deleting
      * all contents), or {@code a} to append (keeping contents). If {@code b} is
      * added to the end, the file will be opened in binary mode; otherwise, it's
@@ -318,52 +277,43 @@ public class FSAPI implements ILuaAPI
      * @cc.treturn string|nil A message explaining why the file cannot be opened.
      */
     @LuaFunction
-    public final Object[] open( String path, String mode ) throws LuaException
-    {
-        environment.addTrackingChange( TrackingField.FS_OPS );
-        try
-        {
-            switch( mode )
-            {
-                case "r":
-                {
+    public final Object[] open(String path, String mode) throws LuaException {
+        environment.addTrackingChange(TrackingField.FS_OPS);
+        try {
+            switch (mode) {
+                case "r": {
                     // Open the file for reading, then create a wrapper around the reader
-                    FileSystemWrapper<BufferedReader> reader = fileSystem.openForRead( path, EncodedReadableHandle::openUtf8 );
-                    return new Object[] { new EncodedReadableHandle( reader.get(), reader ) };
+                    FileSystemWrapper<BufferedReader> reader = fileSystem.openForRead(path, EncodedReadableHandle::openUtf8);
+                    return new Object[]{new EncodedReadableHandle(reader.get(), reader)};
                 }
-                case "w":
-                {
+                case "w": {
                     // Open the file for writing, then create a wrapper around the writer
-                    FileSystemWrapper<BufferedWriter> writer = fileSystem.openForWrite( path, false, EncodedWritableHandle::openUtf8 );
-                    return new Object[] { new EncodedWritableHandle( writer.get(), writer ) };
+                    FileSystemWrapper<BufferedWriter> writer = fileSystem.openForWrite(path, false, EncodedWritableHandle::openUtf8);
+                    return new Object[]{new EncodedWritableHandle(writer.get(), writer)};
                 }
-                case "a":
-                {
+                case "a": {
                     // Open the file for appending, then create a wrapper around the writer
-                    FileSystemWrapper<BufferedWriter> writer = fileSystem.openForWrite( path, true, EncodedWritableHandle::openUtf8 );
-                    return new Object[] { new EncodedWritableHandle( writer.get(), writer ) };
+                    FileSystemWrapper<BufferedWriter> writer = fileSystem.openForWrite(path, true, EncodedWritableHandle::openUtf8);
+                    return new Object[]{new EncodedWritableHandle(writer.get(), writer)};
                 }
                 case "rb":
                     // Open the file for binary reading, then create a wrapper around the reader
-                    FileSystemWrapper<ReadableByteChannel> reader = fileSystem.openForRead( path, Function.identity() );
-                    return new Object[] { BinaryReadableHandle.of( reader.get(), reader ) };
-                case "wb":
-                {
+                    FileSystemWrapper<ReadableByteChannel> reader = fileSystem.openForRead(path, Function.identity());
+                    return new Object[]{BinaryReadableHandle.of(reader.get(), reader)};
+                case "wb": {
                     // Open the file for binary writing, then create a wrapper around the writer
-                    FileSystemWrapper<WritableByteChannel> writer = fileSystem.openForWrite( path, false, Function.identity() );
-                    return new Object[] { BinaryWritableHandle.of( writer.get(), writer ) };
+                    FileSystemWrapper<WritableByteChannel> writer = fileSystem.openForWrite(path, false, Function.identity());
+                    return new Object[]{BinaryWritableHandle.of(writer.get(), writer)};
                 }
                 case "ab":
                     // Open the file for binary appending, then create a wrapper around the reader
-                    FileSystemWrapper<WritableByteChannel> writer = fileSystem.openForWrite( path, true, Function.identity() );
-                    return new Object[] { BinaryWritableHandle.of( writer.get(), writer ) };
+                    FileSystemWrapper<WritableByteChannel> writer = fileSystem.openForWrite(path, true, Function.identity());
+                    return new Object[]{BinaryWritableHandle.of(writer.get(), writer)};
                 default:
-                    throw new LuaException( "Unsupported mode" );
+                    throw new LuaException("Unsupported mode");
             }
-        }
-        catch( FileSystemException e )
-        {
-            return new Object[] { null, e.getMessage() };
+        } catch (FileSystemException e) {
+            return new Object[]{null, e.getMessage()};
         }
     }
 
@@ -376,15 +326,11 @@ public class FSAPI implements ILuaAPI
      * @cc.treturn string The name of the drive that the file is on; e.g. {@code hdd} for local files, or {@code rom} for ROM files.
      */
     @LuaFunction
-    public final Object[] getDrive( String path ) throws LuaException
-    {
-        try
-        {
-            return fileSystem.exists( path ) ? new Object[] { fileSystem.getMountLabel( path ) } : null;
-        }
-        catch( FileSystemException e )
-        {
-            throw new LuaException( e.getMessage() );
+    public final Object[] getDrive(String path) throws LuaException {
+        try {
+            return fileSystem.exists(path) ? new Object[]{fileSystem.getMountLabel(path)} : null;
+        } catch (FileSystemException e) {
+            throw new LuaException(e.getMessage());
         }
     }
 
@@ -398,22 +344,18 @@ public class FSAPI implements ILuaAPI
      * @cc.treturn number|"unlimited" The amount of free space available, in bytes, or "unlimited".
      */
     @LuaFunction
-    public final Object getFreeSpace( String path ) throws LuaException
-    {
-        try
-        {
-            long freeSpace = fileSystem.getFreeSpace( path );
+    public final Object getFreeSpace(String path) throws LuaException {
+        try {
+            long freeSpace = fileSystem.getFreeSpace(path);
             return freeSpace >= 0 ? freeSpace : "unlimited";
-        }
-        catch( FileSystemException e )
-        {
-            throw new LuaException( e.getMessage() );
+        } catch (FileSystemException e) {
+            throw new LuaException(e.getMessage());
         }
     }
 
     /**
      * Searches for files matching a string with wildcards.
-     *
+     * <p>
      * This string is formatted like a normal path string, but can include any
      * number of wildcards ({@code *}) to look for files matching anything.
      * For example, {@code rom/* /command*} will look for any path starting with
@@ -424,22 +366,18 @@ public class FSAPI implements ILuaAPI
      * @throws LuaException If the path doesn't exist.
      */
     @LuaFunction
-    public final String[] find( String path ) throws LuaException
-    {
-        try
-        {
-            environment.addTrackingChange( TrackingField.FS_OPS );
-            return fileSystem.find( path );
-        }
-        catch( FileSystemException e )
-        {
-            throw new LuaException( e.getMessage() );
+    public final String[] find(String path) throws LuaException {
+        try {
+            environment.addTrackingChange(TrackingField.FS_OPS);
+            return fileSystem.find(path);
+        } catch (FileSystemException e) {
+            throw new LuaException(e.getMessage());
         }
     }
 
     /**
      * Returns true if a path is mounted to the parent filesystem.
-     *
+     * <p>
      * The root filesystem "/" is considered a mount, along with disk folders and the rom folder. Other programs
      * (such as network shares) can extend this to make other mount types by correctly assigning their return value for
      * getDrive.
@@ -451,25 +389,21 @@ public class FSAPI implements ILuaAPI
      * treasure disks.
      */
     @LuaFunction
-    public final Object getCapacity( String path ) throws LuaException
-    {
-        try
-        {
-            OptionalLong capacity = fileSystem.getCapacity( path );
+    public final Object getCapacity(String path) throws LuaException {
+        try {
+            OptionalLong capacity = fileSystem.getCapacity(path);
             return capacity.isPresent() ? capacity.getAsLong() : null;
-        }
-        catch( FileSystemException e )
-        {
-            throw new LuaException( e.getMessage() );
+        } catch (FileSystemException e) {
+            throw new LuaException(e.getMessage());
         }
     }
 
     /**
      * Get attributes about a specific file or folder.
-     *
+     * <p>
      * The returned attributes table contains information about the size of the file, whether it is a directory,
      * when it was created and last modified, and whether it is read only.
-     *
+     * <p>
      * The creation and modification times are given as the number of milliseconds since the UNIX epoch. This may be
      * given to {@link OSAPI#date} in order to convert it to more usable form.
      *
@@ -481,28 +415,19 @@ public class FSAPI implements ILuaAPI
      * @see #isDir If you only care whether a path is a directory or not.
      */
     @LuaFunction
-    public final Map<String, Object> attributes( String path ) throws LuaException
-    {
-        try
-        {
-            BasicFileAttributes attributes = fileSystem.getAttributes( path );
+    public final Map<String, Object> attributes(String path) throws LuaException {
+        try {
+            BasicFileAttributes attributes = fileSystem.getAttributes(path);
             Map<String, Object> result = new HashMap<>();
-            result.put( "modification", getFileTime( attributes.lastModifiedTime() ) );
-            result.put( "modified", getFileTime( attributes.lastModifiedTime() ) );
-            result.put( "created", getFileTime( attributes.creationTime() ) );
-            result.put( "size", attributes.isDirectory() ? 0 : attributes.size() );
-            result.put( "isDir", attributes.isDirectory() );
-            result.put( "isReadOnly", fileSystem.isReadOnly( path ) );
+            result.put("modification", getFileTime(attributes.lastModifiedTime()));
+            result.put("modified", getFileTime(attributes.lastModifiedTime()));
+            result.put("created", getFileTime(attributes.creationTime()));
+            result.put("size", attributes.isDirectory() ? 0 : attributes.size());
+            result.put("isDir", attributes.isDirectory());
+            result.put("isReadOnly", fileSystem.isReadOnly(path));
             return result;
+        } catch (FileSystemException e) {
+            throw new LuaException(e.getMessage());
         }
-        catch( FileSystemException e )
-        {
-            throw new LuaException( e.getMessage() );
-        }
-    }
-
-    private static long getFileTime( FileTime time )
-    {
-        return time == null ? 0 : time.toMillis();
     }
 }

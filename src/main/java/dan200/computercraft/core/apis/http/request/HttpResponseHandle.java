@@ -25,15 +25,13 @@ import java.util.Map;
  * @cc.module http.Response
  * @see HTTPAPI#request(IArguments)  On how to make a http request.
  */
-public class HttpResponseHandle implements ObjectSource
-{
+public class HttpResponseHandle implements ObjectSource {
     private final Object reader;
     private final int responseCode;
     private final String responseStatus;
     private final Map<String, String> responseHeaders;
 
-    public HttpResponseHandle( @Nonnull HandleGeneric reader, int responseCode, String responseStatus, @Nonnull Map<String, String> responseHeaders )
-    {
+    public HttpResponseHandle(@Nonnull HandleGeneric reader, int responseCode, String responseStatus, @Nonnull Map<String, String> responseHeaders) {
         this.reader = reader;
         this.responseCode = responseCode;
         this.responseStatus = responseStatus;
@@ -48,9 +46,8 @@ public class HttpResponseHandle implements ObjectSource
      * @cc.treturn string The response message (i.e. "OK")
      */
     @LuaFunction
-    public final Object[] getResponseCode()
-    {
-        return new Object[] { responseCode, responseStatus };
+    public final Object[] getResponseCode() {
+        return new Object[]{responseCode, responseStatus};
     }
 
     /**
@@ -72,14 +69,12 @@ public class HttpResponseHandle implements ObjectSource
      * }</pre>
      */
     @LuaFunction
-    public final Map<String, String> getResponseHeaders()
-    {
+    public final Map<String, String> getResponseHeaders() {
         return responseHeaders;
     }
 
     @Override
-    public Iterable<Object> getExtra()
-    {
-        return Collections.singletonList( reader );
+    public Iterable<Object> getExtra() {
+        return Collections.singletonList(reader);
     }
 }

@@ -26,70 +26,60 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-
 import java.util.List;
 
 import static dan200.computercraft.shared.turtle.core.TurtleBrain.*;
 
-public class ItemTurtle extends ItemComputerBase implements ITurtleItem
-{
+public class ItemTurtle extends ItemComputerBase implements ITurtleItem {
     public ItemTurtle(@NotNull Block block) {
         super(block);
     }
 
-    public void addToCreativeMenu( @Nonnull List<ItemStack> list )
-    {
+    public void addToCreativeMenu(@Nonnull List<ItemStack> list) {
         ComputerFamily family = getFamily();
 
-        list.add( create( -1, null, -1, null, null, 0, -1 ) );
+        list.add(create(-1, null, -1, null, null, 0, -1));
         TurtleUpgrades.getVanillaUpgrades()
-            .filter( x -> TurtleUpgrades.suitableForFamily( family, x ) )
-            .map( x -> create( -1, null, -1, null, x, 0, -1 ) )
-            .forEach( list::add );
+            .filter(x -> TurtleUpgrades.suitableForFamily(family, x))
+            .map(x -> create(-1, null, -1, null, x, 0, -1))
+            .forEach(list::add);
     }
 
-    public ItemStack create( int id, String label, int colour, ITurtleUpgrade leftUpgrade, ITurtleUpgrade rightUpgrade, int fuelLevel, int overlay )
-    {
+    public ItemStack create(int id, String label, int colour, ITurtleUpgrade leftUpgrade, ITurtleUpgrade rightUpgrade, int fuelLevel, int overlay) {
         // Build the stack
-        ItemStack stack = new ItemStack( this );
-        if( label != null )
-        {
-            stack.setCustomName( label );
+        ItemStack stack = new ItemStack(this);
+        if (label != null) {
+            stack.setCustomName(label);
         }
 
-       CompoundTag tag = stack.getData();
+        CompoundTag tag = stack.getData();
 
-        if( id >= 0 )
-        {
+        if (id >= 0) {
             tag
-                .putInt( NBT_ID, id );
+                .putInt(NBT_ID, id);
         }
-        IColouredItem.setColourBasic( stack, colour );
-        if( fuelLevel > 0 )
-        {
+        IColouredItem.setColourBasic(stack, colour);
+        if (fuelLevel > 0) {
             tag
-                .putInt( NBT_FUEL, fuelLevel );
+                .putInt(NBT_FUEL, fuelLevel);
         }
-        if( overlay != -1 )
-        {
+        if (overlay != -1) {
             tag
-                .putInt( NBT_OVERLAY, overlay );
+                .putInt(NBT_OVERLAY, overlay);
         }
 
-        if( leftUpgrade != null )
-        {
+        if (leftUpgrade != null) {
             tag
-                .putInt( NBT_LEFT_UPGRADE,
+                .putInt(NBT_LEFT_UPGRADE,
                     leftUpgrade.getUpgradeID()
-                         );
+                );
         }
 
-        if( rightUpgrade != null )
-        {
+        if (rightUpgrade != null) {
             tag
-                .putInt( NBT_RIGHT_UPGRADE,
+                .putInt(NBT_RIGHT_UPGRADE,
                     rightUpgrade.getUpgradeID()
-                         );
+                );
         }
 
         stack.setData(tag);
@@ -100,28 +90,22 @@ public class ItemTurtle extends ItemComputerBase implements ITurtleItem
     public String getTranslatedName(ItemStack itemStack) {
         I18n i18n = I18n.getInstance();
         String baseString = itemStack.getItemKey();
-        ITurtleUpgrade left = getUpgrade( itemStack, TurtleSide.LEFT );
-        ITurtleUpgrade right = getUpgrade( itemStack, TurtleSide.RIGHT );
-        if( left != null && right != null )
-        {
-            return i18n.translateKeyAndFormat( baseString + ".upgraded_twice.name",
-                i18n.translateKey( right.getUnlocalisedAdjective() ),
-                i18n.translateKey( left.getUnlocalisedAdjective() ) );
-        }
-        else if( left != null )
-        {
-            return i18n.translateKeyAndFormat( baseString + ".upgraded.name", i18n.translateKey(left.getUnlocalisedAdjective()) );
-        }
-        else if( right != null )
-        {
-            return i18n.translateKeyAndFormat( baseString + ".upgraded.name", i18n.translateKey(right.getUnlocalisedAdjective()) );
-        }
-        else
-        {
-            return i18n.translateKey( baseString + ".name" );
+        ITurtleUpgrade left = getUpgrade(itemStack, TurtleSide.LEFT);
+        ITurtleUpgrade right = getUpgrade(itemStack, TurtleSide.RIGHT);
+        if (left != null && right != null) {
+            return i18n.translateKeyAndFormat(baseString + ".upgraded_twice.name",
+                i18n.translateKey(right.getUnlocalisedAdjective()),
+                i18n.translateKey(left.getUnlocalisedAdjective()));
+        } else if (left != null) {
+            return i18n.translateKeyAndFormat(baseString + ".upgraded.name", i18n.translateKey(left.getUnlocalisedAdjective()));
+        } else if (right != null) {
+            return i18n.translateKeyAndFormat(baseString + ".upgraded.name", i18n.translateKey(right.getUnlocalisedAdjective()));
+        } else {
+            return i18n.translateKey(baseString + ".name");
         }
     }
-//
+
+    //
 //    //    @Nullable
 //    //    @Override
 //    //    public String getCreatorModId( ItemStack stack )
@@ -147,32 +131,28 @@ public class ItemTurtle extends ItemComputerBase implements ITurtleItem
 //    //    }
 //
     @Override
-    public ITurtleUpgrade getUpgrade(@Nonnull ItemStack stack, @Nonnull TurtleSide side )
-    {
+    public ITurtleUpgrade getUpgrade(@Nonnull ItemStack stack, @Nonnull TurtleSide side) {
         CompoundTag tag = stack.getData();
 
         String key = side == TurtleSide.LEFT ? NBT_LEFT_UPGRADE : NBT_RIGHT_UPGRADE;
-        return tag.containsKey( key ) ? TurtleUpgrades.get( tag.getInteger( key ) ) : null;
+        return tag.containsKey(key) ? TurtleUpgrades.get(tag.getInteger(key)) : null;
     }
 
     @Override
-    public int getFuelLevel( @Nonnull ItemStack stack )
-    {
+    public int getFuelLevel(@Nonnull ItemStack stack) {
         CompoundTag tag = stack.getData();
-        return tag.containsKey( NBT_FUEL ) ? tag.getInteger( NBT_FUEL ) : 0;
+        return tag.containsKey(NBT_FUEL) ? tag.getInteger(NBT_FUEL) : 0;
     }
 
     @Override
-    public int getOverlay( @Nonnull ItemStack stack )
-    {
+    public int getOverlay(@Nonnull ItemStack stack) {
         CompoundTag tag = stack.getData();
-        return tag.containsKey( NBT_OVERLAY ) ? tag.getInteger( NBT_OVERLAY ) : -1;
+        return tag.containsKey(NBT_OVERLAY) ? tag.getInteger(NBT_OVERLAY) : -1;
     }
 
     @Override
-    public ItemStack withFamily( @Nonnull ItemStack stack, @Nonnull ComputerFamily family )
-    {
-        return TurtleItemFactory.create( getComputerID( stack ), getLabel( stack ), getColour( stack ),
+    public ItemStack withFamily(@Nonnull ItemStack stack, @Nonnull ComputerFamily family) {
+        return TurtleItemFactory.create(getComputerID(stack), getLabel(stack), getColour(stack),
             family, getUpgrade(stack, TurtleSide.LEFT),
             getUpgrade(stack, TurtleSide.RIGHT), getFuelLevel(stack), getOverlay(stack));
     }
@@ -199,7 +179,7 @@ public class ItemTurtle extends ItemComputerBase implements ITurtleItem
                         }
 
                         world.playBlockSoundEffect(
-                            player, (double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), this.block, EnumBlockSoundEffectType.PLACE
+                            player, (float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F, this.block, EnumBlockSoundEffectType.PLACE
                         );
 
                         TileEntity entity = (world.getTileEntity(x, y, z));

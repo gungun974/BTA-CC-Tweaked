@@ -12,7 +12,7 @@ import dan200.computercraft.core.computer.ComputerSide;
 
 /**
  * Interact with redstone attached to this computer.
- *
+ * <p>
  * The {@link RedstoneAPI} library exposes three "types" of redstone control:
  * - Binary input/output ({@link #setOutput}/{@link #getInput}): These simply check if a redstone wire has any input or
  * output. A signal strength of 1 and 15 are treated the same.
@@ -21,10 +21,10 @@ import dan200.computercraft.core.computer.ComputerSide;
  * - Bundled cables ({@link #setBundledOutput}/{@link #getBundledInput}): These interact with "bundled" cables, such
  * as those from Project:Red. These allow you to send 16 separate on/off signals. Each channel corresponds to a
  * colour, with the first being @{colors.white} and the last @{colors.black}.
- *
+ * <p>
  * Whenever a redstone input changes, a {@code redstone} event will be fired. This may be used instead of repeativly
  * polling.
- *
+ * <p>
  * This module may also be referred to as {@code rs}. For example, one may call {@code rs.getSides()} instead of
  * {@link #getSides}.
  *
@@ -47,24 +47,21 @@ import dan200.computercraft.core.computer.ComputerSide;
  *   os.pullEvent("redstone") -- Wait for a change to inputs.
  * end
  * </pre>
- *
+ * <p>
  * [comparator]: https://minecraft.gamepedia.com/Redstone_Comparator#Subtract_signal_strength "Redstone Comparator on
  * the Minecraft wiki."
  * @cc.module redstone
  */
-public class RedstoneAPI implements ILuaAPI
-{
+public class RedstoneAPI implements ILuaAPI {
     private final IAPIEnvironment environment;
 
-    public RedstoneAPI( IAPIEnvironment environment )
-    {
+    public RedstoneAPI(IAPIEnvironment environment) {
         this.environment = environment;
     }
 
     @Override
-    public String[] getNames()
-    {
-        return new String[] { "rs", "redstone" };
+    public String[] getNames() {
+        return new String[]{"rs", "redstone"};
     }
 
     /**
@@ -74,8 +71,7 @@ public class RedstoneAPI implements ILuaAPI
      * @return A table of valid sides.
      */
     @LuaFunction
-    public final String[] getSides()
-    {
+    public final String[] getSides() {
         return ComputerSide.NAMES;
     }
 
@@ -86,9 +82,8 @@ public class RedstoneAPI implements ILuaAPI
      * @param on   Whether the redstone signal should be on or off. When on, a signal strength of 15 is emitted.
      */
     @LuaFunction
-    public final void setOutput( ComputerSide side, boolean on )
-    {
-        environment.setOutput( side, on ? 15 : 0 );
+    public final void setOutput(ComputerSide side, boolean on) {
+        environment.setOutput(side, on ? 15 : 0);
     }
 
     /**
@@ -99,9 +94,8 @@ public class RedstoneAPI implements ILuaAPI
      * @see #setOutput
      */
     @LuaFunction
-    public final boolean getOutput( ComputerSide side )
-    {
-        return environment.getOutput( side ) > 0;
+    public final boolean getOutput(ComputerSide side) {
+        return environment.getOutput(side) > 0;
     }
 
     /**
@@ -111,9 +105,8 @@ public class RedstoneAPI implements ILuaAPI
      * @return Whether the redstone input is on or off.
      */
     @LuaFunction
-    public final boolean getInput( ComputerSide side )
-    {
-        return environment.getInput( side ) > 0;
+    public final boolean getInput(ComputerSide side) {
+        return environment.getInput(side) > 0;
     }
 
     /**
@@ -123,11 +116,10 @@ public class RedstoneAPI implements ILuaAPI
      * @param value The signal strength between 0 and 15.
      * @throws LuaException If {@code value} is not betwene 0 and 15.
      */
-    @LuaFunction( { "setAnalogOutput", "setAnalogueOutput" } )
-    public final void setAnalogOutput( ComputerSide side, int value ) throws LuaException
-    {
-        if( value < 0 || value > 15 ) throw new LuaException( "Expected number in range 0-15" );
-        environment.setOutput( side, value );
+    @LuaFunction({"setAnalogOutput", "setAnalogueOutput"})
+    public final void setAnalogOutput(ComputerSide side, int value) throws LuaException {
+        if (value < 0 || value > 15) throw new LuaException("Expected number in range 0-15");
+        environment.setOutput(side, value);
     }
 
     /**
@@ -137,10 +129,9 @@ public class RedstoneAPI implements ILuaAPI
      * @return The output signal strength, between 0 and 15.
      * @see #setAnalogOutput
      */
-    @LuaFunction( { "getAnalogOutput", "getAnalogueOutput" } )
-    public final int getAnalogOutput( ComputerSide side )
-    {
-        return environment.getOutput( side );
+    @LuaFunction({"getAnalogOutput", "getAnalogueOutput"})
+    public final int getAnalogOutput(ComputerSide side) {
+        return environment.getOutput(side);
     }
 
     /**
@@ -149,10 +140,9 @@ public class RedstoneAPI implements ILuaAPI
      * @param side The side to get.
      * @return The input signal strength, between 0 and 15.
      */
-    @LuaFunction( { "getAnalogInput", "getAnalogueInput" } )
-    public final int getAnalogInput( ComputerSide side )
-    {
-        return environment.getInput( side );
+    @LuaFunction({"getAnalogInput", "getAnalogueInput"})
+    public final int getAnalogInput(ComputerSide side) {
+        return environment.getInput(side);
     }
 
     /**
@@ -164,9 +154,8 @@ public class RedstoneAPI implements ILuaAPI
      * @cc.see colors.combine For adding a color to the bitmask.
      */
     @LuaFunction
-    public final void setBundledOutput( ComputerSide side, int output )
-    {
-        environment.setBundledOutput( side, output );
+    public final void setBundledOutput(ComputerSide side, int output) {
+        environment.setBundledOutput(side, output);
     }
 
     /**
@@ -176,9 +165,8 @@ public class RedstoneAPI implements ILuaAPI
      * @return The bundle cable's output.
      */
     @LuaFunction
-    public final int getBundledOutput( ComputerSide side )
-    {
-        return environment.getBundledOutput( side );
+    public final int getBundledOutput(ComputerSide side) {
+        return environment.getBundledOutput(side);
     }
 
     /**
@@ -189,9 +177,8 @@ public class RedstoneAPI implements ILuaAPI
      * @see #testBundledInput To determine if a specific colour is set.
      */
     @LuaFunction
-    public final int getBundledInput( ComputerSide side )
-    {
-        return environment.getBundledInput( side );
+    public final int getBundledInput(ComputerSide side) {
+        return environment.getBundledInput(side);
     }
 
     /**
@@ -207,9 +194,8 @@ public class RedstoneAPI implements ILuaAPI
      * @see #getBundledInput
      */
     @LuaFunction
-    public final boolean testBundledInput( ComputerSide side, int mask )
-    {
-        int input = environment.getBundledInput( side );
+    public final boolean testBundledInput(ComputerSide side, int mask) {
+        int input = environment.getBundledInput(side);
         return (input & mask) == mask;
     }
 }

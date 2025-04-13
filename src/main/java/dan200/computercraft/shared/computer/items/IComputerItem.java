@@ -11,22 +11,19 @@ import net.minecraft.core.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public interface IComputerItem
-{
+public interface IComputerItem {
     String NBT_ID = "ComputerId";
 
-    default int getComputerID( @Nonnull ItemStack stack )
-    {
+    default int getComputerID(@Nonnull ItemStack stack) {
         CompoundTag nbt = stack.getData();
-        return nbt != null && nbt.containsKey( NBT_ID ) ? nbt.getInteger( NBT_ID ) : -1;
+        return nbt != null && nbt.containsKey(NBT_ID) ? nbt.getInteger(NBT_ID) : -1;
     }
 
-    default String getLabel( @Nonnull ItemStack stack )
-    {
+    default String getLabel(@Nonnull ItemStack stack) {
         return stack.hasCustomName() ? stack.getCustomName() : null;
     }
 
     ComputerFamily getFamily();
 
-    ItemStack withFamily( @Nonnull ItemStack stack, @Nonnull ComputerFamily family );
+    ItemStack withFamily(@Nonnull ItemStack stack, @Nonnull ComputerFamily family);
 }

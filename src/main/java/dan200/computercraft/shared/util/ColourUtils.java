@@ -12,13 +12,12 @@ import net.minecraft.core.util.helper.DyeColor;
 
 import javax.annotation.Nullable;
 
-public final class ColourUtils
-{
+public final class ColourUtils {
     @Nullable
-    private ColourUtils() {}
+    private ColourUtils() {
+    }
 
-    public static DyeColor getStackColour(ItemStack stack )
-    {
+    public static DyeColor getStackColour(ItemStack stack) {
         Item item = stack.getItem();
         return item instanceof ItemDye ? DyeColor.colorFromItemMeta(stack.getMetadata()) : null;
     }

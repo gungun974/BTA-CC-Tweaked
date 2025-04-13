@@ -9,27 +9,25 @@ import net.minecraft.core.player.inventory.slot.Slot;
 import java.util.List;
 
 public class MenuPrinter extends MenuAbstract {
-    public TilePrinter printer;
     private final int printerSlotsStart;
     private final int inventorySlotsStart;
     private final int hotbarSlotsStart;
+    public TilePrinter printer;
 
     public MenuPrinter(Container container, TilePrinter printer) {
         this.printer = printer;
 
         // Ink slot
-        addSlot( new Slot( this.printer, 0, 13, 35 ) );
+        addSlot(new Slot(this.printer, 0, 13, 35));
 
         // In-tray
-        for( int x = 0; x < 6; x++ )
-        {
-            addSlot( new Slot( this.printer, x + 1, 61 + x * 18, 22 ) );
+        for (int x = 0; x < 6; x++) {
+            addSlot(new Slot(this.printer, x + 1, 61 + x * 18, 22));
         }
 
         // Out-tray
-        for( int x = 0; x < 6; x++ )
-        {
-            addSlot( new Slot( this.printer, x + 7, 61 + x * 18, 49 ) );
+        for (int x = 0; x < 6; x++) {
+            addSlot(new Slot(this.printer, x + 7, 61 + x * 18, 49));
         }
 
         for (int j = 0; j < 3; j++) {

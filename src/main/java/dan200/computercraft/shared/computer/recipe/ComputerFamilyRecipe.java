@@ -9,8 +9,7 @@ import dan200.computercraft.shared.computer.core.ComputerFamily;
 import net.minecraft.core.data.registry.recipe.RecipeSymbol;
 import net.minecraft.core.item.ItemStack;
 
-public abstract class ComputerFamilyRecipe extends ComputerConvertRecipe
-{
+public abstract class ComputerFamilyRecipe extends ComputerConvertRecipe {
     private final ComputerFamily family;
 
     public ComputerFamilyRecipe(int recipeWidth, int recipeHeight, RecipeSymbol[] input, ItemStack output, boolean consumeContainerItem, boolean allowMirrored, ComputerFamily family) {
@@ -23,8 +22,7 @@ public abstract class ComputerFamilyRecipe extends ComputerConvertRecipe
         this.family = ComputerFamily.NORMAL;
     }
 
-    public ComputerFamily getFamily()
-    {
+    public ComputerFamily getFamily() {
         return family;
     }
 }

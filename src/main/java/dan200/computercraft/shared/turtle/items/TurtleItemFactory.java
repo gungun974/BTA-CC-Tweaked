@@ -13,33 +13,30 @@ import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.turtle.blocks.ITurtleTile;
 import net.minecraft.core.item.ItemStack;
 
-public final class TurtleItemFactory
-{
-    private TurtleItemFactory() {}
+public final class TurtleItemFactory {
+    private TurtleItemFactory() {
+    }
 
-    public static ItemStack create(ITurtleTile turtle )
-    {
+    public static ItemStack create(ITurtleTile turtle) {
         ITurtleAccess access = turtle.getAccess();
 
-        return create( turtle.getComputerID(),
+        return create(turtle.getComputerID(),
             turtle.getLabel(),
             turtle.getColour(),
             turtle.getFamily(),
-            access.getUpgrade( TurtleSide.LEFT ),
-            access.getUpgrade( TurtleSide.RIGHT ),
+            access.getUpgrade(TurtleSide.LEFT),
+            access.getUpgrade(TurtleSide.RIGHT),
             access.getFuelLevel(),
-            turtle.getOverlay() );
+            turtle.getOverlay());
     }
 
-    public static ItemStack create( int id, String label, int colour, ComputerFamily family, ITurtleUpgrade leftUpgrade, ITurtleUpgrade rightUpgrade,
-                                    int fuelLevel, int overlay )
-    {
-        switch( family )
-        {
+    public static ItemStack create(int id, String label, int colour, ComputerFamily family, ITurtleUpgrade leftUpgrade, ITurtleUpgrade rightUpgrade,
+                                   int fuelLevel, int overlay) {
+        switch (family) {
             case NORMAL:
-                return ComputerCraftItems.TURTLE_NORMAL.create( id, label, colour, leftUpgrade, rightUpgrade, fuelLevel, overlay );
+                return ComputerCraftItems.TURTLE_NORMAL.create(id, label, colour, leftUpgrade, rightUpgrade, fuelLevel, overlay);
             case ADVANCED:
-                return ComputerCraftItems.TURTLE_ADVANCED.create( id, label, colour, leftUpgrade, rightUpgrade, fuelLevel, overlay );
+                return ComputerCraftItems.TURTLE_ADVANCED.create(id, label, colour, leftUpgrade, rightUpgrade, fuelLevel, overlay);
             default:
                 return null;
         }

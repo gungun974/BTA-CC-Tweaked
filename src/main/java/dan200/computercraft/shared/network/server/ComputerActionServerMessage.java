@@ -11,39 +11,32 @@ import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 
-public class ComputerActionServerMessage extends ComputerServerMessage
-{
+public class ComputerActionServerMessage extends ComputerServerMessage {
     private Action action;
 
-    public ComputerActionServerMessage( int instanceId, Action action )
-    {
-        super( instanceId );
+    public ComputerActionServerMessage(int instanceId, Action action) {
+        super(instanceId);
         this.action = action;
     }
 
-    public ComputerActionServerMessage()
-    {
+    public ComputerActionServerMessage() {
     }
 
     @Override
-    public void encodeToUniversalPacket( @Nonnull UniversalPacket buf )
-    {
-        super.encodeToUniversalPacket( buf );
-        buf.writeEnumConstant( action );
+    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+        super.encodeToUniversalPacket(buf);
+        buf.writeEnumConstant(action);
     }
 
     @Override
-    public void decodeFromUniversalPacket( @Nonnull UniversalPacket buf )
-    {
-        super.decodeFromUniversalPacket( buf );
-        action = buf.readEnumConstant( Action.class );
+    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+        super.decodeFromUniversalPacket(buf);
+        action = buf.readEnumConstant(Action.class);
     }
 
     @Override
-    protected void handle( @Nonnull ServerComputer computer, @Nonnull IContainerComputer container )
-    {
-        switch( action )
-        {
+    protected void handle(@Nonnull ServerComputer computer, @Nonnull IContainerComputer container) {
+        switch (action) {
             case TURN_ON:
                 computer.turnOn();
                 break;
@@ -56,8 +49,7 @@ public class ComputerActionServerMessage extends ComputerServerMessage
         }
     }
 
-    public enum Action
-    {
+    public enum Action {
         TURN_ON, SHUTDOWN, REBOOT
     }
 }

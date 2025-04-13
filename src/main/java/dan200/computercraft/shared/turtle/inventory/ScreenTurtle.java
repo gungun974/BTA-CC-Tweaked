@@ -10,15 +10,11 @@ import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.container.ScreenContainerAbstract;
-import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.player.inventory.container.ContainerInventory;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import java.util.UUID;
-
-import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_HEIGHT;
-import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_WIDTH;
 
 public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContainerAbstract {
     public static final int PLAYER_START_Y = 134;
@@ -30,7 +26,8 @@ public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContain
     private final int termHeight;
 
     protected WidgetTerminal terminal;
-
+    UUID glfwKeyCallbackId;
+    UUID glfwCharCallbackId;
     public ScreenTurtle(T container, int termWidth, int termHeight, ContainerInventory inventoryplayer, TileTurtle tileentitydispenser) {
         super(new MenuTurtle(inventoryplayer, tileentitydispenser));
         this.family = container.getFamily();
@@ -41,15 +38,11 @@ public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContain
         this.ySize = 217;
     }
 
-    UUID glfwKeyCallbackId;
-    UUID glfwCharCallbackId;
-
     @Override
-    public void init()
-    {
+    public void init() {
         super.init();
 
-        terminal = new WidgetTerminal( mc, () -> computer, termWidth, termHeight, 0, 0, 0, 0 );
+        terminal = new WidgetTerminal(mc, () -> computer, termWidth, termHeight, 0, 0, 0, 0);
 
         GLFWKeyboardManager.getInstance().removeKeyObserver(glfwKeyCallbackId);
         glfwKeyCallbackId = GLFWKeyboardManager.getInstance().addKeyObserver(
@@ -82,8 +75,7 @@ public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContain
     }
 
     @Override
-    public void tick()
-    {
+    public void tick() {
         super.tick();
         terminal.update();
     }
@@ -91,7 +83,7 @@ public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContain
     @Override
     public void keyPressed(char eventCharacter, int eventKey, int mx, int my) {
         if (eventKey == Keyboard.KEY_ESCAPE) {
-            this.mc.displayScreen((Screen)null);
+            this.mc.displayScreen(null);
         }
     }
 
@@ -133,15 +125,14 @@ public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContain
         if (terminal != null) {
             // Draw selection slot
             int slot = terminal.getSelectedSlot();
-            if( slot >= 0 )
-            {
+            if (slot >= 0) {
                 int slotX = slot % 4;
                 int slotY = slot / 4;
-                this.drawTexturedModalRect( j + TURTLE_START_X - 2 + slotX * 18, k + PLAYER_START_Y - 2 + slotY * 18,
+                this.drawTexturedModalRect(j + TURTLE_START_X - 2 + slotX * 18, k + PLAYER_START_Y - 2 + slotY * 18,
                     0,
                     217,
                     24,
-                    24 );
+                    24);
             }
         }
     }

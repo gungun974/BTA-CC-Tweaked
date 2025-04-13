@@ -11,12 +11,11 @@ import javax.annotation.Nonnull;
 
 /**
  * A peripheral whose methods are not known at runtime.
- *
+ * <p>
  * This behaves similarly to {@link IDynamicLuaObject}, though also accepting the current {@link IComputerAccess}. Generally one may use {@link LuaFunction}
  * instead of implementing this interface.
  */
-public interface IDynamicPeripheral extends IPeripheral
-{
+public interface IDynamicPeripheral extends IPeripheral {
     /**
      * Should return an array of strings that identify the methods that this peripheral exposes to Lua. This will be called once before each attachment, and
      * should not change when called multiple times.
@@ -30,7 +29,7 @@ public interface IDynamicPeripheral extends IPeripheral
     /**
      * This is called when a lua program on an attached computer calls {@code peripheral.call()} with one of the methods exposed by {@link
      * #getMethodNames()}.
-     *
+     * <p>
      * Be aware that this will be called from the ComputerCraft Lua thread, and must be thread-safe when interacting with Minecraft objects.
      *
      * @param computer  The interface to the computer that is making the call. Remember that multiple computers can be attached to a peripheral at once.
@@ -44,5 +43,5 @@ public interface IDynamicPeripheral extends IPeripheral
      * @see #getMethodNames()
      */
     @Nonnull
-    MethodResult callMethod( @Nonnull IComputerAccess computer, @Nonnull ILuaContext context, int method, @Nonnull IArguments arguments ) throws LuaException;
+    MethodResult callMethod(@Nonnull IComputerAccess computer, @Nonnull ILuaContext context, int method, @Nonnull IArguments arguments) throws LuaException;
 }

@@ -18,45 +18,37 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 
-public final class Peripherals
-{
+public final class Peripherals {
     private static final Collection<IPeripheralProvider> providers = new LinkedHashSet<>();
 
-    private Peripherals() {}
+    private Peripherals() {
+    }
 
-    public static synchronized void register( @Nonnull IPeripheralProvider provider )
-    {
-        Objects.requireNonNull( provider, "provider cannot be null" );
-        providers.add( provider );
+    public static synchronized void register(@Nonnull IPeripheralProvider provider) {
+        Objects.requireNonNull(provider, "provider cannot be null");
+        providers.add(provider);
     }
 
     @Nullable
-    public static IPeripheral getPeripheral(World world, BlockPos pos, Direction side )
-    {
-        return pos.y < World.HEIGHT_BLOCKS && (Helper.isServerEnvironment() || Helper.isSinglePlayer()) ? getPeripheralAt( world, pos, side ) : null;
+    public static IPeripheral getPeripheral(World world, BlockPos pos, Direction side) {
+        return pos.y < World.HEIGHT_BLOCKS && (Helper.isServerEnvironment() || Helper.isSinglePlayer()) ? getPeripheralAt(world, pos, side) : null;
     }
 
     @Nullable
-    private static IPeripheral getPeripheralAt( World world, BlockPos pos, Direction side )
-    {
+    private static IPeripheral getPeripheralAt(World world, BlockPos pos, Direction side) {
         // Try the handlers in order:
-        for( IPeripheralProvider peripheralProvider : providers )
-        {
-            try
-            {
-                IPeripheral peripheral = peripheralProvider.getPeripheral( world, pos, side );
-                if( peripheral != null )
-                {
+        for (IPeripheralProvider peripheralProvider : providers) {
+            try {
+                IPeripheral peripheral = peripheralProvider.getPeripheral(world, pos, side);
+                if (peripheral != null) {
                     return peripheral;
                 }
-            }
-            catch( Exception e )
-            {
-                ComputerCraft.log.error( "Peripheral provider " + peripheralProvider + " errored.", e );
+            } catch (Exception e) {
+                ComputerCraft.log.error("Peripheral provider " + peripheralProvider + " errored.", e);
             }
         }
 
-        return GenericPeripheralProvider.getPeripheral( world, pos, side );
+        return GenericPeripheralProvider.getPeripheral(world, pos, side);
     }
 
 }

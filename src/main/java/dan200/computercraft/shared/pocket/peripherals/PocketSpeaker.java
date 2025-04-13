@@ -16,17 +16,14 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class PocketSpeaker extends AbstractPocketUpgrade
-{
-    public PocketSpeaker(int id)
-    {
-        super( id, ComputerCraftItems.SPEAKER );
+public class PocketSpeaker extends AbstractPocketUpgrade {
+    public PocketSpeaker(int id) {
+        super(id, ComputerCraftItems.SPEAKER);
     }
 
     @Nullable
     @Override
-    public IPeripheral createPeripheral( @Nonnull IPocketAccess access )
-    {
+    public IPeripheral createPeripheral(@Nonnull IPocketAccess access) {
         return new PocketSpeakerPeripheral();
     }
 
@@ -36,22 +33,19 @@ public class PocketSpeaker extends AbstractPocketUpgrade
     }
 
     @Override
-    public void update( @Nonnull IPocketAccess access, @Nullable IPeripheral peripheral )
-    {
-        if( !(peripheral instanceof PocketSpeakerPeripheral) )
-        {
+    public void update(@Nonnull IPocketAccess access, @Nullable IPeripheral peripheral) {
+        if (!(peripheral instanceof PocketSpeakerPeripheral)) {
             return;
         }
 
         PocketSpeakerPeripheral speaker = (PocketSpeakerPeripheral) peripheral;
 
         Entity entity = access.getEntity();
-        if( entity != null )
-        {
-            speaker.setLocation( entity.world, Vec3.getPermanentVec3(entity.x, entity.y + entity.getHeadHeight(), entity.z));
+        if (entity != null) {
+            speaker.setLocation(entity.world, Vec3.getPermanentVec3(entity.x, entity.y + entity.getHeadHeight(), entity.z));
         }
 
         speaker.update();
-        access.setLight( speaker.madeSound( 20 ) ? 0x3320fc : -1 );
+        access.setLight(speaker.madeSound(20) ? 0x3320fc : -1);
     }
 }

@@ -16,8 +16,7 @@ import javax.annotation.Nonnull;
 /**
  * Represents a recipe which converts a computer from one form into another.
  */
-public abstract class ComputerConvertRecipe extends RecipeEntryCraftingShaped
-{
+public abstract class ComputerConvertRecipe extends RecipeEntryCraftingShaped {
     public ComputerConvertRecipe(int recipeWidth, int recipeHeight, RecipeSymbol[] input, ItemStack output, boolean consumeContainerItem, boolean allowMirrored) {
         super(recipeWidth, recipeHeight, input, output, consumeContainerItem, allowMirrored);
     }
@@ -28,17 +27,14 @@ public abstract class ComputerConvertRecipe extends RecipeEntryCraftingShaped
 
     @Override
     public boolean matches(ContainerCrafting inventory) {
-        if( !super.matches( inventory ) )
-        {
+        if (!super.matches(inventory)) {
             return false;
         }
 
-        for( int i = 0; i < inventory.getContainerSize(); i++ )
-        {
-            ItemStack stack = inventory.getItem( i );
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            ItemStack stack = inventory.getItem(i);
 
-            if( stack != null && stack.getItem() instanceof IComputerItem )
-            {
+            if (stack != null && stack.getItem() instanceof IComputerItem) {
                 return true;
             }
         }
@@ -48,12 +44,10 @@ public abstract class ComputerConvertRecipe extends RecipeEntryCraftingShaped
 
     @Override
     public ItemStack getCraftingResult(ContainerCrafting inventory) {
-        for( int i = 0; i < inventory.getContainerSize(); i++ )
-        {
-            ItemStack stack = inventory.getItem( i );
-            if( stack != null && stack.getItem() instanceof IComputerItem )
-            {
-                return convert( (IComputerItem) stack.getItem(), stack );
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            ItemStack stack = inventory.getItem(i);
+            if (stack != null && stack.getItem() instanceof IComputerItem) {
+                return convert((IComputerItem) stack.getItem(), stack);
             }
         }
 
@@ -61,5 +55,5 @@ public abstract class ComputerConvertRecipe extends RecipeEntryCraftingShaped
     }
 
     @Nonnull
-    protected abstract ItemStack convert( @Nonnull IComputerItem item, @Nonnull ItemStack stack );
+    protected abstract ItemStack convert(@Nonnull IComputerItem item, @Nonnull ItemStack stack);
 }
