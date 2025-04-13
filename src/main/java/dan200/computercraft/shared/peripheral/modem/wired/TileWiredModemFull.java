@@ -8,6 +8,7 @@ package dan200.computercraft.shared.peripheral.modem.wired;
 import com.google.common.base.Objects;
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.BlockPos;
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.network.wired.IWiredElement;
 import dan200.computercraft.api.network.wired.IWiredNode;
@@ -48,16 +49,11 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile
         }
     }
 
-//    @Override
-//    public void destroy()
-//    {
-//        if( !destroyed )
-//        {
-//            destroyed = true;
-//            doRemove();
-//        }
-//        super.destroy();
-//    }
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        doRemove();
+    }
 
     @Override
     public void onChunkUnloaded()
@@ -102,11 +98,7 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile
         {
             for( Direction facing : DirectionUtil.FACINGS )
             {
-                if( getPos().offset( facing )
-                    .equals( neighbour ) )
-                {
-                    refreshPeripheral( facing );
-                }
+                refreshPeripheral( facing );
             }
         }
     }
@@ -221,6 +213,7 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile
         }
 
         worldObj.setBlockMetadata(x, y, z, (modemOn ? 1 : 0) + (peripheralOn ? 2 : 0));
+        worldObj.notifyBlockChange(x, y, z, getBlockId());
     }
 
     private Set<String> getConnectedPeripheralNames()

@@ -81,17 +81,6 @@ public class TileCable extends TileGeneric implements IPeripheralTile
     {
     }
 
-//    @Override
-//    public void destroy()
-//    {
-//        if( !destroyed )
-//        {
-//            destroyed = true;
-//            modem.destroy();
-//            onRemove();
-//        }
-//    }
-
     @Override
     public void onChunkUnloaded()
     {
@@ -107,12 +96,6 @@ public class TileCable extends TileGeneric implements IPeripheralTile
             connectionsFormed = false;
         }
     }
-
-//    @Nonnull
-//    @Override
-//    public ActionResult onActivate( PlayerEntity player, Hand hand, BlockHitResult hit )
-//    {
-//    }
 
 public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
         if( player.isSneaking() )
@@ -149,14 +132,12 @@ public boolean onBlockRightClicked(Player player, Side side, double xPlaced, dou
 
     public void onNeighbourChange( @Nonnull BlockPos neighbour )
     {
-        Direction dir = getDirection();
-
-        if( neighbour.equals( getPos().offset( dir ) ) && hasModem() && !this.getBlock().getLogic().canPlaceBlockAt( worldObj, x, y, z ) )
+        if( hasModem() && !this.getBlock().getLogic().canPlaceBlockAt( worldObj, x, y, z ) )
         {
             if( hasCable() )
             {
                 // Drop the modem and convert to cable
-                worldObj.dropItem(x, y, z, new ItemStack( ComputerCraftItems.WIRED_MODEM ));
+                worldObj.dropItem(x, y, z, new ItemStack( ComputerCraftItems.WIRED_MODEM, 1 ));
                 blockStateModem = CableModemVariant.None;
                 modemChanged();
                 connectionsChanged();
@@ -164,7 +145,7 @@ public boolean onBlockRightClicked(Player player, Side side, double xPlaced, dou
             else
             {
                 // Drop everything and remove block
-                worldObj.dropItem(x, y, z, new ItemStack( ComputerCraftItems.WIRED_MODEM ));
+                worldObj.dropItem(x, y, z, new ItemStack( ComputerCraftItems.WIRED_MODEM, 1 ));
                 worldObj.setBlockWithNotify(x, y, z, 0);
                 // This'll call #destroy(), so we don't need to reset the network here.
             }
@@ -311,11 +292,7 @@ public boolean onBlockRightClicked(Player player, Side side, double xPlaced, dou
         if( !Helper.isClientWorld() && peripheralAccessAllowed )
         {
             Direction facing = getDirection();
-            if( getPos().offset( facing )
-                .equals( neighbour ) )
-            {
-                refreshPeripheral();
-            }
+            refreshPeripheral();
         }
 
         this.updatePlacementState();
@@ -442,7 +419,14 @@ public boolean onBlockRightClicked(Player player, Side side, double xPlaced, dou
         super.writeToNBT(nbt);
     }
 
-//    @Override
+    @Override
+    public void invalidate() {
+        super.invalidate();
+
+        onRemove();
+    }
+
+    //    @Override
 //    public void markRemoved()
 //    {
 //        super.markRemoved();
