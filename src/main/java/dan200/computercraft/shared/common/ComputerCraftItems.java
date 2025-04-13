@@ -4,6 +4,7 @@ import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.items.ItemBlockComputer;
 import dan200.computercraft.shared.media.items.ItemDisk;
 import dan200.computercraft.shared.media.items.ItemPrintout;
+import dan200.computercraft.shared.media.items.ItemTreasureDisk;
 import dan200.computercraft.shared.peripheral.modem.wired.ItemBlockCable;
 import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
 import dan200.computercraft.shared.turtle.items.ItemTurtle;
@@ -39,6 +40,7 @@ public class ComputerCraftItems {
     public static ItemBlock<?> SPEAKER;
 
     public static final ItemDisk DISK;
+    public static final ItemTreasureDisk TREASURE_DISK;
 
     public static ItemPrintout PRINTED_PAGE;
     public static ItemPrintout PRINTED_PAGES;
@@ -63,6 +65,10 @@ public class ComputerCraftItems {
         DISK = new ItemBuilder(MOD_ID)
             .setKey("item.disk")
             .build((new ItemDisk(NamespaceID.getPermanent(MOD_ID, "disk"), 16539)));
+
+        TREASURE_DISK = new ItemBuilder(MOD_ID)
+            .setKey("item.treasure_disk")
+            .build((new ItemTreasureDisk(NamespaceID.getPermanent(MOD_ID, "treasure_disk"), 16547)));
 
         PRINTED_PAGE = new ItemBuilder(MOD_ID)
             .setKey("item.printed_page")

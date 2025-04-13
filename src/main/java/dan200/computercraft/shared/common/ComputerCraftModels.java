@@ -147,6 +147,12 @@ public class ComputerCraftModels implements ModelEntrypoint {
             return itemModelStandard;
         });
 
+        ModelHelper.setItemModel(ComputerCraftItems.TREASURE_DISK, () -> {
+            ItemModelStandard itemModelStandard = new DiskItemModel(ComputerCraftItems.TREASURE_DISK, MOD_ID);
+            itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/disk_frame"));
+            return itemModelStandard;
+        });
+
         ModelHelper.setItemModel(ComputerCraftItems.PRINTED_PAGE, () -> {
             ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.PRINTED_PAGE, MOD_ID);
             itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/printed_page"));

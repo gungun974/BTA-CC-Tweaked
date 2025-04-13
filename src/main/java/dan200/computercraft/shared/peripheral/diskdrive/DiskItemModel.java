@@ -1,8 +1,6 @@
 package dan200.computercraft.shared.peripheral.diskdrive;
 
 import dan200.computercraft.shared.common.ComputerCraftItems;
-import dan200.computercraft.shared.media.items.ItemDisk;
-import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.EntityRenderDispatcher;
 import net.minecraft.client.render.Font;
