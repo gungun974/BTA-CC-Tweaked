@@ -2,6 +2,7 @@ package dan200.computercraft.shared.common;
 
 import dan200.computercraft.shared.computer.core.ComputerState;
 import net.minecraft.client.render.Font;
+import net.minecraft.client.render.ItemRenderer;
 import net.minecraft.client.render.LightmapHelper;
 import net.minecraft.client.render.TextureManager;
 import net.minecraft.client.render.block.model.BlockModel;
@@ -19,6 +20,7 @@ import net.minecraft.core.item.block.ItemBlock;
 import net.minecraft.core.util.helper.Direction;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 public class ItemModelRotatedBlock extends ItemModelBlock {
@@ -126,6 +128,62 @@ public class ItemModelRotatedBlock extends ItemModelBlock {
         } else {
             super.renderAsItemEntity(tessellator, entity, random, itemstack, renderCount, yaw, brightness, partialTick);
         }
+    }
 
+    @Override
+    public void heldTransformThirdPerson(ItemRenderer renderer, Entity entity, ItemStack itemStack) {
+        if (itemStack.itemID < Blocks.blocksList.length && ((BlockModel)BlockModelDispatcher.getInstance().getDispatch(Blocks.blocksList[itemStack.itemID])).shouldItemRender3d()) {
+            float scale = 0.375F;
+            GL11.glTranslatef(0.0F, 0.1875F, -0.3125F);
+            GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
+            GL11.glScalef(0.375F, -0.375F, -0.375F);
+        } else {
+            super.heldTransformThirdPerson(renderer, entity, itemStack);
+        }
+
+    }
+
+    public void renderItem(Tessellator tessellator, ItemRenderer renderer, ItemStack itemstack, @Nullable Entity entity, float brightness, boolean handheldTransform) {
+        if (((BlockModel)BlockModelDispatcher.getInstance().getDispatch(Blocks.blocksList[itemstack.itemID])).shouldItemRender3d()) {
+            GL11.glEnable(3042);
+            GL11.glBlendFunc(770, 771);
+            TextureRegistry.blockAtlas.bind();
+            ((BlockModel)BlockModelDispatcher.getInstance().getDispatch(Blocks.blocksList[itemstack.itemID])).renderBlockOnInventory(tessellator, appliedCustomMeta(itemstack.getMetadata()), brightness, (Integer)null);
+            GL11.glDisable(3042);
+        } else {
+            super.renderItem(tessellator, renderer, itemstack, entity, brightness, handheldTransform);
+        }
+    }
+
+    public void renderItemInWorld(Tessellator tessellator, Entity entity, ItemStack itemStack, float brightness, float alpha, boolean worldTransform) {
+        if (itemStack != null) {
+            GL11.glBlendFunc(770, 771);
+            GL11.glEnable(2884);
+            GL11.glEnable(3042);
+            if (((BlockModel)BlockModelDispatcher.getInstance().getDispatch(Blocks.blocksList[itemStack.itemID])).shouldItemRender3d()) {
+                GL11.glBlendFunc(770, 771);
+                TextureRegistry.blockAtlas.bind();
+                if (this.useColor) {
+                    int color = this.getColor(itemStack);
+                    float r = (float)(color >> 16 & 255) / 255.0F;
+                    float g = (float)(color >> 8 & 255) / 255.0F;
+                    float b = (float)(color & 255) / 255.0F;
+                    GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
+                } else {
+                    GL11.glColor4f(brightness, brightness, brightness, alpha);
+                }
+
+                GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
+                BlockModel.renderBlocks.useInventoryTint = this.useColor;
+                ((BlockModel)BlockModelDispatcher.getInstance().getDispatch(Blocks.blocksList[itemStack.itemID])).renderBlockOnInventory(tessellator, appliedCustomMeta(itemStack.getMetadata()), brightness, alpha, (Integer)null);
+                BlockModel.renderBlocks.useInventoryTint = true;
+            } else {
+                super.renderItemInWorld(tessellator, entity, itemStack, brightness, alpha, worldTransform);
+            }
+
+            GL11.glDisable(2884);
+            GL11.glDisable(3042);
+        }
     }
 }
