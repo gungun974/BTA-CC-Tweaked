@@ -141,6 +141,12 @@ public class CableItemModel extends ItemModelStandard {
                 }
 
                 GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+
+                if (itemStack.getItem().equals(ComputerCraftItems.WIRED_MODEM)) {
+                    GL11.glScalef(1.20f, 1.20f, 1.20f);
+                    GL11.glTranslatef(0.4f, -0.05f, 0);
+                }
+
                 BlockModel.renderBlocks.useInventoryTint = this.useColor;
                 ((BlockModel)BlockModelDispatcher.getInstance().getDispatch(ComputerCraftBlocks.CABLE)).renderBlockOnInventory(tessellator, getModelMetadata(itemStack), brightness, alpha, (Integer)null);
                 BlockModel.renderBlocks.useInventoryTint = true;
@@ -177,6 +183,10 @@ public class CableItemModel extends ItemModelStandard {
 
                 if (Global.accessor.isFullbrightEnabled() || this.itemfullBright) {
                     brightness = 1.0F;
+                }
+
+                if (itemstack.getItem().equals(ComputerCraftItems.WIRED_MODEM)) {
+                    GL11.glTranslatef(0.5f, 0, 0);
                 }
 
                 this.blockModel.renderBlockOnInventory(tessellator, getModelMetadata(itemstack), brightness, (Integer)null);

@@ -7,6 +7,7 @@ import dan200.computercraft.shared.media.items.ItemPrintout;
 import dan200.computercraft.shared.peripheral.modem.wired.ItemBlockCable;
 import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
 import dan200.computercraft.shared.turtle.items.ItemTurtle;
+import net.minecraft.core.block.Block;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.block.ItemBlock;
 import net.minecraft.core.util.collection.NamespaceID;
@@ -24,6 +25,13 @@ public class ComputerCraftItems {
 
     public static ItemTurtle TURTLE_NORMAL;
     public static ItemTurtle TURTLE_ADVANCED;
+
+    public static ItemBlock<?> DISK_DRIVE;
+
+    public static ItemBlock<?> PRINTER;
+
+    public static ItemBlock<?> MONITOR_NORMAL;
+    public static ItemBlock<?> MONITOR_ADVANCED;
 
     public static ItemBlock<?> WIRELESS_MODEM_NORMAL;
     public static ItemBlock<?> WIRELESS_MODEM_ADVANCED;

@@ -319,9 +319,6 @@ public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T>
 
         if (metadata == 1) {
 
-            GL11.glScalef(1.20f, 1.20f, 1.20f);
-            GL11.glTranslatef(0.4f, -0.05f, 0);
-
             setBounds(bounds, ModemShapes.getBounds(Direction.WEST));
 
             renderBlocks.uvRotateTop = 1;

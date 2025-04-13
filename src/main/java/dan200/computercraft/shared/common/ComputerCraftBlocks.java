@@ -21,6 +21,7 @@ import dan200.computercraft.shared.turtle.items.ItemTurtle;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.item.block.ItemBlock;
@@ -152,6 +153,10 @@ public class ComputerCraftBlocks {
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileDiskDrive::new)
+            .setBlockItem(block -> {
+                ComputerCraftItems.DISK_DRIVE = new ItemBlock<>(block);
+                return ComputerCraftItems.DISK_DRIVE;
+            })
             .build("disk_drive", 10005, b -> new BlockDiskDrive(b));
 
         EntityHelper.createTileEntity(TilePrinter.class, NamespaceID.getPermanent(MOD_ID, "printer"));
@@ -161,6 +166,10 @@ public class ComputerCraftBlocks {
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileDiskDrive::new)
+            .setBlockItem(block -> {
+                ComputerCraftItems.PRINTER = new ItemBlock<>(block);
+                return ComputerCraftItems.PRINTER;
+            })
             .build("printer", 10012, b -> new BlockPrinter(b));
 
         EntityHelper.createTileEntity(TileTurtle.class, NamespaceID.getPermanent(MOD_ID, "turtle"));
@@ -194,6 +203,10 @@ public class ComputerCraftBlocks {
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileMonitor(false))
+            .setBlockItem(block -> {
+                ComputerCraftItems.MONITOR_NORMAL = new ItemBlock<>(block);
+                return ComputerCraftItems.MONITOR_NORMAL;
+            })
             .build("monitor_normal", 10010, b -> new BlockMonitor(b, false));
 
         MONITOR_ADVANCED = new BlockBuilder(MOD_ID)
@@ -201,6 +214,10 @@ public class ComputerCraftBlocks {
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileMonitor(true))
+            .setBlockItem(block -> {
+                ComputerCraftItems.MONITOR_ADVANCED = new ItemBlock<>(block);
+                return ComputerCraftItems.MONITOR_ADVANCED;
+            })
             .build("monitor_advanced", 10007, b -> new BlockMonitor(b, true));
     }
 }

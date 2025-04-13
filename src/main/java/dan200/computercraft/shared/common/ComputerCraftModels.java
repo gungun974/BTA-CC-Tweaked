@@ -16,7 +16,6 @@ import dan200.computercraft.shared.pocket.items.PocketComputerItemModel;
 import dan200.computercraft.shared.turtle.blocks.BlockModelTurtle;
 import dan200.computercraft.shared.turtle.blocks.TileEntityRendererTurtle;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
-import dan200.computercraft.shared.turtle.items.ItemTurtle;
 import dan200.computercraft.shared.turtle.items.TurtleItemModel;
 import net.minecraft.client.render.EntityRenderDispatcher;
 import net.minecraft.client.render.TileEntityRenderDispatcher;
@@ -24,8 +23,6 @@ import net.minecraft.client.render.block.color.BlockColorDispatcher;
 import net.minecraft.client.render.block.model.BlockModelDispatcher;
 import net.minecraft.client.render.block.model.BlockModelHorizontalRotation;
 import net.minecraft.client.render.block.model.BlockModelRotatable;
-import net.minecraft.client.render.block.model.BlockModelStandard;
-import net.minecraft.client.render.item.model.ItemModelBlock;
 import net.minecraft.client.render.item.model.ItemModelDispatcher;
 import net.minecraft.client.render.item.model.ItemModelStandard;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
@@ -53,7 +50,7 @@ public class ComputerCraftModels implements ModelEntrypoint {
             .setTex(0, "computercraft:block/computer_advanced_front", Side.NORTH)
         );
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.SPEAKER, () -> new BlockModelRotatable<>(ComputerCraftBlocks.SPEAKER)
+        ModelHelper.setBlockModel(ComputerCraftBlocks.SPEAKER, () -> new BlockModelHorizontalRotation<>(ComputerCraftBlocks.SPEAKER)
             .setTex(0, "computercraft:block/speaker_side", Side.SOUTH, Side.EAST, Side.WEST)
             .setTex(0, "computercraft:block/speaker_top", Side.TOP, Side.BOTTOM)
             .setTex(0, "computercraft:block/speaker_front", Side.NORTH)
@@ -116,6 +113,9 @@ public class ComputerCraftModels implements ModelEntrypoint {
 
     @Override
     public void initItemModels(ItemModelDispatcher dispatcher) {
+        ModelHelper.setItemModel(ComputerCraftItems.COMPUTER_NORMAL, () -> new ItemModelRotatedBlock(ComputerCraftItems.COMPUTER_NORMAL));
+        ModelHelper.setItemModel(ComputerCraftItems.COMPUTER_ADVANCED, () -> new ItemModelRotatedBlock(ComputerCraftItems.COMPUTER_ADVANCED));
+
         ModelHelper.setItemModel(ComputerCraftItems.POCKET_COMPUTER_NORMAL, () -> {
             ItemModelStandard itemModelStandard = new PocketComputerItemModel(ComputerCraftItems.POCKET_COMPUTER_NORMAL, MOD_ID);
             itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/pocket_computer_normal"));
@@ -128,8 +128,18 @@ public class ComputerCraftModels implements ModelEntrypoint {
             return itemModelStandard;
         });
 
+        ModelHelper.setItemModel(ComputerCraftItems.SPEAKER, () -> new ItemModelRotatedBlock(ComputerCraftItems.SPEAKER));
+        ModelHelper.setItemModel(ComputerCraftItems.DISK_DRIVE, () -> new ItemModelRotatedBlock(ComputerCraftItems.DISK_DRIVE));
+        ModelHelper.setItemModel(ComputerCraftItems.PRINTER, () -> new ItemModelRotatedBlock(ComputerCraftItems.PRINTER));
+
+        ModelHelper.setItemModel(ComputerCraftItems.MONITOR_NORMAL, () -> new ItemModelRotatedBlock(ComputerCraftItems.MONITOR_NORMAL));
+        ModelHelper.setItemModel(ComputerCraftItems.MONITOR_ADVANCED, () -> new ItemModelRotatedBlock(ComputerCraftItems.MONITOR_ADVANCED));
+
         ModelHelper.setItemModel(ComputerCraftItems.TURTLE_NORMAL, () -> new TurtleItemModel(ComputerCraftItems.TURTLE_NORMAL));
         ModelHelper.setItemModel(ComputerCraftItems.TURTLE_ADVANCED, () -> new TurtleItemModel(ComputerCraftItems.TURTLE_ADVANCED));
+
+        ModelHelper.setItemModel(ComputerCraftItems.WIRELESS_MODEM_NORMAL, () -> new ItemModelRotatedBlock(ComputerCraftItems.WIRELESS_MODEM_NORMAL));
+        ModelHelper.setItemModel(ComputerCraftItems.WIRELESS_MODEM_ADVANCED, () -> new ItemModelRotatedBlock(ComputerCraftItems.WIRELESS_MODEM_ADVANCED));
 
         ModelHelper.setItemModel(ComputerCraftItems.DISK, () -> {
             ItemModelStandard itemModelStandard = new DiskItemModel(ComputerCraftItems.DISK, MOD_ID);
