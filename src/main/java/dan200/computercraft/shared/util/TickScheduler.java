@@ -32,5 +32,16 @@ public final class TickScheduler {
     }
 
     public static void tick() {
+        Iterator<TileEntity> iterator = toTick.iterator();
+        while (iterator.hasNext()) {
+            TileEntity tile = iterator.next();
+            iterator.remove();
+
+            World world = tile.worldObj;
+
+            if (world != null && world.isChunkLoaded(tile.x, tile.z) && world.getTileEntity(tile.x, tile.y, tile.z) == tile) {
+                tile.tick();
+            }
+        }
     }
 }
