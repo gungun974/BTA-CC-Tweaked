@@ -310,12 +310,6 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         super.writeToNBT(nbt);
     }
 
-    @Override
-    public void invalidate() {
-        unload();
-        super.invalidate();
-    }
-
     private void updateRedstoneInput(BlockPos neighbour) {
         if (worldObj == null || (!Helper.isServerEnvironment() && !Helper.isSinglePlayer())) {
             return;
