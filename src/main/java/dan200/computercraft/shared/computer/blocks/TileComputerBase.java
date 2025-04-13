@@ -25,6 +25,8 @@ import dan200.computercraft.shared.computer.inventory.ContainerComputer;
 import dan200.computercraft.shared.util.DirectionUtil;
 import dan200.computercraft.shared.util.RedstoneUtil;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.item.Items;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 
@@ -81,20 +83,19 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
-//        ItemStack currentItem = player.getStackInHand( hand );
-//        if( !currentItem.isEmpty() && currentItem.getItem() == Items.NAME_TAG && canNameWithTag( player ) && currentItem.hasCustomName() )
-//        {
-//            // Label to rename computer
-//            if( !getWorld().isClient )
-//            {
-//                setLabel( currentItem.getName()
-//                    .getString() );
-//                currentItem.decrement( 1 );
-//            }
-//            return ActionResult.SUCCESS;
-//        }
-//        else if( !player.isInSneakingPose() )
-//        {
+        ItemStack currentItem = player.getHeldItem();
+        if( currentItem != null && currentItem.getItem().equals(Items.LABEL) && canNameWithTag( player ) && currentItem.hasCustomName() )
+        {
+            // Label to rename computer
+            if( !Helper.isClientWorld() )
+            {
+                setLabel( currentItem.getCustomName());
+                currentItem.consumeItem( player );
+            }
+            return true;
+        }
+        else if( !player.isSneaking() )
+        {
             // Regular right click to activate computer
             if( !worldObj.isClientSide && isUsable( player, false ) )
             {
@@ -105,14 +106,13 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             }
 
             return true;
-//            return ActionResult.SUCCESS;
-//        }
-//        return ActionResult.PASS;
+        }
+        return true;
     }
 
     protected boolean canNameWithTag( Player player )
     {
-        return false;
+        return true;
     }
 
 

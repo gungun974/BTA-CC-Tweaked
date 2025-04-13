@@ -144,7 +144,12 @@ public abstract class ItemBlockCable extends Item
                 return false;
             }
 
-            return placeAt(world, insidePos, player, CableModemVariant.from( direction ), false);
+            if (placeAt(world, insidePos, player, CableModemVariant.from( direction ), false)) {
+                stack.consumeItem( player );
+                return true;
+            }
+
+            return false;
         }
     }
 
@@ -198,7 +203,12 @@ public abstract class ItemBlockCable extends Item
                 }
             }
 
-            return placeAt(world, insidePos, player, CableModemVariant.None, true);
+            if (placeAt(world, insidePos, player, CableModemVariant.None, true)) {
+                stack.consumeItem( player );
+                return true;
+            }
+
+            return false;
         }
     }
 }

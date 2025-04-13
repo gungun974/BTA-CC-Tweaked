@@ -312,18 +312,14 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         );
     }
 
-    /*
-
     public void broadcastDelete()
     {
         // Send deletion to client
-        MinecraftServer server = GameInstanceUtils.getServer();
-        if( server != null )
+        if( Helper.isServerEnvironment() )
         {
-            NetworkHandler.sendToAllPlayers( server, new ComputerDeletedClientMessage( getInstanceID() ) );
+            NetworkHandler.sendToAllPlayers( new ComputerDeletedClientMessage( getInstanceID() ) );
         }
     }
-     */
 
     public int getID()
     {

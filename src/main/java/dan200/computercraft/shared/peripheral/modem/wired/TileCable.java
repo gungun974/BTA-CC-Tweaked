@@ -89,6 +89,8 @@ public class TileCable extends TileGeneric implements IPeripheralTile
         onRemove();
     }
 
+
+
     private void onRemove()
     {
         if( worldObj == null || !Helper.isClientWorld())

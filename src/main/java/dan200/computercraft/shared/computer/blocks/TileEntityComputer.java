@@ -1,37 +1,15 @@
 package dan200.computercraft.shared.computer.blocks;
 
-import com.mojang.nbt.tags.CompoundTag;
-import com.mojang.nbt.tags.ListTag;
-import java.util.List;
-import java.util.Random;
-
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.core.computer.ComputerSide;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
-import net.minecraft.core.block.Block;
-import net.minecraft.core.block.BlockLogicFurnace;
-import net.minecraft.core.block.Blocks;
-import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.block.motion.CarriedBlock;
-import net.minecraft.core.crafting.LookupFuelFurnace;
-import net.minecraft.core.data.registry.Registries;
-import net.minecraft.core.data.registry.recipe.entry.RecipeEntryFurnace;
 import net.minecraft.core.entity.Entity;
-import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.entity.player.Player;
-import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.item.Items;
-import net.minecraft.core.net.packet.Packet;
-import net.minecraft.core.net.packet.PacketTileEntityData;
-import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
-import org.jetbrains.annotations.Nullable;
 
 public class TileEntityComputer extends TileComputerBase  {
     private ComputerProxy proxy;
@@ -123,11 +101,4 @@ public class TileEntityComputer extends TileComputerBase  {
         }
         return proxy;
     }
-
-//    @Nullable
-//    @Override
-//    public ScreenHandler createMenu( int id, @Nonnull PlayerInventory inventory, @Nonnull PlayerEntity player )
-//    {
-//        return new ContainerComputer( id, this );
-//    }
 }

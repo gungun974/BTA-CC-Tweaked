@@ -19,7 +19,7 @@ public class ServerComputerRegistry extends ComputerRegistry<ServerComputer>
             {
                 //System.out.println( "TIMED OUT SERVER COMPUTER " + computer.getInstanceID() );
                 computer.unload();
-                //computer.broadcastDelete();
+                computer.broadcastDelete();
                 it.remove();
                 //System.out.println( getComputers().size() + " SERVER COMPUTERS" );
             }
@@ -63,7 +63,7 @@ public class ServerComputerRegistry extends ComputerRegistry<ServerComputer>
         if( computer != null )
         {
             computer.unload();
-            //computer.broadcastDelete();
+            computer.broadcastDelete();
         }
         super.remove( instanceID );
         //System.out.println( getComputers().size() + " SERVER COMPUTERS" );
