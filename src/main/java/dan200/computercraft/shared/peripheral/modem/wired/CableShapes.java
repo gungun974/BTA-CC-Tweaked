@@ -18,8 +18,8 @@ public final class CableShapes
     private static final double MIN = 0.375;
     private static final double MAX = 1 - MIN;
 
-    private static final AABB SHAPE_CABLE_CORE = AABB.getPermanentBB( MIN, MIN, MIN, MAX, MAX, MAX );
-    private static final EnumMap<Direction, AABB> SHAPE_CABLE_ARM =
+    public static final AABB SHAPE_CABLE_CORE = AABB.getPermanentBB( MIN, MIN, MIN, MAX, MAX, MAX );
+    public static final EnumMap<Direction, AABB> SHAPE_CABLE_ARM =
         new EnumMap<>( new ImmutableMap.Builder<Direction, AABB>().put( Direction.DOWN,
             AABB.getPermanentBB(
                 MIN,

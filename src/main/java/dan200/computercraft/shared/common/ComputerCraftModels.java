@@ -4,6 +4,7 @@ import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
 import dan200.computercraft.shared.peripheral.diskdrive.BlockModelDiskDrive;
 import dan200.computercraft.shared.peripheral.diskdrive.DiskItemModel;
+import dan200.computercraft.shared.peripheral.modem.wired.BlockModelCable;
 import dan200.computercraft.shared.peripheral.modem.wireless.BlockModelWirelessModem;
 import dan200.computercraft.shared.peripheral.monitor.BlockModelMonitor;
 import dan200.computercraft.shared.peripheral.monitor.TileEntityMonitorRenderer;
@@ -70,9 +71,7 @@ public class ComputerCraftModels implements ModelEntrypoint {
             .setTex(0, "computercraft:block/wired_modem_face", Side.sides)
         );
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.CABLE, () -> new BlockModelStandard<>(ComputerCraftBlocks.CABLE)
-            .setTex(0, "computercraft:block/cable_core", Side.sides)
-        );
+        ModelHelper.setBlockModel(ComputerCraftBlocks.CABLE, () -> new BlockModelCable<>(ComputerCraftBlocks.CABLE));
 
         ModelHelper.setBlockModel(ComputerCraftBlocks.DISK_DRIVE, () -> new BlockModelDiskDrive<>(ComputerCraftBlocks.DISK_DRIVE)
             .setTex(0, "computercraft:block/disk_drive_side", Side.SOUTH, Side.EAST, Side.WEST)
