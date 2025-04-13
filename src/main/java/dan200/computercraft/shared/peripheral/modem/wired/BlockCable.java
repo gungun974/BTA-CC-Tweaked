@@ -167,27 +167,8 @@ public class BlockCable extends BlockLogic
         }
     }
 
-    @Override
-    public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xHit, double yHit) {
-        TileEntity entity = (world.getTileEntity(x, y, z));
-        if( !(entity instanceof TileCable) )
-        {
-            return true;
-        }
-
-        TileCable tileCable = (TileCable) entity;
-
-        ComputerCraft.log.info("---------------");
-        ComputerCraft.log.info("Modem : {}", tileCable.blockStateModem);
-        ComputerCraft.log.info("Cable : {}", tileCable.blockStateCable);
-        ComputerCraft.log.info("North : {}", tileCable.blockStateNorth);
-        ComputerCraft.log.info("East : {}", tileCable.blockStateEast);
-        ComputerCraft.log.info("South : {}", tileCable.blockStateSouth);
-        ComputerCraft.log.info("West : {}", tileCable.blockStateWest);
-        ComputerCraft.log.info("Up : {}", tileCable.blockStateUp);
-        ComputerCraft.log.info("Down : {}", tileCable.blockStateDown);
-
-        return true;
+    public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
+        return ((TileCable)world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
     }
 
     @Override

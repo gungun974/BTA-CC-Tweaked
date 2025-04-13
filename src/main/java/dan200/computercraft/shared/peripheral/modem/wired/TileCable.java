@@ -5,6 +5,7 @@
  */
 package dan200.computercraft.shared.peripheral.modem.wired;
 
+import java.util.Objects;
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
@@ -21,12 +22,12 @@ import dan200.computercraft.shared.peripheral.modem.ModemState;
 import dan200.computercraft.shared.util.DirectionUtil;
 import dan200.computercraft.shared.util.TickScheduler;
 import net.minecraft.core.block.BlockLogic;
+import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -111,39 +112,40 @@ public class TileCable extends TileGeneric implements IPeripheralTile
 //    @Override
 //    public ActionResult onActivate( PlayerEntity player, Hand hand, BlockHitResult hit )
 //    {
-//        if( player.isInSneakingPose() )
-//        {
-//            return ActionResult.PASS;
-//        }
-//        if( !canAttachPeripheral() )
-//        {
-//            return ActionResult.FAIL;
-//        }
-//
-//        if( getWorld().isClient )
-//        {
-//            return ActionResult.SUCCESS;
-//        }
-//
-//        String oldName = peripheral.getConnectedName();
-//        togglePeripheralAccess();
-//        String newName = peripheral.getConnectedName();
-//        if( !Objects.equal( newName, oldName ) )
-//        {
-//            if( oldName != null )
-//            {
-//                player.sendMessage( new TranslatableText( "chat.computercraft.wired_modem.peripheral_disconnected",
-//                    ChatHelpers.copy( oldName ) ), false );
-//            }
-//            if( newName != null )
-//            {
-//                player.sendMessage( new TranslatableText( "chat.computercraft.wired_modem.peripheral_connected",
-//                    ChatHelpers.copy( newName ) ), false );
-//            }
-//        }
-//
-//        return ActionResult.SUCCESS;
 //    }
+
+public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
+        if( player.isSneaking() )
+        {
+            return true;
+        }
+        if( !canAttachPeripheral() )
+        {
+            return false;
+        }
+
+        if( Helper.isClientWorld() )
+        {
+            return true;
+        }
+
+        String oldName = peripheral.getConnectedName();
+        togglePeripheralAccess();
+        String newName = peripheral.getConnectedName();
+        if( !Objects.equals( newName, oldName ) )
+        {
+            if( oldName != null )
+            {
+                player.sendMessage( "chat.computercraft.wired_modem.peripheral_disconnected" + oldName);
+            }
+            if( newName != null )
+            {
+                player.sendMessage(  "chat.computercraft.wired_modem.peripheral_connected" + newName );
+            }
+        }
+
+        return true;
+}
 
     public void onNeighbourChange( @Nonnull BlockPos neighbour )
     {
@@ -279,7 +281,7 @@ public class TileCable extends TileGeneric implements IPeripheralTile
         if( oldVariant != newVariant )
         {
             this.blockStateModem = newVariant;
-            worldObj.setBlockWithNotify(x, y, z, getBlockId());
+            worldObj.notifyBlockChange(x, y, z, getBlockId());
         }
     }
 

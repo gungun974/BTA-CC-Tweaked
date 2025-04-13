@@ -175,6 +175,7 @@ public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T>
                             currentCoordinate = WIRED_MODEM_FACE;
                         }
 
+                        renderBlocks.uvRotateTop = 1;
                         this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
                         this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
                         this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
@@ -198,6 +199,7 @@ public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T>
                             currentCoordinate = WIRED_MODEM_FACE;
                         }
 
+                        renderBlocks.uvRotateTop = 3;
                         this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
                         this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
                         this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
@@ -221,6 +223,7 @@ public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T>
                             currentCoordinate = WIRED_MODEM_FACE;
                         }
 
+                        renderBlocks.uvRotateTop = 2;
                         this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
                         this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
                         this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
