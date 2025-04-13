@@ -15,11 +15,20 @@ public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T>
     public static final IconCoordinate CABLE_CORE = TextureRegistry.getTexture("computercraft:block/cable_core");
     public static final IconCoordinate CABLE_SIDE = TextureRegistry.getTexture("computercraft:block/cable_side");
 
+    public static final IconCoordinate MODEM_BACK = TextureRegistry.getTexture("computercraft:block/modem_back");
+
+    public static final IconCoordinate WIRED_MODEM_FACE = TextureRegistry.getTexture("computercraft:block/wired_modem_face");
+    public static final IconCoordinate WIRED_MODEM_FACE_ON = TextureRegistry.getTexture("computercraft:block/wired_modem_face_on");
+
+    public static final IconCoordinate WIRED_MODEM_FACE_PERIPHERAL = TextureRegistry.getTexture("computercraft:block/wired_modem_face_peripheral");
+    public static final IconCoordinate WIRED_MODEM_FACE_PERIPHERAL_ON = TextureRegistry.getTexture("computercraft:block/wired_modem_face_peripheral_on");
+
+
     public BlockModelCable(Block<T> block) {
         super(block);
     }
 
-    public int mode = 0;
+    IconCoordinate currentCoordinate = CABLE_SIDE;
 
     public boolean render(Tessellator tessellator, int x, int y, int z) {
         AABB bounds = this.block.getBlockBoundsFromState(renderBlocks.blockAccess, x, y, z);
@@ -36,52 +45,52 @@ public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T>
                 setBounds(bounds, CableShapes.SHAPE_CABLE_CORE);
                 if (!state.blockStateNorth) {
                     if (state.blockStateSouth && !state.blockStateWest && !state.blockStateEast && !state.blockStateUp && !state.blockStateDown) {
-                        mode = 1;
+                        currentCoordinate = CABLE_CORE;
                     }
                     this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
-                    mode = 0;
+                    currentCoordinate = CABLE_SIDE;
                 }
                 if (!state.blockStateSouth) {
                     if (state.blockStateNorth && !state.blockStateWest && !state.blockStateEast && !state.blockStateUp && !state.blockStateDown) {
-                        mode = 1;
+                        currentCoordinate = CABLE_CORE;
                     }
                     this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
-                    mode = 0;
+                    currentCoordinate = CABLE_SIDE;
                 }
                 if (!state.blockStateEast) {
                     if (state.blockStateWest && !state.blockStateSouth && !state.blockStateNorth && !state.blockStateUp && !state.blockStateDown) {
-                        mode = 1;
+                        currentCoordinate = CABLE_CORE;
                     }
                     if (!state.blockStateWest && !state.blockStateSouth && !state.blockStateNorth && !state.blockStateUp && !state.blockStateDown) {
-                        mode = 1;
+                        currentCoordinate = CABLE_CORE;
                     }
 
                     this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
-                    mode = 0;
+                    currentCoordinate = CABLE_SIDE;
                 }
                 if (!state.blockStateWest) {
                     if (state.blockStateEast && !state.blockStateSouth && !state.blockStateNorth && !state.blockStateUp && !state.blockStateDown) {
-                        mode = 1;
+                        currentCoordinate = CABLE_CORE;
                     }
                     if (!state.blockStateEast && !state.blockStateSouth && !state.blockStateNorth && !state.blockStateUp && !state.blockStateDown) {
-                        mode = 1;
+                        currentCoordinate = CABLE_CORE;
                     }
                     this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
-                    mode = 0;
+                    currentCoordinate = CABLE_SIDE;
                 }
                 if (!state.blockStateUp) {
                     if (state.blockStateDown && !state.blockStateSouth && !state.blockStateNorth && !state.blockStateWest && !state.blockStateEast) {
-                        mode = 1;
+                        currentCoordinate = CABLE_CORE;
                     }
                     this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
-                    mode = 0;
+                    currentCoordinate = CABLE_SIDE;
                 }
                 if (!state.blockStateDown) {
                     if (state.blockStateUp && !state.blockStateSouth && !state.blockStateNorth && !state.blockStateWest && !state.blockStateEast) {
-                        mode = 1;
+                        currentCoordinate = CABLE_CORE;
                     }
                     this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
-                    mode = 0;
+                    currentCoordinate = CABLE_SIDE;
                 }
 
                 if (state.blockStateNorth) {
@@ -127,6 +136,150 @@ public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T>
                     this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
                 }
             }
+
+            if (state.blockStateModem.getFacing() != null) {
+                setBounds(bounds, CableShapes.getModemShape(state));
+
+                switch (state.blockStateModem.getFacing()) {
+                    case NORTH:
+                        if (state.blockStateModem == CableModemVariant.NorthOn) {
+                            currentCoordinate = WIRED_MODEM_FACE_ON;
+                        } else if (state.blockStateModem == CableModemVariant.NorthOffPeripheral) {
+                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL;
+                        } else if (state.blockStateModem == CableModemVariant.NorthOnPeripheral) {
+                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL_ON;
+                        } else {
+                            currentCoordinate = WIRED_MODEM_FACE;
+                        }
+
+                        this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
+                        renderBlocks.flipTexture = true;
+                        this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
+                        renderBlocks.flipTexture = false;
+                        this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
+
+                        currentCoordinate = MODEM_BACK;
+
+                        this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
+                        break;
+                    case EAST:
+                        if (state.blockStateModem == CableModemVariant.EastOn) {
+                            currentCoordinate = WIRED_MODEM_FACE_ON;
+                        } else if (state.blockStateModem == CableModemVariant.EastOffPeripheral) {
+                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL;
+                        } else if (state.blockStateModem == CableModemVariant.EastOnPeripheral) {
+                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL_ON;
+                        } else {
+                            currentCoordinate = WIRED_MODEM_FACE;
+                        }
+
+                        this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
+                        renderBlocks.flipTexture = true;
+                        this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
+                        renderBlocks.flipTexture = false;
+
+                        currentCoordinate = MODEM_BACK;
+
+                        this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
+                        break;
+                    case SOUTH:
+                        if (state.blockStateModem == CableModemVariant.SouthOn) {
+                            currentCoordinate = WIRED_MODEM_FACE_ON;
+                        } else if (state.blockStateModem == CableModemVariant.SouthOffPeripheral) {
+                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL;
+                        } else if (state.blockStateModem == CableModemVariant.SouthOnPeripheral) {
+                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL_ON;
+                        } else {
+                            currentCoordinate = WIRED_MODEM_FACE;
+                        }
+
+                        this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
+                        renderBlocks.flipTexture = true;
+                        this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
+                        renderBlocks.flipTexture = false;
+                        this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
+
+                        currentCoordinate = MODEM_BACK;
+
+                        this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
+                        break;
+                    case WEST:
+                        if (state.blockStateModem == CableModemVariant.WestOn) {
+                            currentCoordinate = WIRED_MODEM_FACE_ON;
+                        } else if (state.blockStateModem == CableModemVariant.WestOffPeripheral) {
+                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL;
+                        } else if (state.blockStateModem == CableModemVariant.WestOnPeripheral) {
+                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL_ON;
+                        } else {
+                            currentCoordinate = WIRED_MODEM_FACE;
+                        }
+
+                        this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
+                        renderBlocks.flipTexture = true;
+                        this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
+                        renderBlocks.flipTexture = false;
+
+                        currentCoordinate = MODEM_BACK;
+
+                        this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
+                        break;
+                    case UP:
+                        if (state.blockStateModem == CableModemVariant.UpOn) {
+                            currentCoordinate = WIRED_MODEM_FACE_ON;
+                        } else if (state.blockStateModem == CableModemVariant.UpOffPeripheral) {
+                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL;
+                        } else if (state.blockStateModem == CableModemVariant.UpOnPeripheral) {
+                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL_ON;
+                        } else {
+                            currentCoordinate = WIRED_MODEM_FACE;
+                        }
+
+                        this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
+
+                        currentCoordinate = MODEM_BACK;
+
+                        this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
+                        break;
+                    case DOWN:
+                        if (state.blockStateModem == CableModemVariant.DownOn) {
+                            currentCoordinate = WIRED_MODEM_FACE_ON;
+                        } else if (state.blockStateModem == CableModemVariant.DownOffPeripheral) {
+                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL;
+                        } else if (state.blockStateModem == CableModemVariant.DownOnPeripheral) {
+                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL_ON;
+                        } else {
+                            currentCoordinate = WIRED_MODEM_FACE;
+                        }
+
+                        this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
+                        this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
+
+                        currentCoordinate = MODEM_BACK;
+
+                        this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
+                        break;
+                    case NONE:
+                }
+            }
+
+            currentCoordinate = CABLE_SIDE;
         }
 
         this.resetRenderBlocks();
@@ -139,9 +292,6 @@ public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T>
 
 
     public IconCoordinate getBlockTextureFromSideAndMetadata(Side side, int data) {
-        if (mode == 0) {
-           return CABLE_SIDE;
-        }
-        return CABLE_CORE;
+        return currentCoordinate;
     }
 }
