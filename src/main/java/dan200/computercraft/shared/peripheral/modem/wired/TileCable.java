@@ -256,17 +256,7 @@ public class TileCable extends TileGeneric implements IPeripheralTile
 
     public void updatePlacementState()
     {
-//        if( context.getStack()
-//            .getItem() instanceof ItemBlockCable.Cable )
-        if(true)
-        {
-            this.blockStateCable = true;
-            BlockCable.correctConnections( this.worldObj, getPos(), this );
-        }
-        else
-        {
-            this.blockStateModem = CableModemVariant.from( modemDirection.getOpposite() );
-        }
+        BlockCable.correctConnections( this.worldObj, getPos(), this );
 
         final BlockLogic logic = getBlock().getLogic();
 

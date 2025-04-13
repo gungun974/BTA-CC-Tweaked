@@ -119,7 +119,16 @@ public class BlockCable extends BlockLogic
 
     @Override
     public void onBlockPlacedByWorld(World world, int x, int y, int z) {
-        super.onBlockPlacedByWorld(world, x, y, z);
+        TileEntity tile = world.getTileEntity( x, y, z );
+        if( tile instanceof TileCable )
+        {
+            TileCable cable = (TileCable) tile;
+
+            if( cable.hasCable() )
+            {
+                cable.connectionsChanged();
+            }
+        }
     }
 
     @Override
