@@ -1,3 +1,7 @@
+-- SPDX-FileCopyrightText: 2017 Daniel Ratcliffe
+--
+-- SPDX-License-Identifier: LicenseRef-CCPL
+
 -- Paint created by nitrogenfingers (edited by dan200)
 -- http://www.youtube.com/user/NitrogenFingers
 
@@ -163,7 +167,7 @@ local function save(path)
 end
 
 --[[
-    Draws colour picker sidebar, the pallette and the footer
+    Draws colour picker sidebar, the palette and the footer
     returns: nil
 ]]
 local function drawInterface()
@@ -242,8 +246,8 @@ end
     Converts each colour in a single line of the canvas and draws it
     returns: nil
 ]]
-local text, fg, bg = "", "", ""
 local function drawCanvasLine(y)
+    local text, fg, bg = "", "", ""
     for x = 1, w - 2 do
         local pixel = getCanvasPixel(x, y)
         if pixel then
@@ -256,6 +260,7 @@ local function drawCanvasLine(y)
             bg = bg .. color_hex_lookup[canvasColour]
         end
     end
+
     term.setCursorPos(1, y)
     term.blit(text, fg, bg)
 end
@@ -268,6 +273,12 @@ local function drawCanvas()
     for y = 1, h - 1 do
         drawCanvasLine(y)
     end
+end
+
+local function termResize()
+    w, h = term.getSize()
+    drawCanvas()
+    drawInterface()
 end
 
 local menu_choices = {
@@ -370,6 +381,8 @@ local function accessMenu()
                 nMenuPosEnd = nMenuPosEnd + 1
                 nMenuPosStart = nMenuPosEnd
             end
+        elseif id == "term_resize" then
+            termResize()
         end
     end
 end
@@ -428,9 +441,7 @@ local function handleEvents()
                 drawInterface()
             end
         elseif id == "term_resize" then
-            w, h = term.getSize()
-            drawCanvas()
-            drawInterface()
+            termResize()
         end
     end
 end
