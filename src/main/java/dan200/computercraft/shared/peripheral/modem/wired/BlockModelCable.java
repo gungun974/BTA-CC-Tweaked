@@ -2,7 +2,6 @@ package dan200.computercraft.shared.peripheral.modem.wired;
 
 import dan200.computercraft.shared.peripheral.modem.ModemShapes;
 import net.minecraft.client.render.LightmapHelper;
-import net.minecraft.client.render.block.color.BlockColor;
 import net.minecraft.client.render.block.color.BlockColorDispatcher;
 import net.minecraft.client.render.block.model.BlockModelStandard;
 import net.minecraft.client.render.tessellator.Tessellator;

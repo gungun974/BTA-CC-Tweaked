@@ -63,27 +63,6 @@ public final class ClientMonitor extends ClientTerminal {
     @Environment(EnvType.CLIENT)
     public boolean createBuffer(MonitorRenderer renderer, float xMargin, float yMargin) {
         switch (renderer) {
-//            case TBO:
-//                if( tboBuffer != 0 )
-//                {
-//                    return false;
-//                }
-//
-//                deleteBuffers();
-//
-//                tboBuffer = GL15.glGenBuffers();
-//                GL15.glBindBuffer(GL31.GL_TEXTURE_BUFFER, tboBuffer);
-//                GL15.glBufferData( GL31.GL_TEXTURE_BUFFER, 0, GL15.GL_STATIC_DRAW );
-//                tboTexture = GL15.glGenTextures();
-//                GL11.glBindTexture( GL31.GL_TEXTURE_BUFFER, tboTexture );
-//                GL31.glTexBuffer( GL31.GL_TEXTURE_BUFFER, GL30.GL_R8UI, tboBuffer );
-//                GL11.glBindTexture( GL31.GL_TEXTURE_BUFFER, 0 );
-//
-//                GL11.glBindTexture(GL31.GL_TEXTURE_BUFFER, 0);
-//
-//                addMonitor();
-//                return true;
-
             case DisplayList:
                 if (this.displayListCompiled) {
                     return false;
@@ -143,7 +122,7 @@ public final class ClientMonitor extends ClientTerminal {
 
     @Environment(EnvType.CLIENT)
     public void destroy() {
-        if (tboBuffer != 0/* || buffer != null*/) {
+        if (tboBuffer != 0) {
             synchronized (allMonitors) {
                 allMonitors.remove(this);
             }

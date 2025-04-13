@@ -53,8 +53,6 @@ public final class FixedWidthFontRenderer {
             drawBackground(x, y, backgroundColour, palette, greyscale, leftMarginSize, rightMarginSize, FONT_HEIGHT);
         }
 
-        //ComputerCraft.log.info(text.toString());
-
         for (int i = 0; i < text.length(); i++) {
             double[] colour = palette.getColour(getColour(textColour.charAt(i), Colour.BLACK));
             float r, g, b;
@@ -127,7 +125,6 @@ public final class FixedWidthFontRenderer {
         return 15 - Terminal.getColour(c, def);
     }
 
-    //
     public static float toGreyscale(double[] rgb) {
         return (float) ((rgb[0] + rgb[1] + rgb[2]) / 3);
     }

@@ -16,8 +16,9 @@ import static dan200.computercraft.ComputerCraft.MOD_ID;
 
 public class ComputerCraftItems {
 
-    public static final ItemDisk DISK;
-    public static final ItemTreasureDisk TREASURE_DISK;
+    public static ItemDisk DISK;
+    public static ItemTreasureDisk TREASURE_DISK;
+
     public static ItemBlockComputer COMPUTER_NORMAL;
     public static ItemBlockComputer COMPUTER_ADVANCED;
     public static ItemPocketComputer POCKET_COMPUTER_NORMAL;
@@ -38,7 +39,7 @@ public class ComputerCraftItems {
     public static ItemBlockCable.Cable CABLE;
     public static ItemBlockCable.WiredModem WIRED_MODEM;
 
-    static {
+    public static void RegisterItems() {
         POCKET_COMPUTER_NORMAL = new ItemBuilder(MOD_ID)
             .setKey("item.pocket_computer_normal")
             .build((new ItemPocketComputer(NamespaceID.getPermanent(MOD_ID, "pocket_computer_normal"), 16540, ComputerFamily.NORMAL)));
@@ -74,9 +75,5 @@ public class ComputerCraftItems {
         WIRED_MODEM = new ItemBuilder(MOD_ID)
             .setKey("item.wired_modem")
             .build((new ItemBlockCable.WiredModem(NamespaceID.getPermanent(MOD_ID, "wired_modem"), 16546)));
-    }
-
-    public ComputerCraftItems() {
-
     }
 }

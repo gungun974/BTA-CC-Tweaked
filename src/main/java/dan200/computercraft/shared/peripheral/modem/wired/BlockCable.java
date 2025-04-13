@@ -35,22 +35,6 @@ public class BlockCable extends BlockLogic {
             .getFacing() != direction;
     }
 
-//    @Nonnull
-//    @Override
-//    @Deprecated
-//    public BlockState getStateForNeighborUpdate( @Nonnull BlockState state, @Nonnull Direction side, @Nonnull BlockState otherState,
-//                                                 @Nonnull WorldAccess world, @Nonnull BlockPos pos, @Nonnull BlockPos otherPos )
-//    {
-//        updateWaterloggedPostPlacement( state, world, pos );
-//        // Should never happen, but handle the case where we've no modem or cable.
-//        if( !state.get( CABLE ) && state.get( MODEM ) == CableModemVariant.None )
-//        {
-//            return getFluidState( state ).getBlockState();
-//        }
-//
-//        return state.with( CONNECTIONS.get( side ), doesConnectVisually( state, world, pos, side ) );
-//    }
-
     public static boolean doesConnectVisually(TileCable state, World world, BlockPos pos, Direction direction) {
         if (!state.blockStateCable) {
             return false;

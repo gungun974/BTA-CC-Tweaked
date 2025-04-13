@@ -48,15 +48,16 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
     public TileDiskDrive() {
     }
 
-//    @Override
-//    public void destroy()
-//    {
-//        ejectContents( true );
-//        if( recordPlaying )
-//        {
-//            stopRecord();
-//        }
-//    }
+
+    @Override
+    public void invalidate() {
+        ejectContents( true );
+        if( recordPlaying )
+        {
+            stopRecord();
+        }
+        super.invalidate();
+    }
 
     public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
         if (player.isSneaking()) {
@@ -350,11 +351,6 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
     }
 
     private void updateBlockState() {
-//        if( removed )
-//        {
-//            return;
-//        }
-
         if (diskStack != null) {
             IMedia contents = getDiskMedia();
             updateBlockState(contents != null ? DiskDriveState.FULL : DiskDriveState.INVALID);
@@ -434,13 +430,6 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
     public String getName() {
         return customName != null ? customName : "A name";
     }
-
-//    @Nonnull
-//    @Override
-//    public ScreenHandler createMenu( int id, @Nonnull PlayerInventory inventory, @Nonnull PlayerEntity player )
-//    {
-//        return new ContainerDiskDrive( id, inventory, this );
-//    }
 
     private static class MountInfo {
         String mountPath;

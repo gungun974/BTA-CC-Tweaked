@@ -108,12 +108,6 @@ public class BlockMonitor extends BlockLogic {
         TileEntity entity = world.getTileEntity(x, y, z);
         if (entity instanceof TileMonitor && !Helper.isClientWorld()) {
             TileMonitor monitor = (TileMonitor) entity;
-            // Defer the block update if we're being placed by another TE. See #691
-//            if( livingEntity == null || livingEntity instanceof FakePlayer )
-//            {
-//                monitor.updateNeighborsDeferred();
-//                return;
-//            }
 
             monitor.updateNeighbors();
         }

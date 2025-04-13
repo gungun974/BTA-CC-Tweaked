@@ -6,7 +6,6 @@
 package dan200.computercraft.client.gui;
 
 import dan200.computercraft.client.gui.widgets.WidgetTerminal;
-import dan200.computercraft.client.gui.widgets.WidgetWrapper;
 import dan200.computercraft.fabric.GLFWKeyboardManager;
 import dan200.computercraft.fabric.GLFWMouseManager;
 import dan200.computercraft.shared.computer.core.ClientComputer;
@@ -19,9 +18,6 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.Objects;
 import java.util.UUID;
-
-//import static dan200.computercraft.client.render.ComputerBorderRenderer.BORDER;
-//import static dan200.computercraft.client.render.ComputerBorderRenderer.MARGIN;
 
 public class GuiComputer<T extends ContainerComputerBase> extends Screen {
     /**
@@ -40,19 +36,14 @@ public class GuiComputer<T extends ContainerComputerBase> extends Screen {
     private static final int BORDER_RIGHT_X = 36;
     private static final int LIGHT_BORDER_Y = 56;
     private static final int LIGHT_CORNER_Y = 80;
-    private static final float TEX_SCALE = 1 / 256.0f;
     protected final ComputerFamily family;
-    //protected final ComputerFamily family;
     protected final ClientComputer computer;
     private final int termWidth;
     private final int termHeight;
-    //
     protected WidgetTerminal terminal;
-    protected WidgetWrapper terminalWrapper;
     UUID glfwKeyCallbackId;
     UUID glfwCharCallbackId;
     UUID glfwScrollCallbackId;
-    private int border;
     private int mouseButton = -1;
     public GuiComputer(T container, int termWidth, int termHeight) {
         super();
@@ -152,36 +143,15 @@ public class GuiComputer<T extends ContainerComputerBase> extends Screen {
         drawTexturedModalRect(x, (double) y, u, v, width, height, textureWidth, textureHeight);
     }
 
-    //    public static GuiComputer<ContainerComputer> create( ContainerComputer container, PlayerInventory inventory, Text component )
-//    {
-//        return new GuiComputer<>( container, inventory, component, ComputerCraft.computerTermWidth, ComputerCraft.computerTermHeight );
-//    }
-//
-//    public static GuiComputer<ContainerPocketComputer> createPocket( ContainerPocketComputer container, PlayerInventory inventory, Text component )
-//    {
-//        return new GuiComputer<>( container, inventory, component, ComputerCraft.pocketTermWidth, ComputerCraft.pocketTermHeight );
-//    }
-//
-//    public static GuiComputer<ContainerViewComputer> createView( ContainerViewComputer container, PlayerInventory inventory, Text component )
-//    {
-//        return new GuiComputer<>( container, inventory, component, container.getWidth(), container.getHeight() );
-//    }
-//
-    protected void initTerminal(int border, int widthExtra, int heightExtra) {
-        this.border = border;
-        //client.keyboard.setRepeatEvents( true );
-
+    protected void initTerminal() {
         super.init();
 
         terminal = new WidgetTerminal(mc, () -> computer, termWidth, termHeight, MARGIN, MARGIN, MARGIN, MARGIN);
-
-        //children.add( terminalWrapper );
-        //setFocused( terminalWrapper );
     }
 
     @Override
     public void init() {
-        initTerminal(BORDER, 0, 0);
+        initTerminal();
 
         GLFWKeyboardManager.getInstance().removeKeyObserver(glfwKeyCallbackId);
         glfwKeyCallbackId = GLFWKeyboardManager.getInstance().addKeyObserver(

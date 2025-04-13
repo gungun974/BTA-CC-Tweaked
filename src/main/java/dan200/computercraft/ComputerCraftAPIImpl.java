@@ -50,21 +50,10 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI {
     }
 
     public static InputStream getResourceFile(String domain, String subPath) {
-//        MinecraftServer server = GameInstanceUtils.getServer();
-//        if( server != null )
-//        {
-//            ReloadableResourceManager manager = (ReloadableResourceManager) ((MinecraftServerAccess) server).getServerResourceManager().getResourceManager();
-//            try
         {
             return manager.getResource(new ResourceManager.Identifier(domain, subPath))
                 .getInputStream();
         }
-//            catch( IOException ignored )
-//            {
-//                return null;
-//            }
-//        }
-        //return null;
     }
 
     @Nonnull
@@ -101,10 +90,7 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI {
 
     @Override
     public IMount createResourceMount(@Nonnull String domain, @Nonnull String subPath) {
-//        MinecraftServer server = Minecraft.getMinecraft();
-//        if( server != null )
         {
-//            ResourceManager manager = ((MinecraftServerAccess) server).getServerResourceManager().getResourceManager();
             ResourceMount mount = ResourceMount.get(domain, subPath, manager);
             return mount.exists("") ? mount : null;
         }

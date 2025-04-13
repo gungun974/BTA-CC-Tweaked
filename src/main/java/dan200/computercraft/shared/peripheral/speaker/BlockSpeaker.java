@@ -14,27 +14,4 @@ public class BlockSpeaker extends BlockLogicRotatable {
         super(block, Material.stone);
         block.withEntity(TileSpeaker::new);
     }
-//    private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-//
-//    public BlockSpeaker( Settings settings )
-//    {
-//        super( settings, ComputerCraftRegistry.ModTiles.SPEAKER );
-//        setDefaultState( getStateManager().getDefaultState()
-//            .with( FACING, Direction.NORTH ) );
-//    }
-
-//    @Nullable
-//    @Override
-//    public BlockState getPlacementState( ItemPlacementContext placement )
-//    {
-//        return getDefaultState().with( FACING,
-//            placement.getPlayerFacing()
-//                .getOpposite() );
-//    }
-//
-//    @Override
-//    protected void appendProperties( StateManager.Builder<Block, BlockState> properties )
-//    {
-//        properties.add( FACING );
-//    }
 }

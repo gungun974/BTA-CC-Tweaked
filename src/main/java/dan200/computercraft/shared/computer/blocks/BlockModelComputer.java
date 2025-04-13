@@ -26,8 +26,6 @@ public class BlockModelComputer<T extends BlockLogic> extends BlockModelHorizont
 
             final ComputerState currentState = ComputerState.class.getEnumConstants()[(currentMetadata >> 3) & 0b11];
 
-            ComputerCraft.log.info("hoi");
-
             switch (currentState) {
                 case ON:
                     return TextureRegistry.getTexture(originalFront.namespaceId.namespace() + ":block/" + originalFront.namespaceId.value() + "_on");

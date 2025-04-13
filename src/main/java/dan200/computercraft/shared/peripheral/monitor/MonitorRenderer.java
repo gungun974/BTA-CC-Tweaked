@@ -26,13 +26,6 @@ public enum MonitorRenderer {
      */
     BEST,
 
-//    /**
-//     * Render using texture buffer objects.
-//     *
-//     * @see org.lwjgl.opengl.GL31#glTexBuffer(int, int, int)
-//     */
-//    TBO,
-
     /**
      * Render using DisplayList.
      */
@@ -55,16 +48,6 @@ public enum MonitorRenderer {
         switch (current) {
             case BEST:
                 return best();
-//            case TBO:
-//                checkCapabilities();
-//                if( !textureBuffer )
-//                {
-//                    ComputerCraft.log.warn( "Texture buffers are not supported on your graphics card. Falling back to default." );
-//                    ComputerCraft.monitorRenderer = BEST;
-//                    return best();
-//                }
-//
-//                return TBO;
             default:
                 return current;
         }
@@ -82,7 +65,6 @@ public enum MonitorRenderer {
         }
 
         return DisplayList;
-//        return textureBuffer && !shaderMod ? TBO : DisplayList;
     }
 
     private static void checkCapabilities() {

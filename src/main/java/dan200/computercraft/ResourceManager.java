@@ -7,8 +7,6 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class ResourceManager {
-
-
     public Identifier[] findResources(String namespace, String subPath) {
         final String path = "/assets/" + namespace + "/" + subPath;
 

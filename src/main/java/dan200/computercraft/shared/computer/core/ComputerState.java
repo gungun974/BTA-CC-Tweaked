@@ -5,28 +5,7 @@
  */
 package dan200.computercraft.shared.computer.core;
 
-public enum ComputerState// implements StringIdentifiable
+public enum ComputerState
 {
-    OFF("off"), ON("on"), BLINKING("blinking");
-
-    private final String name;
-
-    ComputerState(String name) {
-        this.name = name;
-    }
-
-    /*
-    @Nonnull
-    @Override
-    public String asString()
-    {
-        return name;
-    }
-
-    @Override
-    public String toString()
-    {
-        return name;
-    }
-     */
+    OFF, ON, BLINKING;
 }

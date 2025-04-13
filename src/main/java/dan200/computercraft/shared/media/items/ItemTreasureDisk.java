@@ -71,8 +71,6 @@ public class ItemTreasureDisk extends Item implements IMedia {
 
     @Override
     public String getTranslatedDescription(ItemStack stack) {
-        I18n i18n = I18n.getInstance();
-
         String text = super.getTranslatedDescription(stack);
 
         String label = getTitle(stack);

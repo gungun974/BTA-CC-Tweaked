@@ -34,30 +34,29 @@ import turniplabs.halplibe.helper.EntityHelper;
 import static dan200.computercraft.ComputerCraft.MOD_ID;
 
 public class ComputerCraftBlocks {
-    public static final Block<?> COMPUTER_NORMAL;
-    public static final Block<?> COMPUTER_ADVANCED;
-    // public static final BlockComputer COMPUTER_COMMAND // "computer_command"
+    public static Block<?> COMPUTER_NORMAL;
+    public static Block<?> COMPUTER_ADVANCED;
 
-    public static final Block<?> TURTLE_NORMAL;
-    public static final Block<?> TURTLE_ADVANCED;
+    public static Block<?> TURTLE_NORMAL;
+    public static Block<?> TURTLE_ADVANCED;
 
-    public static final Block<?> SPEAKER;
+    public static Block<?> SPEAKER;
 
-    public static final Block<?> DISK_DRIVE;
+    public static Block<?> DISK_DRIVE;
 
-    public static final Block<?> PRINTER;
+    public static Block<?> PRINTER;
 
-    public static final Block<?> MONITOR_NORMAL;
-    public static final Block<?> MONITOR_ADVANCED;
+    public static Block<?> MONITOR_NORMAL;
+    public static Block<?> MONITOR_ADVANCED;
 
-    public static final Block<?> WIRELESS_MODEM_NORMAL;
-    public static final Block<?> WIRELESS_MODEM_ADVANCED;
+    public static Block<?> WIRELESS_MODEM_NORMAL;
+    public static Block<?> WIRELESS_MODEM_ADVANCED;
 
-    public static final Block<?> WIRED_MODEM_FULL;
+    public static Block<?> WIRED_MODEM_FULL;
 
-    public static final Block<?> CABLE;
+    public static Block<?> CABLE;
 
-    static {
+    public static void RegisterBlocks() {
         final IconCoordinate a = TextureRegistry.getTexture("computercraft:block/computer_normal_front");
 
         try {
@@ -219,8 +218,5 @@ public class ComputerCraftBlocks {
                 return ComputerCraftItems.MONITOR_ADVANCED;
             })
             .build("monitor_advanced", 10007, b -> new BlockMonitor(b, true));
-    }
-
-    public ComputerCraftBlocks() {
     }
 }

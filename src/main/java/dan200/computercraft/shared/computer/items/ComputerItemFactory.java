@@ -19,8 +19,6 @@ public final class ComputerItemFactory {
                 return ComputerCraftItems.COMPUTER_NORMAL.create(id, label);
             case ADVANCED:
                 return ComputerCraftItems.COMPUTER_ADVANCED.create(id, label);
-//            case COMMAND:
-//                return ComputerCraftRegistry.ModItems.COMPUTER_COMMAND.create( id, label );
             default:
                 return null;
         }

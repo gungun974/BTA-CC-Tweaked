@@ -265,20 +265,6 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
         super.writeToNBT(nbt);
     }
 
-//    @Override
-//    public void markRemoved()
-//    {
-//        super.markRemoved();
-//        doRemove();
-//    }
-//
-//    @Override
-//    public void cancelRemoval()
-//    {
-//        super.cancelRemoval();
-//        TickScheduler.schedule( this );
-//    }
-
     public IWiredElement getElement() {
         return element;
     }

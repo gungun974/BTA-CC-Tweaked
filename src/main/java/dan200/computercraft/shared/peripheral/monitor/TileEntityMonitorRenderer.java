@@ -49,67 +49,6 @@ public class TileEntityMonitorRenderer extends TileEntityRenderer<TileMonitor> {
         }
 
         switch (renderType) {
-//            case TBO:
-//                if (MonitorTextureBufferShader.use()) {
-//                    int width = terminal.getWidth(), height = terminal.getHeight();
-//                    int pixelWidth = width * FONT_WIDTH, pixelHeight = height * FONT_HEIGHT;
-//
-//                    if (redraw) {
-//                        int size = width * height * 3;
-//                        if (tboContents == null || tboContents.capacity() < size) {
-//                            tboContents = ByteBuffer.allocateDirect(size);
-//                        }
-//
-//                        ByteBuffer monitorBuffer = tboContents;
-//                        monitorBuffer.clear();
-//                        for (int y = 0; y < height; y++) {
-//                            TextBuffer text = terminal.getLine(y);
-//                            TextBuffer textColour = terminal.getTextColourLine(y);
-//                            TextBuffer background = terminal.getBackgroundColourLine(y);
-//                            for (int x = 0; x < width; x++) {
-//                                monitorBuffer.put((byte) (text.charAt(x) & 0xFF));
-//                                monitorBuffer.put((byte) getColour(textColour.charAt(x), Colour.WHITE));
-//                                monitorBuffer.put((byte) getColour(background.charAt(x), Colour.BLACK));
-//                            }
-//                        }
-//                        monitorBuffer.flip();
-//
-//                        // Liaison du buffer et chargement des données
-//                        GL15.glBindBuffer(GL31.GL_TEXTURE_BUFFER, monitor.tboBuffer);
-//                        GL15.glBufferData(GL31.GL_TEXTURE_BUFFER, monitorBuffer, GL15.GL_STATIC_DRAW);
-//                        GL15.glBindBuffer(GL31.GL_TEXTURE_BUFFER, 0);
-//                    }
-//
-////                    GL11.glBindTexture(GL31.GL_TEXTURE_BUFFER, monitor.tboTexture);
-////                    GL31.glTexBuffer(GL31.GL_TEXTURE_BUFFER, GL11.GL_RGB8, monitor.tboBuffer);
-////                    GL11.glBindTexture(GL31.GL_TEXTURE_BUFFER, 0);
-//
-//                    GL11.glBindTexture(GL31.GL_TEXTURE_BUFFER, monitor.tboTexture);
-//                    GL31.glBindBuffer(GL31.GL_TEXTURE_BUFFER, monitor.tboBuffer);
-//                    GL31.glTexBuffer(GL31.GL_TEXTURE_BUFFER, GL11.GL_RGBA8, monitor.tboBuffer);
-////
-//                    GL13.glActiveTexture(MonitorTextureBufferShader.TEXTURE_INDEX);
-//                    GL11.glBindTexture(GL31.GL_TEXTURE_BUFFER, monitor.tboTexture);
-//                    GL13.glActiveTexture(GL13.GL_TEXTURE0);
-//
-//                    MonitorTextureBufferShader.setupUniform(/*matrix,*/ width, height, terminal.getPalette(), !monitor.isColour());
-//
-//                    Tessellator tessellator = Tessellator.instance;
-//
-//                    tessellator.startDrawing(GL11.GL_QUAD_STRIP);
-//
-//                    tessellator.setColorRGBA_F(1,1,1, 1f);
-//
-//                    tessellator.addVertexWithUV(-xMargin, -yMargin, 0, 0, 0);
-//                    tessellator.addVertexWithUV(-xMargin, pixelHeight + yMargin, 0, 0, 1);
-//                    tessellator.addVertexWithUV(pixelWidth + xMargin, -yMargin, 0, 1, 0);
-//                    tessellator.addVertexWithUV(pixelWidth + xMargin, pixelHeight + yMargin, 0, 1, 1);
-//                    tessellator.draw();
-//
-//                    GL20.glUseProgram(0);
-//                }
-//
-//                break;
             case DisplayList:
                 if (monitor.displayListCompiled) {
                     GL11.glCallList(monitor.displayList);

@@ -42,8 +42,6 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
     private static final String NBT_ADVANCED = "Advanced";
     private final Set<IComputerAccess> computers = new HashSet<>();
     // MonitorWatcher state.
-    boolean enqueued;
-    TerminalState cached;
     private boolean advanced;
     private ServerMonitor serverMonitor;
     private ClientMonitor clientMonitor;
@@ -260,20 +258,8 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
         super.writeToNBT(tag);
     }
 
-//    @Override
-//    public double getRenderDistance()
-//    {
-//        return ComputerCraft.monitorDistanceSq;
-//    }
-
     // Sizing and placement stuff
 
-//    @Override
-//    public void cancelRemoval()
-//    {
-//        super.cancelRemoval();
-//        TickScheduler.schedule( this );
-//    }
 
     @Nonnull
     @Override
@@ -717,31 +703,6 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
     void addComputer(IComputerAccess computer) {
         computers.add(computer);
     }
-
-    //    @Nonnull
-    //    @Override
-    //    public Box getRenderBoundingBox()
-    //    {
-    //        TileMonitor start = getNeighbour( 0, 0 );
-    //        TileMonitor end = getNeighbour( m_width - 1, m_height - 1 );
-    //        if( start != null && end != null )
-    //        {
-    //            BlockPos startPos = start.getPos();
-    //            BlockPos endPos = end.getPos();
-    //            int minX = Math.min( startPos.getX(), endPos.getX() );
-    //            int minY = Math.min( startPos.getY(), endPos.getY() );
-    //            int minZ = Math.min( startPos.getZ(), endPos.getZ() );
-    //            int maxX = Math.max( startPos.getX(), endPos.getX() ) + 1;
-    //            int maxY = Math.max( startPos.getY(), endPos.getY() ) + 1;
-    //            int maxZ = Math.max( startPos.getZ(), endPos.getZ() ) + 1;
-    //            return new Box( minX, minY, minZ, maxX, maxY, maxZ );
-    //        }
-    //        else
-    //        {
-    //            BlockPos pos = getPos();
-    //            return new Box( pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1 );
-    //        }
-    //    }
 
     void removeComputer(IComputerAccess computer) {
         computers.remove(computer);

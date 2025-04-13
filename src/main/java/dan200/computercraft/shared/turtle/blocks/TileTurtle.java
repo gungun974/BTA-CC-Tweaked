@@ -164,29 +164,10 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
 
     }
 
-//    @Override
-//    public boolean isEmpty()
-//    {
-//        for( ItemStack stack : inventory )
-//        {
-//            if( stack != null )
-//            {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
 
     private void onInventoryDefinitelyChanged() {
-        //super.markDirty();
         inventoryChanged = true;
     }
-
-//    @Override
-//    protected boolean canNameWithTag( PlayerEntity player )
-//    {
-//        return true;
-//    }
 
     public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
         // Apply dye
@@ -369,7 +350,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     }
 
     public void onTileEntityChange() {
-        //super.markDirty();
+        worldObj.notifyBlockChange(x, y, z, getBlockId());
     }
 
     private boolean hasPeripheralUpgradeOnSide(ComputerSide side) {
@@ -489,11 +470,4 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
         // Mark the other turtle as having moved, and so its peripheral is dead.
         copy.moveState = MoveState.MOVED;
     }
-
-//    @Nullable
-//    @Override
-//    public ScreenHandler createMenu( int id, @Nonnull PlayerInventory inventory, @Nonnull PlayerEntity player )
-//    {
-//        return new ContainerTurtle( id, inventory, brain );
-//    }
 }

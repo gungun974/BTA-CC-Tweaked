@@ -41,19 +41,6 @@ public final class WorldUtil {
             .isLiquid();
     }
 
-    /*
-    public static boolean isVecInside( VoxelShape shape, Vec3 vec )
-    {
-        if( shape.isEmpty() )
-        {
-            return false;
-        }
-        // AxisAlignedBB.contains, but without strict inequalities.
-        AABB bb = shape.getBoundingBox();
-        return vec.x >= bb.minX && vec.x <= bb.maxX && vec.y >= bb.minY && vec.y <= bb.maxY && vec.z >= bb.minZ && vec.z <= bb.maxZ;
-    }
-     */
-
     public static Pair<Entity, Vec3> rayTraceEntities(World world, Vec3 vecStart, Vec3 vecDir, double distance) {
         vecStart = vecStart.add(0.5, 0.5, 0.5);
         Vec3 vecEnd = vecStart.add(vecDir.x * distance, vecDir.y * distance, vecDir.z * distance);

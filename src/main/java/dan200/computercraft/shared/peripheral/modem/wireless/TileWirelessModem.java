@@ -35,32 +35,11 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile {
         modem = new Peripheral(this);
     }
 
-//    @Override
-//    public void cancelRemoval()
-//    {
-//        super.cancelRemoval();
-//        TickScheduler.schedule( this );
-//    }
-//
-//    @Override
-//    public void resetBlock()
-//    {
-//        super.resetBlock();
-//        hasModemDirection = false;
-//        world.getBlockTickScheduler()
-//            .schedule( getPos(),
-//                getCachedState().getBlock(), 0 );
-//    }
-//
-//    @Override
-//    public void destroy()
-//    {
-//        if( !destroyed )
-//        {
-//            modem.destroy();
-//            destroyed = true;
-//        }
-//    }
+    @Override
+    public void invalidate() {
+        modem.destroy();
+        super.invalidate();
+    }
 
     @Override
     public void tick() {

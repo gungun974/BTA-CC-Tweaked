@@ -9,7 +9,10 @@ import com.google.common.eventbus.Subscribe;
 import dan200.computercraft.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.event.TurtleActionEvent;
+import dan200.computercraft.fabric.Helper;
+import net.minecraft.core.util.helper.MathHelper;
 import net.minecraft.core.world.World;
+import net.minecraft.server.MinecraftServer;
 
 public final class TurtlePermissions {
     public static boolean isBlockEditable(World world, BlockPos pos) {
@@ -17,10 +20,19 @@ public final class TurtlePermissions {
     }
 
     public static boolean isBlockEnterable(World world, BlockPos pos) {
-        //TODO: Make sure turtle respect spawn protection
+        if (!Helper.isServerEnvironment()){
+            return true;
+        }
+
+        MinecraftServer mcServer = MinecraftServer.getInstance();
+
+        if (mcServer.spawnProtectionRange > 0) {
+            int dx = (int) MathHelper.abs((float)(pos.x - world.getLevelData().getSpawnX()));
+            int dz = (int)MathHelper.abs((float)(pos.z - world.getLevelData().getSpawnZ()));
+            return Math.max(dx, dz) > mcServer.spawnProtectionRange;
+        }
+
         return true;
-//        MinecraftServer server = MinecraftServer.getInstance();
-//        return server == null || world.isClient || (world instanceof ServerWorld && !server.isSpawnProtected( (ServerWorld) world, pos, player ));
     }
 
     @Subscribe

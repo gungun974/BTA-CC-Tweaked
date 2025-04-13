@@ -6,12 +6,14 @@
 package dan200.computercraft.shared.turtle.core;
 
 import dan200.computercraft.BlockPos;
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleCommand;
 import dan200.computercraft.api.turtle.TurtleAnimation;
 import dan200.computercraft.api.turtle.TurtleCommandResult;
 import dan200.computercraft.api.turtle.event.TurtleBlockEvent;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
+import dan200.computercraft.shared.TurtlePermissions;
 import dan200.computercraft.shared.util.DirectionUtil;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
@@ -202,20 +204,20 @@ public class TurtlePlaceCommand implements ITurtleCommand {
             return true;
         }
 
-        return world.getBlockMaterial(position.x, position.y, position.z).isReplaceable();
+        if (ComputerCraft.turtlesObeyBlockProtection) {
+            // Check spawn protection
+            boolean editable = allowReplaceable ? TurtlePermissions.isBlockEditable(world, position) : TurtlePermissions.isBlockEditable(world,
+                position.offset(
+                    side));
+            if (!editable) {
+                if (outErrorMessage != null) {
+                    outErrorMessage[0] = "Cannot place in protected area";
+                }
+                return false;
+            }
+        }
 
-//        if (ComputerCraft.turtlesObeyBlockProtection) {
-//            // Check spawn protection
-//            boolean editable = replaceable ? TurtlePermissions.isBlockEditable(world, position) : TurtlePermissions.isBlockEditable(world,
-//                position.offset(
-//                    side));
-//            if (!editable) {
-//                if (outErrorMessage != null) {
-//                    outErrorMessage[0] = "Cannot place in protected area";
-//                }
-//                return false;
-//            }
-//        }
+        return world.getBlockMaterial(position.x, position.y, position.z).isReplaceable();
     }
 
     @Nonnull

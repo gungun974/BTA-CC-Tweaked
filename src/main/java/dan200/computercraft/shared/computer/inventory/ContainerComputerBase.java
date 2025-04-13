@@ -15,7 +15,6 @@ import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 public class ContainerComputerBase implements IContainerComputer {
-    private final Predicate<Player> canUse;
     private final int instanceId;
     private final ComputerFamily family;
     private final InputState input = new InputState(this);
@@ -29,7 +28,6 @@ public class ContainerComputerBase implements IContainerComputer {
 
     protected ContainerComputerBase(Predicate<Player> canUse, int computerInstanceId,
                                     ComputerFamily family) {
-        this.canUse = canUse;
         this.instanceId = computerInstanceId;
         this.family = family;
     }
@@ -74,17 +72,4 @@ public class ContainerComputerBase implements IContainerComputer {
     public InputState getInput() {
         return input;
     }
-
-//    @Override
-//    public void close( @Nonnull PlayerEntity player )
-//    {
-//        super.close( player );
-//        input.close();
-//    }
-//
-//    @Override
-//    public boolean canUse( @Nonnull PlayerEntity player )
-//    {
-//        return canUse.test( player );
-//    }
 }

@@ -14,7 +14,6 @@ import java.util.*;
 
 public final class PocketUpgrades {
     private static final Map<Integer, IPocketUpgrade> upgrades = new HashMap<>();
-    //private static final Map<IPocketUpgrade, String> upgradeOwners = new Object2ObjectLinkedOpenCustomHashMap<>();
 
     private PocketUpgrades() {
     }
@@ -52,12 +51,6 @@ public final class PocketUpgrades {
 
         return null;
     }
-
-//    @Nullable
-//    public static String getOwner( IPocketUpgrade upgrade )
-//    {
-//        return upgradeOwners.get( upgrade );
-//    }
 
     public static Iterable<IPocketUpgrade> getVanillaUpgrades() {
         List<IPocketUpgrade> vanilla = new ArrayList<>();

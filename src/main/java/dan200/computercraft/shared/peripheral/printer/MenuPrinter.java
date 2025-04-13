@@ -69,60 +69,6 @@ public class MenuPrinter extends MenuAbstract {
         }
     }
 
-//    public ItemStack transferSlot( @Nonnull PlayerEntity player, int index )
-//    {
-//        Slot slot = slots.get( index );
-//        if( slot == null || !slot.hasStack() )
-//        {
-//            return ItemStack.EMPTY;
-//        }
-//        ItemStack stack = slot.getStack();
-//        ItemStack result = stack.copy();
-//        if( index < 13 )
-//        {
-//            // Transfer from printer to inventory
-//            if( !insertItem( stack, 13, 49, true ) )
-//            {
-//                return ItemStack.EMPTY;
-//            }
-//        }
-//        else
-//        {
-//            // Transfer from inventory to printer
-//            if( TilePrinter.isInk( stack ) )
-//            {
-//                if( !insertItem( stack, 0, 1, false ) )
-//                {
-//                    return ItemStack.EMPTY;
-//                }
-//            }
-//            else //if is paper
-//            {
-//                if( !insertItem( stack, 1, 13, false ) )
-//                {
-//                    return ItemStack.EMPTY;
-//                }
-//            }
-//        }
-//
-//        if( stack.isEmpty() )
-//        {
-//            slot.setStack( ItemStack.EMPTY );
-//        }
-//        else
-//        {
-//            slot.markDirty();
-//        }
-//
-//        if( stack.getCount() == result.getCount() )
-//        {
-//            return ItemStack.EMPTY;
-//        }
-//
-//        slot.onTakeItem( player, stack );
-//        return result;
-//    }
-
     @Override
     public List<Integer> getTargetSlots(InventoryAction action, Slot slot, int target, Player player) {
         return slot.index >= this.printerSlotsStart && slot.index < this.inventorySlotsStart

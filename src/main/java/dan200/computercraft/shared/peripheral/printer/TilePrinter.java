@@ -67,11 +67,11 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
     public TilePrinter() {
     }
 
-//    @Override
-//    public void destroy()
-//    {
-//        ejectContents();
-//    }
+    @Override
+    public void invalidate() {
+        ejectContents();
+        super.invalidate();
+    }
 
     private static boolean isPaper(ItemStack stack) {
         if (stack == null) {
@@ -251,12 +251,6 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
     }
 
 
-//    @Override
-//    public boolean canPlayerUse( @Nonnull PlayerEntity playerEntity )
-//    {
-//        return isUsable( playerEntity, false );
-//    }
-
     @Override
     public void setItem(int i, @Nullable ItemStack stack) {
         if (i >= 0 && i < inventory.size() && !InventoryUtil.areItemsEqual(stack, inventory.get(i))) {
@@ -279,23 +273,6 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
     public boolean stillValid(Player player) {
         return isUsable(player, false);
     }
-
-//    @Override
-//    public boolean isValid( int slot, @Nonnull ItemStack stack )
-//    {
-//        if( slot == 0 )
-//        {
-//            return isInk( stack );
-//        }
-//        else if( slot >= TOP_SLOTS[0] && slot <= TOP_SLOTS[TOP_SLOTS.length - 1] )
-//        {
-//            return isPaper( stack );
-//        }
-//        else
-//        {
-//            return false;
-//        }
-//    }
 
     @Override
     public void sortContainer() {
@@ -430,31 +407,4 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
         }
         return false;
     }
-
-//    @Nonnull
-//    @Override
-//    public Text getName()
-//    {
-//        return customName != null ? customName : new TranslatableText( getCachedState().getBlock()
-//            .getTranslationKey() );
-//    }
-//
-//    @Override
-//    public boolean hasCustomName()
-//    {
-//        return customName != null;
-//    }
-//
-//    @Override
-//    public Text getDisplayName()
-//    {
-//        return Nameable.super.getDisplayName();
-//    }
-//
-//    @Nullable
-//    @Override
-//    public Text getCustomName()
-//    {
-//        return customName;
-//    }
 }

@@ -39,10 +39,7 @@ public final class Peripherals {
         // Try the handlers in order:
         for (IPeripheralProvider peripheralProvider : providers) {
             try {
-                IPeripheral peripheral = peripheralProvider.getPeripheral(world, pos, side);
-                if (peripheral != null) {
-                    return peripheral;
-                }
+                return peripheralProvider.getPeripheral(world, pos, side);
             } catch (Exception e) {
                 ComputerCraft.log.error("Peripheral provider " + peripheralProvider + " errored.", e);
             }

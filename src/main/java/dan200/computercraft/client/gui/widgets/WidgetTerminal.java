@@ -21,9 +21,6 @@ import java.util.function.Supplier;
 import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_HEIGHT;
 import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_WIDTH;
 
-//import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_HEIGHT;
-//import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_WIDTH;
-
 public class WidgetTerminal extends Gui implements GuiElement {
     private static final float TERMINATE_TIME = 0.5f;
 
@@ -36,7 +33,6 @@ public class WidgetTerminal extends Gui implements GuiElement {
     private final int topMargin;
     private final int bottomMargin;
     private final BitSet keysDown = new BitSet(256);
-    private boolean focused;
     private float terminateTimer = -1;
     private float rebootTimer = -1;
     private float shutdownTimer = -1;
@@ -288,45 +284,6 @@ public class WidgetTerminal extends Gui implements GuiElement {
 
     }
 
-    //
-//    @Override
-//    public boolean changeFocus( boolean reversed )
-//    {
-//        if( focused )
-//        {
-//            // When blurring, we should make all keys go up
-//            for( int key = 0; key < keysDown.size(); key++ )
-//            {
-//                if( keysDown.get( key ) )
-//                {
-//                    queueEvent( "key_up", key );
-//                }
-//            }
-//            keysDown.clear();
-//
-//            // When blurring, we should make the last mouse button go up
-//            if( lastMouseButton > 0 )
-//            {
-//                IComputer computer = this.computer.get();
-//                if( computer != null )
-//                {
-//                    computer.mouseUp( lastMouseButton + 1, lastMouseX + 1, lastMouseY + 1 );
-//                }
-//                lastMouseButton = -1;
-//            }
-//
-//            shutdownTimer = terminateTimer = rebootTimer = -1;
-//        }
-//        focused = !focused;
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isMouseOver( double x, double y )
-//    {
-//        return true;
-//    }
-//
     private void queueEvent(String event, Object... args) {
         ClientComputer computer = this.computer.get();
         if (computer != null) {

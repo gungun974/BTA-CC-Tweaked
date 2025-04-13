@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TurtleMoveCommand implements ITurtleCommand {
-    private static final AABB EMPTY_BOX = AABB.getPermanentBB(0, 0, 0, 0, 0, 0);
     private final MoveDirection direction;
 
     public TurtleMoveCommand(MoveDirection direction) {
@@ -35,11 +34,6 @@ public class TurtleMoveCommand implements ITurtleCommand {
         if (position.getY() < 0 || position.getY() >= World.HEIGHT_BLOCKS) {
             return TurtleCommandResult.failure(position.getY() < 0 ? "Too low to move" : "Too high to move");
         }
-//        if( !World.isInBuildLimit( position ) )
-//        {
-//            return TurtleCommandResult.failure( "Cannot leave the world" );
-//        }
-
         // Check spawn protection
         if (ComputerCraft.turtlesObeyBlockProtection && !TurtlePermissions.isBlockEnterable(world, position)) {
             return TurtleCommandResult.failure("Cannot enter protected area");
@@ -48,12 +42,6 @@ public class TurtleMoveCommand implements ITurtleCommand {
         if (!world.isChunkLoaded(Math.floorDiv(position.x, 16), Math.floorDiv(position.z, 16))) {
             return TurtleCommandResult.failure("Cannot leave loaded world");
         }
-//        if( !world.getWorldBorder()
-//            .contains( position ) )
-//        {
-//            return TurtleCommandResult.failure( "Cannot pass the world border" );
-//        }
-
         return TurtleCommandResult.success();
     }
 
@@ -81,10 +69,6 @@ public class TurtleMoveCommand implements ITurtleCommand {
         }
 
         // Check there isn't anything in the way
-
-//        AABB collision = oldWorld.getBlockLogic(newPosition.x, newPosition.y, newPosition.y, BlockLogic.class).getBounds()
-//            .move( -newPosition.getX() / 2.0, -newPosition.getY() / 2.0, -newPosition.getZ() / 2.0 )
-//            .expand( newPosition.getX(), newPosition.getY(), newPosition.getZ() );
 
         AABB collision = AABB.getPermanentBB(newPosition.getX(), newPosition.getY(), newPosition.getZ(), newPosition.getX() + 1.0, newPosition.getY() + 1.0, newPosition.getZ() + 1.0);
 
@@ -144,9 +128,4 @@ public class TurtleMoveCommand implements ITurtleCommand {
         }
         return TurtleCommandResult.success();
     }
-
-//    private static AABB getBox( AABB shape )
-//    {
-//        return shape.isEmpty() ? EMPTY_BOX : shape;
-//    }
 }

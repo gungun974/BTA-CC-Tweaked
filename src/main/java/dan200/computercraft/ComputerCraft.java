@@ -5,8 +5,6 @@
  */
 package dan200.computercraft;
 
-//import dan200.computercraft.api.turtle.event.TurtleAction;
-
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
@@ -34,10 +32,7 @@ import org.slf4j.LoggerFactory;
 import turniplabs.halplibe.helper.network.NetworkHandler;
 import turniplabs.halplibe.util.GameStartEntrypoint;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public final class ComputerCraft implements ModInitializer, GameStartEntrypoint {
@@ -91,13 +86,11 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
     public static int monitorWidth = 8;
     public static int monitorHeight = 6;
 
-    //public static ItemGroup MAIN_GROUP = FabricItemGroupBuilder.build( new Identifier( MOD_ID, "main" ), () -> new ItemStack( ModBlocks.COMPUTER_NORMAL ) );
-
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void onInitialize() {
-        new ComputerCraftBlocks();
-        new ComputerCraftItems();
-
+        ComputerCraftBlocks.RegisterBlocks();
+        ComputerCraftItems.RegisterItems();
 
         NetworkHandler.registerNetworkMessage(ComputerActionServerMessage::new);
         NetworkHandler.registerNetworkMessage(QueueEventServerMessage::new);
@@ -115,17 +108,10 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
         NetworkHandler.registerNetworkMessage(ComputerTerminalClientMessage::new);
         NetworkHandler.registerNetworkMessage(MonitorClientMessage::new);
 
-
         ComputerCraftAPI.registerPeripheralProvider((world, pos, side) -> {
             TileEntity tile = world.getTileEntity(pos.x, pos.y, pos.z);
             return tile instanceof IPeripheralTile ? ((IPeripheralTile) tile).getPeripheral(side) : null;
         });
-
-//        ComputerCraftAPI.registerPeripheralProvider( ( world, pos, side ) -> {
-//            BlockEntity tile = world.getBlockEntity( pos );
-//            return ComputerCraft.enableCommandBlock && tile instanceof CommandBlockBlockEntity ?
-//                new CommandBlockPeripheral( (CommandBlockBlockEntity) tile ) : null;
-//        } );
 
         // Register bundled power providers
         ComputerCraftAPI.registerBundledRedstoneProvider(new DefaultBundledRedstoneProvider());
@@ -147,14 +133,6 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
         TurtleEvent.EVENT_BUS.register(new SignInspectHandler());
 
         ComputerCraftAPI.registerGenericSource(new InventoryMethods());
-        /*
-        ComputerCraftProxyCommon.init();
-        init();
-        FabricLoader.getInstance().getModContainer( MOD_ID ).ifPresent( modContainer -> {
-            ResourceManagerHelper.registerBuiltinResourcePack( new Identifier( MOD_ID, "classic" ), modContainer, ResourcePackActivationType.NORMAL );
-            ResourceManagerHelper.registerBuiltinResourcePack( new Identifier( MOD_ID, "overhaul" ), modContainer, ResourcePackActivationType.NORMAL );
-        } );
-         */
     }
 
 

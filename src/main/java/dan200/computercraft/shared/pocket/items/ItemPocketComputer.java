@@ -102,24 +102,7 @@ public class ItemPocketComputer extends Item implements IComputerItem, IMedia, I
 
     public static CompoundTag getUpgradeInfo(@Nonnull ItemStack stack) {
         return stack.getData();
-        //return stack.getOrCreateSubTag( NBT_UPGRADE_INFO );
     }
-
-    //    @Nullable
-    //    @Override
-    //    public String getCreatorModId( ItemStack stack )
-    //    {
-    //        IPocketUpgrade upgrade = getUpgrade( stack );
-    //        if( upgrade != null )
-    //        {
-    //            // If we're a non-vanilla, non-CC upgrade then return whichever mod this upgrade
-    //            // belongs to.
-    //            String mod = PocketUpgrades.getOwner( upgrade );
-    //            if( mod != null && !mod.equals( ComputerCraft.MOD_ID ) ) return mod;
-    //        }
-    //
-    //        return super.getCreatorModId( stack );
-    //    }
 
     public static IPocketUpgrade getUpgrade(@Nonnull ItemStack stack) {
         CompoundTag compound = stack.getData();

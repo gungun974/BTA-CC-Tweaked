@@ -61,22 +61,6 @@ public final class PrintoutRenderer {
         }
     }
 
-    public static void drawText(int x, int y, int z, int start, String[] text, String[] colours) {
-        for (int line = 0; line < LINES_PER_PAGE && line < text.length; line++) {
-            FixedWidthFontRenderer.drawString(
-                x,
-                y + line * FONT_HEIGHT,
-                z,
-                new TextBuffer(text[start + line]),
-                new TextBuffer(colours[start + line]),
-                null,
-                Palette.DEFAULT,
-                false,
-                0,
-                0);
-        }
-    }
-
     public static void drawBorder(float x, float y, float z, int page, int pages, boolean isBook) {
         int leftPages = page;
         int rightPages = pages - page - 1;

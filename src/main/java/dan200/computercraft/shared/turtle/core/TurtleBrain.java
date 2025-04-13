@@ -193,13 +193,6 @@ public class TurtleBrain implements ITurtleAccess {
             return false;
         }
 
-        // Ensure we're inside the world border
-//        if( !world.getWorldBorder()
-//            .contains( pos ) )
-//        {
-//            return false;
-//        }
-
         owner.notifyMoveStart();
 
         try {

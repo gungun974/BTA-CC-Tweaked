@@ -365,33 +365,6 @@ public class TileCable extends TileGeneric implements IPeripheralTile {
         onRemove();
     }
 
-    //    @Override
-//    public void markRemoved()
-//    {
-//        super.markRemoved();
-//        onRemove();
-//    }
-//
-//    @Override
-//    public void cancelRemoval()
-//    {
-//        super.cancelRemoval();
-//        TickScheduler.schedule( this );
-//    }
-
-//    @Override
-//    public void resetBlock()
-//    {
-//        super.resetBlock();
-//        hasModemDirection = false;
-//        if( !world.isClient )
-//        {
-//            world.getBlockTickScheduler()
-//                .schedule( pos,
-//                    getCachedState().getBlock(), 0 );
-//        }
-//    }
-
     public IWiredElement getElement(Direction facing) {
         return BlockCable.canConnectIn(this, facing) ? cable : null;
     }

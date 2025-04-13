@@ -28,27 +28,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class IDAssigner {
-    //private static final WorldSavePath FOLDER = WorldSavePathAccess.createWorldSavePath( ComputerCraft.MOD_ID );
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting()
         .create();
     private static final Type ID_TOKEN = new TypeToken<Map<String, Integer>>() {
     }.getType();
     private static Map<String, Integer> ids;
-    //private static WeakReference<MinecraftServer> server;
     private static Path idFile;
 
     private IDAssigner() {
     }
 
     public static synchronized int getNextId(String kind) {
-//        MinecraftServer currentServer = getCachedServer();
-//        if( currentServer == null )
-//        {
-//            // The server has changed, refetch our ID map
-//            if( GameInstanceUtils.getServer() != null )
-//            {
-//                server = new WeakReference<>( GameInstanceUtils.getServer() );
-
         File dir = getDir();
         dir.mkdirs();
 
@@ -64,14 +54,11 @@ public final class IDAssigner {
         } else {
             ids = new HashMap<>();
         }
-//            }
-//        }
 
         Integer existing = ids.get(kind);
         int next = existing == null ? 0 : existing + 1;
         ids.put(kind, next);
 
-        // We've changed the ID file, so save it back again.
         try (Writer writer = Files.newBufferedWriter(idFile, StandardCharsets.UTF_8)) {
             GSON.toJson(ids, writer);
         } catch (Exception e) {
@@ -80,26 +67,6 @@ public final class IDAssigner {
 
         return next;
     }
-
-//    private static MinecraftServer getCachedServer()
-//    {
-//        if( server == null )
-//        {
-//            return null;
-//        }
-//
-//        MinecraftServer currentServer = server.get();
-//        if( currentServer == null )
-//        {
-//            return null;
-//        }
-//
-//        if( currentServer != GameInstanceUtils.getServer() )
-//        {
-//            return null;
-//        }
-//        return currentServer;
-//    }
 
     public static File getDir() {
         if (Helper.isServerEnvironment()) {

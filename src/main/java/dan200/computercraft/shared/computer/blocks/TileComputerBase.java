@@ -197,20 +197,6 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         return worldObj.getSignal(pos.x, pos.y, pos.z, direction.getSide()) ? 15 : 0;
     }
 
-    /*
-    protected static int getRedstoneInput( World world, BlockPos pos, Direction side )
-    {
-        int power = world.getEmittedRedstonePower( pos, side );
-        if( power >= 15 )
-        {
-            return power;
-        }
-
-        BlockState neighbour = world.getBlockState( pos );
-        return neighbour.getBlock() == Blocks.REDSTONE_WIRE ? Math.max( power, neighbour.get( RedstoneWireBlock.POWER ) ) : power;
-    }
-     */
-
     protected boolean isPeripheralBlockedOnSide(ComputerSide localSide) {
         return false;
     }
@@ -324,14 +310,11 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         super.writeToNBT(nbt);
     }
 
-    /*
     @Override
-    public void markRemoved()
-    {
+    public void invalidate() {
         unload();
-        super.markRemoved();
+        super.invalidate();
     }
-     */
 
     private void updateRedstoneInput(BlockPos neighbour) {
         if (worldObj == null || (!Helper.isServerEnvironment() && !Helper.isSinglePlayer())) {
@@ -406,7 +389,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         if (computer != null) {
             computer.setID(computerID);
         }
-        //markDirty();
+        worldObj.notifyBlockChange(x, y, z, getBlockId());
     }
 
     @Override
@@ -427,30 +410,13 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         if (computer != null) {
             computer.setLabel(label);
         }
-        //markDirty();
+        worldObj.notifyBlockChange(x, y, z, getBlockId());
     }
 
     @Override
     public ComputerFamily getFamily() {
         return family;
     }
-
-    /*
-    protected void transferStateFrom( TileComputerBase copy )
-    {
-        if( copy.computerID != computerID || copy.instanceID != instanceID )
-        {
-            unload();
-            instanceID = copy.instanceID;
-            computerID = copy.computerID;
-            label = copy.label;
-            on = copy.on;
-            startOn = copy.startOn;
-            updateBlock();
-        }
-        copy.instanceID = -1;
-    }
-     */
 
     @Nonnull
     @Override
@@ -459,43 +425,4 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     public abstract ComputerProxy createProxy();
-
-    /*
-    @Nonnull
-    @Override
-    public Text getName()
-    {
-        return hasCustomName() ? new LiteralText( label ) : new TranslatableText( getCachedState().getBlock()
-            .getTranslationKey() );
-    }
-     */
-
-    /*
-    @Override
-    public boolean hasCustomName()
-    {
-        return !Strings.isNullOrEmpty( label );
-    }
-
-    @Nonnull
-    @Override
-    public Text getDisplayName()
-    {
-        return Nameable.super.getDisplayName();
-    }
-
-    @Nullable
-    @Override
-    public Text getCustomName()
-    {
-        return hasCustomName() ? new LiteralText( label ) : null;
-    }
-
-    @Override
-    public void writeScreenOpeningData( ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf )
-    {
-        packetByteBuf.writeInt( getServerComputer().getInstanceID() );
-        packetByteBuf.writeEnumConstant( getServerComputer().getFamily() );
-    }
-     */
 }

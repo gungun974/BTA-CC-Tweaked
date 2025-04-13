@@ -36,52 +36,18 @@ public final class InventoryUtil {
         // Look for tile with inventory
         int y = pos.getY();
         if (y >= 0 && y < World.HEIGHT_BLOCKS) {
-            // Check if block is InventoryProvider
-//            if( block instanceof InventoryProvider )
-//            {
-//                return ((InventoryProvider) block).getInventory( blockState, world, pos );
-//            }
-            // Check if block is BlockEntity w/ Inventory
-//            if( block.hasBlockEntity() )
-//            {
             TileEntity tileEntity = world.getTileEntity(pos.x, pos.y, pos.z);
 
             Container inventory = getInventory(tileEntity);
             return inventory;
-//            }
         }
 
-        //TODO: RAYCAST
-//        // Look for entity with inventory
-//        Vec3 vecStart = Vec3.getPermanentVec3( pos.getX() + 0.5 + 0.6 * side.getOffsetX(),
-//            pos.getY() + 0.5 + 0.6 * side.getOffsetY(),
-//            pos.getZ() + 0.5 + 0.6 * side.getOffsetZ() );
-//        Direction dir = side.getOpposite();
-//        Vec3 vecDir = Vec3.getPermanentVec3( dir.getOffsetX(), dir.getOffsetY(), dir.getOffsetZ() );
-//        Pair<Entity, Vec3> hit = WorldUtil.rayTraceEntities( world, vecStart, vecDir, 1.1 );
-//        if( hit != null )
-//        {
-//            Entity entity = hit.getKey();
-//            if( entity instanceof Container )
-//            {
-//                return (Container) entity;
-//            }
-//        }
         return null;
     }
 
     public static Container getInventory(TileEntity tileEntity) {
-//        World world = tileEntity.worldObj;
-//        BlockPos pos = new BlockPos(tileEntity.x, tileEntity.y, tileEntity.z);
-        //BlockState blockState = world.getBlockState( pos );
-        //Block block = blockState.getBlock();
-
         if (tileEntity instanceof Container) {
             Container inventory = (Container) tileEntity;
-//            if( inventory instanceof ChestBlockEntity && block instanceof ChestBlock )
-//            {
-//                return ChestBlock.getInventory( (ChestBlock) block, blockState, world, pos, true );
-//            }
             return inventory;
         }
 

@@ -24,9 +24,7 @@ class GenericPeripheral implements IDynamicPeripheral {
     private final List<SaturatedMethod> methods;
 
     GenericPeripheral(TileEntity tile, List<SaturatedMethod> methods) {
-        //Identifier type = BlockEntityType.getId( tile.getType() );
         this.tile = tile;
-        //this.type = type == null ? "unknown" : type.toString();
         this.type = "unknown";
         this.methods = methods;
     }
