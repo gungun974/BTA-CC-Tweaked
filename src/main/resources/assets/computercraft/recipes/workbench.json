@@ -1269,5 +1269,99 @@
             "meta": 0
         },
         "consumeContainers": false
+    },
+    {
+        "name": "computercraft:workbench/cable",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            " # ",
+            "#R#",
+            " # "
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "group": "minecraft:stones"
+            },
+            {
+                "symbol": "R",
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.cable",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+    {
+        "name": "computercraft:workbench/wired_modem",
+        "type": "minecraft:crafting/shaped",
+        "pattern": [
+            "###",
+            "#R#",
+            "###"
+        ],
+        "symbols": [
+            {
+                "symbol": "#",
+                "group": "minecraft:stones"
+            },
+            {
+                "symbol": "R",
+                "stack": {
+                    "key": "item.dust.redstone",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.wired_modem",
+            "amount": 1,
+            "meta": 0
+        },
+        "consumeContainers": false
+    },
+    {
+        "name": "computercraft:workbench/wired_modem",
+        "type": "minecraft:crafting/shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "tile.computercraft.wired.modem.full",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "item.computercraft.wired_modem",
+            "amount": 1,
+            "meta": 0
+        }
+    },
+    {
+        "name": "computercraft:workbench/wired_modem_full",
+        "type": "minecraft:crafting/shapeless",
+        "inputs": [
+            {
+                "stack": {
+                    "key": "item.computercraft.wired_modem",
+                    "amount": 1,
+                    "meta": 0
+                }
+            }
+        ],
+        "result": {
+            "key": "tile.computercraft.wired.modem.full",
+            "amount": 1,
+            "meta": 0
+        }
     }
 ]
