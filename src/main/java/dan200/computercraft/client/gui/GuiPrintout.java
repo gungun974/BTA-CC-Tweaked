@@ -7,11 +7,16 @@ package dan200.computercraft.client.gui;
 
 import dan200.computercraft.client.render.PrintoutRenderer;
 import dan200.computercraft.core.terminal.TextBuffer;
+import dan200.computercraft.fabric.GLFWKeyboardManager;
+import dan200.computercraft.fabric.GLFWMouseManager;
 import dan200.computercraft.shared.media.items.ItemPrintout;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.core.item.ItemStack;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
+import java.util.UUID;
 
 public class GuiPrintout extends Screen {
     private final boolean book;
@@ -19,6 +24,8 @@ public class GuiPrintout extends Screen {
     private final TextBuffer[] text;
     private final TextBuffer[] colours;
     private int page;
+
+    UUID glfwScrollCallbackId;
 
     public GuiPrintout(ItemStack stack) {
         super();
@@ -41,35 +48,42 @@ public class GuiPrintout extends Screen {
             .getItem()).getType() == ItemPrintout.Type.BOOK;
     }
 
-//    @Override
-//    public boolean mouseScrolled( double x, double y, double delta )
-//    {
-//        if( super.mouseScrolled( x, y, delta ) )
-//        {
-//            return true;
-//        }
-//        if( delta < 0 )
-//        {
-//            // Scroll up goes to the next page
-//            if( page < pages - 1 )
-//            {
-//                page++;
-//            }
-//            return true;
-//        }
-//
-//        if( delta > 0 )
-//        {
-//            // Scroll down goes to the previous page
-//            if( page > 0 )
-//            {
-//                page--;
-//            }
-//            return true;
-//        }
-//
-//        return false;
-//    }
+    @Override
+    public void init() {
+        GLFWMouseManager.getInstance().removeScrollObserver(glfwScrollCallbackId);
+        glfwScrollCallbackId = GLFWMouseManager.getInstance().addScrollObserver(
+            this::glfwScrollCallback
+        );
+    }
+
+    @Override
+    public void removed() {
+        GLFWMouseManager.getInstance().removeScrollObserver(glfwScrollCallbackId);
+    }
+
+    public void glfwScrollCallback(long window, double xoffset, double yoffset) {
+        if( yoffset < 0 )
+        {
+            // Scroll up goes to the next page
+            if( page < pages - 1 )
+            {
+                page++;
+            }
+            return;
+        }
+
+        if( yoffset > 0 )
+        {
+            // Scroll down goes to the previous page
+            if( page > 0 )
+            {
+                page--;
+            }
+            return;
+        }
+
+        return;
+    }
 
     @Override
     public void render(int mx, int my, float partialTick) {
