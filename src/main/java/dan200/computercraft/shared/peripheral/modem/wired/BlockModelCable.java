@@ -318,12 +318,16 @@ public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T>
         tessellator.startDrawingQuads();
 
         if (metadata == 1) {
+
+            GL11.glScalef(1.20f, 1.20f, 1.20f);
+            GL11.glTranslatef(0.4f, -0.05f, 0);
+
             setBounds(bounds, ModemShapes.getBounds(Direction.WEST));
 
             renderBlocks.uvRotateTop = 1;
             tessellator.setNormal(0.0F, 0.0F, 1.0F);
             this.renderSouthFace(tessellator, bounds, 0.0, 0.0, 0.0, WIRED_MODEM_FACE);
-            tessellator.setNormal(0.0F, -1.0F, 0.0F);
+            tessellator.setNormal(0.0F, 1.0F, 0.0F);
             this.renderTopFace(tessellator, bounds, 0.0, 0.0, 0.0, WIRED_MODEM_FACE);
             tessellator.setNormal(0.0F, -1.0F, 0.0F);
             this.renderBottomFace(tessellator, bounds, 0.0, 0.0, 0.0, WIRED_MODEM_FACE);
