@@ -12,6 +12,7 @@ import dan200.computercraft.shared.PocketUpgrades;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
 import dan200.computercraft.shared.pocket.items.PocketComputerItemFactory;
+import net.minecraft.core.data.registry.Registries;
 import net.minecraft.core.data.registry.recipe.HasJsonAdapter;
 import net.minecraft.core.data.registry.recipe.RecipeSymbol;
 import net.minecraft.core.data.registry.recipe.SearchQuery;
@@ -142,7 +143,10 @@ public final class PocketComputerUpgradeRecipe extends RecipeEntryCrafting<Recip
         }
 
         public JsonElement serialize(PocketComputerUpgradeRecipe src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonObject();
+            JsonObject obj = new JsonObject();
+            obj.addProperty("name", src.toString().replaceFirst("/*$", ""));
+            obj.addProperty("type", Registries.RECIPE_TYPES.getKey(src.getClass()));
+            return obj;
         }
     }
 }

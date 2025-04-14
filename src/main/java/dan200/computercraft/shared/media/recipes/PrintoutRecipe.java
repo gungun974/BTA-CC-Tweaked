@@ -8,6 +8,7 @@ package dan200.computercraft.shared.media.recipes;
 import com.google.gson.*;
 import dan200.computercraft.fabric.mixin.ContainerCraftingAccessor;
 import dan200.computercraft.shared.media.items.ItemPrintout;
+import net.minecraft.core.data.registry.Registries;
 import net.minecraft.core.data.registry.recipe.HasJsonAdapter;
 import net.minecraft.core.data.registry.recipe.RecipeSymbol;
 import net.minecraft.core.data.registry.recipe.SearchQuery;
@@ -159,7 +160,10 @@ public final class PrintoutRecipe extends RecipeEntryCrafting<RecipeSymbol[], It
         }
 
         public JsonElement serialize(PrintoutRecipe src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonObject();
+            JsonObject obj = new JsonObject();
+            obj.addProperty("name", src.toString().replaceFirst("/*$", ""));
+            obj.addProperty("type", Registries.RECIPE_TYPES.getKey(src.getClass()));
+            return obj;
         }
     }
 }

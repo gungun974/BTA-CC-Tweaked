@@ -13,6 +13,7 @@ import dan200.computercraft.shared.TurtleUpgrades;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.turtle.items.ITurtleItem;
 import dan200.computercraft.shared.turtle.items.TurtleItemFactory;
+import net.minecraft.core.data.registry.Registries;
 import net.minecraft.core.data.registry.recipe.HasJsonAdapter;
 import net.minecraft.core.data.registry.recipe.RecipeSymbol;
 import net.minecraft.core.data.registry.recipe.SearchQuery;
@@ -181,7 +182,10 @@ public final class TurtleUpgradeRecipe extends RecipeEntryCrafting<RecipeSymbol[
         }
 
         public JsonElement serialize(TurtleUpgradeRecipe src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonObject();
+            JsonObject obj = new JsonObject();
+            obj.addProperty("name", src.toString().replaceFirst("/*$", ""));
+            obj.addProperty("type", Registries.RECIPE_TYPES.getKey(src.getClass()));
+            return obj;
         }
     }
 }

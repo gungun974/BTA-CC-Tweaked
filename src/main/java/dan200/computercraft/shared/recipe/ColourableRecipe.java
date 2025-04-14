@@ -9,6 +9,7 @@ import com.google.gson.*;
 import dan200.computercraft.shared.common.IColouredItem;
 import dan200.computercraft.shared.util.ColourTracker;
 import dan200.computercraft.shared.util.ColourUtils;
+import net.minecraft.core.data.registry.Registries;
 import net.minecraft.core.data.registry.recipe.HasJsonAdapter;
 import net.minecraft.core.data.registry.recipe.RecipeSymbol;
 import net.minecraft.core.data.registry.recipe.SearchQuery;
@@ -117,7 +118,10 @@ public final class ColourableRecipe extends RecipeEntryCrafting<RecipeSymbol[], 
         }
 
         public JsonElement serialize(ColourableRecipe src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonObject();
+            JsonObject obj = new JsonObject();
+            obj.addProperty("name", src.toString().replaceFirst("/*$", ""));
+            obj.addProperty("type", Registries.RECIPE_TYPES.getKey(src.getClass()));
+            return obj;
         }
     }
 }
