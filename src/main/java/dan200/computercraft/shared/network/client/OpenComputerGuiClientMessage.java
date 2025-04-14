@@ -1,6 +1,5 @@
 package dan200.computercraft.shared.network.client;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
 import net.minecraft.client.Minecraft;
@@ -57,7 +56,6 @@ public class OpenComputerGuiClientMessage implements NetworkMessage {
 
     protected Screen getScreenInstance(ContainerComputerBase container) {
         try {
-            ComputerCraft.log.info(screen.getName());
             return (Screen) screen.getConstructor(ContainerComputerBase.class, int.class, int.class).newInstance(container, width, height);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
                  InvocationTargetException e) {
