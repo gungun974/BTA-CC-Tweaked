@@ -6,7 +6,7 @@
 package dan200.computercraft.shared;
 
 import com.google.common.eventbus.Subscribe;
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.event.TurtleActionEvent;
 import dan200.computercraft.fabric.Helper;

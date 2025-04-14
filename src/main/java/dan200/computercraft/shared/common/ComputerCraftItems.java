@@ -6,9 +6,9 @@ import dan200.computercraft.shared.computer.items.ItemBlockComputer;
 import dan200.computercraft.shared.media.items.ItemDisk;
 import dan200.computercraft.shared.media.items.ItemPrintout;
 import dan200.computercraft.shared.media.items.ItemTreasureDisk;
-import dan200.computercraft.shared.peripheral.modem.wired.ItemBlockCable;
+import dan200.computercraft.shared.peripheral.modem.wired.ItemCable;
 import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
-import dan200.computercraft.shared.turtle.items.ItemTurtle;
+import dan200.computercraft.shared.turtle.items.ItemBlockTurtle;
 import net.minecraft.core.item.block.ItemBlock;
 import net.minecraft.core.util.collection.NamespaceID;
 import turniplabs.halplibe.helper.ItemBuilder;
@@ -24,8 +24,8 @@ public class ComputerCraftItems {
     public static ItemBlockComputer COMPUTER_ADVANCED;
     public static ItemPocketComputer POCKET_COMPUTER_NORMAL;
     public static ItemPocketComputer POCKET_COMPUTER_ADVANCED;
-    public static ItemTurtle TURTLE_NORMAL;
-    public static ItemTurtle TURTLE_ADVANCED;
+    public static ItemBlockTurtle TURTLE_NORMAL;
+    public static ItemBlockTurtle TURTLE_ADVANCED;
     public static ItemBlock<?> DISK_DRIVE;
     public static ItemBlock<?> PRINTER;
     public static ItemBlock<?> MONITOR_NORMAL;
@@ -37,8 +37,8 @@ public class ComputerCraftItems {
     public static ItemPrintout PRINTED_PAGES;
     public static ItemPrintout PRINTED_BOOK;
 
-    public static ItemBlockCable.Cable CABLE;
-    public static ItemBlockCable.WiredModem WIRED_MODEM;
+    public static ItemCable.Cable CABLE;
+    public static ItemCable.WiredModem WIRED_MODEM;
 
     private static int currentGeneratedId;
 
@@ -79,10 +79,10 @@ public class ComputerCraftItems {
 
         CABLE = new ItemBuilder(MOD_ID)
             .setKey("item.cable")
-            .build((new ItemBlockCable.Cable(NamespaceID.getPermanent(MOD_ID, "cable"), generateNexId())));
+            .build((new ItemCable.Cable(NamespaceID.getPermanent(MOD_ID, "cable"), generateNexId())));
 
         WIRED_MODEM = new ItemBuilder(MOD_ID)
             .setKey("item.wired_modem")
-            .build((new ItemBlockCable.WiredModem(NamespaceID.getPermanent(MOD_ID, "wired_modem"), generateNexId())));
+            .build((new ItemCable.WiredModem(NamespaceID.getPermanent(MOD_ID, "wired_modem"), generateNexId())));
     }
 }

@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.shared.turtle.upgrades;
 
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.item.Item;

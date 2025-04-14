@@ -7,7 +7,7 @@ package dan200.computercraft.shared.turtle.core;
 
 import com.google.common.base.Objects;
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.lua.ILuaCallback;
 import dan200.computercraft.api.lua.MethodResult;

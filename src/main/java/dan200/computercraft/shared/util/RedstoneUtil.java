@@ -5,7 +5,6 @@
  */
 package dan200.computercraft.shared.util;
 
-import dan200.computercraft.BlockPos;
 import dan200.computercraft.fabric.Helper;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.util.helper.Direction;

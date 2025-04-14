@@ -1,6 +1,6 @@
 package dan200.computercraft.shared.computer.blocks;
 
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.shared.computer.core.ComputerFamily;

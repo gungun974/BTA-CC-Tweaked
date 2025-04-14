@@ -7,7 +7,7 @@ package dan200.computercraft.shared.turtle.blocks;
 
 import com.mojang.nbt.tags.CompoundTag;
 import com.mojang.nbt.tags.ListTag;
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
@@ -302,7 +302,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
 
     @Override
     public Direction getDirection() {
-        return BlockTurtle.getDirectionFromMeta(getBlockMeta());
+        return BlockLogicTurtle.getDirectionFromMeta(getBlockMeta());
     }
 
     public void setDirection(Direction dir) {
@@ -312,7 +312,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
 
         final int currentMetadata = getBlockMeta();
 
-        worldObj.setBlockMetadata(x, y, z, BlockTurtle.setDirection(currentMetadata, dir));
+        worldObj.setBlockMetadata(x, y, z, BlockLogicTurtle.setDirection(currentMetadata, dir));
 
         updateRedstoneOutput();
         updateRedstoneInput();

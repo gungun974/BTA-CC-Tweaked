@@ -6,7 +6,7 @@
 package dan200.computercraft.shared.computer.core;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.ComputerCraftAPIImpl;
 import dan200.computercraft.api.ComputerCraftAPI;

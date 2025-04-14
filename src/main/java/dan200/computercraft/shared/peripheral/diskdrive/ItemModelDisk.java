@@ -1,6 +1,6 @@
-package dan200.computercraft.shared.pocket.items;
+package dan200.computercraft.shared.peripheral.diskdrive;
 
-import dan200.computercraft.shared.common.IColouredItem;
+import dan200.computercraft.shared.common.ComputerCraftItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.EntityRenderDispatcher;
 import net.minecraft.client.render.Font;
@@ -18,13 +18,10 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class PocketComputerItemModel extends ItemModelStandard {
-    public static final IconCoordinate POCKET_COMPUTER_FRAME = TextureRegistry.getTexture("computercraft:item/pocket_computer_frame");
-    public static final IconCoordinate POCKET_COMPUTER_ON = TextureRegistry.getTexture("computercraft:item/pocket_computer_on");
-    public static final IconCoordinate POCKET_COMPUTER_BLINK = TextureRegistry.getTexture("computercraft:item/pocket_computer_blink");
-    public static final IconCoordinate POCKET_COMPUTER_LIGHT = TextureRegistry.getTexture("computercraft:item/pocket_computer_light");
-    public static final IconCoordinate POCKET_COMPUTER_COLOUR = TextureRegistry.getTexture("computercraft:item/pocket_computer_colour");
-    public PocketComputerItemModel(Item item, String namespace) {
+public class ItemModelDisk extends ItemModelStandard {
+    public static final IconCoordinate DISK_COLOUR = TextureRegistry.getTexture("computercraft:item/disk_colour");
+
+    public ItemModelDisk(Item item, String namespace) {
         super(item, namespace);
     }
 
@@ -135,36 +132,16 @@ public class PocketComputerItemModel extends ItemModelStandard {
 
         IconCoordinate tex = this.getIcon(entity, itemStack);
 
-        int lightState = ItemPocketComputer.getLightState(itemStack);
-        int colour = IColouredItem.getColourBasic(itemStack);
+        draw3DModel(tessellator, worldTransform, tex);
 
-        switch (ItemPocketComputer.getState(itemStack)) {
-            case OFF:
-                draw3DModel(tessellator, worldTransform, POCKET_COMPUTER_FRAME);
-                break;
-            case ON:
-                draw3DModel(tessellator, worldTransform, POCKET_COMPUTER_ON);
-                break;
-            case BLINKING:
-                draw3DModel(tessellator, worldTransform, POCKET_COMPUTER_BLINK);
-        }
+        int diskColour = ComputerCraftItems.DISK.getColour(itemStack);
 
-        if (colour != -1) {
-            float r = (float) (colour >> 16 & 0xFF) / 255.0F;
-            float g = (float) (colour >> 8 & 0xFF) / 255.0F;
-            float b = (float) (colour & 0xFF) / 255.0F;
+        if (diskColour != -1) {
+            float r = (float) (diskColour >> 16 & 0xFF) / 255.0F;
+            float g = (float) (diskColour >> 8 & 0xFF) / 255.0F;
+            float b = (float) (diskColour & 0xFF) / 255.0F;
             GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
-            draw3DModel(tessellator, worldTransform, POCKET_COMPUTER_COLOUR);
-        } else {
-            draw3DModel(tessellator, worldTransform, tex);
-        }
-
-        if (lightState != -1) {
-            float r = (float) (lightState >> 16 & 0xFF) / 255.0F;
-            float g = (float) (lightState >> 8 & 0xFF) / 255.0F;
-            float b = (float) (lightState & 0xFF) / 255.0F;
-            GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
-            draw3DModel(tessellator, worldTransform, POCKET_COMPUTER_LIGHT);
+            draw3DModel(tessellator, worldTransform, DISK_COLOUR);
         }
 
         GL11.glDisable(32826);
@@ -193,36 +170,16 @@ public class PocketComputerItemModel extends ItemModelStandard {
                 GL11.glColor4f(brightness, brightness, brightness, alpha);
             }
 
-            int lightState = ItemPocketComputer.getLightState(itemStack);
-            int colour = IColouredItem.getColourBasic(itemStack);
+            this.renderTexturedQuad(tessellator, x, y, textureIndex);
 
-            switch (ItemPocketComputer.getState(itemStack)) {
-                case OFF:
-                    this.renderTexturedQuad(tessellator, x, y, POCKET_COMPUTER_FRAME);
-                    break;
-                case ON:
-                    this.renderTexturedQuad(tessellator, x, y, POCKET_COMPUTER_ON);
-                    break;
-                case BLINKING:
-                    this.renderTexturedQuad(tessellator, x, y, POCKET_COMPUTER_BLINK);
-            }
+            int diskColour = ComputerCraftItems.DISK.getColour(itemStack);
 
-            if (colour != -1) {
-                float r = (float) (colour >> 16 & 0xFF) / 255.0F;
-                float g = (float) (colour >> 8 & 0xFF) / 255.0F;
-                float b = (float) (colour & 0xFF) / 255.0F;
+            if (diskColour != -1) {
+                float r = (float) (diskColour >> 16 & 0xFF) / 255.0F;
+                float g = (float) (diskColour >> 8 & 0xFF) / 255.0F;
+                float b = (float) (diskColour & 0xFF) / 255.0F;
                 GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
-                this.renderTexturedQuad(tessellator, x, y, POCKET_COMPUTER_COLOUR);
-            } else {
-                this.renderTexturedQuad(tessellator, x, y, textureIndex);
-            }
-
-            if (lightState != -1) {
-                float r = (float) (lightState >> 16 & 0xFF) / 255.0F;
-                float g = (float) (lightState >> 8 & 0xFF) / 255.0F;
-                float b = (float) (lightState & 0xFF) / 255.0F;
-                GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
-                this.renderTexturedQuad(tessellator, x, y, POCKET_COMPUTER_LIGHT);
+                this.renderTexturedQuad(tessellator, x, y, DISK_COLOUR);
             }
 
 
@@ -287,39 +244,18 @@ public class PocketComputerItemModel extends ItemModelStandard {
 
                 GL11.glRotatef(180.0F - renderDispatcher.viewLerpYaw, 0.0F, 1.0F, 0.0F);
 
-                int lightState = ItemPocketComputer.getLightState(itemstack);
-                int colour = IColouredItem.getColourBasic(itemstack);
+                this.renderFlat(tessellator, tex);
 
-                switch (ItemPocketComputer.getState(itemstack)) {
-                    case OFF:
-                        this.renderFlat(tessellator, POCKET_COMPUTER_FRAME);
-                        this.renderFlat(tessellator, tex);
-                        break;
-                    case ON:
-                        this.renderFlat(tessellator, POCKET_COMPUTER_ON);
-                        this.renderFlat(tessellator, tex);
-                        break;
-                    case BLINKING:
-                        this.renderFlat(tessellator, POCKET_COMPUTER_BLINK);
-                }
+                int diskColour = ComputerCraftItems.DISK.getColour(itemstack);
 
-                if (colour != -1) {
-                    float r = (float) (colour >> 16 & 0xFF) / 255.0F;
-                    float g = (float) (colour >> 8 & 0xFF) / 255.0F;
-                    float b = (float) (colour & 0xFF) / 255.0F;
+                if (diskColour != -1) {
+                    float r = (float) (diskColour >> 16 & 0xFF) / 255.0F;
+                    float g = (float) (diskColour >> 8 & 0xFF) / 255.0F;
+                    float b = (float) (diskColour & 0xFF) / 255.0F;
                     GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0f);
-                    this.renderFlat(tessellator, POCKET_COMPUTER_COLOUR);
-                } else {
-                    this.renderFlat(tessellator, tex);
+                    this.renderFlat(tessellator, DISK_COLOUR);
                 }
 
-                if (lightState != -1) {
-                    float r = (float) (lightState >> 16 & 0xFF) / 255.0F;
-                    float g = (float) (lightState >> 8 & 0xFF) / 255.0F;
-                    float b = (float) (lightState & 0xFF) / 255.0F;
-                    GL11.glColor4f(r * brightness, g * brightness, b * brightness, 1.0f);
-                    this.renderFlat(tessellator, POCKET_COMPUTER_LIGHT);
-                }
                 GL11.glPopMatrix();
             }
         }

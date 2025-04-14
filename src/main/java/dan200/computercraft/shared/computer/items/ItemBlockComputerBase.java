@@ -7,6 +7,7 @@ import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.block.ItemBlock;
 import net.minecraft.core.lang.I18n;
@@ -14,10 +15,10 @@ import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 
-public abstract class ItemComputerBase extends ItemBlock implements IComputerItem, IMedia {
+public abstract class ItemBlockComputerBase<T extends BlockLogic> extends ItemBlock<T> implements IComputerItem, IMedia {
     private final ComputerFamily family;
 
-    public ItemComputerBase(Block block) {
+    public ItemBlockComputerBase(Block<T> block) {
         super(block);
 
         if (block.equals(ComputerCraftBlocks.COMPUTER_ADVANCED)) {

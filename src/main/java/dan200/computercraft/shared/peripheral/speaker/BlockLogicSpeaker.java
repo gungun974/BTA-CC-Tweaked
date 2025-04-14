@@ -9,8 +9,8 @@ import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogicRotatable;
 import net.minecraft.core.block.material.Material;
 
-public class BlockSpeaker extends BlockLogicRotatable {
-    public BlockSpeaker(Block<?> block) {
+public class BlockLogicSpeaker extends BlockLogicRotatable {
+    public BlockLogicSpeaker(Block<?> block) {
         super(block, Material.stone);
         block.withEntity(TileSpeaker::new);
     }

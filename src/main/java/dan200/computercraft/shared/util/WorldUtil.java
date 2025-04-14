@@ -7,7 +7,6 @@ package dan200.computercraft.shared.util;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.MapMaker;
-import dan200.computercraft.BlockPos;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.entity.Mob;

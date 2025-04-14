@@ -4,7 +4,7 @@ import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.common.IColouredItem;
-import dan200.computercraft.shared.turtle.blocks.BlockAORenderer;
+import dan200.computercraft.client.blocks.BlockAORenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Font;
 import net.minecraft.client.render.ItemRenderer;
@@ -27,8 +27,8 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
-public class TurtleItemModel extends ItemModelBlock {
-    public TurtleItemModel(ItemBlock<?> itemBlock) {
+public class ItemModelBlockTurtle extends ItemModelBlock {
+    public ItemModelBlockTurtle(ItemBlock<?> itemBlock) {
         super(itemBlock);
     }
 

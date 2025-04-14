@@ -6,8 +6,8 @@
 package dan200.computercraft.shared.peripheral.modem.wired;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.BlockPos;
-import dan200.computercraft.PortableTickScheduler;
+import dan200.computercraft.shared.util.BlockPos;
+import dan200.computercraft.shared.util.PortableTickScheduler;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.network.wired.IWiredElement;
 import dan200.computercraft.api.network.wired.IWiredNode;
@@ -195,7 +195,7 @@ public class TileCable extends TileGeneric implements IPeripheralTile {
                 // TODO Figure out why this crashes.
                 IWiredNode node = element.getNode();
                 if (node != null && this.node != null) {
-                    if (BlockCable.canConnectIn(this, facing)) {
+                    if (BlockLogicCable.canConnectIn(this, facing)) {
                         // If we can connect to it then do so
                         this.node.connectTo(node);
                     } else if (this.node.getNetwork() == node.getNetwork()) {
@@ -210,12 +210,12 @@ public class TileCable extends TileGeneric implements IPeripheralTile {
     }
 
     public void updatePlacementState() {
-        BlockCable.correctConnections(this.worldObj, getPos(), this);
+        BlockLogicCable.correctConnections(this.worldObj, getPos(), this);
 
         final BlockLogic logic = getBlock().getLogic();
 
-        if (logic instanceof BlockCable) {
-            ((BlockCable) logic).updateBlockBoundsFromState(this.worldObj, this.x, this.y, this.z);
+        if (logic instanceof BlockLogicCable) {
+            ((BlockLogicCable) logic).updateBlockBoundsFromState(this.worldObj, this.x, this.y, this.z);
         }
     }
 
@@ -366,7 +366,7 @@ public class TileCable extends TileGeneric implements IPeripheralTile {
     }
 
     public IWiredElement getElement(Direction facing) {
-        return BlockCable.canConnectIn(this, facing) ? cable : null;
+        return BlockLogicCable.canConnectIn(this, facing) ? cable : null;
     }
 
     @Nonnull

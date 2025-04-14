@@ -6,7 +6,7 @@
 package dan200.computercraft.shared.peripheral.monitor;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
@@ -198,11 +198,11 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
 
     // region Sizing and placement stuff
     public Direction getDirection() {
-        return BlockMonitor.metaToFacing(getBlockMeta());
+        return BlockLogicMonitor.metaToFacing(getBlockMeta());
     }
 
     public Direction getOrientation() {
-        return BlockMonitor.metaToOrientation(getBlockMeta());
+        return BlockLogicMonitor.metaToOrientation(getBlockMeta());
     }
 
     @Override
@@ -362,7 +362,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             yIndex > 0, xIndex > 0, xIndex < width - 1);
 
         if (worldObj != null) {
-            final int newMetadata = (currentMetadata & ~0b11110000) | (BlockMonitor.stateToMeta(edgeState));
+            final int newMetadata = (currentMetadata & ~0b11110000) | (BlockLogicMonitor.stateToMeta(edgeState));
 
             worldObj.setBlockMetadataWithNotify(this.x, this.y, this.z, newMetadata);
         }

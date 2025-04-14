@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.shared.network.client;
 
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.sound.SoundEntry;
 import net.minecraft.client.sound.SoundRepository;

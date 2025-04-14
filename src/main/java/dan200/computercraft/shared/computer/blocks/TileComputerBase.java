@@ -6,10 +6,10 @@
 package dan200.computercraft.shared.computer.blocks;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.Peripherals;
-import dan200.computercraft.PortableTickScheduler;
+import dan200.computercraft.shared.util.PortableTickScheduler;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.client.gui.GuiComputer;

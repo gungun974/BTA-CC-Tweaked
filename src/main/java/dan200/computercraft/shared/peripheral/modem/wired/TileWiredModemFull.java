@@ -7,7 +7,7 @@ package dan200.computercraft.shared.peripheral.modem.wired;
 
 import com.google.common.base.Objects;
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.network.wired.IWiredElement;
 import dan200.computercraft.api.network.wired.IWiredNode;

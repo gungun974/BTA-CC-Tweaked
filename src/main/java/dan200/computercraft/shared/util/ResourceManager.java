@@ -1,4 +1,6 @@
-package dan200.computercraft;
+package dan200.computercraft.shared.util;
+
+import dan200.computercraft.ComputerCraft;
 
 import java.io.InputStream;
 import java.net.URI;

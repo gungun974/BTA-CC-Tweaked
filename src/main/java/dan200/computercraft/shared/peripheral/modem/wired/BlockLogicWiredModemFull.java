@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.shared.peripheral.modem.wired;
 
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.block.entity.TileEntity;
@@ -14,8 +14,8 @@ import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
-public class BlockWiredModemFull extends BlockLogic {
-    public BlockWiredModemFull(Block<?> block, Material material) {
+public class BlockLogicWiredModemFull extends BlockLogic {
+    public BlockLogicWiredModemFull(Block<?> block, Material material) {
         super(block, material);
     }
 

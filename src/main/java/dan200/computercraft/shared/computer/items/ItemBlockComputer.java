@@ -4,6 +4,7 @@ import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.shared.computer.blocks.TileComputerBase;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.enums.EnumBlockSoundEffectType;
@@ -15,8 +16,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class ItemBlockComputer extends ItemComputerBase {
-    public ItemBlockComputer(@NotNull Block block) {
+public class ItemBlockComputer<T extends BlockLogic> extends ItemBlockComputerBase<T> {
+    public ItemBlockComputer(@NotNull Block<T> block) {
         super(block);
     }
 

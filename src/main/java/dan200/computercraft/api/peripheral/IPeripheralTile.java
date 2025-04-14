@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.api.peripheral;
 
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
 

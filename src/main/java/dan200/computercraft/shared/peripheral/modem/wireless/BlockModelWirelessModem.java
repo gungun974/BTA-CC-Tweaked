@@ -1,7 +1,6 @@
 package dan200.computercraft.shared.peripheral.modem.wireless;
 
 import dan200.computercraft.shared.peripheral.modem.ModemShapes;
-import net.minecraft.client.render.block.color.BlockColor;
 import net.minecraft.client.render.block.color.BlockColorDispatcher;
 import net.minecraft.client.render.block.model.BlockModelFullyRotatable;
 import net.minecraft.client.render.tessellator.Tessellator;
@@ -73,7 +72,7 @@ public class BlockModelWirelessModem<T extends BlockLogic> extends BlockModelFul
         }
 
         float yOffset = 0.5F;
-        AABB bounds = ModemShapes.getBounds(BlockWirelessModem.metaToDirection(metadata).getOpposite());
+        AABB bounds = ModemShapes.getBounds(BlockLogicWirelessModem.metaToDirection(metadata).getOpposite());
         GL11.glTranslatef(-0.5F, 0.0F - yOffset, -0.5F);
         this.renderBlockWithBounds(tessellator, bounds, metadata, brightness, alpha, lightmapCoordinate);
         GL11.glTranslatef(0.5F, yOffset, 0.5F);

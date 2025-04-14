@@ -5,7 +5,6 @@
  */
 package dan200.computercraft.shared.util;
 
-import dan200.computercraft.BlockPos;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.item.ItemStack;

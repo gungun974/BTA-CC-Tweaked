@@ -1,22 +1,23 @@
 package dan200.computercraft.shared.common;
 
 import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.client.items.ItemModelRotatedBlock;
 import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
 import dan200.computercraft.shared.peripheral.diskdrive.BlockModelDiskDrive;
-import dan200.computercraft.shared.peripheral.diskdrive.DiskItemModel;
+import dan200.computercraft.shared.peripheral.diskdrive.ItemModelDisk;
 import dan200.computercraft.shared.peripheral.modem.wired.BlockModelCable;
 import dan200.computercraft.shared.peripheral.modem.wired.BlockModelModemFull;
-import dan200.computercraft.shared.peripheral.modem.wired.CableItemModel;
+import dan200.computercraft.shared.peripheral.modem.wired.ItemModelCable;
 import dan200.computercraft.shared.peripheral.modem.wireless.BlockModelWirelessModem;
 import dan200.computercraft.shared.peripheral.monitor.BlockModelMonitor;
 import dan200.computercraft.shared.peripheral.monitor.TileEntityMonitorRenderer;
 import dan200.computercraft.shared.peripheral.monitor.TileMonitor;
 import dan200.computercraft.shared.peripheral.printer.BlockModelPrinter;
-import dan200.computercraft.shared.pocket.items.PocketComputerItemModel;
+import dan200.computercraft.shared.pocket.items.ItemModelPocketComputer;
 import dan200.computercraft.shared.turtle.blocks.BlockModelTurtle;
 import dan200.computercraft.shared.turtle.blocks.TileEntityRendererTurtle;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
-import dan200.computercraft.shared.turtle.items.TurtleItemModel;
+import dan200.computercraft.shared.turtle.items.ItemModelBlockTurtle;
 import net.minecraft.client.render.EntityRenderDispatcher;
 import net.minecraft.client.render.TileEntityRenderDispatcher;
 import net.minecraft.client.render.block.color.BlockColorDispatcher;
@@ -116,13 +117,13 @@ public class ComputerCraftModels implements ModelEntrypoint {
         ModelHelper.setItemModel(ComputerCraftItems.COMPUTER_ADVANCED, () -> new ItemModelRotatedBlock(ComputerCraftItems.COMPUTER_ADVANCED));
 
         ModelHelper.setItemModel(ComputerCraftItems.POCKET_COMPUTER_NORMAL, () -> {
-            ItemModelStandard itemModelStandard = new PocketComputerItemModel(ComputerCraftItems.POCKET_COMPUTER_NORMAL, MOD_ID);
+            ItemModelStandard itemModelStandard = new ItemModelPocketComputer(ComputerCraftItems.POCKET_COMPUTER_NORMAL, MOD_ID);
             itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/pocket_computer_normal"));
             return itemModelStandard;
         });
 
         ModelHelper.setItemModel(ComputerCraftItems.POCKET_COMPUTER_ADVANCED, () -> {
-            ItemModelStandard itemModelStandard = new PocketComputerItemModel(ComputerCraftItems.POCKET_COMPUTER_ADVANCED, MOD_ID);
+            ItemModelStandard itemModelStandard = new ItemModelPocketComputer(ComputerCraftItems.POCKET_COMPUTER_ADVANCED, MOD_ID);
             itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/pocket_computer_advanced"));
             return itemModelStandard;
         });
@@ -134,20 +135,20 @@ public class ComputerCraftModels implements ModelEntrypoint {
         ModelHelper.setItemModel(ComputerCraftItems.MONITOR_NORMAL, () -> new ItemModelRotatedBlock(ComputerCraftItems.MONITOR_NORMAL));
         ModelHelper.setItemModel(ComputerCraftItems.MONITOR_ADVANCED, () -> new ItemModelRotatedBlock(ComputerCraftItems.MONITOR_ADVANCED));
 
-        ModelHelper.setItemModel(ComputerCraftItems.TURTLE_NORMAL, () -> new TurtleItemModel(ComputerCraftItems.TURTLE_NORMAL));
-        ModelHelper.setItemModel(ComputerCraftItems.TURTLE_ADVANCED, () -> new TurtleItemModel(ComputerCraftItems.TURTLE_ADVANCED));
+        ModelHelper.setItemModel(ComputerCraftItems.TURTLE_NORMAL, () -> new ItemModelBlockTurtle(ComputerCraftItems.TURTLE_NORMAL));
+        ModelHelper.setItemModel(ComputerCraftItems.TURTLE_ADVANCED, () -> new ItemModelBlockTurtle(ComputerCraftItems.TURTLE_ADVANCED));
 
         ModelHelper.setItemModel(ComputerCraftItems.WIRELESS_MODEM_NORMAL, () -> new ItemModelRotatedBlock(ComputerCraftItems.WIRELESS_MODEM_NORMAL));
         ModelHelper.setItemModel(ComputerCraftItems.WIRELESS_MODEM_ADVANCED, () -> new ItemModelRotatedBlock(ComputerCraftItems.WIRELESS_MODEM_ADVANCED));
 
         ModelHelper.setItemModel(ComputerCraftItems.DISK, () -> {
-            ItemModelStandard itemModelStandard = new DiskItemModel(ComputerCraftItems.DISK, MOD_ID);
+            ItemModelStandard itemModelStandard = new ItemModelDisk(ComputerCraftItems.DISK, MOD_ID);
             itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/disk_frame"));
             return itemModelStandard;
         });
 
         ModelHelper.setItemModel(ComputerCraftItems.TREASURE_DISK, () -> {
-            ItemModelStandard itemModelStandard = new DiskItemModel(ComputerCraftItems.TREASURE_DISK, MOD_ID);
+            ItemModelStandard itemModelStandard = new ItemModelDisk(ComputerCraftItems.TREASURE_DISK, MOD_ID);
             itemModelStandard.icon = TextureRegistry.getTexture(NamespaceID.getPermanent(MOD_ID, "item/disk_frame"));
             return itemModelStandard;
         });
@@ -170,8 +171,8 @@ public class ComputerCraftModels implements ModelEntrypoint {
             return itemModelStandard;
         });
 
-        ModelHelper.setItemModel(ComputerCraftItems.CABLE, () -> new CableItemModel(ComputerCraftItems.CABLE));
-        ModelHelper.setItemModel(ComputerCraftItems.WIRED_MODEM, () -> new CableItemModel(ComputerCraftItems.WIRED_MODEM));
+        ModelHelper.setItemModel(ComputerCraftItems.CABLE, () -> new ItemModelCable(ComputerCraftItems.CABLE));
+        ModelHelper.setItemModel(ComputerCraftItems.WIRED_MODEM, () -> new ItemModelCable(ComputerCraftItems.WIRED_MODEM));
 
         ComputerCraft.log.info("Item Models initialized.");
     }

@@ -18,8 +18,8 @@ import net.minecraft.core.world.World;
 import net.minecraft.core.world.WorldSource;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockWirelessModem extends BlockLogicFullyRotatable {
-    public BlockWirelessModem(Block<?> block, boolean advanced) {
+public class BlockLogicWirelessModem extends BlockLogicFullyRotatable {
+    public BlockLogicWirelessModem(Block<?> block, boolean advanced) {
         super(block, Material.stone);
         block.withEntity(() -> new TileWirelessModem(advanced));
         this.setBlockBounds(0.125, 0.0, 0.125, 0.875, 0.1875, 0.875);
@@ -45,6 +45,6 @@ public class BlockWirelessModem extends BlockLogicFullyRotatable {
 
     @Override
     public AABB getBlockBoundsFromState(WorldSource world, int x, int y, int z) {
-        return ModemShapes.getBounds(BlockWirelessModem.metaToDirection(world.getBlockMetadata(x, y, z)).getOpposite());
+        return ModemShapes.getBounds(BlockLogicWirelessModem.metaToDirection(world.getBlockMetadata(x, y, z)).getOpposite());
     }
 }

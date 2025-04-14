@@ -17,8 +17,8 @@ import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockMonitor extends BlockLogic {
-    public BlockMonitor(Block<?> block, boolean advanced) {
+public class BlockLogicMonitor extends BlockLogic {
+    public BlockLogicMonitor(Block<?> block, boolean advanced) {
         super(block, Material.stone);
         block.withEntity(() -> new TileMonitor(advanced));
     }

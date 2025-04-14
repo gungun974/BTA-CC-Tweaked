@@ -22,8 +22,8 @@ public class BlockModelMonitor<T extends BlockLogic> extends BlockModelStandard<
     @Override
     public boolean render(Tessellator tessellator, int x, int y, int z) {
         int meta = renderBlocks.blockAccess.getBlockMetadata(x, y, z);
-        Direction dir = BlockMonitor.metaToFacing(meta);
-        Direction orientation = BlockMonitor.metaToOrientation(meta);
+        Direction dir = BlockLogicMonitor.metaToFacing(meta);
+        Direction orientation = BlockLogicMonitor.metaToOrientation(meta);
 
         if (orientation == Direction.UP) {
             switch (dir) {
@@ -115,13 +115,13 @@ public class BlockModelMonitor<T extends BlockLogic> extends BlockModelStandard<
     public IconCoordinate getBlockTexture(WorldSource blockAccess, int x, int y, int z, Side side) {
         int currentMetadata = blockAccess.getBlockMetadata(x, y, z);
 
-        Direction facing = BlockMonitor.metaToFacing(currentMetadata);
+        Direction facing = BlockLogicMonitor.metaToFacing(currentMetadata);
 
         int index = Sides.orientationLookUpHorizontal[6 * Math.min(facing.getId(), 5) + side.getId()];
 
-        MonitorEdgeState edgeState = BlockMonitor.metaToState(currentMetadata);
+        MonitorEdgeState edgeState = BlockLogicMonitor.metaToState(currentMetadata);
 
-        Direction orientation = BlockMonitor.metaToOrientation(currentMetadata);
+        Direction orientation = BlockLogicMonitor.metaToOrientation(currentMetadata);
 
         if (index >= Sides.orientationLookUpHorizontal.length) {
             return this.blockTextures.get(Side.BOTTOM);

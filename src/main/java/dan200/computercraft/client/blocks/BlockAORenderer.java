@@ -1,4 +1,4 @@
-package dan200.computercraft.shared.turtle.blocks;
+package dan200.computercraft.client.blocks;
 
 import net.minecraft.client.render.LightmapHelper;
 import net.minecraft.client.render.block.model.BlockModel;

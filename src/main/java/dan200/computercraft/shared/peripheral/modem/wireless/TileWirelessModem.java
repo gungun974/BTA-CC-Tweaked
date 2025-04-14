@@ -60,7 +60,7 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile {
         }
 
         hasModemDirection = true;
-        modemDirection = BlockWirelessModem.metaToDirection(worldObj.getBlockMetadata(x, y, z)).getOpposite();
+        modemDirection = BlockLogicWirelessModem.metaToDirection(worldObj.getBlockMetadata(x, y, z)).getOpposite();
     }
 
     private void updateBlockState() {

@@ -1,4 +1,4 @@
-package dan200.computercraft;
+package dan200.computercraft.shared.util;
 
 import com.google.common.collect.MapMaker;
 

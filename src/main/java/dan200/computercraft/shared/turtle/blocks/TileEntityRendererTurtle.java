@@ -2,6 +2,7 @@ package dan200.computercraft.shared.turtle.blocks;
 
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
+import dan200.computercraft.client.blocks.BlockAORenderer;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,7 +40,7 @@ public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
 
     public void doRender(Tessellator tessellator, TileTurtle tileEntity, double x, double y, double z, float partialTick) {
         Block<?> block = tileEntity.getBlock();
-        if (block != null && block.getLogic() instanceof BlockTurtle) {
+        if (block != null && block.getLogic() instanceof BlockLogicTurtle) {
             GL11.glEnable(32826);
             GL11.glPushMatrix();
 

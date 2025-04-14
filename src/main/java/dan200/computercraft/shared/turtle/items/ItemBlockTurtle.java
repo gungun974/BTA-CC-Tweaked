@@ -11,7 +11,7 @@ import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.shared.TurtleUpgrades;
 import dan200.computercraft.shared.common.IColouredItem;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
-import dan200.computercraft.shared.computer.items.ItemComputerBase;
+import dan200.computercraft.shared.computer.items.ItemBlockComputerBase;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import dan200.computercraft.shared.turtle.core.TurtleBrain;
 import net.minecraft.core.block.Block;
@@ -30,8 +30,8 @@ import java.util.List;
 
 import static dan200.computercraft.shared.turtle.core.TurtleBrain.*;
 
-public class ItemTurtle extends ItemComputerBase implements ITurtleItem {
-    public ItemTurtle(@NotNull Block block) {
+public class ItemBlockTurtle extends ItemBlockComputerBase implements ITurtleItem {
+    public ItemBlockTurtle(@NotNull Block block) {
         super(block);
     }
 

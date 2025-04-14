@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.api.turtle;
 
-import dan200.computercraft.shared.turtle.blocks.BlockAORenderer;
+import dan200.computercraft.client.blocks.BlockAORenderer;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.item.IItemConvertible;

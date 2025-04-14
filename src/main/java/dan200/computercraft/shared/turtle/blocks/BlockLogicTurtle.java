@@ -19,8 +19,8 @@ import net.minecraft.core.world.World;
 import net.minecraft.core.world.WorldSource;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockTurtle extends BlockLogicComputer {
-    public BlockTurtle(Block<?> block, ComputerFamily family) {
+public class BlockLogicTurtle extends BlockLogicComputer {
+    public BlockLogicTurtle(Block<?> block, ComputerFamily family) {
         super(block, family);
         block.withEntity(() -> new TileTurtle(family));
         this.setBlockBounds(0.125, 0.125, 0.125, 0.875, 0.875, 0.875);

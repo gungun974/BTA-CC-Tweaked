@@ -5,23 +5,23 @@ import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import dan200.computercraft.shared.computer.blocks.TileEntityComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.items.ItemBlockComputer;
-import dan200.computercraft.shared.peripheral.diskdrive.BlockDiskDrive;
+import dan200.computercraft.shared.peripheral.diskdrive.BlockLogicDiskDrive;
 import dan200.computercraft.shared.peripheral.diskdrive.TileDiskDrive;
-import dan200.computercraft.shared.peripheral.modem.wired.BlockCable;
-import dan200.computercraft.shared.peripheral.modem.wired.BlockWiredModemFull;
+import dan200.computercraft.shared.peripheral.modem.wired.BlockLogicCable;
+import dan200.computercraft.shared.peripheral.modem.wired.BlockLogicWiredModemFull;
 import dan200.computercraft.shared.peripheral.modem.wired.TileCable;
 import dan200.computercraft.shared.peripheral.modem.wired.TileWiredModemFull;
-import dan200.computercraft.shared.peripheral.modem.wireless.BlockWirelessModem;
+import dan200.computercraft.shared.peripheral.modem.wireless.BlockLogicWirelessModem;
 import dan200.computercraft.shared.peripheral.modem.wireless.TileWirelessModem;
-import dan200.computercraft.shared.peripheral.monitor.BlockMonitor;
+import dan200.computercraft.shared.peripheral.monitor.BlockLogicMonitor;
 import dan200.computercraft.shared.peripheral.monitor.TileMonitor;
-import dan200.computercraft.shared.peripheral.printer.BlockPrinter;
+import dan200.computercraft.shared.peripheral.printer.BlockLogicPrinter;
 import dan200.computercraft.shared.peripheral.printer.TilePrinter;
-import dan200.computercraft.shared.peripheral.speaker.BlockSpeaker;
+import dan200.computercraft.shared.peripheral.speaker.BlockLogicSpeaker;
 import dan200.computercraft.shared.peripheral.speaker.TileSpeaker;
-import dan200.computercraft.shared.turtle.blocks.BlockTurtle;
+import dan200.computercraft.shared.turtle.blocks.BlockLogicTurtle;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
-import dan200.computercraft.shared.turtle.items.ItemTurtle;
+import dan200.computercraft.shared.turtle.items.ItemBlockTurtle;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
@@ -82,7 +82,7 @@ public class ComputerCraftBlocks {
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileEntityComputer(ComputerFamily.NORMAL))
             .setBlockItem(block -> {
-                ComputerCraftItems.COMPUTER_NORMAL = new ItemBlockComputer(block);
+                ComputerCraftItems.COMPUTER_NORMAL = new ItemBlockComputer<>(block);
                 return ComputerCraftItems.COMPUTER_NORMAL;
             })
             .build("computer_normal", generateNexId(), b -> new BlockLogicComputer(b, ComputerFamily.NORMAL));
@@ -94,7 +94,7 @@ public class ComputerCraftBlocks {
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileEntityComputer(ComputerFamily.ADVANCED))
             .setBlockItem(block -> {
-                ComputerCraftItems.COMPUTER_ADVANCED = new ItemBlockComputer(block);
+                ComputerCraftItems.COMPUTER_ADVANCED = new ItemBlockComputer<>(block);
                 return ComputerCraftItems.COMPUTER_ADVANCED;
             })
             .build("computer_advanced", generateNexId(), b -> new BlockLogicComputer(b, ComputerFamily.ADVANCED));
@@ -107,10 +107,10 @@ public class ComputerCraftBlocks {
             .setTags(BlockTags.NOT_IN_CREATIVE_MENU, BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileTurtle(ComputerFamily.NORMAL))
             .setBlockItem(block -> {
-                ComputerCraftItems.TURTLE_NORMAL = new ItemTurtle(block);
+                ComputerCraftItems.TURTLE_NORMAL = new ItemBlockTurtle(block);
                 return ComputerCraftItems.TURTLE_NORMAL;
             })
-            .build("turtle_normal", generateNexId(), b -> new BlockTurtle(b, ComputerFamily.NORMAL));
+            .build("turtle_normal", generateNexId(), b -> new BlockLogicTurtle(b, ComputerFamily.NORMAL));
 
         TURTLE_ADVANCED = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
@@ -118,10 +118,10 @@ public class ComputerCraftBlocks {
             .setTags(BlockTags.NOT_IN_CREATIVE_MENU, BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(() -> new TileTurtle(ComputerFamily.ADVANCED))
             .setBlockItem(block -> {
-                ComputerCraftItems.TURTLE_ADVANCED = new ItemTurtle(block);
+                ComputerCraftItems.TURTLE_ADVANCED = new ItemBlockTurtle(block);
                 return ComputerCraftItems.TURTLE_ADVANCED;
             })
-            .build("turtle_advanced", generateNexId(), b -> new BlockTurtle(b, ComputerFamily.ADVANCED));
+            .build("turtle_advanced", generateNexId(), b -> new BlockLogicTurtle(b, ComputerFamily.ADVANCED));
 
         EntityHelper.createTileEntity(TileWirelessModem.class, NamespaceID.getPermanent(MOD_ID, "wireless_modem"));
 
@@ -134,7 +134,7 @@ public class ComputerCraftBlocks {
                 ComputerCraftItems.WIRELESS_MODEM_NORMAL = new ItemBlock<>(block);
                 return ComputerCraftItems.WIRELESS_MODEM_NORMAL;
             })
-            .build("wireless_modem_normal", generateNexId(), b -> new BlockWirelessModem(b, false));
+            .build("wireless_modem_normal", generateNexId(), b -> new BlockLogicWirelessModem(b, false));
 
         WIRELESS_MODEM_ADVANCED = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
@@ -145,7 +145,7 @@ public class ComputerCraftBlocks {
                 ComputerCraftItems.WIRELESS_MODEM_ADVANCED = new ItemBlock<>(block);
                 return ComputerCraftItems.WIRELESS_MODEM_ADVANCED;
             })
-            .build("wireless_modem_advanced", generateNexId(), b -> new BlockWirelessModem(b, true));
+            .build("wireless_modem_advanced", generateNexId(), b -> new BlockLogicWirelessModem(b, true));
 
         EntityHelper.createTileEntity(TileWiredModemFull.class, NamespaceID.getPermanent(MOD_ID, "wired_modem_full"));
 
@@ -154,7 +154,7 @@ public class ComputerCraftBlocks {
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileWiredModemFull::new)
-            .build("wired_modem_full", generateNexId(), b -> new BlockWiredModemFull(b, Material.stone));
+            .build("wired_modem_full", generateNexId(), b -> new BlockLogicWiredModemFull(b, Material.stone));
 
         EntityHelper.createTileEntity(TileCable.class, NamespaceID.getPermanent(MOD_ID, "cable"));
 
@@ -163,7 +163,7 @@ public class ComputerCraftBlocks {
             .setResistance(10f)
             .setTags(BlockTags.NOT_IN_CREATIVE_MENU, BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileCable::new)
-            .build("cable", generateNexId(), b -> new BlockCable(b, Material.stone));
+            .build("cable", generateNexId(), b -> new BlockLogicCable(b, Material.stone));
 
         EntityHelper.createTileEntity(TileMonitor.class, NamespaceID.getPermanent(MOD_ID, "monitor"));
 
@@ -176,7 +176,7 @@ public class ComputerCraftBlocks {
                 ComputerCraftItems.MONITOR_NORMAL = new ItemBlock<>(block);
                 return ComputerCraftItems.MONITOR_NORMAL;
             })
-            .build("monitor_normal", generateNexId(), b -> new BlockMonitor(b, false));
+            .build("monitor_normal", generateNexId(), b -> new BlockLogicMonitor(b, false));
 
         MONITOR_ADVANCED = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
@@ -187,7 +187,7 @@ public class ComputerCraftBlocks {
                 ComputerCraftItems.MONITOR_ADVANCED = new ItemBlock<>(block);
                 return ComputerCraftItems.MONITOR_ADVANCED;
             })
-            .build("monitor_advanced", generateNexId(), b -> new BlockMonitor(b, true));
+            .build("monitor_advanced", generateNexId(), b -> new BlockLogicMonitor(b, true));
 
         EntityHelper.createTileEntity(TileDiskDrive.class, NamespaceID.getPermanent(MOD_ID, "disk_drive"));
 
@@ -200,7 +200,7 @@ public class ComputerCraftBlocks {
                 ComputerCraftItems.DISK_DRIVE = new ItemBlock<>(block);
                 return ComputerCraftItems.DISK_DRIVE;
             })
-            .build("disk_drive", generateNexId(), b -> new BlockDiskDrive(b));
+            .build("disk_drive", generateNexId(), b -> new BlockLogicDiskDrive(b));
 
         EntityHelper.createTileEntity(TileSpeaker.class, NamespaceID.getPermanent(MOD_ID, "speaker"));
 
@@ -213,7 +213,7 @@ public class ComputerCraftBlocks {
                 ComputerCraftItems.SPEAKER = new ItemBlock<>(block);
                 return ComputerCraftItems.SPEAKER;
             })
-            .build("speaker", generateNexId(), b -> new BlockSpeaker(b));
+            .build("speaker", generateNexId(), b -> new BlockLogicSpeaker(b));
 
         EntityHelper.createTileEntity(TilePrinter.class, NamespaceID.getPermanent(MOD_ID, "printer"));
 
@@ -226,6 +226,6 @@ public class ComputerCraftBlocks {
                 ComputerCraftItems.PRINTER = new ItemBlock<>(block);
                 return ComputerCraftItems.PRINTER;
             })
-            .build("printer", generateNexId(), b -> new BlockPrinter(b));
+            .build("printer", generateNexId(), b -> new BlockLogicPrinter(b));
     }
 }

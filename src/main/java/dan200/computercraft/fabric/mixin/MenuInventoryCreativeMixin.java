@@ -4,7 +4,7 @@ import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.media.items.ItemDisk;
 import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
-import dan200.computercraft.shared.turtle.items.ItemTurtle;
+import dan200.computercraft.shared.turtle.items.ItemBlockTurtle;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.data.tag.Tag;
 import net.minecraft.core.item.Item;
@@ -39,7 +39,7 @@ public class MenuInventoryCreativeMixin {
     private static boolean addBlocks(Block<?> block, Tag<Block<?>> tag) {
         if (block.id() == ComputerCraftBlocks.TURTLE_NORMAL.id() || block.id() == ComputerCraftBlocks.TURTLE_ADVANCED.id()) {
             int before = creativeItems.size();
-            ((ItemTurtle) block.asItem()).addToCreativeMenu(creativeItems);
+            ((ItemBlockTurtle) block.asItem()).addToCreativeMenu(creativeItems);
             extraCount += creativeItems.size() - before;
             return true;
         }

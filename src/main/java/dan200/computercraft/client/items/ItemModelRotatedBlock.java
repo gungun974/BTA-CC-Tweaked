@@ -1,6 +1,10 @@
-package dan200.computercraft.shared.common;
+package dan200.computercraft.client.items;
 
+import dan200.computercraft.shared.common.ComputerCraftBlocks;
+import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.computer.core.ComputerState;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.Font;
 import net.minecraft.client.render.ItemRenderer;
 import net.minecraft.client.render.LightmapHelper;
@@ -23,6 +27,7 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nullable;
 import java.util.Random;
 
+@Environment(EnvType.CLIENT)
 public class ItemModelRotatedBlock extends ItemModelBlock {
     private final Block<?> block;
     private final BlockModel<?> blockModel;

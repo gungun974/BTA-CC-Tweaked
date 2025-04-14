@@ -1,6 +1,6 @@
 package dan200.computercraft.fabric.mixin;
 
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.DropConsumer;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.block.entity.TileEntity;

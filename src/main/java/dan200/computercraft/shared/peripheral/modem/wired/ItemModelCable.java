@@ -7,7 +7,6 @@ import net.minecraft.client.render.Font;
 import net.minecraft.client.render.ItemRenderer;
 import net.minecraft.client.render.LightmapHelper;
 import net.minecraft.client.render.TextureManager;
-import net.minecraft.client.render.block.color.BlockColor;
 import net.minecraft.client.render.block.color.BlockColorDispatcher;
 import net.minecraft.client.render.block.model.BlockModel;
 import net.minecraft.client.render.block.model.BlockModelDispatcher;
@@ -31,11 +30,11 @@ import org.lwjgl.opengl.GL11;
 import java.util.Random;
 
 
-public class CableItemModel extends ItemModelStandard {
+public class ItemModelCable extends ItemModelStandard {
     private final Block<?> block;
     private final BlockModel<?> blockModel;
 
-    public CableItemModel(Item item) {
+    public ItemModelCable(Item item) {
         super(item, null);
         this.block = ComputerCraftBlocks.CABLE;
         this.blockModel = BlockModelDispatcher.getInstance().getDispatch(this.block);

@@ -6,7 +6,7 @@
 package dan200.computercraft.shared.peripheral.diskdrive;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
 import dan200.computercraft.api.media.IMedia;
@@ -81,7 +81,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
     }
 
     public Direction getDirection() {
-        return BlockDiskDrive.getDirectionFromMeta(getBlockMeta());
+        return BlockLogicDiskDrive.getDirectionFromMeta(getBlockMeta());
     }
 
     @Override

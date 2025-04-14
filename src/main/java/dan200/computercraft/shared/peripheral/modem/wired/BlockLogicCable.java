@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.shared.peripheral.modem.wired;
 
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.shared.common.ComputerCraftItems;
 import net.minecraft.core.block.Block;
@@ -24,8 +24,8 @@ import net.minecraft.core.world.WorldSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BlockCable extends BlockLogic {
-    public BlockCable(Block<?> block, Material material) {
+public class BlockLogicCable extends BlockLogic {
+    public BlockLogicCable(Block<?> block, Material material) {
         super(block, material);
         this.setBlockBounds(0.125, 0.0, 0.125, 0.875, 0.1875, 0.875);
     }

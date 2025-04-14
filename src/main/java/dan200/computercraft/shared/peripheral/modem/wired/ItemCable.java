@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.shared.peripheral.modem.wired;
 
-import dan200.computercraft.BlockPos;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
@@ -17,10 +17,10 @@ import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
 
-import static dan200.computercraft.shared.peripheral.modem.wired.BlockCable.correctConnections;
+import static dan200.computercraft.shared.peripheral.modem.wired.BlockLogicCable.correctConnections;
 
-public abstract class ItemBlockCable extends Item {
-    public ItemBlockCable(NamespaceID namespaceId, int id) {
+public abstract class ItemCable extends Item {
+    public ItemCable(NamespaceID namespaceId, int id) {
         super(namespaceId, id);
     }
 
@@ -99,7 +99,7 @@ public abstract class ItemBlockCable extends Item {
         return false;
     }
 
-    public static class WiredModem extends ItemBlockCable {
+    public static class WiredModem extends ItemCable {
         public WiredModem(NamespaceID namespaceId, int id) {
             super(namespaceId, id);
         }
@@ -142,7 +142,7 @@ public abstract class ItemBlockCable extends Item {
         }
     }
 
-    public static class Cable extends ItemBlockCable {
+    public static class Cable extends ItemCable {
         public Cable(NamespaceID namespaceId, int id) {
             super(namespaceId, id);
         }
