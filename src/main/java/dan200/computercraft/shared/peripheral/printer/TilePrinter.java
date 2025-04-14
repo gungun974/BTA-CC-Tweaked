@@ -13,7 +13,7 @@ import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.media.items.ItemPrintout;
-import dan200.computercraft.shared.network.client.OpenGuiContainerMessage;
+import dan200.computercraft.shared.network.client.OpenGuiPrinterClientMessage;
 import dan200.computercraft.shared.util.*;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.Item;
@@ -88,7 +88,7 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
 
         // Open the GUI
         if (!Helper.isClientWorld()) {
-            OpenGuiContainerMessage.SendToPlayer(player, this, "dan200.computercraft.shared.peripheral.printer.ScreenPrinter", MenuPrinter::new);
+            new OpenGuiPrinterClientMessage(this).sendToPlayer(player);
         }
         return true;
     }

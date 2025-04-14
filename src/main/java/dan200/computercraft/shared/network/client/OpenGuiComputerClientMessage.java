@@ -1,5 +1,6 @@
 package dan200.computercraft.shared.network.client;
 
+import dan200.computercraft.client.gui.GuiComputer;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
@@ -13,30 +14,24 @@ import turniplabs.halplibe.helper.network.UniversalPacket;
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 
-public class OpenComputerGuiClientMessage implements NetworkMessage {
-    protected String screen;
-
+public class OpenGuiComputerClientMessage implements NetworkMessage {
     private int instanceId;
     private ComputerFamily family;
     private int width;
     private int height;
 
-    public OpenComputerGuiClientMessage(String screen, int instanceId, ComputerFamily family, int width, int height) {
-        this.screen = screen;
-
+    public OpenGuiComputerClientMessage(int instanceId, ComputerFamily family, int width, int height) {
         this.instanceId = instanceId;
         this.family = family;
         this.width = width;
         this.height = height;
     }
 
-    public OpenComputerGuiClientMessage() {
+    public OpenGuiComputerClientMessage() {
     }
 
     @Override
     public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
-        buf.writeString(screen);
-
         buf.writeInt(instanceId);
         buf.writeEnumConstant(family);
         buf.writeInt(width);
@@ -45,23 +40,10 @@ public class OpenComputerGuiClientMessage implements NetworkMessage {
 
     @Override
     public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
-        screen = buf.readString();
-
         instanceId = buf.readInt();
         family = buf.readEnumConstant(ComputerFamily.class);
         width = buf.readInt();
         height = buf.readInt();
-    }
-
-    protected Screen getScreenInstance(ContainerComputerBase container) {
-        try {
-            Class<?> screenClass = Class.forName(screen);
-
-            return (Screen) screenClass.getConstructor(ContainerComputerBase.class, int.class, int.class).newInstance(container, width, height);
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException |
-                 ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
@@ -75,6 +57,6 @@ public class OpenComputerGuiClientMessage implements NetworkMessage {
     private void clientHandler() {
         ContainerComputerBase container = new ContainerComputerBase(instanceId, family);
 
-        Minecraft.getMinecraft().displayScreen(getScreenInstance(container));
+        Minecraft.getMinecraft().displayScreen(new GuiComputer<>(container, width, height));
     }
 }

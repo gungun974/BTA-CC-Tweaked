@@ -15,7 +15,7 @@ import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.MediaProviders;
 import dan200.computercraft.shared.common.TileGeneric;
-import dan200.computercraft.shared.network.client.OpenGuiContainerMessage;
+import dan200.computercraft.shared.network.client.OpenGuiDiskDriveClientMessage;
 import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.RecordUtil;
@@ -73,7 +73,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
         } else {
             // Open the GUI
             if (!Helper.isClientWorld()) {
-                OpenGuiContainerMessage.SendToPlayer(player, this, "dan200.computercraft.shared.peripheral.diskdrive.ScreenDiskDrive", MenuDiskDrive::new);
+                new OpenGuiDiskDriveClientMessage(this).sendToPlayer(player);
             }
             return true;
         }

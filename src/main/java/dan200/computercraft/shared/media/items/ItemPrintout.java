@@ -8,7 +8,7 @@ package dan200.computercraft.shared.media.items;
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.common.ComputerCraftItems;
-import dan200.computercraft.shared.network.client.OpenGuiPrintoutMessage;
+import dan200.computercraft.shared.network.client.OpenGuiPrintoutClientMessage;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
@@ -113,7 +113,7 @@ public class ItemPrintout extends Item {
             return stack;
         }
 
-        NetworkHandler.sendToPlayer(player, new OpenGuiPrintoutMessage(stack));
+        NetworkHandler.sendToPlayer(player, new OpenGuiPrintoutClientMessage(stack));
 
         return stack;
     }

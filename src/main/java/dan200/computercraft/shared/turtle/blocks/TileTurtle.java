@@ -207,7 +207,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
             createServerComputer().turnOn();
             createServerComputer().sendTerminalState(player);
             ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this));
-            createServerComputer().sendOpenContainerComputerGui(player, this, "dan200.computercraft.shared.turtle.inventory.ScreenTurtle", MenuTurtle::new);
+            createServerComputer().sendOpenGuiTurtle(player, this);
         }
         return true;
     }

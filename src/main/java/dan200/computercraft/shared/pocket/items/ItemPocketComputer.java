@@ -171,7 +171,7 @@ public class ItemPocketComputer extends Item implements IComputerItem, IMedia, I
             if (!stop && computer != null) {
                 computer.sendTerminalState(player);
                 ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this, world, player.inventory, player, stack));
-                computer.sendOpenComputerGui(player, "dan200.computercraft.shared.pocket.inventory.ScreenPocketComputer");
+                computer.sendOpenComputerGui(player);
             }
         }
         return stack;

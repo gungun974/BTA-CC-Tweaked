@@ -12,12 +12,12 @@ import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
 
-public class OpenGuiPrintoutMessage implements NetworkMessage {
+public class OpenGuiPrintoutClientMessage implements NetworkMessage {
     public int itemID;
     public int itemMeta;
     public CompoundTag itemData;
 
-    public OpenGuiPrintoutMessage(ItemStack stack) {
+    public OpenGuiPrintoutClientMessage(ItemStack stack) {
         if (stack == null) {
             this.itemID = -1;
             this.itemMeta = 0;
@@ -29,7 +29,7 @@ public class OpenGuiPrintoutMessage implements NetworkMessage {
         }
     }
 
-    public OpenGuiPrintoutMessage() {
+    public OpenGuiPrintoutClientMessage() {
     }
 
     @Override

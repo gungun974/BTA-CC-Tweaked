@@ -28,7 +28,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
-import net.minecraft.core.player.inventory.menu.MenuAbstract;
 import net.minecraft.core.world.World;
 import net.minecraft.server.MinecraftServer;
 import turniplabs.halplibe.helper.network.NetworkHandler;
@@ -185,9 +184,9 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         return new ComputerTerminalClientMessage(getInstanceID(), write());
     }
 
-    protected NetworkMessage createOpenComputerGuiPacket(String screen) {
+    protected NetworkMessage createOpenComputerGuiPacket() {
         final TerminalState state = write();
-        return new OpenComputerGuiClientMessage(screen, getInstanceID(), getFamily(), state.width, state.height);
+        return new OpenGuiComputerClientMessage(getInstanceID(), getFamily(), state.width, state.height);
     }
 
     @Nullable
@@ -258,15 +257,13 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         NetworkHandler.sendToPlayer(player, createTerminalPacket());
     }
 
-    public void sendOpenComputerGui(Player player, String screen) {
-        NetworkHandler.sendToPlayer(player, createOpenComputerGuiPacket(screen));
+    public void sendOpenComputerGui(Player player) {
+        NetworkHandler.sendToPlayer(player, createOpenComputerGuiPacket());
     }
 
-    public <C extends TileEntity> void sendOpenContainerComputerGui(Player player, C tileEntity, String screen, OpenGuiContainerMessage.MenuAbstractSupplier<MenuAbstract, C> menu) {
+    public void sendOpenGuiTurtle(Player player, TileTurtle turtle) {
         final TerminalState state = write();
-        OpenContainerComputerGuiClientMessage.SendToPlayer(player, tileEntity, screen, menu,
-            getInstanceID(), getFamily(), state.width, state.height
-        );
+        new OpenGuiTurtleClientMessage(turtle, getInstanceID(), getFamily(), state.width, state.height).sendToPlayer(player);
     }
 
     public void broadcastDelete() {

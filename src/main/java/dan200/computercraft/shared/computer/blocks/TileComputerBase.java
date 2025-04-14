@@ -92,7 +92,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
                 createServerComputer().turnOn();
                 createServerComputer().sendTerminalState(player);
                 ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this));
-                createServerComputer().sendOpenComputerGui(player, "dan200.computercraft.client.gui.GuiComputer");
+                createServerComputer().sendOpenComputerGui(player);
             }
 
             return true;
