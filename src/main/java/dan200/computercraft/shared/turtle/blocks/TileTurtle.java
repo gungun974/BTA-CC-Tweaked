@@ -28,6 +28,8 @@ import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemDye;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.Items;
+import net.minecraft.core.net.packet.Packet;
+import net.minecraft.core.net.packet.PacketTileEntityData;
 import net.minecraft.core.player.gamemode.Gamemode;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Axis;
@@ -286,6 +288,11 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
 
         // Read state
         brain.readFromNBT(nbt);
+    }
+
+    @Override
+    public Packet getDescriptionPacket() {
+        return new PacketTileEntityData(this);
     }
 
     @Override

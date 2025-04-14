@@ -43,6 +43,7 @@ public class TurtleBrain implements ITurtleAccess {
     public static final String NBT_LEFT_UPGRADE_DATA = "LeftUpgradeNbt";
     public static final String NBT_FUEL = "Fuel";
     public static final String NBT_OVERLAY = "Overlay";
+    public static final String NBT_ANIMATION = "Animation";
 
     private static final String NBT_SLOT = "Slot";
 
@@ -674,6 +675,8 @@ public class TurtleBrain implements ITurtleAccess {
         } else {
             owningPlayer = null;
         }
+
+        animation = TurtleAnimation.values()[(nbt.getInteger(NBT_ANIMATION))];
     }
 
     /**
@@ -720,6 +723,8 @@ public class TurtleBrain implements ITurtleAccess {
                 .getLeastSignificantBits());
             //owner.putString( "Name", owningPlayer.getName() );
         }
+
+        nbt.putInt(NBT_ANIMATION, animation.ordinal());
 
         return nbt;
     }

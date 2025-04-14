@@ -23,11 +23,16 @@ import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.DirectionUtil;
 import dan200.computercraft.shared.util.PortableTickScheduler;
 import dan200.computercraft.shared.util.RedstoneUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.Items;
+import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.entity.player.PlayerServer;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -279,6 +284,18 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         int blockId = Helper.getBlockLogic(worldObj, this.x, this.y, this.z, BlockLogicComputer.class).id();
 
         worldObj.notifyBlockChange(this.x, this.y, this.z, blockId);
+
+        if (Helper.isServerEnvironment()) {
+            updateBlockServer();
+        }
+    }
+
+    @Environment(EnvType.SERVER)
+    private void updateBlockServer() {
+        Packet packet = this.getDescriptionPacket();
+        if (packet != null) {
+            MinecraftServer.getInstance().playerList.sendPacketToPlayersAroundPoint(x, y, z, 64, worldObj.dimension.id, packet);
+        }
     }
 
     protected abstract void updateBlockState(ComputerState newState);
