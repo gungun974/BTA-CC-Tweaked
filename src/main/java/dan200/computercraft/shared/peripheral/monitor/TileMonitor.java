@@ -93,11 +93,15 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
         if (!player.isSneaking() && getFront() == side.getDirection()) {
             if (!Helper.isClientWorld()) {
                 HitResult hit = player.rayTrace(player.distanceTo(x, y, z), 0, false, false);
-                monitorTouched((float) (hit.location.x - hit.x), (float) (hit.location.y - hit.y), (float) (hit.location.z - hit.z));
+                if (hit != null) {
+                    monitorTouched((float) (hit.location.x - hit.x), (float) (hit.location.y - hit.y), (float) (hit.location.z - hit.z));
+                }
             }
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     @Override
