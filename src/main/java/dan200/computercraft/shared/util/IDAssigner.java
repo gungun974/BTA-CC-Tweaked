@@ -10,11 +10,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.fabric.Helper;
+import dan200.computercraft.fabric.IWorldDirNameAccess;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.world.Dimension;
-import net.minecraft.core.world.World;
 import net.minecraft.server.MinecraftServer;
 
 import java.io.File;
@@ -39,7 +39,7 @@ public final class IDAssigner {
     }
 
     public static synchronized int getNextId(String kind) {
-        File dir = getDir();
+        File dir = getWorldDir();
         dir.mkdirs();
 
         // Load our ID file from disk
@@ -68,27 +68,10 @@ public final class IDAssigner {
         return next;
     }
 
-    public static File getDir() {
+    public static File getWorldDir() {
         if (Helper.isServerEnvironment()) {
-            return getServerDir();
+            return new File(MinecraftServer.getInstance().getMinecraftDir(), ((IWorldDirNameAccess)MinecraftServer.getInstance()).cc_bta$getWorldDirName() + "/computercraft");
         }
-        return getClientDir();
-    }
-
-    @Environment(EnvType.SERVER)
-    private static File getServerDir() {
-        return getWorldDir(MinecraftServer.getInstance().getDimensionWorld(Dimension.OVERWORLD.id));
-    }
-
-    @Environment(EnvType.CLIENT)
-    private static File getClientDir() {
-        return getWorldDir(Minecraft.getMinecraft().currentWorld);
-    }
-
-    public static File getWorldDir(World world) {
-        if (Helper.isServerEnvironment()) {
-            return new File(MinecraftServer.getInstance().getMinecraftDir(), "saves/" + world.getLevelData().getWorldName());
-        }
-        return new File(Minecraft.getMinecraft().getMinecraftDir(), "saves/" + world.getLevelData().getWorldName());
+        return new File(Minecraft.getMinecraft().getMinecraftDir(), "saves/" + ((IWorldDirNameAccess)Minecraft.getMinecraft()).cc_bta$getWorldDirName() + "/computercraft");
     }
 }

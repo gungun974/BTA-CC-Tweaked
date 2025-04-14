@@ -16,6 +16,7 @@
     "client": [
         "GLFMouseImplementationMixin",
         "GLFWKeyboardImplementationMixin",
+        "MinecraftMixin",
         "PlayerControllerSPMixin",
         "WorldClientMixin",
         "WorldClientMPMixin"

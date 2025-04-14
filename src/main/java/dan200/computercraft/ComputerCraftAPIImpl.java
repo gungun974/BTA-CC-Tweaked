@@ -80,7 +80,7 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI {
         try {
             return new FileMount(
                 new File(
-                    IDAssigner.getDir(), subPath
+                    IDAssigner.getWorldDir(), subPath
                 ), capacity
             );
         } catch (Exception e) {
