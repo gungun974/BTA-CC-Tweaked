@@ -46,6 +46,10 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
     // Logging
     public static final Logger log = LoggerFactory.getLogger(MOD_ID);
     // Configuration fields
+
+    public static int startBlockID = 1800;
+    public static int startItemID = 19000;
+
     public static int computerSpaceLimit = 1000 * 1000;
     public static int floppySpaceLimit = 125 * 1000;
     public static int maximumFilesOpen = 128;

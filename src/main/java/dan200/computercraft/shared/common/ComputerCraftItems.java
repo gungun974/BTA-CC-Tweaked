@@ -1,5 +1,6 @@
 package dan200.computercraft.shared.common;
 
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.items.ItemBlockComputer;
 import dan200.computercraft.shared.media.items.ItemDisk;
@@ -39,41 +40,49 @@ public class ComputerCraftItems {
     public static ItemBlockCable.Cable CABLE;
     public static ItemBlockCable.WiredModem WIRED_MODEM;
 
+    private static int currentGeneratedId;
+
+    private static int generateNexId () {
+        return currentGeneratedId++;
+    }
+
     public static void RegisterItems() {
+        currentGeneratedId = ComputerCraft.startItemID;
+
         POCKET_COMPUTER_NORMAL = new ItemBuilder(MOD_ID)
             .setKey("item.pocket_computer_normal")
-            .build((new ItemPocketComputer(NamespaceID.getPermanent(MOD_ID, "pocket_computer_normal"), 16540, ComputerFamily.NORMAL)));
+            .build((new ItemPocketComputer(NamespaceID.getPermanent(MOD_ID, "pocket_computer_normal"), generateNexId(), ComputerFamily.NORMAL)));
 
         POCKET_COMPUTER_ADVANCED = new ItemBuilder(MOD_ID)
             .setKey("item.pocket_computer_advanced")
-            .build((new ItemPocketComputer(NamespaceID.getPermanent(MOD_ID, "pocket_computer_advanced"), 16541, ComputerFamily.ADVANCED)));
+            .build((new ItemPocketComputer(NamespaceID.getPermanent(MOD_ID, "pocket_computer_advanced"), generateNexId(), ComputerFamily.ADVANCED)));
 
         DISK = new ItemBuilder(MOD_ID)
             .setKey("item.disk")
-            .build((new ItemDisk(NamespaceID.getPermanent(MOD_ID, "disk"), 16539)));
+            .build((new ItemDisk(NamespaceID.getPermanent(MOD_ID, "disk"), generateNexId())));
 
         TREASURE_DISK = new ItemBuilder(MOD_ID)
             .setKey("item.treasure_disk")
-            .build((new ItemTreasureDisk(NamespaceID.getPermanent(MOD_ID, "treasure_disk"), 16547)));
+            .build((new ItemTreasureDisk(NamespaceID.getPermanent(MOD_ID, "treasure_disk"), generateNexId())));
 
         PRINTED_PAGE = new ItemBuilder(MOD_ID)
             .setKey("item.printed_page")
-            .build((new ItemPrintout(NamespaceID.getPermanent(MOD_ID, "printed_page"), 16542, ItemPrintout.Type.PAGE)));
+            .build((new ItemPrintout(NamespaceID.getPermanent(MOD_ID, "printed_page"), generateNexId(), ItemPrintout.Type.PAGE)));
 
         PRINTED_PAGES = new ItemBuilder(MOD_ID)
             .setKey("item.printed_pages")
-            .build((new ItemPrintout(NamespaceID.getPermanent(MOD_ID, "printed_pages"), 16543, ItemPrintout.Type.PAGES)));
+            .build((new ItemPrintout(NamespaceID.getPermanent(MOD_ID, "printed_pages"), generateNexId(), ItemPrintout.Type.PAGES)));
 
         PRINTED_BOOK = new ItemBuilder(MOD_ID)
             .setKey("item.printed_book")
-            .build((new ItemPrintout(NamespaceID.getPermanent(MOD_ID, "printed_book"), 16544, ItemPrintout.Type.BOOK)));
+            .build((new ItemPrintout(NamespaceID.getPermanent(MOD_ID, "printed_book"), generateNexId(), ItemPrintout.Type.BOOK)));
 
         CABLE = new ItemBuilder(MOD_ID)
             .setKey("item.cable")
-            .build((new ItemBlockCable.Cable(NamespaceID.getPermanent(MOD_ID, "cable"), 16545)));
+            .build((new ItemBlockCable.Cable(NamespaceID.getPermanent(MOD_ID, "cable"), generateNexId())));
 
         WIRED_MODEM = new ItemBuilder(MOD_ID)
             .setKey("item.wired_modem")
-            .build((new ItemBlockCable.WiredModem(NamespaceID.getPermanent(MOD_ID, "wired_modem"), 16546)));
+            .build((new ItemBlockCable.WiredModem(NamespaceID.getPermanent(MOD_ID, "wired_modem"), generateNexId())));
     }
 }
