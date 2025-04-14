@@ -154,7 +154,7 @@ final class ComputerExecutor {
         apis.add(new FSAPI(environment));
         apis.add(new PeripheralAPI(environment));
         apis.add(new OSAPI(environment));
-        //if( ComputerCraft.httpEnabled ) apis.add( new HTTPAPI( environment ) );
+        if( ComputerCraft.httpEnabled ) apis.add( new HTTPAPI( environment ) );
 
         // Load in the externally registered APIs.
         for (ILuaAPIFactory factory : ApiFactories.getAll()) {

@@ -11,14 +11,11 @@ import dan200.computercraft.client.gui.FixedWidthFontRenderer;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.shared.util.DirectionUtil;
 import net.minecraft.client.render.LightmapHelper;
-import net.minecraft.client.render.model.ModelSign;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.client.render.tileentity.TileEntityRenderer;
 import net.minecraft.core.util.helper.Direction;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
-
-import java.nio.ByteBuffer;
 
 import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_HEIGHT;
 import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_WIDTH;
@@ -28,25 +25,18 @@ public class TileEntityMonitorRenderer extends TileEntityRenderer<TileMonitor> {
      * {@link TileMonitor#RENDER_MARGIN}, but a tiny bit of additional padding to ensure that there is no space between the monitor frame and contents.
      */
     private static final float MARGIN = (float) (TileMonitor.RENDER_MARGIN * 1.1);
-    private static ByteBuffer tboContents;
-
-    private final ModelSign modelSign = new ModelSign();
 
     public TileEntityMonitorRenderer() {
     }
 
     private static void renderTerminal(ClientMonitor monitor, float xMargin, float yMargin) {
-        Terminal terminal = monitor.getTerminal();
-
         MonitorRenderer renderType = MonitorRenderer.current();
         boolean redraw = monitor.pollTerminalChanged();
         if (redraw) {
             monitor.displayListCompiled = false;
         }
 
-        if (monitor.createBuffer(renderType, xMargin, yMargin)) {
-            redraw = true;
-        }
+        monitor.createBuffer(renderType, xMargin, yMargin);
 
         switch (renderType) {
             case DisplayList:
@@ -117,8 +107,6 @@ public class TileEntityMonitorRenderer extends TileEntityRenderer<TileMonitor> {
 
         double xSize = origin.getWidth() - 2.0 * (TileMonitor.RENDER_MARGIN + TileMonitor.RENDER_BORDER);
         double ySize = origin.getHeight() - 2.0 * (TileMonitor.RENDER_MARGIN + TileMonitor.RENDER_BORDER);
-
-        //ComputerCraft.log.info("Width: {}", origin.getWidth());
 
         // Draw the background blocker
         FixedWidthFontRenderer.drawBlocker(tessellator,
