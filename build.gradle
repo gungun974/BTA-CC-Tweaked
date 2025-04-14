@@ -18,8 +18,8 @@ switch (OperatingSystem.current()) {
         project.ext.lwjglNatives = "natives-macos"
 }
 
-group = "dan200.computercraft"
-archivesBaseName = "cc-restiched"
+group = project.mod_group
+archivesBaseName = project.mod_name
 version = project.mod_version
 
 loom {
@@ -141,7 +141,6 @@ dependencies {
     shade 'com.electronwill.night-config:toml:3.6.5'
 
     implementation 'commons-codec:commons-codec:1.16.0'
-
 }
 
 java {

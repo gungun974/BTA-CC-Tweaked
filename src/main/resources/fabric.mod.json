@@ -1,14 +1,14 @@
 {
     "schemaVersion": 1,
     "id": "computercraft",
-    "name": "CC:Restitched",
+    "name": "BTA-CC",
     "version": "${version}",
-    "description": "CC: Tweaked for Fabric.",
+    "description": "CC: Tweaked for BTA.",
     "license": "ComputerCraft Public License",
     "icon": "assets/computercraft/pack.png",
     "contact": {
-        "homepage": "https://github.com/Merith-TK/cc-restitched",
-        "issues": "https://github.com/Merith-TK/cc-restitched/issues"
+        "homepage": "https://github.com/gungun974/BTA-CC-Tweaked",
+        "issues": "https://github.com/gungun974/BTA-CC-Tweaked/issues"
     },
     "authors": [
         "Daniel Ratcliffe",
@@ -17,19 +17,14 @@
         "parly",
         "Merith.TK",
         "Jummit",
-		"Toad-Dev"
+		"Toad-Dev",
+        "Gungun974"
     ],
     "depends": {
-        "minecraft": "*",
-        "fabricloader": ">=0.15.5"
+        "minecraft": "~7.3",
+        "fabricloader": ">=0.15.5",
+        "halplibe": ">=5.2.0"
     },
-    "suggests": {
-        "modmenu": "*"
-    },
-	"conflicts": {
-		"canvas": "*",
-		"iris": "*"
-	},
     "environment": "*",
     "entrypoints": {
         "main": [
@@ -37,10 +32,6 @@
         ],
         "recipesReady": [
             "dan200.computercraft.shared.common.ComputerCraftRecipe"
-        ],
-        "client": [
-        ],
-        "modmenu": [
         ],
         "initModels": [
             "dan200.computercraft.shared.common.ComputerCraftModels"
