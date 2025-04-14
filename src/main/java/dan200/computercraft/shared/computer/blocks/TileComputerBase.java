@@ -28,11 +28,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.Items;
-import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.entity.player.PlayerServer;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -291,12 +288,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     @Environment(EnvType.SERVER)
-    private void updateBlockServer() {
-        Packet packet = this.getDescriptionPacket();
-        if (packet != null) {
-            MinecraftServer.getInstance().playerList.sendPacketToPlayersAroundPoint(x, y, z, 64, worldObj.dimension.id, packet);
-        }
-    }
+    protected void updateBlockServer() {}
 
     protected abstract void updateBlockState(ComputerState newState);
 

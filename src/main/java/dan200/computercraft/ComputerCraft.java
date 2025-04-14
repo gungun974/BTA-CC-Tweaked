@@ -117,6 +117,7 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
         NetworkHandler.registerNetworkMessage(ComputerDeletedClientMessage::new);
         NetworkHandler.registerNetworkMessage(ComputerTerminalClientMessage::new);
         NetworkHandler.registerNetworkMessage(MonitorClientMessage::new);
+        NetworkHandler.registerNetworkMessage(TurtleBrainClientMessage::new);
 
         ComputerCraftAPI.registerPeripheralProvider((world, pos, side) -> {
             TileEntity tile = world.getTileEntity(pos.x, pos.y, pos.z);

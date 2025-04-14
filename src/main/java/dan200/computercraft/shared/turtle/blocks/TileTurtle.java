@@ -20,10 +20,13 @@ import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.computer.inventory.ContainerComputer;
+import dan200.computercraft.shared.network.client.TurtleBrainClientMessage;
 import dan200.computercraft.shared.turtle.apis.TurtleAPI;
 import dan200.computercraft.shared.turtle.core.TurtleBrain;
 import dan200.computercraft.shared.turtle.inventory.MenuTurtle;
 import dan200.computercraft.shared.util.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemDye;
 import net.minecraft.core.item.ItemStack;
@@ -38,6 +41,7 @@ import net.minecraft.core.util.helper.DyeColor;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import turniplabs.halplibe.helper.network.NetworkHandler;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -236,6 +240,11 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
                     item != null ? item.copy() : null);
             }
         }
+    }
+
+    @Environment(EnvType.SERVER)
+    protected void updateBlockServer() {
+        NetworkHandler.sendToAllAround(x, y, z, 64, worldObj.dimension.id, new TurtleBrainClientMessage(getPos(), brain));
     }
 
     @Override
@@ -467,5 +476,9 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
         inventoryChanged = copy.inventoryChanged;
         brain = copy.brain;
         brain.setOwner(this);
+    }
+
+    public void updateBrainFromNBT(CompoundTag tag) {
+        brain.readFromNBT(tag);
     }
 }
