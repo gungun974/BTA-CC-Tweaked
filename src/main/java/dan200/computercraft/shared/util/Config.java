@@ -13,10 +13,10 @@ import com.electronwill.nightconfig.core.file.FileNotFoundAction;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Converter;
 import dan200.computercraft.ComputerCraft;
-//import dan200.computercraft.api.turtle.event.TurtleAction;
+import dan200.computercraft.api.turtle.event.TurtleAction;
 import dan200.computercraft.core.apis.http.options.Action;
 import dan200.computercraft.core.apis.http.options.AddressRuleConfig;
-//import dan200.computercraft.shared.peripheral.monitor.MonitorRenderer;
+import dan200.computercraft.shared.peripheral.monitor.MonitorRenderer;
 import net.fabricmc.loader.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 
@@ -30,18 +30,16 @@ public final class Config
 {
     private static final int MODEM_MAX_RANGE = 100000;
 
-    public static final String TRANSLATION_PREFIX = "gui.computercraft.config.";
-
     public static final CommentedConfigSpec serverSpec;
     public static final CommentedConfigSpec clientSpec;
 
     public static CommentedFileConfig serverConfig;
     public static CommentedFileConfig clientConfig;
 
-    private static final WorldSavePath serverDir = WorldSavePathAccess.createWorldSavePath( "serverconfig" );
     private static final String serverFileName = "computercraft-server.toml";
 
     private static Path serverPath = null;
+    private static final Path clientServerPath = FabricLoader.INSTANCE.getConfigDir().resolve( serverFileName );
     private static final Path clientPath = FabricLoader.INSTANCE.getConfigDir().resolve( "computercraft-client.toml" );
 
     private Config()
@@ -278,9 +276,9 @@ public final class Config
         }
     }
 
-    public static void serverStarting( MinecraftServer server )
+    public static void serverStarting()
     {
-        serverPath = server.getSavePath( serverDir ).resolve( serverFileName );
+        serverPath = MinecraftServer.getInstance().getMinecraftDir().toPath().resolve( serverFileName );
 
         try( CommentedFileConfig config = buildFileConfig( serverPath ) )
         {
@@ -292,14 +290,17 @@ public final class Config
         }
     }
 
-    public static void serverStopping( MinecraftServer server )
+    public static void clientStarted()
     {
-        serverConfig = null;
-        serverPath = null;
-    }
+        try( CommentedFileConfig config = buildFileConfig( clientServerPath ) )
+        {
+            config.load();
+            serverSpec.correct( config, Config::correctionListener );
+            config.save();
+            serverConfig = config;
+            sync();
+        }
 
-    public static void clientStarted( MinecraftClient client )
-    {
         try( CommentedFileConfig config = buildFileConfig( clientPath ) )
         {
             config.load();
@@ -395,7 +396,7 @@ public final class Config
 
     private static final Converter<String, String> converter = CaseFormat.LOWER_CAMEL.converterTo( CaseFormat.UPPER_UNDERSCORE );
 
-    private static TurtleAction getAction( String value )
+    private static TurtleAction getAction(String value )
     {
         try
         {

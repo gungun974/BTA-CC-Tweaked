@@ -12,6 +12,8 @@ import dan200.computercraft.api.turtle.event.TurtleAction;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.core.apis.http.options.Action;
 import dan200.computercraft.core.apis.http.options.AddressRule;
+import dan200.computercraft.core.filesystem.ResourceMount;
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.TurtlePermissions;
 import dan200.computercraft.shared.common.*;
 import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
@@ -23,6 +25,7 @@ import dan200.computercraft.shared.peripheral.generic.methods.InventoryMethods;
 import dan200.computercraft.shared.peripheral.monitor.MonitorRenderer;
 import dan200.computercraft.shared.turtle.FurnaceRefuelHandler;
 import dan200.computercraft.shared.turtle.SignInspectHandler;
+import dan200.computercraft.shared.util.Config;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.item.Item;
@@ -37,17 +40,11 @@ import java.util.concurrent.TimeUnit;
 
 public final class ComputerCraft implements ModInitializer, GameStartEntrypoint {
     public static final String MOD_ID = "computercraft";
-    public static final int turtleTermWidth = 39;
-    public static final int turtleTermHeight = 13;
     // Registries
     public static final ClientComputerRegistry clientComputerRegistry = new ClientComputerRegistry();
     public static final ServerComputerRegistry serverComputerRegistry = new ServerComputerRegistry();
     // Logging
     public static final Logger log = LoggerFactory.getLogger(MOD_ID);
-    public static List<AddressRule> httpRules = Collections.unmodifiableList(Arrays.asList(
-        AddressRule.parse("$private", null, Action.DENY.toPartial()),
-        AddressRule.parse("*", null, Action.ALLOW.toPartial())
-    ));
     // Configuration fields
     public static int computerSpaceLimit = 1000 * 1000;
     public static int floppySpaceLimit = 125 * 1000;
@@ -62,6 +59,10 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
     public static long maxMainComputerTime = TimeUnit.MILLISECONDS.toNanos(5);
     public static boolean httpEnabled = true;
     public static boolean httpWebsocketEnabled = true;
+    public static List<AddressRule> httpRules = Collections.unmodifiableList(Arrays.asList(
+        AddressRule.parse("$private", null, Action.DENY.toPartial()),
+        AddressRule.parse("*", null, Action.ALLOW.toPartial())
+    ));
     public static int httpMaxRequests = 16;
     public static int httpMaxWebsockets = 4;
     public static boolean enableCommandBlock = false;
@@ -70,7 +71,7 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
     public static int modemRangeDuringStorm = 64;
     public static int modemHighAltitudeRangeDuringStorm = 384;
     public static int maxNotesPerTick = 8;
-    public static MonitorRenderer monitorRenderer = MonitorRenderer.DisplayList;
+    public static MonitorRenderer monitorRenderer = MonitorRenderer.BEST;
     public static double monitorDistanceSq = 4096;
     public static long monitorBandwidth = 1_000_000;
     public static boolean turtlesNeedFuel = true;
@@ -81,6 +82,8 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
     public static EnumSet<TurtleAction> turtleDisabledActions = EnumSet.noneOf(TurtleAction.class);
     public static int computerTermWidth = 51;
     public static int computerTermHeight = 19;
+    public static final int turtleTermWidth = 39;
+    public static final int turtleTermHeight = 13;
     public static int pocketTermWidth = 26;
     public static int pocketTermHeight = 20;
     public static int monitorWidth = 8;
@@ -128,16 +131,38 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
             return null;
         });
 
-        TurtleEvent.EVENT_BUS.register(FurnaceRefuelHandler.INSTANCE);
-        TurtleEvent.EVENT_BUS.register(new TurtlePermissions());
-        TurtleEvent.EVENT_BUS.register(new SignInspectHandler());
+        // Config
+//        ServerLifecycleEvents.SERVER_STARTING.register( Config::serverStarting );
+//        ServerLifecycleEvents.SERVER_STOPPING.register( Config::serverStopping );
+//        ServerPlayConnectionEvents.JOIN.register( ( listener, sender, server ) ->
+//        {
+//            NetworkHandler.sendToPlayer( listener.player, new TerminalDimensionsClientMessage() );
+//        } );
+//
+//        ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register( ( blockEntity, world ) -> {
+//            if( blockEntity instanceof TileGeneric )
+//            {
+//                ((TileGeneric) blockEntity).onChunkUnloaded();
+//            }
+//        } );
+
+        TurtleEvent.EVENT_BUS.register( FurnaceRefuelHandler.INSTANCE );
+        TurtleEvent.EVENT_BUS.register( new TurtlePermissions() );
+        TurtleEvent.EVENT_BUS.register( new SignInspectHandler() );
 
         ComputerCraftAPI.registerGenericSource(new InventoryMethods());
+
+        //ResourceManagerHelper.get( ResourceType.SERVER_DATA ).registerReloadListener( ResourceMount.RELOAD_LISTENER );
     }
 
 
     @Override
     public void beforeGameStart() {
+        if (Helper.isServerEnvironment()) {
+            Config.serverStarting();
+        } else {
+            Config.clientStarted();
+        }
     }
 
     @Override
