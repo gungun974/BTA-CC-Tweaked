@@ -460,14 +460,10 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     // Privates
 
     public void transferStateFrom(TileTurtle copy) {
-        //super.transferStateFrom( copy );
         Collections.copy(inventory, copy.inventory);
         Collections.copy(previousInventory, copy.previousInventory);
         inventoryChanged = copy.inventoryChanged;
         brain = copy.brain;
         brain.setOwner(this);
-
-        // Mark the other turtle as having moved, and so its peripheral is dead.
-        copy.moveState = MoveState.MOVED;
     }
 }
