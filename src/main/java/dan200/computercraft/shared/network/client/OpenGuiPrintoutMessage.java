@@ -2,6 +2,9 @@ package dan200.computercraft.shared.network.client;
 
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.client.gui.GuiPrintout;
+import dan200.computercraft.fabric.Helper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.item.ItemStack;
 import turniplabs.halplibe.helper.network.NetworkMessage;
@@ -45,6 +48,13 @@ public class OpenGuiPrintoutMessage implements NetworkMessage {
 
     @Override
     public void handle(NetworkContext context) {
+        if (!Helper.isServerEnvironment()) {
+            clientHandler();
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void clientHandler() {
         if (itemID < 0) {
             return;
         }

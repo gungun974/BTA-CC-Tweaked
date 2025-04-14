@@ -6,8 +6,11 @@
 package dan200.computercraft.shared.network.client;
 
 import com.mojang.nbt.tags.CompoundTag;
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
@@ -44,6 +47,13 @@ public class ComputerDataClientMessage extends ComputerClientMessage {
 
     @Override
     public void handle(NetworkContext context) {
+        if (!Helper.isServerEnvironment()) {
+            clientHandler();
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void clientHandler() {
         getComputer().setState(state, userData);
     }
 }

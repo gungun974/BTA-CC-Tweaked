@@ -5,10 +5,10 @@
  */
 package dan200.computercraft.shared.peripheral.generic;
 
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.asm.NamedMethod;
 import dan200.computercraft.core.asm.PeripheralMethod;
+import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;

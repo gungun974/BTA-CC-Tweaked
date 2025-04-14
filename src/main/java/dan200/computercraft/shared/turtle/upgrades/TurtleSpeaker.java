@@ -5,7 +5,6 @@
  */
 package dan200.computercraft.shared.turtle.upgrades;
 
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.turtle.AbstractTurtleUpgrade;
 import dan200.computercraft.api.turtle.ITurtleAccess;
@@ -14,6 +13,7 @@ import dan200.computercraft.api.turtle.TurtleUpgradeType;
 import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.peripheral.speaker.SpeakerPeripheral;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
+import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.client.render.TextureManager;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.util.phys.Vec3;

@@ -5,8 +5,8 @@
  */
 package dan200.computercraft.api.turtle.event;
 
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.api.turtle.ITurtleAccess;
+import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.world.World;

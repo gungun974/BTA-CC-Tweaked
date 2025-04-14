@@ -5,8 +5,8 @@
  */
 package dan200.computercraft.shared.peripheral.modem.wired;
 
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
+import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.enums.EnumBlockSoundEffectType;

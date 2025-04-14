@@ -32,6 +32,7 @@ public class PeripheralAPI implements ILuaAPI, IAPIEnvironment.IPeripheralChange
     private final IAPIEnvironment environment;
     private final PeripheralWrapper[] peripherals = new PeripheralWrapper[6];
     private boolean running;
+
     public PeripheralAPI(IAPIEnvironment environment) {
         this.environment = environment;
         this.environment.setPeripheralChangeListener(this);

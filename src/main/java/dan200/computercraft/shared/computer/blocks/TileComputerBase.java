@@ -6,13 +6,10 @@
 package dan200.computercraft.shared.computer.blocks;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.Peripherals;
-import dan200.computercraft.shared.util.PortableTickScheduler;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
-import dan200.computercraft.client.gui.GuiComputer;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.IComputerPlayer;
@@ -22,7 +19,9 @@ import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.computer.inventory.ContainerComputer;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.DirectionUtil;
+import dan200.computercraft.shared.util.PortableTickScheduler;
 import dan200.computercraft.shared.util.RedstoneUtil;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
@@ -88,7 +87,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
                 createServerComputer().turnOn();
                 createServerComputer().sendTerminalState(player);
                 ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this));
-                createServerComputer().sendOpenComputerGui(player, GuiComputer.class);
+                createServerComputer().sendOpenComputerGui(player, "dan200.computercraft.client.gui.GuiComputer");
             }
 
             return true;

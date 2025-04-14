@@ -6,8 +6,6 @@
 package dan200.computercraft.shared.peripheral.modem.wired;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.shared.util.BlockPos;
-import dan200.computercraft.shared.util.PortableTickScheduler;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.network.wired.IWiredElement;
 import dan200.computercraft.api.network.wired.IWiredNode;
@@ -17,7 +15,9 @@ import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.peripheral.modem.ModemState;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.DirectionUtil;
+import dan200.computercraft.shared.util.PortableTickScheduler;
 import dan200.computercraft.shared.util.TickScheduler;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.entity.player.Player;

@@ -54,6 +54,7 @@ public final class NetworkUtils {
     private static TrustManagerFactory trustManager;
     private static SslContext sslContext;
     private static boolean triedSslContext = false;
+
     private NetworkUtils() {
     }
 

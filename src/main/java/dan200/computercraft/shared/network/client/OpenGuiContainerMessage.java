@@ -6,7 +6,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Screen;
-import net.minecraft.client.gui.container.ScreenContainerAbstract;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.Item;
@@ -23,11 +22,11 @@ import java.lang.reflect.InvocationTargetException;
 
 public class OpenGuiContainerMessage<A> implements NetworkMessage {
     protected A container;
-    protected Class<?> screen;
+    protected String screen;
     private int windowId = 0;
     private MenuAbstractSupplier<MenuAbstract, A> menu;
 
-    public OpenGuiContainerMessage(Player player, A container, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, A> menu) {
+    public OpenGuiContainerMessage(Player player, A container, String screen, MenuAbstractSupplier<MenuAbstract, A> menu) {
         this.container = container;
         this.screen = screen;
         this.menu = menu;
@@ -39,7 +38,7 @@ public class OpenGuiContainerMessage<A> implements NetworkMessage {
     public OpenGuiContainerMessage() {
     }
 
-    public static <C extends TileEntity> void SendToPlayer(Player player, C tileEntity, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, C> menu) {
+    public static <C extends TileEntity> void SendToPlayer(Player player, C tileEntity, String screen, MenuAbstractSupplier<MenuAbstract, C> menu) {
         OpenGuiContainerMessage<C> message = new OpenGuiContainerMessage<>(player, tileEntity, screen, menu);
         NetworkHandler.sendToPlayer(player, message);
         if (Helper.isServerEnvironment()) {
@@ -47,7 +46,7 @@ public class OpenGuiContainerMessage<A> implements NetworkMessage {
         }
     }
 
-    public static <C extends Item> void SendToPlayer(Player player, C item, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, C> menu) {
+    public static <C extends Item> void SendToPlayer(Player player, C item, String screen, MenuAbstractSupplier<MenuAbstract, C> menu) {
         OpenGuiContainerMessage<C> message = new OpenGuiContainerMessage<>(player, item, screen, menu);
         NetworkHandler.sendToPlayer(player, message);
         if (Helper.isServerEnvironment()) {
@@ -77,7 +76,7 @@ public class OpenGuiContainerMessage<A> implements NetworkMessage {
     public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
         buf.writeInt(windowId);
         buf.writeString(container.getClass().getName());
-        buf.writeString(screen.getName());
+        buf.writeString(screen);
     }
 
     @SuppressWarnings("unchecked")
@@ -93,18 +92,16 @@ public class OpenGuiContainerMessage<A> implements NetworkMessage {
             throw new RuntimeException(e);
         }
 
-        try {
-            screen = Class.forName(buf.readString());
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        screen = buf.readString();
     }
 
     protected Screen getScreenInstance(ContainerInventory inventory) {
         try {
-            return (Screen) screen.getConstructor(ContainerInventory.class, container.getClass()).newInstance(inventory, container);
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-                 InvocationTargetException e) {
+            Class<?> screenClass = Class.forName(this.screen);
+
+            return (Screen) screenClass.getConstructor(ContainerInventory.class, container.getClass()).newInstance(inventory, container);
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException |
+                 ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

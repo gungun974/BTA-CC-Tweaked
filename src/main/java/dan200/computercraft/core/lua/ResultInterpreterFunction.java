@@ -24,6 +24,7 @@ class ResultInterpreterFunction extends ResumableVarArgFunction<ResultInterprete
     private final Object instance;
     private final ILuaContext context;
     private final String name;
+
     ResultInterpreterFunction(CobaltLuaMachine machine, LuaMethod method, Object instance, ILuaContext context, String name) {
         this.machine = machine;
         this.method = method;

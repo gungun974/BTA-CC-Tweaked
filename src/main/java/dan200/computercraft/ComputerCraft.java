@@ -12,7 +12,6 @@ import dan200.computercraft.api.turtle.event.TurtleAction;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.core.apis.http.options.Action;
 import dan200.computercraft.core.apis.http.options.AddressRule;
-import dan200.computercraft.core.filesystem.ResourceMount;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.TurtlePermissions;
 import dan200.computercraft.shared.common.*;
@@ -35,7 +34,10 @@ import org.slf4j.LoggerFactory;
 import turniplabs.halplibe.helper.network.NetworkHandler;
 import turniplabs.halplibe.util.GameStartEntrypoint;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public final class ComputerCraft implements ModInitializer, GameStartEntrypoint {
@@ -150,9 +152,9 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
 //            }
 //        } );
 
-        TurtleEvent.EVENT_BUS.register( FurnaceRefuelHandler.INSTANCE );
-        TurtleEvent.EVENT_BUS.register( new TurtlePermissions() );
-        TurtleEvent.EVENT_BUS.register( new SignInspectHandler() );
+        TurtleEvent.EVENT_BUS.register(FurnaceRefuelHandler.INSTANCE);
+        TurtleEvent.EVENT_BUS.register(new TurtlePermissions());
+        TurtleEvent.EVENT_BUS.register(new SignInspectHandler());
 
         ComputerCraftAPI.registerGenericSource(new InventoryMethods());
 

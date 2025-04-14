@@ -24,6 +24,7 @@ public class ItemModelPocketComputer extends ItemModelStandard {
     public static final IconCoordinate POCKET_COMPUTER_BLINK = TextureRegistry.getTexture("computercraft:item/pocket_computer_blink");
     public static final IconCoordinate POCKET_COMPUTER_LIGHT = TextureRegistry.getTexture("computercraft:item/pocket_computer_light");
     public static final IconCoordinate POCKET_COMPUTER_COLOUR = TextureRegistry.getTexture("computercraft:item/pocket_computer_colour");
+
     public ItemModelPocketComputer(Item item, String namespace) {
         super(item, namespace);
     }

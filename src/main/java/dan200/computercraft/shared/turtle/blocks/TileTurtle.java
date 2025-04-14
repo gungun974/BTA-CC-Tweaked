@@ -7,7 +7,6 @@ package dan200.computercraft.shared.turtle.blocks;
 
 import com.mojang.nbt.tags.CompoundTag;
 import com.mojang.nbt.tags.ListTag;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
@@ -24,11 +23,7 @@ import dan200.computercraft.shared.computer.inventory.ContainerComputer;
 import dan200.computercraft.shared.turtle.apis.TurtleAPI;
 import dan200.computercraft.shared.turtle.core.TurtleBrain;
 import dan200.computercraft.shared.turtle.inventory.MenuTurtle;
-import dan200.computercraft.shared.turtle.inventory.ScreenTurtle;
-import dan200.computercraft.shared.util.DirectionUtil;
-import dan200.computercraft.shared.util.InventoryUtil;
-import dan200.computercraft.shared.util.RedstoneUtil;
-import dan200.computercraft.shared.util.WorldUtil;
+import dan200.computercraft.shared.util.*;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemDye;
 import net.minecraft.core.item.ItemStack;
@@ -210,7 +205,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
             createServerComputer().turnOn();
             createServerComputer().sendTerminalState(player);
             ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this));
-            createServerComputer().sendOpenContainerComputerGui(player, this, ScreenTurtle.class, MenuTurtle::new);
+            createServerComputer().sendOpenContainerComputerGui(player, this, "dan200.computercraft.shared.turtle.inventory.ScreenTurtle", MenuTurtle::new);
         }
         return true;
     }

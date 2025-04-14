@@ -45,6 +45,7 @@ public class GuiComputer<T extends ContainerComputerBase> extends Screen {
     UUID glfwCharCallbackId;
     UUID glfwScrollCallbackId;
     private int mouseButton = -1;
+
     public GuiComputer(T container, int termWidth, int termHeight) {
         super();
         this.family = container.getFamily();

@@ -14,7 +14,6 @@ import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.util.Colour;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.lang.I18n;
 import net.minecraft.core.util.collection.NamespaceID;
 import net.minecraft.core.world.World;
 

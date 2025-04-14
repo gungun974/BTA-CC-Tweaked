@@ -5,7 +5,6 @@
  */
 package dan200.computercraft.shared.computer.core;
 
-public enum ComputerState
-{
+public enum ComputerState {
     OFF, ON, BLINKING;
 }

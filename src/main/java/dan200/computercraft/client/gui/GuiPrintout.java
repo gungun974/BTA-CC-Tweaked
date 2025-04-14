@@ -7,13 +7,11 @@ package dan200.computercraft.client.gui;
 
 import dan200.computercraft.client.render.PrintoutRenderer;
 import dan200.computercraft.core.terminal.TextBuffer;
-import dan200.computercraft.fabric.GLFWKeyboardManager;
 import dan200.computercraft.fabric.GLFWMouseManager;
 import dan200.computercraft.shared.media.items.ItemPrintout;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.core.item.ItemStack;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.util.UUID;
@@ -62,21 +60,17 @@ public class GuiPrintout extends Screen {
     }
 
     public void glfwScrollCallback(long window, double xoffset, double yoffset) {
-        if( yoffset < 0 )
-        {
+        if (yoffset < 0) {
             // Scroll up goes to the next page
-            if( page < pages - 1 )
-            {
+            if (page < pages - 1) {
                 page++;
             }
             return;
         }
 
-        if( yoffset > 0 )
-        {
+        if (yoffset > 0) {
             // Scroll down goes to the previous page
-            if( page > 0 )
-            {
+            if (page > 0) {
                 page--;
             }
             return;

@@ -5,9 +5,9 @@
  */
 package dan200.computercraft.shared.peripheral.monitor;
 
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.client.gui.FixedWidthFontRenderer;
 import dan200.computercraft.shared.common.ClientTerminal;
+import dan200.computercraft.shared.util.BlockPos;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.GLAllocation;

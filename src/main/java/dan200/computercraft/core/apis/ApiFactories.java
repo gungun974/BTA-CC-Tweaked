@@ -16,6 +16,7 @@ import java.util.Objects;
 public final class ApiFactories {
     private static final Collection<ILuaAPIFactory> factories = new LinkedHashSet<>();
     private static final Collection<ILuaAPIFactory> factoriesView = Collections.unmodifiableCollection(factories);
+
     private ApiFactories() {
     }
 

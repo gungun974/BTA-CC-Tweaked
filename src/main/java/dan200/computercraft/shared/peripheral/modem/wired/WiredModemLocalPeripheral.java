@@ -6,10 +6,10 @@
 package dan200.computercraft.shared.peripheral.modem.wired;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.Peripherals;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.IDAssigner;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;

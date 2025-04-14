@@ -25,6 +25,7 @@ import net.minecraft.client.render.block.model.BlockModelDispatcher;
 import net.minecraft.client.render.block.model.BlockModelHorizontalRotation;
 import net.minecraft.client.render.item.model.ItemModelDispatcher;
 import net.minecraft.client.render.item.model.ItemModelStandard;
+import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.util.collection.NamespaceID;
 import net.minecraft.core.util.helper.Side;
@@ -37,6 +38,14 @@ public class ComputerCraftModels implements ModelEntrypoint {
 
     @Override
     public void initBlockModels(BlockModelDispatcher dispatcher) {
+
+        final IconCoordinate a = TextureRegistry.getTexture("computercraft:block/computer_normal_front");
+
+        try {
+            TextureRegistry.initializeAllFiles("computercraft", a.parentAtlas, false);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         ModelHelper.setBlockModel(ComputerCraftBlocks.COMPUTER_NORMAL, () -> new BlockModelComputer<>(ComputerCraftBlocks.COMPUTER_NORMAL)
             .setTex(0, "computercraft:block/computer_normal_side", Side.SOUTH, Side.EAST, Side.WEST)

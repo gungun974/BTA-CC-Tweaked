@@ -6,7 +6,6 @@
 package dan200.computercraft.shared.peripheral.diskdrive;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
 import dan200.computercraft.api.media.IMedia;
@@ -17,6 +16,7 @@ import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.MediaProviders;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.network.client.OpenGuiContainerMessage;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.RecordUtil;
 import net.minecraft.client.sound.SoundEntry;
@@ -51,9 +51,8 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
 
     @Override
     public void invalidate() {
-        ejectContents( true );
-        if( recordPlaying )
-        {
+        ejectContents(true);
+        if (recordPlaying) {
             stopRecord();
         }
         super.invalidate();
@@ -74,7 +73,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
         } else {
             // Open the GUI
             if (!Helper.isClientWorld()) {
-                OpenGuiContainerMessage.SendToPlayer(player, this, ScreenDiskDrive.class, MenuDiskDrive::new);
+                OpenGuiContainerMessage.SendToPlayer(player, this, "dan200.computercraft.shared.peripheral.diskdrive.ScreenDiskDrive", MenuDiskDrive::new);
             }
             return true;
         }

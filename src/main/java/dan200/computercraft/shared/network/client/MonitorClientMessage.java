@@ -5,8 +5,11 @@
  */
 package dan200.computercraft.shared.network.client;
 
-import dan200.computercraft.shared.util.BlockPos;
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.peripheral.monitor.TileMonitor;
+import dan200.computercraft.shared.util.BlockPos;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -47,6 +50,13 @@ public class MonitorClientMessage implements NetworkMessage {
 
     @Override
     public void handle(NetworkContext context) {
+        if (!Helper.isServerEnvironment()) {
+            clientHandler(context);
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void clientHandler(NetworkContext context) {
         Player player = context.player;
         if (player == null || player.world == null) {
             return;

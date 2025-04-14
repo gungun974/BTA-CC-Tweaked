@@ -5,9 +5,9 @@
  */
 package dan200.computercraft.shared.peripheral.modem.wired;
 
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.shared.common.ComputerCraftItems;
+import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.block.entity.TileEntity;

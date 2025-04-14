@@ -6,10 +6,10 @@
 package dan200.computercraft.api.turtle;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.api.lua.ILuaCallback;
 import dan200.computercraft.api.lua.MethodResult;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.ItemStorage;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Direction;

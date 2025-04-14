@@ -30,6 +30,7 @@ public class FileMount implements IWritableMount {
     private final File rootPath;
     private final long capacity;
     private long usedSpace;
+
     public FileMount(File rootPath, long capacity) {
         this.rootPath = rootPath;
         this.capacity = capacity + MINIMUM_FILE_SIZE;

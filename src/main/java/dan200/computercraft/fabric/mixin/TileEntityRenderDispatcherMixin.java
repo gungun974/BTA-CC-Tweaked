@@ -58,7 +58,7 @@ public abstract class TileEntityRenderDispatcherMixin {
             }
 
             GL11.glColor3f(brightness, brightness, brightness);
-            this.renderTileEntity(tessellator, tileEntity, (double)tileEntity.x - renderPosX, (double)tileEntity.y - renderPosY, (double)tileEntity.z - renderPosZ, partialTick);
+            this.renderTileEntity(tessellator, tileEntity, (double) tileEntity.x - renderPosX, (double) tileEntity.y - renderPosY, (double) tileEntity.z - renderPosZ, partialTick);
         }
     }
 }

@@ -4,7 +4,6 @@ import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
 import net.minecraft.client.gui.Screen;
-import net.minecraft.client.gui.container.ScreenContainerAbstract;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.Item;
@@ -23,7 +22,7 @@ public class OpenContainerComputerGuiClientMessage<A> extends OpenGuiContainerMe
     private int height;
 
     public OpenContainerComputerGuiClientMessage(
-        Player player, A container, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, A> menu,
+        Player player, A container, String screen, MenuAbstractSupplier<MenuAbstract, A> menu,
         int instanceId,
         ComputerFamily family,
         int width,
@@ -39,7 +38,7 @@ public class OpenContainerComputerGuiClientMessage<A> extends OpenGuiContainerMe
     public OpenContainerComputerGuiClientMessage() {
     }
 
-    public static <C extends TileEntity> void SendToPlayer(Player player, C tileEntity, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, C> menu,
+    public static <C extends TileEntity> void SendToPlayer(Player player, C tileEntity, String screen, MenuAbstractSupplier<MenuAbstract, C> menu,
                                                            int instanceId,
                                                            ComputerFamily family,
                                                            int width,
@@ -57,7 +56,7 @@ public class OpenContainerComputerGuiClientMessage<A> extends OpenGuiContainerMe
         }
     }
 
-    public static <C extends Item> void SendToPlayer(Player player, C item, Class<? extends ScreenContainerAbstract> screen, MenuAbstractSupplier<MenuAbstract, C> menu,
+    public static <C extends Item> void SendToPlayer(Player player, C item, String screen, MenuAbstractSupplier<MenuAbstract, C> menu,
                                                      int instanceId,
                                                      ComputerFamily family,
                                                      int width,
@@ -97,15 +96,17 @@ public class OpenContainerComputerGuiClientMessage<A> extends OpenGuiContainerMe
         ContainerComputerBase container = new ContainerComputerBase(instanceId, family);
 
         try {
-            return (Screen) screen.getConstructor(ContainerComputerBase.class, int.class, int.class, ContainerInventory.class, this.container.getClass()).newInstance(
+            Class<?> screenClass = Class.forName(this.screen);
+
+            return (Screen) screenClass.getConstructor(ContainerComputerBase.class, int.class, int.class, ContainerInventory.class, this.container.getClass()).newInstance(
                 container,
                 width,
                 height,
                 inventory,
                 this.container
             );
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-                 InvocationTargetException e) {
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException |
+                 ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

@@ -42,7 +42,7 @@ public class ComputerCraftItems {
 
     private static int currentGeneratedId;
 
-    private static int generateNexId () {
+    private static int generateNexId() {
         return currentGeneratedId++;
     }
 

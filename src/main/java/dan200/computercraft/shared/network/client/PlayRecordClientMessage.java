@@ -5,7 +5,10 @@
  */
 package dan200.computercraft.shared.network.client;
 
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.util.BlockPos;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.sound.SoundEntry;
 import net.minecraft.client.sound.SoundRepository;
@@ -71,6 +74,13 @@ public class PlayRecordClientMessage implements NetworkMessage {
 
     @Override
     public void handle(NetworkContext context) {
+        if (!Helper.isServerEnvironment()) {
+            clientHandler();
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void clientHandler() {
         Minecraft mc = Minecraft.getMinecraft();
 
         mc.sndManager.playMusic(soundEntry, pos.x, pos.y, pos.z, 1.0F, 1.0F);

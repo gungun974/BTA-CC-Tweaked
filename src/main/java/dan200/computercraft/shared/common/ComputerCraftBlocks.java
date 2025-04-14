@@ -22,8 +22,6 @@ import dan200.computercraft.shared.peripheral.speaker.TileSpeaker;
 import dan200.computercraft.shared.turtle.blocks.BlockLogicTurtle;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import dan200.computercraft.shared.turtle.items.ItemBlockTurtle;
-import net.minecraft.client.render.texture.stitcher.IconCoordinate;
-import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.block.tag.BlockTags;
@@ -59,20 +57,12 @@ public class ComputerCraftBlocks {
 
     private static int currentGeneratedId;
 
-    private static int generateNexId () {
+    private static int generateNexId() {
         return currentGeneratedId++;
     }
 
     public static void RegisterBlocks() {
-       currentGeneratedId = ComputerCraft.startBlockID;
-
-        final IconCoordinate a = TextureRegistry.getTexture("computercraft:block/computer_normal_front");
-
-        try {
-            TextureRegistry.initializeAllFiles("computercraft", a.parentAtlas, false);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        currentGeneratedId = ComputerCraft.startBlockID;
 
         EntityHelper.createTileEntity(TileEntityComputer.class, NamespaceID.getPermanent(MOD_ID, "computer"));
 

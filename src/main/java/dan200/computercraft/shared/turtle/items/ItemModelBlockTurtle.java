@@ -2,9 +2,9 @@ package dan200.computercraft.shared.turtle.items;
 
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
+import dan200.computercraft.client.blocks.BlockAORenderer;
 import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.common.IColouredItem;
-import dan200.computercraft.client.blocks.BlockAORenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Font;
 import net.minecraft.client.render.ItemRenderer;

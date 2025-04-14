@@ -8,7 +8,6 @@ import dan200.computercraft.shared.computer.core.ClientComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
-import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.container.ScreenContainerAbstract;
 import net.minecraft.core.player.inventory.container.ContainerInventory;
 import org.lwjgl.input.Keyboard;
@@ -28,6 +27,7 @@ public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContain
     protected WidgetTerminal terminal;
     UUID glfwKeyCallbackId;
     UUID glfwCharCallbackId;
+
     public ScreenTurtle(T container, int termWidth, int termHeight, ContainerInventory inventoryplayer, TileTurtle tileentitydispenser) {
         super(new MenuTurtle(inventoryplayer, tileentitydispenser));
         this.family = container.getFamily();

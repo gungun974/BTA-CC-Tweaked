@@ -5,9 +5,9 @@
  */
 package dan200.computercraft.shared.common;
 
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
 import dan200.computercraft.fabric.Helper;
+import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;

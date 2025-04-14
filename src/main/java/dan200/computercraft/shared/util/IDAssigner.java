@@ -11,10 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.IWorldDirNameAccess;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.world.Dimension;
 import net.minecraft.server.MinecraftServer;
 
 import java.io.File;
@@ -70,8 +67,8 @@ public final class IDAssigner {
 
     public static File getWorldDir() {
         if (Helper.isServerEnvironment()) {
-            return new File(MinecraftServer.getInstance().getMinecraftDir(), ((IWorldDirNameAccess)MinecraftServer.getInstance()).cc_bta$getWorldDirName() + "/computercraft");
+            return new File(MinecraftServer.getInstance().getMinecraftDir(), ((IWorldDirNameAccess) MinecraftServer.getInstance()).cc_bta$getWorldDirName() + "/computercraft");
         }
-        return new File(Minecraft.getMinecraft().getMinecraftDir(), "saves/" + ((IWorldDirNameAccess)Minecraft.getMinecraft()).cc_bta$getWorldDirName() + "/computercraft");
+        return new File(Minecraft.getMinecraft().getMinecraftDir(), "saves/" + ((IWorldDirNameAccess) Minecraft.getMinecraft()).cc_bta$getWorldDirName() + "/computercraft");
     }
 }

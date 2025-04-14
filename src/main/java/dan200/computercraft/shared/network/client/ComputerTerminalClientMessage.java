@@ -5,6 +5,9 @@
  */
 package dan200.computercraft.shared.network.client;
 
+import dan200.computercraft.fabric.Helper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import turniplabs.halplibe.helper.network.UniversalPacket;
 
 import javax.annotation.Nonnull;
@@ -34,6 +37,13 @@ public class ComputerTerminalClientMessage extends ComputerClientMessage {
 
     @Override
     public void handle(NetworkContext context) {
+        if (!Helper.isServerEnvironment()) {
+            clientHandler();
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void clientHandler() {
         getComputer().read(state);
     }
 }

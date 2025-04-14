@@ -6,7 +6,6 @@
 package dan200.computercraft.shared.computer.core;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.ComputerCraftAPIImpl;
 import dan200.computercraft.api.ComputerCraftAPI;
@@ -23,9 +22,10 @@ import dan200.computercraft.fabric.IComputerPlayer;
 import dan200.computercraft.shared.common.ServerTerminal;
 import dan200.computercraft.shared.network.client.*;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
+import dan200.computercraft.shared.util.BlockPos;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Screen;
-import net.minecraft.client.gui.container.ScreenContainerAbstract;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.player.inventory.menu.MenuAbstract;
@@ -156,11 +156,16 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
                     }
                 }
             } else {
-                final Player player = Minecraft.getMinecraft().thePlayer;
-                if (isInteracting(player)) {
-                    NetworkHandler.sendToPlayer(player, createTerminalPacket());
-                }
+                sendSinglePlayerBroadcastState();
             }
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void sendSinglePlayerBroadcastState() {
+        final Player player = Minecraft.getMinecraft().thePlayer;
+        if (isInteracting(player)) {
+            NetworkHandler.sendToPlayer(player, createTerminalPacket());
         }
     }
 
@@ -180,7 +185,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         return new ComputerTerminalClientMessage(getInstanceID(), write());
     }
 
-    protected NetworkMessage createOpenComputerGuiPacket(Class<? extends Screen> screen) {
+    protected NetworkMessage createOpenComputerGuiPacket(String screen) {
         final TerminalState state = write();
         return new OpenComputerGuiClientMessage(screen, getInstanceID(), getFamily(), state.width, state.height);
     }
@@ -253,11 +258,11 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         NetworkHandler.sendToPlayer(player, createTerminalPacket());
     }
 
-    public void sendOpenComputerGui(Player player, Class<? extends Screen> screen) {
+    public void sendOpenComputerGui(Player player, String screen) {
         NetworkHandler.sendToPlayer(player, createOpenComputerGuiPacket(screen));
     }
 
-    public <C extends TileEntity> void sendOpenContainerComputerGui(Player player, C tileEntity, Class<? extends ScreenContainerAbstract> screen, OpenGuiContainerMessage.MenuAbstractSupplier<MenuAbstract, C> menu) {
+    public <C extends TileEntity> void sendOpenContainerComputerGui(Player player, C tileEntity, String screen, OpenGuiContainerMessage.MenuAbstractSupplier<MenuAbstract, C> menu) {
         final TerminalState state = write();
         OpenContainerComputerGuiClientMessage.SendToPlayer(player, tileEntity, screen, menu,
             getInstanceID(), getFamily(), state.width, state.height

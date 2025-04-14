@@ -21,6 +21,7 @@ public final class TurtleUpgrades {
     private static final IdentityHashMap<ITurtleUpgrade, Wrapper> wrappers = new IdentityHashMap<>();
     private static ITurtleUpgrade[] vanilla;
     private static boolean needsRebuild;
+
     private TurtleUpgrades() {
     }
 
