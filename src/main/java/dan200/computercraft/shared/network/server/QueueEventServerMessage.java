@@ -37,16 +37,22 @@ public class QueueEventServerMessage extends ComputerServerMessage {
     public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
         super.encodeToUniversalPacket(buf);
         buf.writeString(event);
-        buf.writeCompoundTag(args == null ? null : NBTUtil.encodeObjects(args));
+        buf.writeBoolean(args != null);
+        if (args != null) {
+            buf.writeCompoundTag(NBTUtil.encodeObjects(args));
+        }
     }
 
     @Override
     public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
         super.decodeFromUniversalPacket(buf);
         event = buf.readString();
+        boolean hasArgs = buf.readBoolean();
 
-        CompoundTag args = buf.readCompoundTag();
-        this.args = args == null ? null : NBTUtil.decodeObjects(args);
+        if (hasArgs) {
+            CompoundTag args = buf.readCompoundTag();
+            this.args = NBTUtil.decodeObjects(args);
+        }
     }
 
     @Override
