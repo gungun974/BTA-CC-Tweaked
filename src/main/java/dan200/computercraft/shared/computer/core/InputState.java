@@ -5,16 +5,16 @@
  */
 package dan200.computercraft.shared.computer.core;
 
-import it.unimi.dsi.fastutil.ints.IntIterator;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * An {@link InputHandler} which keeps track of the current key and mouse state, and releases them when the container is closed.
  */
 public class InputState implements InputHandler {
     private final IContainerComputer owner;
-    private final IntSet keysDown = new IntOpenHashSet(4);
+    private final Set<Integer> keysDown = new HashSet<>(4);
 
     private int lastMouseX;
     private int lastMouseY;
@@ -100,9 +100,9 @@ public class InputState implements InputHandler {
     public void close() {
         IComputer computer = owner.getComputer();
         if (computer != null) {
-            IntIterator keys = keysDown.iterator();
+            Iterator<Integer> keys = keysDown.iterator();
             while (keys.hasNext()) {
-                computer.keyUp(keys.nextInt());
+                computer.keyUp(keys.next());
             }
 
             if (lastMouseDown != -1) {

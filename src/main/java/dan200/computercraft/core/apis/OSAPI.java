@@ -10,8 +10,6 @@ import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.shared.util.StringUtil;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import javax.annotation.Nonnull;
 import java.time.Instant;
@@ -31,7 +29,7 @@ import static dan200.computercraft.api.lua.LuaValues.checkFinite;
 public class OSAPI implements ILuaAPI {
     private final IAPIEnvironment apiEnvironment;
 
-    private final Int2ObjectMap<Alarm> alarms = new Int2ObjectOpenHashMap<>();
+    private final HashMap<Integer, Alarm> alarms = new HashMap<>();
     private int clock;
     private double time;
     private int day;
@@ -93,13 +91,13 @@ public class OSAPI implements ILuaAPI {
 
             if (time > previousTime || day > previousDay) {
                 double now = this.day * 24.0 + this.time;
-                Iterator<Int2ObjectMap.Entry<Alarm>> it = alarms.int2ObjectEntrySet().iterator();
+                Iterator<HashMap.Entry<Integer, Alarm>> it = alarms.entrySet().iterator();
                 while (it.hasNext()) {
-                    Int2ObjectMap.Entry<Alarm> entry = it.next();
+                    HashMap.Entry<Integer, Alarm> entry = it.next();
                     Alarm alarm = entry.getValue();
                     double t = alarm.day * 24.0 + alarm.time;
                     if (now >= t) {
-                        apiEnvironment.queueEvent("alarm", entry.getIntKey());
+                        apiEnvironment.queueEvent("alarm", entry.getKey());
                         it.remove();
                     }
                 }

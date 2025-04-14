@@ -6,15 +6,15 @@
 package dan200.computercraft.shared.peripheral.modem;
 
 import dan200.computercraft.api.lua.LuaException;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ModemState {
     private final Runnable onChanged;
     private final AtomicBoolean changed = new AtomicBoolean(true);
-    private final IntSet channels = new IntOpenHashSet();
+    private final Set<Integer> channels = new HashSet<>();
     private boolean open = false;
 
     public ModemState() {

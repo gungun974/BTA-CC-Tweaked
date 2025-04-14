@@ -6,15 +6,15 @@
 package dan200.computercraft.core.tracking;
 
 import dan200.computercraft.core.computer.Computer;
-import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 
 public class ComputerTracker {
     private final WeakReference<Computer> computer;
     private final int computerId;
-    private final Object2LongOpenHashMap<TrackingField> fields;
+    private final HashMap<TrackingField, Long> fields;
     private long tasks;
     private long totalTime;
     private long maxTime;
@@ -24,7 +24,7 @@ public class ComputerTracker {
     public ComputerTracker(Computer computer) {
         this.computer = new WeakReference<>(computer);
         computerId = computer.getID();
-        fields = new Object2LongOpenHashMap<>();
+        fields = new HashMap<>();
     }
 
     ComputerTracker(ComputerTracker timings) {
@@ -38,7 +38,7 @@ public class ComputerTracker {
         serverCount = timings.serverCount;
         serverTime = timings.serverTime;
 
-        fields = new Object2LongOpenHashMap<>(timings.fields);
+        fields = new HashMap<>(timings.fields);
     }
 
     @Nullable
@@ -79,7 +79,7 @@ public class ComputerTracker {
 
     void addValue(TrackingField field, long change) {
         synchronized (fields) {
-            fields.addTo(field, change);
+            fields.put(field, change);
         }
     }
 
@@ -93,7 +93,7 @@ public class ComputerTracker {
         if (field == TrackingField.SERVER_TIME) return serverTime;
 
         synchronized (fields) {
-            return fields.getLong(field);
+            return fields.get(field);
         }
     }
 
