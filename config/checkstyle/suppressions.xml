@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
+    <!-- All the config options and method fields. -->
+    <suppress checks="StaticVariableName" files=".*[\\/]ComputerCraft.java" />
+    <suppress checks="StaticVariableName" files=".*[\\/]ComputerCraftAPI.java" />
+
+    <!-- Some shadowed fields in mixins can't be renamed -->
+    <suppress checks="StaticVariableName" files=".*[\\/]mixin[\\/].*" />
+
+    <!-- The commands API is documented in Lua. -->
+    <suppress checks="SummaryJavadocCheck" files=".*[\\/]CommandAPI.java" />
+</suppressions>

@@ -1,0 +1,158 @@
+plugins {
+    id 'fabric-loom' version '0.7-SNAPSHOT'
+    id 'maven-publish'
+    id "checkstyle"
+    id "com.github.hierynomus.license" version "0.15.0"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+        vendor = JvmVendorSpec.ADOPTOPENJDK
+    }
+}
+
+version = mod_version
+
+group = "dan200.computercraft"
+archivesBaseName = "cc-restiched"
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven { url "https://maven.shedaniel.me/" }
+    maven {
+        name "SquidDev"
+        url "https://squiddev.cc/maven"
+    }
+}
+
+configurations {
+    implementation.extendsFrom shade
+}
+
+dependencies {
+    checkstyle "com.puppycrawl.tools:checkstyle:8.25"
+
+    minecraft "com.mojang:minecraft:${mc_version}"
+    mappings "net.fabricmc:yarn:${mc_version}+build.${mappings_version}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    modImplementation "io.github.prospector:modmenu:${modmenu_version}"
+    modImplementation "me.shedaniel.cloth.api:cloth-utils-v1:${cloth_api_version}"
+
+    implementation 'com.electronwill.night-config:toml:3.6.3'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+    shade 'org.squiddev:Cobalt:0.5.2-SNAPSHOT'
+
+    include "me.shedaniel.cloth.api:cloth-utils-v1:${cloth_api_version}"
+    include 'com.electronwill.night-config:core:3.6.3'
+    include 'com.electronwill.night-config:toml:3.6.3'
+    include "me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}"
+
+    modRuntime "me.shedaniel:RoughlyEnoughItems-api:5.12.248"
+    modRuntime "me.shedaniel:RoughlyEnoughItems:5.12.248"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "fabric.mod.json"
+        expand "version": project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "fabric.mod.json"
+    }
+}
+
+// ensure that the encoding is set to UTF-8, no matter what the system default is
+// this fixes some edge cases with special characters not displaying correctly
+// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+// if it is present.
+// If you remove this task, sources will not be generated.
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
+jar {
+    from "LICENSE"
+
+    from configurations.shade.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
+
+import com.hierynomus.gradle.license.tasks.LicenseCheck
+import com.hierynomus.gradle.license.tasks.LicenseFormat
+
+license {
+    mapping("java", "SLASHSTAR_STYLE")
+    strictCheck true
+
+    ext.year = Calendar.getInstance().get(Calendar.YEAR)
+}
+
+[licenseMain, licenseFormatMain].forEach {
+    it.configure {
+        include("**/*.java")
+        exclude("dan200/computercraft/api/**")
+        header file('config/license/main.txt')
+    }
+}
+
+[licenseTest, licenseFormatTest].forEach {
+    it.configure {
+        include("**/*.java")
+        header file('config/license/main.txt')
+    }
+}
+
+gradle.projectsEvaluated {
+    tasks.withType(LicenseFormat) {
+        outputs.upToDateWhen { false }
+    }
+}
+
+
+task licenseAPI(type: LicenseCheck);
+task licenseFormatAPI(type: LicenseFormat);
+[licenseAPI, licenseFormatAPI].forEach {
+    it.configure {
+        source = sourceSets.main.java
+        include("dan200/computercraft/api/**")
+        header file('config/license/api.txt')
+    }
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            // add all the jars that should be included when publishing to maven
+            artifact(remapJar) {
+                builtBy remapJar
+            }
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
+        }
+    }
+
+    // select the repositories you want to publish to
+    repositories {
+        // uncomment to publish to the local maven
+        // mavenLocal()
+    }
+}

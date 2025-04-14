@@ -1,0 +1,48 @@
+{
+    "schemaVersion": 1,
+    "id": "computercraft",
+    "name": "CC:Restitched",
+    "version": "${version}",
+    "description": "CC: Tweaked for Fabric.",
+    "license": "ComputerCraft Public License",
+    "icon": "assets/computercraft/pack.png",
+    "contact": {
+        "homepage": "https://github.com/Merith-TK/cc-restitched",
+        "issues": "https://github.com/Merith-TK/cc-restitched/issues"
+    },
+    "authors": [
+        "Daniel Ratcliffe",
+        "Aaron Mills",
+        "SquidDev",
+        "parly",
+        "Merith.TK",
+        "Jummit",
+		"Toad-Dev"
+    ],
+    "depends": {
+        "fabricloader": ">=0.4.0",
+        "fabric": "*"
+    },
+    "suggests": {
+        "modmenu": "*"
+    },
+	"conflicts": {
+		"canvas": "*",
+		"iris": "*"
+	},
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "dan200.computercraft.ComputerCraft"
+        ],
+        "client": [
+            "dan200.computercraft.client.proxy.ComputerCraftProxyClient"
+        ],
+        "modmenu": [
+            "dan200.computercraft.shared.integration.ModMenuIntegration"
+        ]
+    },
+    "mixins": [
+        "computercraft.mixins.json"
+    ]
+}
