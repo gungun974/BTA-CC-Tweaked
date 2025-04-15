@@ -89,7 +89,7 @@
         "symbols": [
             {
                 "symbol": "#",
-                "group": "minecraft:cobblestones"
+                "group": "minecraft:stones"
             },
             {
                 "symbol": "R",
@@ -742,7 +742,7 @@
         "symbols": [
             {
                 "symbol": "#",
-                "group": "minecraft:cobblestones"
+                "group": "minecraft:stones"
             },
             {
                 "symbol": "R",
@@ -788,7 +788,7 @@
         ],
         "result": {
             "key": "tile.computercraft.monitor.advanced",
-            "amount": 1,
+            "amount": 4,
             "meta": 0
         },
         "consumeContainers": false
@@ -804,7 +804,7 @@
         "symbols": [
             {
                 "symbol": "#",
-                "group": "minecraft:cobblestones"
+                "group": "minecraft:stones"
             },
             {
                 "symbol": "G",
@@ -908,7 +908,7 @@
         "symbols": [
             {
                 "symbol": "#",
-                "group": "minecraft:cobblestones"
+                "group": "minecraft:stones"
             },
             {
                 "symbol": "A",
@@ -1024,7 +1024,7 @@
         "symbols": [
             {
                 "symbol": "#",
-                "group": "minecraft:cobblestones"
+                "group": "minecraft:stones"
             },
             {
                 "symbol": "R",
@@ -1060,7 +1060,7 @@
         "symbols": [
             {
                 "symbol": "#",
-                "group": "minecraft:cobblestones"
+                "group": "minecraft:stones"
             },
             {
                 "symbol": "N",
@@ -1252,7 +1252,7 @@
         "symbols": [
             {
                 "symbol": "#",
-                "group": "minecraft:cobblestones"
+                "group": "minecraft:stones"
             },
             {
                 "symbol": "E",
@@ -1294,7 +1294,7 @@
         ],
         "result": {
             "key": "item.computercraft.cable",
-            "amount": 1,
+            "amount": 6,
             "meta": 0
         },
         "consumeContainers": false
