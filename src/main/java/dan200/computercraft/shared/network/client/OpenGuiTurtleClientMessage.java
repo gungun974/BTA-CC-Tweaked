@@ -36,6 +36,7 @@ public class OpenGuiTurtleClientMessage extends OpenGuiContainerMessage<TileTurt
     }
 
     public OpenGuiTurtleClientMessage() {
+        super(new TileTurtle());
     }
 
     @Override
@@ -58,15 +59,15 @@ public class OpenGuiTurtleClientMessage extends OpenGuiContainerMessage<TileTurt
 
     @Override
     @Environment(EnvType.CLIENT)
-    protected Screen getScreenInstance(ContainerInventory playerInventory) {
-        ContainerComputerBase container = new ContainerComputerBase(instanceId, family);
+    protected Screen getScreenInstance(ContainerInventory playerInventory, TileTurtle container) {
+        ContainerComputerBase containerComputerBase = new ContainerComputerBase(instanceId, family);
 
         return new ScreenTurtle<>(
-            container,
+            containerComputerBase,
             width,
             height,
             playerInventory,
-            new TileTurtle()
+            container
         );
     }
 

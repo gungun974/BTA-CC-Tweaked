@@ -15,12 +15,14 @@ public class OpenGuiDiskDriveClientMessage extends OpenGuiContainerMessage<TileD
         super(container);
     }
 
-    public OpenGuiDiskDriveClientMessage() {}
+    public OpenGuiDiskDriveClientMessage() {
+        super(new TileDiskDrive());
+    }
 
     @Override
     @Environment(EnvType.CLIENT)
-    protected Screen getScreenInstance(ContainerInventory playerInventory) {
-        return new ScreenDiskDrive(playerInventory, new TileDiskDrive());
+    protected Screen getScreenInstance(ContainerInventory playerInventory, TileDiskDrive container) {
+        return new ScreenDiskDrive(playerInventory, container);
     }
 
     @Override

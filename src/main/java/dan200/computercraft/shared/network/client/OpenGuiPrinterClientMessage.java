@@ -15,12 +15,14 @@ public class OpenGuiPrinterClientMessage extends OpenGuiContainerMessage<TilePri
         super(container);
     }
 
-    public OpenGuiPrinterClientMessage() {}
+    public OpenGuiPrinterClientMessage() {
+        super(new TilePrinter());
+    }
 
     @Override
     @Environment(EnvType.CLIENT)
-    protected Screen getScreenInstance(ContainerInventory playerInventory) {
-        return new ScreenPrinter(playerInventory, new TilePrinter());
+    protected Screen getScreenInstance(ContainerInventory playerInventory, TilePrinter container) {
+        return new ScreenPrinter(playerInventory, container);
     }
 
     @Override

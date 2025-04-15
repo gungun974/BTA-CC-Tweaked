@@ -18,14 +18,11 @@ import turniplabs.halplibe.helper.network.UniversalPacket;
 import javax.annotation.Nonnull;
 
 abstract class OpenGuiContainerMessage<A> implements NetworkMessage {
-    protected A container;
+    final protected A container;
     private int windowId = 0;
 
     public OpenGuiContainerMessage(A container) {
         this.container = container;
-    }
-
-    public OpenGuiContainerMessage() {
     }
 
     public void sendToPlayer(Player player) {
@@ -69,7 +66,7 @@ abstract class OpenGuiContainerMessage<A> implements NetworkMessage {
     }
 
     @Environment(EnvType.CLIENT)
-    abstract protected Screen getScreenInstance(ContainerInventory playerInventory);
+    abstract protected Screen getScreenInstance(ContainerInventory playerInventory, A container);
 
     @Override
     public void handle(NetworkContext context) {
@@ -84,12 +81,12 @@ abstract class OpenGuiContainerMessage<A> implements NetworkMessage {
 
     @Environment(EnvType.CLIENT)
     private void doClient() {
-        Minecraft.getMinecraft().displayScreen(getScreenInstance(Minecraft.getMinecraft().thePlayer.inventory));
+        Minecraft.getMinecraft().displayScreen(getScreenInstance(Minecraft.getMinecraft().thePlayer.inventory, this.container));
         Minecraft.getMinecraft().thePlayer.craftingInventory.containerId = windowId;
     }
 
     @Environment(EnvType.CLIENT)
     private void doSinglePlayer() {
-        Minecraft.getMinecraft().displayScreen(getScreenInstance(Minecraft.getMinecraft().thePlayer.inventory));
+        Minecraft.getMinecraft().displayScreen(getScreenInstance(Minecraft.getMinecraft().thePlayer.inventory, this.container));
     }
 }
