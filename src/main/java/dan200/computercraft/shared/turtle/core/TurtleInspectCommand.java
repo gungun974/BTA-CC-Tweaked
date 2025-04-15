@@ -10,9 +10,11 @@ import dan200.computercraft.api.turtle.ITurtleCommand;
 import dan200.computercraft.api.turtle.TurtleCommandResult;
 import dan200.computercraft.api.turtle.event.TurtleBlockEvent;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.peripheral.generic.data.BlockData;
 import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.block.Block;
+import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
 
@@ -42,10 +44,10 @@ public class TurtleInspectCommand implements ITurtleCommand {
             return TurtleCommandResult.failure("No block to inspect");
         }
 
-        Block block = world.getBlock(newPosition.x, newPosition.y, newPosition.z);
+        BlockLogic block = Helper.getBlockLogic(world, newPosition.x, newPosition.y, newPosition.z);
         int metadata = world.getBlockMetadata(newPosition.x, newPosition.y, newPosition.z);
 
-        Map<String, Object> table = BlockData.fill(new HashMap<>(), block.id(), metadata);
+        Map<String, Object> table = BlockData.fill(new HashMap<>(), block.id(), metadata, block.namespaceId());
 
         // Fire the event, exiting if it is cancelled
         TurtleBlockEvent.Inspect event = new TurtleBlockEvent.Inspect(turtle, world, newPosition, block.id(), metadata, table);
