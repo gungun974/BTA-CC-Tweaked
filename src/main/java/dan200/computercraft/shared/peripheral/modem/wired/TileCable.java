@@ -23,6 +23,8 @@ import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.lang.I18n;
+import net.minecraft.core.net.packet.Packet;
+import net.minecraft.core.net.packet.PacketTileEntityData;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.Vec3;
@@ -212,10 +214,12 @@ public class TileCable extends TileGeneric implements IPeripheralTile {
     public void updatePlacementState() {
         BlockLogicCable.correctConnections(this.worldObj, getPos(), this);
 
-        final BlockLogic logic = getBlock().getLogic();
+        final BlockLogic logic = Helper.getBlockLogic(this.worldObj, this.x, this.y, this.z);
 
         if (logic instanceof BlockLogicCable) {
             ((BlockLogicCable) logic).updateBlockBoundsFromState(this.worldObj, this.x, this.y, this.z);
+
+            worldObj.markBlockNeedsUpdate(this.x, this.y, this.z);
         }
     }
 
@@ -322,6 +326,12 @@ public class TileCable extends TileGeneric implements IPeripheralTile {
         hasModemDirection = true;
         modemDirection = blockStateModem.getFacing();
     }
+
+    @Override
+    public Packet getDescriptionPacket() {
+        return new PacketTileEntityData(this);
+    }
+
 
     @Override
     public void readFromNBT(CompoundTag nbt) {
