@@ -22,7 +22,7 @@ import java.io.IOException;
 
 public class ItemTreasureDisk extends Item implements IMedia {
     public static final String NBT_TITLE = "Title";
-    public static final String NBT_COLOUR = "Colour";
+    public static final String NBT_COLOUR = "Color";
     public static final String NBT_SUB_PATH = "SubPath";
 
     public ItemTreasureDisk(NamespaceID namespaceId, int id) {
