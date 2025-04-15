@@ -204,6 +204,10 @@ public final class Config {
             serverSpec.comment("turtle.disabled_actions",
                 "A list of turtle actions which are disabled.");
             serverSpec.defineList("turtle.disabled_actions", Collections.emptyList(), x -> x instanceof String && getAction((String) x) != null);
+
+            serverSpec.comment("turtle.can_use_silk_touch",
+                "If set to true, Turtles will be able to equip golden pickaxe and use it");
+            serverSpec.define("turtle.can_use_silk_touch", ComputerCraft.turtlesCanUseSilkTouch);
         }
 
         { // Terminal sizes
@@ -351,6 +355,7 @@ public final class Config {
             ComputerCraft.advancedTurtleFuelLimit = serverConfig.<Integer>get("turtle.advanced_fuel_limit");
             ComputerCraft.turtlesObeyBlockProtection = serverConfig.<Boolean>get("turtle.obey_block_protection");
             ComputerCraft.turtlesCanPush = serverConfig.<Boolean>get("turtle.can_push");
+            ComputerCraft.turtlesCanUseSilkTouch = serverConfig.<Boolean>get("turtle.can_use_silk_touch");
 
             ComputerCraft.turtleDisabledActions.clear();
             for (String value : serverConfig.<List<String>>get("turtle.disabled_actions")) {

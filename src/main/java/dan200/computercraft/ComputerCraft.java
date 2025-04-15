@@ -86,6 +86,7 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
     public static boolean turtlesObeyBlockProtection = true;
     public static boolean turtlesCanPush = true;
     public static EnumSet<TurtleAction> turtleDisabledActions = EnumSet.noneOf(TurtleAction.class);
+    public static boolean turtlesCanUseSilkTouch = true;
     public static int computerTermWidth = 51;
     public static int computerTermHeight = 19;
     public static final int turtleTermWidth = 39;
