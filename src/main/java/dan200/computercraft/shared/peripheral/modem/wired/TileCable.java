@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class TileCable extends TileGeneric implements IPeripheralTile {
-    private static final String NBT_PERIPHERAL_ENABLED = "PeirpheralAccess";
+    private static final String NBT_PERIPHERAL_ENABLED = "PeripheralAccess";
     private final WiredModemLocalPeripheral peripheral = new WiredModemLocalPeripheral();
     private final WiredModemElement cable = new CableElement();
     private final IWiredNode node = cable.getNode();
