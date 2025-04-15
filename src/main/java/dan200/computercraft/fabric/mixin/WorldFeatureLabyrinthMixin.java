@@ -7,6 +7,7 @@ import dan200.computercraft.shared.media.items.TreasureDisk;
 import net.minecraft.core.WeightedRandomBag;
 import net.minecraft.core.WeightedRandomLootObject;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.world.World;
 import net.minecraft.core.world.generate.feature.WorldFeatureLabyrinth;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,10 +24,10 @@ public class WorldFeatureLabyrinthMixin {
     public WeightedRandomBag<WeightedRandomLootObject> chestLoot;
 
     @Inject(
-        method = "<init>",
-        at = @At("TAIL")
+        method = "place",
+        at = @At("RETURN")
     )
-    private void addTreasuresDisks(CallbackInfo ci) {
+    private void addTreasuresDisks(World world, Random random, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         this.chestLoot.addEntry(new WeightedRandomLootObject(new ItemStack(ComputerCraftItems.TREASURE_DISK, 1, 0)), 100.0);
     }
 
