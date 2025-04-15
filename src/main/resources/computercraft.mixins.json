@@ -18,6 +18,7 @@
         "GLFWKeyboardImplementationMixin",
         "MinecraftMixin",
         "PlayerControllerSPMixin",
+        "RecipePageCraftingMixin",
         "TileEntityRenderDispatcherMixin",
         "WorldClientMixin",
         "WorldClientMPMixin"

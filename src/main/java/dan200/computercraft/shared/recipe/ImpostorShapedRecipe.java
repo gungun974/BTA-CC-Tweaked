@@ -34,11 +34,6 @@ public class ImpostorShapedRecipe extends RecipeEntryCraftingShaped implements H
     }
 
     @Override
-    public boolean matchesQuery(SearchQuery query) {
-        return false;
-    }
-
-    @Override
     public RecipeJsonAdapter<?> getAdapter() {
         return new ImpostorShapedRecipeJsonAdapter();
     }
