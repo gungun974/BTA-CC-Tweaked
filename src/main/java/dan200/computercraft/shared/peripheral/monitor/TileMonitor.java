@@ -239,6 +239,20 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             }
         }
 
+        // Always check on client if we are not referring to an old client origin
+        if (Helper.isClientWorld() && !(xIndex == 0 && yIndex == 0)) {
+            BlockPos pos = getPos().offset(getRight(), -xIndex)
+                .offset(getDown(), -yIndex);
+            TileEntity te = worldObj.getTileEntity(pos.x, pos.y, pos.z);
+            if (!(te instanceof TileMonitor)) {
+                clientMonitor = null;
+            }
+
+            if (clientMonitor != ((TileMonitor) te).clientMonitor) {
+                clientMonitor = ((TileMonitor) te).clientMonitor;
+            }
+        }
+
         if (oldXIndex != xIndex || oldYIndex != yIndex || oldWidth != width || oldHeight != height) {
             // One of our properties has changed, so ensure we redraw the block
             updateBlock();
