@@ -12,6 +12,8 @@ public final class PortableTickScheduler {
     private static final Set<PortableTickSchedule> toTickAtEnd = Collections.newSetFromMap(new MapMaker().weakKeys()
         .makeMap());
 
+    public static final PortableTickScheduler mainPortableTickScheduler = new PortableTickScheduler();
+
     public PortableTickScheduler() {
     }
 

@@ -20,6 +20,7 @@ import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import dan200.computercraft.shared.util.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.player.inventory.container.Container;
@@ -28,6 +29,8 @@ import net.minecraft.core.util.helper.DyeColor;
 import net.minecraft.core.util.phys.AABB;
 import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.chunk.Chunk;
+import net.minecraft.core.world.chunk.ChunkPosition;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -225,6 +228,34 @@ public class TurtleBrain implements ITurtleAccess {
                     owner.updateRedstoneOutput();
 
                     owner.notifyMoveEnd();
+
+                    Chunk oldChunk = world.getChunkFromChunkCoords(Math.floorDiv(oldPos.x, 16), Math.floorDiv(oldPos.z, 16));
+                    if (oldChunk != null) {
+                        if (oldChunk.isLoaded && owner != null && oldChunk.tileEntityMap.containsValue(owner)) {
+                            oldChunk.tileEntityMap.remove(new ChunkPosition(oldPos.x & 15, oldPos.y, oldPos.z & 15));
+                        }
+                    }
+
+                    if (!Helper.isServerEnvironment()) {
+                        PortableTickScheduler.mainPortableTickScheduler.scheduleOnNextEndTick(() -> {
+                            if (!Minecraft.getMinecraft().renderGlobal.tileEntities.contains(owner)) {
+                                Minecraft.getMinecraft().renderGlobal.tileEntities.add((owner));
+                            }
+                        });
+
+                        PortableTickScheduler.mainPortableTickScheduler.scheduleOnNextStartTick(() -> {
+                            if (!Minecraft.getMinecraft().renderGlobal.tileEntities.contains(owner)) {
+                                Minecraft.getMinecraft().renderGlobal.tileEntities.add((owner));
+                            }
+                        });
+
+                        PortableTickScheduler.mainPortableTickScheduler.scheduleStartTick(() -> {
+                            if (!Minecraft.getMinecraft().renderGlobal.tileEntities.contains(owner)) {
+                                Minecraft.getMinecraft().renderGlobal.tileEntities.add((owner));
+                            }
+                        }, 2);
+                    }
+
                     return true;
                 }
 
