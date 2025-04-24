@@ -10,6 +10,7 @@ import dan200.computercraft.shared.peripheral.modem.wired.ItemCable;
 import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
 import dan200.computercraft.shared.turtle.items.ItemBlockTurtle;
 import net.minecraft.core.item.block.ItemBlock;
+import net.minecraft.core.item.tag.ItemTags;
 import net.minecraft.core.util.collection.NamespaceID;
 import turniplabs.halplibe.helper.ItemBuilder;
 
@@ -51,18 +52,22 @@ public class ComputerCraftItems {
 
         POCKET_COMPUTER_NORMAL = new ItemBuilder(MOD_ID)
             .setKey("item.pocket_computer_normal")
+            .addTags(ItemTags.NOT_IN_CREATIVE_MENU)
             .build((new ItemPocketComputer(NamespaceID.getPermanent(MOD_ID, "pocket_computer_normal"), generateNexId(), ComputerFamily.NORMAL)));
 
         POCKET_COMPUTER_ADVANCED = new ItemBuilder(MOD_ID)
             .setKey("item.pocket_computer_advanced")
+            .addTags(ItemTags.NOT_IN_CREATIVE_MENU)
             .build((new ItemPocketComputer(NamespaceID.getPermanent(MOD_ID, "pocket_computer_advanced"), generateNexId(), ComputerFamily.ADVANCED)));
 
         DISK = new ItemBuilder(MOD_ID)
             .setKey("item.disk")
+            .addTags(ItemTags.NOT_IN_CREATIVE_MENU)
             .build((new ItemDisk(NamespaceID.getPermanent(MOD_ID, "disk"), generateNexId())));
 
         TREASURE_DISK = new ItemBuilder(MOD_ID)
             .setKey("item.treasure_disk")
+            .addTags(ItemTags.NOT_IN_CREATIVE_MENU)
             .build((new ItemTreasureDisk(NamespaceID.getPermanent(MOD_ID, "treasure_disk"), generateNexId())));
 
         PRINTED_PAGE = new ItemBuilder(MOD_ID)

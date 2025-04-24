@@ -1,12 +1,13 @@
 package dan200.computercraft.fabric.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.media.items.ItemDisk;
 import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
 import dan200.computercraft.shared.turtle.items.ItemBlockTurtle;
 import net.minecraft.core.block.Block;
-import net.minecraft.core.data.tag.Tag;
+import net.minecraft.core.block.Blocks;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.menu.MenuInventoryCreative;
@@ -15,7 +16,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
@@ -29,41 +29,47 @@ public class MenuInventoryCreativeMixin {
     public static int creativeItemsCount;
     @Unique
     private static int extraCount = 0;
-    @Shadow
-    protected List<ItemStack> searchedItems;
 
-    @Redirect(
+    @Inject(
         method = "<clinit>",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/core/block/Block;hasTag(Lnet/minecraft/core/data/tag/Tag;)Z")
+
     )
-    private static boolean addBlocks(Block<?> block, Tag<Block<?>> tag) {
+    private static void addBlocks(CallbackInfo ci, @Local(name = "id") int i) {
+        Block<?> block = Blocks.blocksList[i];
+
+        if(block == null) {
+            return;
+        }
+
         if (block.id() == ComputerCraftBlocks.TURTLE_NORMAL.id() || block.id() == ComputerCraftBlocks.TURTLE_ADVANCED.id()) {
             int before = creativeItems.size();
             ((ItemBlockTurtle) block.asItem()).addToCreativeMenu(creativeItems);
             extraCount += creativeItems.size() - before;
-            return true;
         }
-        return block.hasTag(tag);
     }
 
-    @Redirect(
+    @Inject(
         method = "<clinit>",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/core/item/Item;hasTag(Lnet/minecraft/core/data/tag/Tag;)Z")
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/core/item/Item;hasTag(Lnet/minecraft/core/data/tag/Tag;)Z", shift = At.Shift.AFTER)
     )
-    private static boolean addItems(Item item, Tag<Item> tag) {
+    private static void addItems(CallbackInfo ci, @Local(name = "i") int i) {
+        Item item = Item.itemsList[i];
+
+        if(item == null) {
+            return;
+        }
+
         if (item.id == ComputerCraftItems.POCKET_COMPUTER_NORMAL.id || item.id == ComputerCraftItems.POCKET_COMPUTER_ADVANCED.id) {
             int before = creativeItems.size();
             ((ItemPocketComputer) item).addToCreativeMenu(creativeItems);
             extraCount += creativeItems.size() - before;
-            return true;
         }
         if (item.id == ComputerCraftItems.DISK.id) {
             int before = creativeItems.size();
             ((ItemDisk) item).addToCreativeMenu(creativeItems);
             extraCount += creativeItems.size() - before;
-            return true;
         }
-        return item.hasTag(tag);
     }
 
     @Inject(
