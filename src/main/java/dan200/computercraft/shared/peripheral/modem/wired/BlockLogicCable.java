@@ -24,6 +24,8 @@ import net.minecraft.core.world.WorldSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+
 public class BlockLogicCable extends BlockLogic {
     public BlockLogicCable(Block<?> block, Material material) {
         super(block, material);
@@ -111,6 +113,42 @@ public class BlockLogicCable extends BlockLogic {
 
     public boolean isSolidRender() {
         return false;
+    }
+
+    @Override
+    public void getCollidingBoundingBoxes(World world, int x, int y, int z, AABB aabb, ArrayList<AABB> aabbList) {
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+
+        if (tileEntity instanceof TileCable) {
+            final TileCable state = (TileCable) tileEntity;
+
+            if (state.blockStateCable) {
+                this.addIntersectingBoundingBox(aabb, CableShapes.SHAPE_CABLE_CORE.cloneMove((double) x, (double) y, (double) z), aabbList);
+
+                if (state.blockStateNorth) {
+                    this.addIntersectingBoundingBox(aabb, CableShapes.SHAPE_CABLE_ARM.get(Direction.NORTH).cloneMove((double) x, (double) y, (double) z), aabbList);
+                }
+                if (state.blockStateSouth) {
+                    this.addIntersectingBoundingBox(aabb, CableShapes.SHAPE_CABLE_ARM.get(Direction.SOUTH).cloneMove((double) x, (double) y, (double) z), aabbList);
+                }
+                if (state.blockStateEast) {
+                    this.addIntersectingBoundingBox(aabb, CableShapes.SHAPE_CABLE_ARM.get(Direction.EAST).cloneMove((double) x, (double) y, (double) z), aabbList);
+                }
+                if (state.blockStateWest) {
+                    this.addIntersectingBoundingBox(aabb, CableShapes.SHAPE_CABLE_ARM.get(Direction.WEST).cloneMove((double) x, (double) y, (double) z), aabbList);
+                }
+                if (state.blockStateUp) {
+                    this.addIntersectingBoundingBox(aabb, CableShapes.SHAPE_CABLE_ARM.get(Direction.UP).cloneMove((double) x, (double) y, (double) z), aabbList);
+                }
+                if (state.blockStateDown) {
+                    this.addIntersectingBoundingBox(aabb, CableShapes.SHAPE_CABLE_ARM.get(Direction.DOWN).cloneMove((double) x, (double) y, (double) z), aabbList);
+                }
+            }
+
+            if (state.blockStateModem.getFacing() != null) {
+                this.addIntersectingBoundingBox(aabb, CableShapes.getModemShape(state).cloneMove((double) x, (double) y, (double) z), aabbList);
+            }
+        }
     }
 
     @Override
