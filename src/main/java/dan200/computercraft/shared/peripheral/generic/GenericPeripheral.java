@@ -13,6 +13,8 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IDynamicPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.block.entity.TileEntityDispatcher;
+import net.minecraft.core.util.collection.NamespaceID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,8 +26,9 @@ class GenericPeripheral implements IDynamicPeripheral {
     private final List<SaturatedMethod> methods;
 
     GenericPeripheral(TileEntity tile, List<SaturatedMethod> methods) {
+        NamespaceID namespaceID = TileEntityDispatcher.getIDFromClass(tile.getClass());
         this.tile = tile;
-        this.type = "unknown";
+        this.type = namespaceID == null ? "unknown" : namespaceID.toString();
         this.methods = methods;
     }
 

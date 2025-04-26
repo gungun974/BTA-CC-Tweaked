@@ -30,6 +30,5 @@ public interface IPeripheralProvider {
      * @return A peripheral, or {@link Optional#empty()} if there is not a peripheral here you'd like to handle.
      * @see dan200.computercraft.api.ComputerCraftAPI#registerPeripheralProvider(IPeripheralProvider)
      */
-    @Nonnull
     IPeripheral getPeripheral(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side);
 }

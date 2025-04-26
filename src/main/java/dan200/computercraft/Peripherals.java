@@ -7,6 +7,7 @@ package dan200.computercraft;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
+import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.peripheral.generic.GenericPeripheralProvider;
 import dan200.computercraft.shared.util.BlockPos;
@@ -40,7 +41,10 @@ public final class Peripherals {
         // Try the handlers in order:
         for (IPeripheralProvider peripheralProvider : providers) {
             try {
-                return peripheralProvider.getPeripheral(world, pos, side);
+                IPeripheral peripheral = peripheralProvider.getPeripheral(world, pos, side);
+                if (peripheral != null) {
+                    return peripheral;
+                }
             } catch (Exception e) {
                 ComputerCraft.log.error("Peripheral provider " + peripheralProvider + " errored.", e);
             }
