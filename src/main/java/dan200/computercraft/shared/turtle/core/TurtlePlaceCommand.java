@@ -13,6 +13,7 @@ import dan200.computercraft.api.turtle.TurtleCommandResult;
 import dan200.computercraft.api.turtle.event.TurtleBlockEvent;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.shared.TurtlePermissions;
+import dan200.computercraft.shared.peripheral.modem.wired.ItemCable;
 import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.DirectionUtil;
 import net.minecraft.core.block.Blocks;
@@ -60,7 +61,8 @@ public class TurtlePlaceCommand implements ITurtleCommand {
                 item instanceof ItemBoat ||
                 item instanceof ItemBucketEmpty ||
                 item instanceof ItemEgg ||
-                item instanceof ItemSnowball
+                item instanceof ItemSnowball ||
+                item instanceof ItemCable
         ) && !canDeployOnBlock(stack, turtle, position, direction, true, outErrorMessage)) {
             return stack;
         }

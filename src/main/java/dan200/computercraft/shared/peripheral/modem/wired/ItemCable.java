@@ -8,6 +8,7 @@ package dan200.computercraft.shared.peripheral.modem.wired;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
 import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.block.entity.TileEntity;
+import net.minecraft.core.block.entity.TileEntityActivator;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.enums.EnumBlockSoundEffectType;
 import net.minecraft.core.item.Item;
@@ -16,6 +17,8 @@ import net.minecraft.core.util.collection.NamespaceID;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
+
+import java.util.Random;
 
 import static dan200.computercraft.shared.peripheral.modem.wired.BlockLogicCable.correctConnections;
 
@@ -196,6 +199,57 @@ public abstract class ItemCable extends Item {
             }
 
             return false;
+        }
+
+        @Override
+        public void onUseByActivator(ItemStack stack, TileEntityActivator activatorBlock, World world, Random random, int blockX, int blockY, int blockZ, double offX, double offY, double offZ, Direction direction) {
+            if (stack.stackSize <= 0) {
+                return;
+            }
+
+            BlockPos pos = new BlockPos(blockX, blockY, blockZ);
+
+            // Try to add a cable to a modem inside the block we're clicking on.
+            BlockPos insidePos = pos.offset(direction);
+
+            TileEntity insideTileEntity = world.getTileEntity(insidePos.x, insidePos.y, insidePos.z);
+
+            if (insideTileEntity instanceof TileCable) {
+                TileCable state = (TileCable) insideTileEntity;
+
+                if (!state.blockStateCable) {
+                    placeAtCorrected(world,
+                        insidePos,
+                        state,
+                        state.blockStateModem,
+                        true
+                    );
+                    world.notifyBlockChange(pos.x, pos.y, pos.z, world.getBlockId(pos.x, pos.y, pos.z));
+                }
+                return;
+            }
+
+            TileEntity tileEntity = world.getTileEntity(pos.x, pos.y, pos.z);
+
+            if (tileEntity instanceof TileCable) {
+                TileCable state = (TileCable) tileEntity;
+
+                if (!state.blockStateCable) {
+                    placeAtCorrected(world,
+                        pos,
+                        state,
+                        state.blockStateModem,
+                        true
+                    );
+                    world.notifyBlockChange(pos.x, pos.y, pos.z, world.getBlockId(pos.x, pos.y, pos.z));
+                }
+            }
+
+            if (placeAt(world, insidePos, null, CableModemVariant.None, true)) {
+                --stack.stackSize;
+            }
+
+            world.notifyBlockChange(pos.x, pos.y, pos.z, world.getBlockId(pos.x, pos.y, pos.z));
         }
     }
 }
