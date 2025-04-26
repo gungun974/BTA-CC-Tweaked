@@ -85,20 +85,15 @@ public class BlockModelWirelessModem<T extends BlockLogic> extends BlockModelFul
         int index = Sides.orientationLookUpHorizontal[6 * Math.min(currentMetadata & 7, 5) + side.getId()];
         if (index >= Sides.orientationLookUpHorizontal.length) {
             return this.blockTextures.get(Side.BOTTOM);
-        } else if (index != Side.BOTTOM.getId()) {
-            IconCoordinate originalFront = this.blockTextures.get(Side.NORTH);
-
-            final boolean isOn = ((currentMetadata >> 3) & 0b1) == 1;
-
-            if (isOn) {
-                return TextureRegistry.getTexture(originalFront.namespaceId.namespace() + ":block/" + originalFront.namespaceId.value() + "_on");
-            }
-
-            return originalFront;
-        } else {
-            return this.blockTextures.get(Side.getSideById(index));
         }
+        IconCoordinate originalFront = this.blockTextures.get(Side.NORTH);
+
+        final boolean isOn = ((currentMetadata >> 3) & 0b1) == 1;
+
+        if (isOn) {
+            return TextureRegistry.getTexture(originalFront.namespaceId.namespace() + ":block/" + originalFront.namespaceId.value() + "_on");
+        }
+
+        return originalFront;
     }
-
-
 }
