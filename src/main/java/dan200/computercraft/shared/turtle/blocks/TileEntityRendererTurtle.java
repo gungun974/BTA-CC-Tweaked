@@ -39,6 +39,9 @@ public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
     }
 
     public void doRender(Tessellator tessellator, TileTurtle tileEntity, double x, double y, double z, float partialTick) {
+        if (this.renderDispatcher.textureManager == null) {
+            return;
+        }
         Block<?> block = tileEntity.getBlock();
         if (block != null && block.getLogic() instanceof BlockLogicTurtle) {
             GL11.glEnable(32826);

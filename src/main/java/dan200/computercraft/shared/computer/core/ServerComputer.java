@@ -49,6 +49,8 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
     private boolean changedLastFrame;
     private int ticksSincePing;
 
+    private boolean pauseExecution;
+
     public ServerComputer(World world, int computerID, String label, int instanceID, ComputerFamily family, int terminalWidth, int terminalHeight) {
         super(family != ComputerFamily.NORMAL, terminalWidth, terminalHeight);
         this.instanceID = instanceID;
@@ -64,6 +66,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
 
         changedLastFrame = false;
         ticksSincePing = 0;
+        pauseExecution = false;
     }
 
     public ComputerFamily getFamily() {
@@ -96,6 +99,10 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
 
     @Override
     public void update() {
+        if (pauseExecution) {
+            return;
+        }
+
         super.update();
 
         TileEntity tileEntity = world.getTileEntity(position.x, position.y, position.z);
@@ -117,6 +124,14 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
 
     public boolean hasTimedOut() {
         return ticksSincePing > 100;
+    }
+
+    public void freezeComputer() {
+        pauseExecution = true;
+    }
+
+    public void unfreezeComputer() {
+        pauseExecution = false;
     }
 
     public void unload() {

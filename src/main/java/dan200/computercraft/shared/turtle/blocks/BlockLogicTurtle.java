@@ -5,6 +5,7 @@
  */
 package dan200.computercraft.shared.turtle.blocks;
 
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.turtle.items.TurtleItemFactory;
@@ -13,6 +14,7 @@ import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.Mob;
 import net.minecraft.core.item.ItemStack;
+import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.AABB;
 import net.minecraft.core.world.World;
@@ -41,7 +43,24 @@ public class BlockLogicTurtle extends BlockLogicComputer {
 
     @Override
     public void onBlockPlacedByMob(World world, int x, int y, int z, @NotNull Side side, Mob mob, double xPlaced, double yPlaced) {
-        world.setBlockMetadataWithNotify(x, y, z, mob.getHorizontalPlacementDirection(side).getId());
+        Direction direction = mob.getHorizontalPlacementDirection(side);
+
+        world.setBlockMetadataWithNotify(x, y, z, direction.getId());
+
+        TileEntity entity = (world.getTileEntity(x, y, z));
+        if (!(entity instanceof TileTurtle)) {
+            return;
+        }
+
+        TileTurtle turtle = (TileTurtle) entity;
+
+        turtle.setDirection(direction);
+        turtle.carriedBlock = null;
+
+        if (!Helper.isClientWorld()) {
+            turtle.createServerComputer()
+                .setWorld(world);
+        }
     }
 
     @Override

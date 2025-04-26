@@ -842,6 +842,10 @@ public class TurtleBrain implements ITurtleAccess {
             getAnimationFraction(f) * Math.PI) : 0.0f;
     }
 
+    public boolean isRunningAnimation() {
+        return animation != TurtleAnimation.NONE;
+    }
+
     private static final class CommandCallback implements ILuaCallback {
         final MethodResult pull = MethodResult.pullEvent("turtle_response", this);
         private final int command;

@@ -23,10 +23,12 @@ import dan200.computercraft.shared.computer.inventory.ContainerComputer;
 import dan200.computercraft.shared.network.client.TurtleBrainClientMessage;
 import dan200.computercraft.shared.turtle.apis.TurtleAPI;
 import dan200.computercraft.shared.turtle.core.TurtleBrain;
-import dan200.computercraft.shared.turtle.inventory.MenuTurtle;
 import dan200.computercraft.shared.util.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.block.Block;
+import net.minecraft.core.block.motion.CarriedBlock;
+import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemDye;
 import net.minecraft.core.item.ItemStack;
@@ -40,6 +42,7 @@ import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.DyeColor;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.Vec3;
+import net.minecraft.core.world.World;
 import org.jetbrains.annotations.Nullable;
 import turniplabs.halplibe.helper.network.NetworkHandler;
 
@@ -480,5 +483,13 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
 
     public void updateBrainFromNBT(CompoundTag tag) {
         brain.readFromNBT(tag);
+    }
+
+    public boolean canBeCarried(World world, Entity potentialHolder) {
+        return !brain.isRunningAnimation();
+    }
+
+    public CarriedBlock getCarriedEntry(World world, Entity holder, Block<?> currentBlock, int currentMeta) {
+        return super.getCarriedEntry(world, holder, currentBlock, BlockLogicTurtle.setDirection(currentMeta, Direction.NORTH));
     }
 }

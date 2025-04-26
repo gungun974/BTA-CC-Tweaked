@@ -25,11 +25,13 @@ import dan200.computercraft.shared.util.PortableTickScheduler;
 import dan200.computercraft.shared.util.RedstoneUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.Items;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
+import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -245,6 +247,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
                 startOn = false;
             }
 
+            computer.unfreezeComputer();
             computer.keepAlive();
 
             fresh = false;
@@ -269,6 +272,18 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         portableTickScheduler.tickAtEnd();
     }
 
+    public void heldTick(World world, Entity holder) {
+        if (Helper.isServerEnvironment() || Helper.isSinglePlayer()) {
+            ServerComputer computer = createServerComputer();
+            if (computer == null) {
+                return;
+            }
+
+            computer.freezeComputer();
+            computer.keepAlive();
+        }
+    }
+
     public void updateRedstoneOutput() {
         // Update redstone
         updateBlock();
@@ -278,6 +293,9 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     public void updateBlock() {
+        if (worldObj == null) {
+            return;
+        }
         int blockId = Helper.getBlockLogic(worldObj, this.x, this.y, this.z, BlockLogicComputer.class).id();
 
         worldObj.notifyBlockChange(this.x, this.y, this.z, blockId);
@@ -391,6 +409,10 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         if (computer != null) {
             computer.setID(computerID);
         }
+
+        if (worldObj == null) {
+            return;
+        }
         worldObj.notifyBlockChange(x, y, z, getBlockId());
     }
 
@@ -412,6 +434,11 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         if (computer != null) {
             computer.setLabel(label);
         }
+
+        if (worldObj == null) {
+            return;
+        }
+
         worldObj.notifyBlockChange(x, y, z, getBlockId());
     }
 
