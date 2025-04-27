@@ -8,6 +8,7 @@ package dan200.computercraft.shared.turtle.blocks;
 import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
+import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.turtle.items.TurtleItemFactory;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.entity.TileEntity;
@@ -58,8 +59,11 @@ public class BlockLogicTurtle extends BlockLogicComputer {
         turtle.carriedBlock = null;
 
         if (!Helper.isClientWorld()) {
-            turtle.createServerComputer()
-                .setWorld(world);
+            ServerComputer computer = turtle.getServerComputer();
+
+            if (computer != null) {
+                computer.setWorld(world);
+            }
         }
     }
 
