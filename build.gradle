@@ -20,7 +20,7 @@ switch (OperatingSystem.current()) {
 }
 
 group = project.mod_group
-archivesBaseName = project.mod_name
+archivesBaseName = "cc-bta-${project.bta_version}"
 version = project.mod_version
 
 loom {
