@@ -1,35 +1,36 @@
 {
-    "required": true,
-    "package": "dan200.computercraft.fabric.mixin",
-    "compatibilityLevel": "JAVA_8",
-    "mixins": [
-        "ContainerCraftingAccessor",
-        "EntityMixin",
-        "LogicBlockMixin",
-        "MenuAbstractMixin",
-        "MenuInventoryCreativeMixin",
-        "PlayerMixin",
-        "WorldFeatureDungeonMixin",
-        "WorldFeatureLabyrinthMixin",
-        "WorldMixin"
-    ],
-    "client": [
-        "GLFMouseImplementationMixin",
-        "GLFWKeyboardImplementationMixin",
-        "MinecraftMixin",
-        "PlayerControllerSPMixin",
-        "RecipePageCraftingMixin",
-        "TileEntityRenderDispatcherMixin",
-        "WorldClientMixin",
-        "WorldClientMPMixin"
-    ],
-    "server": [
-        "MinecraftServerMixin",
-        "PacketHandlerServerAccessor",
-        "PlayerServerAccessor",
-        "ServerPlayerControllerMixin"
-    ],
-    "injectors": {
-        "defaultRequire": 1
-    }
+  "required": true,
+  "package": "dan200.computercraft.fabric.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "ContainerCraftingAccessor",
+    "EntityMixin",
+    "LogicBlockMixin",
+    "MenuAbstractMixin",
+    "MenuInventoryCreativeMixin",
+    "PlayerMixin",
+    "WorldFeatureDungeonMixin",
+    "WorldFeatureLabyrinthMixin",
+    "WorldMixin"
+  ],
+  "client": [
+    "GLFMouseImplementationMixin",
+    "GLFWKeyboardImplementationMixin",
+    "MinecraftMixin",
+    "PlayerControllerSPMixin",
+    "RecipePageCraftingMixin",
+    "TextureManagerMixin",
+    "TileEntityRenderDispatcherMixin",
+    "WorldClientMixin",
+    "WorldClientMPMixin"
+  ],
+  "server": [
+    "MinecraftServerMixin",
+    "PacketHandlerServerAccessor",
+    "PlayerServerAccessor",
+    "ServerPlayerControllerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }
