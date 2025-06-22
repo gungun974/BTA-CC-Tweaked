@@ -1,6 +1,7 @@
 package dan200.computercraft.client.blocks;
 
 import net.minecraft.client.render.LightmapHelper;
+import net.minecraft.client.render.RenderBlocks;
 import net.minecraft.client.render.block.model.BlockModel;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.block.entity.TileEntity;
@@ -9,6 +10,8 @@ import net.minecraft.core.util.helper.Sides;
 import net.minecraft.core.util.phys.AABB;
 
 public class BlockAORenderer {
+   private static RenderBlocks renderBlocks;
+
     private final AABB bounds;
 
     private double bottomU1 = 0;
@@ -110,6 +113,14 @@ public class BlockAORenderer {
 
     public boolean render(Tessellator tessellator, TileEntity tileEntity, float angle, float r, float g, float b
     ) {
+        if (BlockModel.renderBlocks.blockAccess != null) {
+            BlockAORenderer.renderBlocks = BlockModel.renderBlocks;
+        }
+
+        if (BlockAORenderer.renderBlocks == null) {
+            return false;
+        }
+
         int meta = tileEntity.getBlockMeta();
         boolean somethingRendered = false;
 
@@ -142,6 +153,14 @@ public class BlockAORenderer {
 
     public boolean render(Tessellator tessellator, Side obscureSide
     ) {
+        if (BlockModel.renderBlocks.blockAccess != null) {
+            BlockAORenderer.renderBlocks = BlockModel.renderBlocks;
+        }
+
+        if (BlockAORenderer.renderBlocks == null) {
+            return false;
+        }
+
         boolean somethingRendered = false;
 
         int sideId = obscureSide.getId();
@@ -396,7 +415,7 @@ public class BlockAORenderer {
         float rigP
     ) {
         boolean rendered = false;
-        BlockModel.renderBlocks.setupLighting(tileEntity.getBlock(), x, y, z, r, g, b, side, meta, dirX, dirY, dirZ, depth, topX, topY, topZ, topP, botP, lefX, lefY, lefZ, lefP, rigP);
+        renderBlocks.setupLighting(tileEntity.getBlock(), x, y, z, r, g, b, side, meta, dirX, dirY, dirZ, depth, topX, topY, topZ, topP, botP, lefX, lefY, lefZ, lefP, rigP);
 
         if (side == 0) {
             this.renderBottomFace(tessellator, bounds, bottomU1, bottomV1, bottomU2, bottomV2);
@@ -427,30 +446,30 @@ public class BlockAORenderer {
         double d13 = 1 - bounds.minY;
         double d14 = 1 - bounds.minZ;
         double d15 = 1 - bounds.maxZ;
-        if (BlockModel.renderBlocks.enableAO) {
+        if (renderBlocks.enableAO) {
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordTopLeft);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordTopLeft);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedTopLeft, BlockModel.renderBlocks.colorGreenTopLeft, BlockModel.renderBlocks.colorBlueTopLeft);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedTopLeft, renderBlocks.colorGreenTopLeft, renderBlocks.colorBlueTopLeft);
             tessellator.addVertexWithUV(d11, d13, d15, u1, v1);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordBottomLeft);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordBottomLeft);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedBottomLeft, BlockModel.renderBlocks.colorGreenBottomLeft, BlockModel.renderBlocks.colorBlueBottomLeft);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedBottomLeft, renderBlocks.colorGreenBottomLeft, renderBlocks.colorBlueBottomLeft);
             tessellator.addVertexWithUV(d11, d13, d14, u1, v2);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordBottomRight);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordBottomRight);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedBottomRight, BlockModel.renderBlocks.colorGreenBottomRight, BlockModel.renderBlocks.colorBlueBottomRight);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedBottomRight, renderBlocks.colorGreenBottomRight, renderBlocks.colorBlueBottomRight);
             tessellator.addVertexWithUV(d12, d13, d14, u2, v2);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordTopRight);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordTopRight);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedTopRight, BlockModel.renderBlocks.colorGreenTopRight, BlockModel.renderBlocks.colorBlueTopRight);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedTopRight, renderBlocks.colorGreenTopRight, renderBlocks.colorBlueTopRight);
             tessellator.addVertexWithUV(d12, d13, d15, u2, v1);
         } else {
             tessellator.addVertexWithUV(d11, d13, d15, u1, v1);
@@ -470,30 +489,30 @@ public class BlockAORenderer {
         double d13 = 1 - bounds.maxY;
         double d14 = 1 - bounds.minZ;
         double d15 = 1 - bounds.maxZ;
-        if (BlockModel.renderBlocks.enableAO) {
+        if (renderBlocks.enableAO) {
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordTopLeft);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordTopLeft);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedTopLeft, BlockModel.renderBlocks.colorGreenTopLeft, BlockModel.renderBlocks.colorBlueTopLeft);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedTopLeft, renderBlocks.colorGreenTopLeft, renderBlocks.colorBlueTopLeft);
             tessellator.addVertexWithUV(d12, d13, d15, u2, v2);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordBottomLeft);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordBottomLeft);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedBottomLeft, BlockModel.renderBlocks.colorGreenBottomLeft, BlockModel.renderBlocks.colorBlueBottomLeft);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedBottomLeft, renderBlocks.colorGreenBottomLeft, renderBlocks.colorBlueBottomLeft);
             tessellator.addVertexWithUV(d12, d13, d14, u2, v1);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordBottomRight);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordBottomRight);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedBottomRight, BlockModel.renderBlocks.colorGreenBottomRight, BlockModel.renderBlocks.colorBlueBottomRight);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedBottomRight, renderBlocks.colorGreenBottomRight, renderBlocks.colorBlueBottomRight);
             tessellator.addVertexWithUV(d11, d13, d14, u1, v1);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordTopRight);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordTopRight);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedTopRight, BlockModel.renderBlocks.colorGreenTopRight, BlockModel.renderBlocks.colorBlueTopRight);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedTopRight, renderBlocks.colorGreenTopRight, renderBlocks.colorBlueTopRight);
             tessellator.addVertexWithUV(d11, d13, d15, u1, v2);
         } else {
             tessellator.addVertexWithUV(d12, d13, d15, u2, v2);
@@ -513,30 +532,30 @@ public class BlockAORenderer {
         double d14 = 1 - bounds.minY;
         double d15 = 1 - bounds.maxY;
         double d16 = 1 - bounds.minZ;
-        if (BlockModel.renderBlocks.enableAO) {
+        if (renderBlocks.enableAO) {
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordTopLeft);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordTopLeft);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedTopLeft, BlockModel.renderBlocks.colorGreenTopLeft, BlockModel.renderBlocks.colorBlueTopLeft);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedTopLeft, renderBlocks.colorGreenTopLeft, renderBlocks.colorBlueTopLeft);
             tessellator.addVertexWithUV(d12, d15, d16, u2, v1);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordBottomLeft);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordBottomLeft);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedBottomLeft, BlockModel.renderBlocks.colorGreenBottomLeft, BlockModel.renderBlocks.colorBlueBottomLeft);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedBottomLeft, renderBlocks.colorGreenBottomLeft, renderBlocks.colorBlueBottomLeft);
             tessellator.addVertexWithUV(d13, d15, d16, u1, v1);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordBottomRight);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordBottomRight);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedBottomRight, BlockModel.renderBlocks.colorGreenBottomRight, BlockModel.renderBlocks.colorBlueBottomRight);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedBottomRight, renderBlocks.colorGreenBottomRight, renderBlocks.colorBlueBottomRight);
             tessellator.addVertexWithUV(d13, d14, d16, u1, v2);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordTopRight);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordTopRight);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedTopRight, BlockModel.renderBlocks.colorGreenTopRight, BlockModel.renderBlocks.colorBlueTopRight);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedTopRight, renderBlocks.colorGreenTopRight, renderBlocks.colorBlueTopRight);
             tessellator.addVertexWithUV(d12, d14, d16, u2, v2);
         } else {
             tessellator.addVertexWithUV(d12, d15, d16, u2, v1);
@@ -556,30 +575,30 @@ public class BlockAORenderer {
         double y0 = 1 - bounds.minY;
         double y1 = 1 - bounds.maxY;
         double z0 = 1 - bounds.maxZ;
-        if (BlockModel.renderBlocks.enableAO) {
+        if (renderBlocks.enableAO) {
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordTopLeft);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordTopLeft);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedTopLeft, BlockModel.renderBlocks.colorGreenTopLeft, BlockModel.renderBlocks.colorBlueTopLeft);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedTopLeft, renderBlocks.colorGreenTopLeft, renderBlocks.colorBlueTopLeft);
             tessellator.addVertexWithUV(x0, y1, z0, u1, v1);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordBottomLeft);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordBottomLeft);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedBottomLeft, BlockModel.renderBlocks.colorGreenBottomLeft, BlockModel.renderBlocks.colorBlueBottomLeft);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedBottomLeft, renderBlocks.colorGreenBottomLeft, renderBlocks.colorBlueBottomLeft);
             tessellator.addVertexWithUV(x0, y0, z0, u1, v2);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordBottomRight);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordBottomRight);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedBottomRight, BlockModel.renderBlocks.colorGreenBottomRight, BlockModel.renderBlocks.colorBlueBottomRight);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedBottomRight, renderBlocks.colorGreenBottomRight, renderBlocks.colorBlueBottomRight);
             tessellator.addVertexWithUV(x1, y0, z0, u2, v2);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordTopRight);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordTopRight);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedTopRight, BlockModel.renderBlocks.colorGreenTopRight, BlockModel.renderBlocks.colorBlueTopRight);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedTopRight, renderBlocks.colorGreenTopRight, renderBlocks.colorBlueTopRight);
             tessellator.addVertexWithUV(x1, y1, z0, u2, v1);
         } else {
             tessellator.addVertexWithUV(x0, y1, z0, u1, v1);
@@ -599,30 +618,30 @@ public class BlockAORenderer {
         double d14 = 1 - bounds.maxY;
         double d15 = 1 - bounds.minZ;
         double d16 = 1 - bounds.maxZ;
-        if (BlockModel.renderBlocks.enableAO) {
+        if (renderBlocks.enableAO) {
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordTopLeft);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordTopLeft);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedTopLeft, BlockModel.renderBlocks.colorGreenTopLeft, BlockModel.renderBlocks.colorBlueTopLeft);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedTopLeft, renderBlocks.colorGreenTopLeft, renderBlocks.colorBlueTopLeft);
             tessellator.addVertexWithUV(d12, d14, d16, u2, v1);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordBottomLeft);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordBottomLeft);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedBottomLeft, BlockModel.renderBlocks.colorGreenBottomLeft, BlockModel.renderBlocks.colorBlueBottomLeft);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedBottomLeft, renderBlocks.colorGreenBottomLeft, renderBlocks.colorBlueBottomLeft);
             tessellator.addVertexWithUV(d12, d14, d15, u1, v1);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordBottomRight);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordBottomRight);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedBottomRight, BlockModel.renderBlocks.colorGreenBottomRight, BlockModel.renderBlocks.colorBlueBottomRight);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedBottomRight, renderBlocks.colorGreenBottomRight, renderBlocks.colorBlueBottomRight);
             tessellator.addVertexWithUV(d12, d13, d15, u1, v2);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordTopRight);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordTopRight);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedTopRight, BlockModel.renderBlocks.colorGreenTopRight, BlockModel.renderBlocks.colorBlueTopRight);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedTopRight, renderBlocks.colorGreenTopRight, renderBlocks.colorBlueTopRight);
             tessellator.addVertexWithUV(d12, d13, d16, u2, v2);
         } else {
             tessellator.addVertexWithUV(d12, d14, d16, u2, v1);
@@ -642,30 +661,30 @@ public class BlockAORenderer {
         double yMax = 1 - bounds.maxY;
         double zMin = 1 - bounds.minZ;
         double zMax = 1 - bounds.maxZ;
-        if (BlockModel.renderBlocks.enableAO) {
+        if (renderBlocks.enableAO) {
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordTopLeft);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordTopLeft);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedTopLeft, BlockModel.renderBlocks.colorGreenTopLeft, BlockModel.renderBlocks.colorBlueTopLeft);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedTopLeft, renderBlocks.colorGreenTopLeft, renderBlocks.colorBlueTopLeft);
             tessellator.addVertexWithUV(xMin, yMin, zMax, u1, v2);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordBottomLeft);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordBottomLeft);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedBottomLeft, BlockModel.renderBlocks.colorGreenBottomLeft, BlockModel.renderBlocks.colorBlueBottomLeft);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedBottomLeft, renderBlocks.colorGreenBottomLeft, renderBlocks.colorBlueBottomLeft);
             tessellator.addVertexWithUV(xMin, yMin, zMin, u2, v2);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordBottomRight);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordBottomRight);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedBottomRight, BlockModel.renderBlocks.colorGreenBottomRight, BlockModel.renderBlocks.colorBlueBottomRight);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedBottomRight, renderBlocks.colorGreenBottomRight, renderBlocks.colorBlueBottomRight);
             tessellator.addVertexWithUV(xMin, yMax, zMin, u2, v1);
             if (LightmapHelper.isLightmapEnabled()) {
-                tessellator.setLightmapCoord(BlockModel.renderBlocks.lightmapCoordTopRight);
+                tessellator.setLightmapCoord(renderBlocks.lightmapCoordTopRight);
             }
 
-            tessellator.setColorOpaque_F(BlockModel.renderBlocks.colorRedTopRight, BlockModel.renderBlocks.colorGreenTopRight, BlockModel.renderBlocks.colorBlueTopRight);
+            tessellator.setColorOpaque_F(renderBlocks.colorRedTopRight, renderBlocks.colorGreenTopRight, renderBlocks.colorBlueTopRight);
             tessellator.addVertexWithUV(xMin, yMax, zMax, u1, v1);
         } else {
             tessellator.addVertexWithUV(xMin, yMin, zMax, u1, v2);
