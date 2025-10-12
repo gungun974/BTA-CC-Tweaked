@@ -140,7 +140,7 @@ dependencies {
     shade 'com.electronwill.night-config:core:3.6.5'
     shade 'com.electronwill.night-config:toml:3.6.5'
 
-    implementation 'commons-codec:commons-codec:1.16.0'
+    include(implementation 'commons-codec:commons-codec:1.16.0')
 }
 
 java {
