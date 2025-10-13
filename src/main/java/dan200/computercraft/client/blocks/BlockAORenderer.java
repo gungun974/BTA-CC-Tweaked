@@ -1,7 +1,11 @@
 package dan200.computercraft.client.blocks;
 
+import dan200.computercraft.ComputerCraft;
+import dan200.computercraft.fabric.mixin.RenderGlobalAccessor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.LightmapHelper;
 import net.minecraft.client.render.RenderBlocks;
+import net.minecraft.client.render.RenderGlobal;
 import net.minecraft.client.render.block.model.BlockModel;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.block.entity.TileEntity;
@@ -113,6 +117,11 @@ public class BlockAORenderer {
 
     public boolean render(Tessellator tessellator, TileEntity tileEntity, float angle, float r, float g, float b
     ) {
+        RenderBlocks globalRenderBlocks = ((RenderGlobalAccessor) Minecraft.getMinecraft().renderGlobal).getGlobalRenderBlocks();
+        if (globalRenderBlocks != null) {
+            BlockAORenderer.renderBlocks = globalRenderBlocks;
+        }
+
         if (BlockModel.renderBlocks.blockAccess != null) {
             BlockAORenderer.renderBlocks = BlockModel.renderBlocks;
         }
@@ -153,12 +162,13 @@ public class BlockAORenderer {
 
     public boolean render(Tessellator tessellator, Side obscureSide
     ) {
-        if (BlockModel.renderBlocks.blockAccess != null) {
-            BlockAORenderer.renderBlocks = BlockModel.renderBlocks;
+        RenderBlocks globalRenderBlocks = ((RenderGlobalAccessor) Minecraft.getMinecraft().renderGlobal).getGlobalRenderBlocks();
+        if (globalRenderBlocks != null) {
+            BlockAORenderer.renderBlocks = globalRenderBlocks;
         }
 
-        if (BlockAORenderer.renderBlocks == null) {
-            return false;
+        if (BlockModel.renderBlocks.blockAccess != null) {
+            BlockAORenderer.renderBlocks = BlockModel.renderBlocks;
         }
 
         boolean somethingRendered = false;

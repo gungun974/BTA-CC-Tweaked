@@ -19,6 +19,7 @@
     "MinecraftMixin",
     "PlayerControllerSPMixin",
     "RecipePageCraftingMixin",
+    "RenderGlobalAccessor",
     "TextureManagerMixin",
     "TileEntityRenderDispatcherMixin",
     "WorldClientMixin",
