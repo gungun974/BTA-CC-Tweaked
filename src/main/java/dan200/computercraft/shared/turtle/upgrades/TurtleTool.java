@@ -293,6 +293,6 @@ public class TurtleTool extends AbstractTurtleUpgrade {
 
     protected boolean canBreakBlock(World world, BlockPos pos) {
         Block<?> block = world.getBlock(pos.x, pos.y, pos.z);
-        return block != null && block != Blocks.BEDROCK && block.blockHardness > 0;
+        return block != null && block != Blocks.BEDROCK;
     }
 }
