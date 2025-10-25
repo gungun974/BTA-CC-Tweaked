@@ -22,7 +22,6 @@
     "RenderGlobalAccessor",
     "TextureManagerMixin",
     "TileEntityRenderDispatcherMixin",
-    "WorldClientMixin",
     "WorldClientMPMixin"
   ],
   "server": [
