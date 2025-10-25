@@ -1,11 +1,9 @@
 package dan200.computercraft.client.blocks;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.fabric.mixin.RenderGlobalAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.LightmapHelper;
 import net.minecraft.client.render.RenderBlocks;
-import net.minecraft.client.render.RenderGlobal;
 import net.minecraft.client.render.block.model.BlockModel;
 import net.minecraft.client.render.tessellator.Tessellator;
 import net.minecraft.core.block.entity.TileEntity;
@@ -13,9 +11,9 @@ import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.helper.Sides;
 import net.minecraft.core.util.phys.AABB;
 
-public class BlockAORenderer {
-   private static RenderBlocks renderBlocks;
+import javax.annotation.Nullable;
 
+public class BlockAORenderer {
     private final AABB bounds;
 
     private double bottomU1 = 0;
@@ -115,18 +113,25 @@ public class BlockAORenderer {
         return this;
     }
 
+    @Nullable
+    public static RenderBlocks getRenderBlocks() {
+        if (BlockModel.renderBlocks.blockAccess != null) {
+            return BlockModel.renderBlocks;
+        }
+
+        RenderBlocks globalRenderBlocks = ((RenderGlobalAccessor) Minecraft.getMinecraft().renderGlobal).getGlobalRenderBlocks();
+        if (globalRenderBlocks != null && globalRenderBlocks.blockAccess != null) {
+            return globalRenderBlocks;
+        }
+
+        return null;
+    }
+
     public boolean render(Tessellator tessellator, TileEntity tileEntity, float angle, float r, float g, float b
     ) {
-        RenderBlocks globalRenderBlocks = ((RenderGlobalAccessor) Minecraft.getMinecraft().renderGlobal).getGlobalRenderBlocks();
-        if (globalRenderBlocks != null) {
-            BlockAORenderer.renderBlocks = globalRenderBlocks;
-        }
+        RenderBlocks renderBlocks = getRenderBlocks();
 
-        if (BlockModel.renderBlocks.blockAccess != null) {
-            BlockAORenderer.renderBlocks = BlockModel.renderBlocks;
-        }
-
-        if (BlockAORenderer.renderBlocks == null) {
+        if (renderBlocks == null) {
             return false;
         }
 
@@ -144,9 +149,6 @@ public class BlockAORenderer {
             case 1:
                 sideId = Side.EAST.getId();
                 break;
-            case 2:
-                sideId = Side.NORTH.getId();
-                break;
             case 3:
                 sideId = Side.WEST.getId();
                 break;
@@ -162,15 +164,6 @@ public class BlockAORenderer {
 
     public boolean render(Tessellator tessellator, Side obscureSide
     ) {
-        RenderBlocks globalRenderBlocks = ((RenderGlobalAccessor) Minecraft.getMinecraft().renderGlobal).getGlobalRenderBlocks();
-        if (globalRenderBlocks != null) {
-            BlockAORenderer.renderBlocks = globalRenderBlocks;
-        }
-
-        if (BlockModel.renderBlocks.blockAccess != null) {
-            BlockAORenderer.renderBlocks = BlockModel.renderBlocks;
-        }
-
         boolean somethingRendered = false;
 
         int sideId = obscureSide.getId();
@@ -424,7 +417,13 @@ public class BlockAORenderer {
         float lefP,
         float rigP
     ) {
-        boolean rendered = false;
+        RenderBlocks renderBlocks = getRenderBlocks();
+
+        if (renderBlocks == null) {
+            return false;
+        }
+
+        renderBlocks.cache.setupCache(tileEntity.getBlock(), tileEntity.worldObj, tileEntity.x, tileEntity.y, tileEntity.z);
         renderBlocks.setupLighting(tileEntity.getBlock(), x, y, z, r, g, b, side, meta, dirX, dirY, dirZ, depth, topX, topY, topZ, topP, botP, lefX, lefY, lefZ, lefP, rigP);
 
         if (side == 0) {
@@ -441,12 +440,16 @@ public class BlockAORenderer {
             this.renderEastFace(tessellator, bounds, eastU1, eastV1, eastU2, eastV2);
         }
 
-        rendered = true;
-
-        return rendered;
+        return true;
     }
 
     private void renderBottomFace(Tessellator tessellator, AABB bounds, double u1, double v1, double u2, double v2) {
+        RenderBlocks renderBlocks = getRenderBlocks();
+
+        if (renderBlocks == null) {
+            return;
+        }
+
         if (u1 == 0 && v1 == 0 && u2 == 0 && v2 == 0) {
             return;
         }
@@ -490,6 +493,12 @@ public class BlockAORenderer {
     }
 
     private void renderTopFace(Tessellator tessellator, AABB bounds, double u1, double v1, double u2, double v2) {
+        RenderBlocks renderBlocks = getRenderBlocks();
+
+        if (renderBlocks == null) {
+            return;
+        }
+
         if (u1 == 0 && v1 == 0 && u2 == 0 && v2 == 0) {
             return;
         }
@@ -533,6 +542,12 @@ public class BlockAORenderer {
     }
 
     private void renderNorthFace(Tessellator tessellator, AABB bounds, double u1, double v1, double u2, double v2) {
+        RenderBlocks renderBlocks = getRenderBlocks();
+
+        if (renderBlocks == null) {
+            return;
+        }
+
         if (u1 == 0 && v1 == 0 && u2 == 0 && v2 == 0) {
             return;
         }
@@ -576,6 +591,12 @@ public class BlockAORenderer {
     }
 
     private void renderSouthFace(Tessellator tessellator, AABB bounds, double u1, double v1, double u2, double v2) {
+        RenderBlocks renderBlocks = getRenderBlocks();
+
+        if (renderBlocks == null) {
+            return;
+        }
+
         if (u1 == 0 && v1 == 0 && u2 == 0 && v2 == 0) {
             return;
         }
@@ -619,6 +640,12 @@ public class BlockAORenderer {
     }
 
     private void renderWestFace(Tessellator tessellator, AABB bounds, double u1, double v1, double u2, double v2) {
+        RenderBlocks renderBlocks = getRenderBlocks();
+
+        if (renderBlocks == null) {
+            return;
+        }
+
         if (u1 == 0 && v1 == 0 && u2 == 0 && v2 == 0) {
             return;
         }
@@ -662,6 +689,12 @@ public class BlockAORenderer {
     }
 
     private void renderEastFace(Tessellator tessellator, AABB bounds, double u1, double v1, double u2, double v2) {
+        RenderBlocks renderBlocks = getRenderBlocks();
+
+        if (renderBlocks == null) {
+            return;
+        }
+
         if (u1 == 0 && v1 == 0 && u2 == 0 && v2 == 0) {
             return;
         }
