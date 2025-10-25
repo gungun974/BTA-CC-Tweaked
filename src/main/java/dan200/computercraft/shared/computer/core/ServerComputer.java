@@ -105,6 +105,10 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
 
         super.update();
 
+        if (world == null) {
+            return;
+        }
+
         TileEntity tileEntity = world.getTileEntity(position.x, position.y, position.z);
         if (tileEntity instanceof TileTurtle) {
             selectedSlot = ((TileTurtle) tileEntity).getAccess().getSelectedSlot();

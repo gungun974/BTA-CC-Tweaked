@@ -3,7 +3,7 @@ package dan200.computercraft.shared.turtle.blocks;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.client.blocks.BlockAORenderer;
-import dan200.computercraft.shared.common.ComputerCraftBlocks;
+import dan200.computercraft.shared.computer.core.ComputerFamily;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -17,8 +17,6 @@ import org.lwjgl.opengl.GL11;
 
 @Environment(EnvType.CLIENT)
 public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
-    private final Minecraft mc = Minecraft.getMinecraft();
-
     private static void drawBase(Tessellator tessellator, TileTurtle tileEntity, float angle) {
         (new BlockAORenderer(AABB.getTemporaryBB(2 / 16f, 2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f, 13 / 16f)))
             .setBottomUV(5.75 / 16, 2.75 / 16, 2.75 / 16, 0)
@@ -42,7 +40,13 @@ public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
         if (this.renderDispatcher.textureManager == null) {
             return;
         }
+
+        if (tileEntity.carriedBlock == null && tileEntity.worldObj == null) {
+            return;
+        }
+
         Block<?> block = tileEntity.getBlock();
+
         if (block != null && block.getLogic() instanceof BlockLogicTurtle) {
             GL11.glEnable(32826);
             GL11.glPushMatrix();
@@ -67,7 +71,11 @@ public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
 
             BlockModel.renderBlocks.enableAO = true;
 
-            BlockModel.renderBlocks.cache.setupCache(block, tileEntity.worldObj, tileEntity.x, tileEntity.y, tileEntity.z);
+            if (tileEntity.worldObj == null) {
+                BlockModel.renderBlocks.cache.setupCache(block, Minecraft.getMinecraft().currentWorld, tileEntity.x, tileEntity.y, tileEntity.z);
+            } else {
+                BlockModel.renderBlocks.cache.setupCache(block, tileEntity.worldObj, tileEntity.x, tileEntity.y, tileEntity.z);
+            }
 
             if (colour != -1) {
                 float r = (float) (colour >> 16 & 0xFF) / 255.0F;
@@ -96,7 +104,7 @@ public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
                     .render(tessellator, tileEntity, angle, r, g, b);
 
                 tessellator.draw();
-            } else if (block.id() == ComputerCraftBlocks.TURTLE_ADVANCED.id()) {
+            } else if (tileEntity.getFamily() == ComputerFamily.ADVANCED) {
                 this.loadTexture("/assets/computercraft/textures/block/turtle_advanced.png");
             } else {
                 this.loadTexture("/assets/computercraft/textures/block/turtle_normal.png");

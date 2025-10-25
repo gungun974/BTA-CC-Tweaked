@@ -423,7 +423,7 @@ public class BlockAORenderer {
             return false;
         }
 
-        renderBlocks.cache.setupCache(tileEntity.getBlock(), tileEntity.worldObj, tileEntity.x, tileEntity.y, tileEntity.z);
+        renderBlocks.cache.setupCache(tileEntity.getBlock(), tileEntity.carriedBlock != null ? tileEntity.carriedBlock.world : tileEntity.worldObj, tileEntity.x, tileEntity.y, tileEntity.z);
         renderBlocks.setupLighting(tileEntity.getBlock(), x, y, z, r, g, b, side, meta, dirX, dirY, dirZ, depth, topX, topY, topZ, topP, botP, lefX, lefY, lefZ, lefP, rigP);
 
         if (side == 0) {
