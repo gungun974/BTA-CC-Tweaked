@@ -62,7 +62,9 @@ public class TurtlePlaceCommand implements ITurtleCommand {
                 item instanceof ItemBucketEmpty ||
                 item instanceof ItemEgg ||
                 item instanceof ItemSnowball ||
-                item instanceof ItemCable
+                item instanceof ItemCable ||
+                item instanceof ItemSeeds ||
+                item instanceof ItemDye
         ) && !canDeployOnBlock(stack, turtle, position, direction, true, outErrorMessage)) {
             return stack;
         }
@@ -133,13 +135,11 @@ public class TurtlePlaceCommand implements ITurtleCommand {
         return stack.copy();
     }
 
-    static private boolean placeSign(
+    static private void placeSign(
         ItemStack itemstack, World world, int blockX, int blockY, int blockZ, Side side, Direction direction
     ) {
         int sideHit = side.getOpposite().getId();
-        if (!world.getBlockMaterial(blockX, blockY, blockZ).isSolid()) {
-            return false;
-        } else {
+        if (world.getBlockMaterial(blockX, blockY, blockZ).isSolid()) {
             if (!world.canPlaceInsideBlock(blockX, blockY, blockZ)) {
                 blockX += side.getOffsetX();
                 blockY += side.getOffsetY();
@@ -155,9 +155,7 @@ public class TurtlePlaceCommand implements ITurtleCommand {
             }
 
             if (blockY < 0 || blockY >= world.getHeightBlocks()) {
-                return false;
             } else if (!Blocks.SIGN_POST_PLANKS_OAK.canPlaceBlockAt(world, blockX, blockY, blockZ)) {
-                return false;
             } else {
                 if (sideHit == Side.TOP.getId() || sideHit == Side.BOTTOM.getId()) {
                     world.playBlockSoundEffect(
@@ -185,7 +183,6 @@ public class TurtlePlaceCommand implements ITurtleCommand {
 
                 itemstack.consumeItem(null);
 
-                return true;
             }
         }
     }
