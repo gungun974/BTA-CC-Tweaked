@@ -18,7 +18,7 @@ import net.minecraft.core.util.collection.NamespaceID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.*;
 
 class GenericPeripheral implements IDynamicPeripheral {
     private final String type;
@@ -50,6 +50,11 @@ class GenericPeripheral implements IDynamicPeripheral {
     @Override
     public String getType() {
         return type;
+    }
+
+    @Override
+    public Set<String> getAdditionalTypes() {
+        return new HashSet<>(Collections.singletonList("inventory"));
     }
 
     @Nullable

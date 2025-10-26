@@ -9,6 +9,8 @@ import dan200.computercraft.api.lua.LuaFunction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The interface that defines a peripheral.
@@ -26,6 +28,16 @@ public interface IPeripheral {
      */
     @Nonnull
     String getType();
+
+
+    /**
+     * Return additional types/traits associated with this object.
+     *
+     * @return A collection of additional object traits.
+     */
+    default Set<String> getAdditionalTypes() {
+        return new HashSet<>();
+    }
 
     /**
      * Is called when when a computer is attaching to the peripheral.

@@ -5,6 +5,7 @@
  */
 package dan200.computercraft.core.apis;
 
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
 import dan200.computercraft.api.lua.*;
@@ -127,6 +128,17 @@ public class PeripheralAPI implements ILuaAPI, IAPIEnvironment.IPeripheralChange
         return false;
     }
 
+    // Replace it later with CC Tweaked LuaUtil
+    public static Object[] consArray(Object value, Collection<?> rest) {
+        if (rest.isEmpty()) return new Object[]{ value };
+
+        Object[] out = new Object[rest.size() + 1];
+        out[0] = value;
+        int i = 1;
+        for (Object additionalType : rest) out[i++] = additionalType;
+        return out;
+    }
+
     @LuaFunction
     public final Object[] getType(String sideName) {
         ComputerSide side = ComputerSide.valueOfInsensitive(sideName);
@@ -134,7 +146,20 @@ public class PeripheralAPI implements ILuaAPI, IAPIEnvironment.IPeripheralChange
 
         synchronized (peripherals) {
             PeripheralWrapper p = peripherals[side.ordinal()];
-            if (p != null) return new Object[]{p.getType()};
+            return p == null ? null : consArray(p.getType(), p.getAdditionalTypes());
+        }
+    }
+
+    @LuaFunction
+    public final Object[] hasType(String sideName, String type) {
+        ComputerSide side = ComputerSide.valueOfInsensitive(sideName);
+        if (side == null) return null;
+
+        synchronized (peripherals) {
+            PeripheralWrapper p = peripherals[side.ordinal()];
+            if (p != null) {
+                return new Object[]{ p.getType().equals(type) || p.getAdditionalTypes().contains(type) };
+            }
         }
         return null;
     }
@@ -180,6 +205,7 @@ public class PeripheralAPI implements ILuaAPI, IAPIEnvironment.IPeripheralChange
         private final IPeripheral peripheral;
 
         private final String type;
+        private final Set<String> additionalTypes;
         private final Map<String, PeripheralMethod> methodMap;
         private boolean attached;
 
@@ -190,6 +216,7 @@ public class PeripheralAPI implements ILuaAPI, IAPIEnvironment.IPeripheralChange
             attached = false;
 
             type = Objects.requireNonNull(peripheral.getType(), "Peripheral type cannot be null");
+            additionalTypes = peripheral.getAdditionalTypes();
 
             methodMap = PeripheralAPI.getMethods(peripheral);
         }
@@ -200,6 +227,10 @@ public class PeripheralAPI implements ILuaAPI, IAPIEnvironment.IPeripheralChange
 
         public String getType() {
             return type;
+        }
+
+        public Set<String> getAdditionalTypes() {
+            return additionalTypes;
         }
 
         public Collection<String> getMethods() {

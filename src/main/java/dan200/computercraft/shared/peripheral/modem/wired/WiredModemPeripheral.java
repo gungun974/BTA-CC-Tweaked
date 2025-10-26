@@ -23,10 +23,7 @@ import net.minecraft.core.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -54,6 +51,11 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
     @Override
     protected IPacketNetwork getNetwork() {
         return modem.getNode();
+    }
+
+    @Override
+    public Set<String> getAdditionalTypes() {
+        return new HashSet<>(Collections.singleton("peripheral_hub"));
     }
 
     @Override
@@ -153,6 +155,17 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
         return wrappers == null ? null : wrappers.get(remoteName);
     }
 
+    // Replace it later with CC Tweaked LuaUtil
+    public static Object[] consArray(Object value, Collection<?> rest) {
+        if (rest.isEmpty()) return new Object[]{ value };
+
+        Object[] out = new Object[rest.size() + 1];
+        out[0] = value;
+        int i = 1;
+        for (Object additionalType : rest) out[i++] = additionalType;
+        return out;
+    }
+
     /**
      * Get the type of a peripheral is available on this wired network.
      *
@@ -168,7 +181,27 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
     @LuaFunction
     public final Object[] getTypeRemote(IComputerAccess computer, String name) {
         RemotePeripheralWrapper wrapper = getWrapper(computer, name);
-        return wrapper != null ? new Object[]{wrapper.getType()} : null;
+        return wrapper == null ? null : consArray(wrapper.getType(), wrapper.getAdditionalTypes());
+    }
+
+    /**
+     * Check a peripheral is of a particular type.
+     * <p>
+     * > [!NOTE]
+     * > This function only appears on wired modems. Check {@link #isWireless} returns false before calling it.
+     *
+     * @param computer The calling computer.
+     * @param name     The peripheral's name.
+     * @param type     The type to check.
+     * @return The peripheral's name.
+     * @cc.treturn boolean|nil If a peripheral has a particular type, or {@literal nil} if it is not present.
+     * @cc.since 1.99
+     * @see PeripheralAPI#getType
+     */
+    @LuaFunction
+    public final Object[] hasTypeRemote(IComputerAccess computer, String name, String type) {
+        RemotePeripheralWrapper wrapper = getWrapper(computer, name);
+        return wrapper == null ? null : new Object[]{ wrapper.getType().equals(type) || wrapper.getAdditionalTypes().contains(type) };
     }
 
     /**
@@ -284,6 +317,7 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
         private final String name;
 
         private final String type;
+        private final Set<String> additionalTypes;
         private final Map<String, PeripheralMethod> methodMap;
 
         RemotePeripheralWrapper(WiredModemElement element, IPeripheral peripheral, IComputerAccess computer, String name) {
@@ -293,6 +327,7 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
             this.name = name;
 
             type = Objects.requireNonNull(peripheral.getType(), "Peripheral type cannot be null");
+            additionalTypes = peripheral.getAdditionalTypes();
             methodMap = PeripheralAPI.getMethods(peripheral);
         }
 
@@ -308,6 +343,10 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
 
         public String getType() {
             return type;
+        }
+
+        public Set<String> getAdditionalTypes() {
+            return additionalTypes;
         }
 
         public Collection<String> getMethodNames() {
