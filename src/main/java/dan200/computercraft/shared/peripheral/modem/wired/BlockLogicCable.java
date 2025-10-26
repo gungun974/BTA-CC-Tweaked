@@ -90,12 +90,14 @@ public class BlockLogicCable extends BlockLogic {
     }
 
     public void updateBlockBoundsFromState(WorldSource world, int x, int y, int z) {
-        TileCable state = (TileCable) world.getTileEntity(x, y, z);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
 
-        if (state == null) {
+        if (!(tileEntity instanceof TileEntity)) {
             setBlockBounds(0, 0, 0, 1, 1, 1);
-            return;
+           return;
         }
+
+        TileCable state = (TileCable) tileEntity;
 
         AABB shape = CableShapes.getShape(state);
 
