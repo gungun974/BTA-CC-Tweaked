@@ -284,12 +284,32 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         }
     }
 
+    private final int[] previousOutput = new int[ComputerSide.COUNT];
+
     public void updateRedstoneOutput() {
         // Update redstone
         updateBlock();
-        for (Direction dir : DirectionUtil.FACINGS) {
-            RedstoneUtil.propagateRedstoneOutput(worldObj, new BlockPos(x, y, z), dir);
-        }
+
+            for (Direction dir : DirectionUtil.FACINGS) {
+                if (Helper.isServerEnvironment() || Helper.isSinglePlayer()) {
+                    ServerComputer computer = getServerComputer();
+                    if (computer == null) {
+                        continue;
+                    }
+
+                    int signal = computer.getRedstoneOutput(remapToLocalSide(dir));
+
+                    if (signal == previousOutput[remapToLocalSide(dir).ordinal()]) {
+                        continue;
+                    }
+
+                    previousOutput[remapToLocalSide(dir).ordinal()] = signal;
+                }
+
+                BlockLogicComputer.ENABLE_REDSTONE = true;
+                RedstoneUtil.propagateRedstoneOutput(worldObj, new BlockPos(x, y, z), dir);
+                BlockLogicComputer.ENABLE_REDSTONE = false;
+            }
     }
 
     public void updateBlock() {

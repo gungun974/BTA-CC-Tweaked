@@ -27,6 +27,12 @@ public final class RedstoneUtil {
                 continue;
             }
             world.notifyBlocksOfNeighborChange(pos.x + s.getOffsetX(), pos.y + s.getOffsetY(), pos.z + s.getOffsetZ(), blockId);
+            for (Side s2 : Side.sides) {
+                if (s2.getDirection() == side) {
+                    continue;
+                }
+                world.notifyBlocksOfNeighborChange(pos.x + s.getOffsetX() + s2.getOffsetX(), pos.y + s.getOffsetY() + s2.getOffsetY(), pos.z + s.getOffsetZ() + s2.getOffsetZ(), blockId);
+            }
         }
 
     }

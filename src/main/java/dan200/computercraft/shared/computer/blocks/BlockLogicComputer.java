@@ -111,8 +111,10 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
         computerEntity.destroy();
     }
 
+    static boolean ENABLE_REDSTONE = false;
+
     public boolean isSignalSource() {
-        return true;
+        return ENABLE_REDSTONE;
     }
 
     public boolean getDirectSignal(World world, int x, int y, int z, Side side) {
