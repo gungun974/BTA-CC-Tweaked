@@ -2,6 +2,7 @@ package dan200.computercraft.fabric.mixin;
 
 import dan200.computercraft.shared.recipe.ImpostorShapedRecipe;
 import dan200.computercraft.shared.recipe.ImpostorShapelessRecipe;
+import dan200.computercraft.shared.turtle.recipes.TurtleRecipe;
 import net.minecraft.client.gui.guidebook.crafting.RecipePageCrafting;
 import net.minecraft.client.gui.guidebook.crafting.displays.DisplayAdapterShaped;
 import net.minecraft.client.gui.guidebook.crafting.displays.DisplayAdapterShapeless;
@@ -25,6 +26,7 @@ public class RecipePageCraftingMixin {
         at = @At("TAIL")
     )
     private static void injectImpostorRecipes(CallbackInfo ci) {
+        recipeToDisplayAdapterMap.put(TurtleRecipe.class, new DisplayAdapterShaped());
         recipeToDisplayAdapterMap.put(ImpostorShapedRecipe.class, new DisplayAdapterShaped());
         recipeToDisplayAdapterMap.put(ImpostorShapelessRecipe.class, new DisplayAdapterShapeless());
     }
