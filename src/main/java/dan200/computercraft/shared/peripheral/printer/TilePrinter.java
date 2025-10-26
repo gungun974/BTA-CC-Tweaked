@@ -137,6 +137,10 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
             return;
         }
 
+        if (Helper.isClientWorld()) {
+            return;
+        }
+
         final int currentMetadata = getBlockMeta();
 
         final boolean currentBottom = ((currentMetadata >> 3) & 0b1) == 1;
