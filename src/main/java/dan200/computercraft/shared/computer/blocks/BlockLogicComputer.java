@@ -3,11 +3,14 @@ package dan200.computercraft.shared.computer.blocks;
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.core.computer.ComputerSide;
+import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.common.IBundledRedstoneBlock;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.computer.items.ComputerItemFactory;
 import dan200.computercraft.shared.util.BlockPos;
+import dan200.computercraft.shared.util.DirectionUtil;
+import dan200.computercraft.shared.util.RedstoneUtil;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogicRotatable;
 import net.minecraft.core.block.entity.TileEntity;
@@ -109,6 +112,10 @@ public class BlockLogicComputer extends BlockLogicRotatable implements IBundledR
         TileComputerBase computerEntity = (TileComputerBase) entity;
 
         computerEntity.destroy();
+
+        for (Direction dir : DirectionUtil.FACINGS) {
+            RedstoneUtil.propagateRedstoneOutput(world, new BlockPos(x, y, z), dir);
+        }
     }
 
     static boolean ENABLE_REDSTONE = false;
