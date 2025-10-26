@@ -79,6 +79,12 @@ public class ItemBlockComputer<T extends BlockLogic> extends ItemBlockComputerBa
 
                         computerEntity.readDescription(stack.getData());
 
+                        // Set label
+                        String label = stack.getCustomName();
+                        if (label != null) {
+                            computerEntity.setLabel(label);
+                        }
+
                         return true;
                     }
 

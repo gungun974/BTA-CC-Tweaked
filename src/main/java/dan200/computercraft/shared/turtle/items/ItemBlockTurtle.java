@@ -166,6 +166,12 @@ public class ItemBlockTurtle extends ItemBlockComputerBase implements ITurtleIte
 
                         turtle.readDescription(stack.getData());
 
+                        // Set label
+                        String label = stack.getCustomName();
+                        if (label != null) {
+                            turtle.setLabel(label);
+                        }
+
                         if (player != null) {
                             turtle.setOwningPlayer(player.uuid);
                         }
