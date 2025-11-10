@@ -244,12 +244,12 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             BlockPos pos = getPos().offset(getRight(), -xIndex)
                 .offset(getDown(), -yIndex);
             TileEntity te = worldObj.getTileEntity(pos.x, pos.y, pos.z);
-            if (!(te instanceof TileMonitor)) {
+            if (te instanceof TileMonitor) {
+                if (clientMonitor != ((TileMonitor) te).clientMonitor) {
+                    clientMonitor = ((TileMonitor) te).clientMonitor;
+                }
+            } else {
                 clientMonitor = null;
-            }
-
-            if (clientMonitor != ((TileMonitor) te).clientMonitor) {
-                clientMonitor = ((TileMonitor) te).clientMonitor;
             }
         }
 
