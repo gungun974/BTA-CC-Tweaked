@@ -26,9 +26,7 @@ public class TurtleInventoryCrafting extends ContainerCrafting {
 
     @SuppressWarnings("ConstantConditions")
     public TurtleInventoryCrafting(ITurtleAccess turtle) {
-        // Passing null in here is evil, but we don't have a container present. We override most methods in order to
-        // avoid throwing any NPEs.
-        super(null, 0, 0);
+        super(null, 3, 3);
         this.turtle = turtle;
         xStart = 0;
         yStart = 0;
