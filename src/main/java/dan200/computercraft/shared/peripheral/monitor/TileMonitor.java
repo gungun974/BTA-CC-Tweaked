@@ -62,6 +62,15 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
     }
 
     @Override
+    public int getBlockMeta() {
+        if (this.worldObj == null) {
+            return 0;
+        }
+
+        return this.carriedBlock != null ? this.carriedBlock.metadata : this.worldObj.getBlockMetadata(this.x, this.y, this.z);
+    }
+
+    @Override
     public void invalidate() {
         super.invalidate();
 
