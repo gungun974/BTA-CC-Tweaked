@@ -6,7 +6,6 @@
 package dan200.computercraft.api.media;
 
 import dan200.computercraft.api.filesystem.IMount;
-import net.minecraft.client.sound.SoundEntry;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.world.World;
@@ -58,7 +57,7 @@ public interface IMedia {
      * @return The name, or null if this item does not represent an item with audio.
      */
     @Nullable
-    default SoundEntry getAudio(@Nonnull ItemStack stack) {
+    default String getAudio(@Nonnull ItemStack stack) {
         return null;
     }
 

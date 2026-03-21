@@ -129,7 +129,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
                 restartRecord = false;
                 if (recordQueued) {
                     IMedia contents = getDiskMedia();
-                    SoundEntry record = contents != null ? contents.getAudio(diskStack) : null;
+                    String record = contents != null ? contents.getAudio(diskStack) : null;
                     if (record != null) {
                         recordPlaying = true;
                         playRecord();
@@ -411,7 +411,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
 
     private void playRecord() {
         IMedia contents = getDiskMedia();
-        SoundEntry record = contents != null ? contents.getAudio(diskStack) : null;
+        String record = contents != null ? contents.getAudio(diskStack) : null;
         if (record != null) {
             RecordUtil.playRecord(record, contents.getAudioTitle(diskStack), worldObj, new BlockPos(x, y, z));
         } else {

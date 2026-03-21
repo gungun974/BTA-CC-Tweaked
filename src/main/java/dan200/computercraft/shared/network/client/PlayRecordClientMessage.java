@@ -10,8 +10,6 @@ import dan200.computercraft.shared.util.BlockPos;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.sound.SoundEntry;
-import net.minecraft.client.sound.SoundRepository;
 import net.minecraft.core.lang.I18n;
 import org.jetbrains.annotations.NotNull;
 import turniplabs.halplibe.helper.network.NetworkMessage;
@@ -29,12 +27,12 @@ import javax.annotation.Nonnull;
 public class PlayRecordClientMessage implements NetworkMessage {
     private BlockPos pos;
     private String name;
-    private SoundEntry soundEntry;
+    private String soundEntry;
 
-    public PlayRecordClientMessage(BlockPos pos, SoundEntry entry, String name) {
+    public PlayRecordClientMessage(BlockPos pos, String entry, String name) {
         this.pos = pos;
         this.name = name;
-        soundEntry = entry;
+        this.soundEntry = entry;
     }
 
     public PlayRecordClientMessage(BlockPos pos) {
@@ -42,6 +40,8 @@ public class PlayRecordClientMessage implements NetworkMessage {
         name = null;
         soundEntry = null;
     }
+
+    public PlayRecordClientMessage() {}
 
     @Override
     public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
@@ -53,7 +53,7 @@ public class PlayRecordClientMessage implements NetworkMessage {
         } else {
             buf.writeBoolean(true);
             buf.writeString(name);
-            buf.writeString(soundEntry.name);
+            buf.writeString(soundEntry);
         }
     }
 
@@ -65,7 +65,7 @@ public class PlayRecordClientMessage implements NetworkMessage {
         pos = new BlockPos(x, y, z);
         if (buf.readBoolean()) {
             name = buf.readString();
-            soundEntry = SoundRepository.SOUNDS.getSoundEntry(buf.readString());
+            soundEntry = buf.readString();
         } else {
             name = null;
             soundEntry = null;

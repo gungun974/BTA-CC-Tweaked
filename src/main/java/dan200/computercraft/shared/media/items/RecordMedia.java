@@ -39,12 +39,12 @@ public final class RecordMedia implements IMedia {
     }
 
     @Override
-    public SoundEntry getAudio(@Nonnull ItemStack stack) {
+    public String getAudio(@Nonnull ItemStack stack) {
         Item item = stack.getItem();
         if (!(item instanceof ItemDiscMusic)) {
             return null;
         }
 
-        return SoundRepository.SOUNDS.getSoundEntry(((ItemDiscMusic) item).recordName);
+        return ((ItemDiscMusic) item).recordName;
     }
 }
