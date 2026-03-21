@@ -6,6 +6,7 @@
 package dan200.computercraft.shared.peripheral.diskdrive;
 
 import com.mojang.nbt.tags.CompoundTag;
+import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
 import dan200.computercraft.api.media.IMedia;
@@ -66,7 +67,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
                 return true;
             }
             if (!Helper.isClientWorld() && getItem(0) == null && MediaProviders.get(disk) != null) {
-                setDiskStack(disk);
+                setDiskStack(player.inventory.removeItem(player.inventory.getCurrentItemIndex(), 1));
                 player.setHeldObject(null);
             }
             return true;
