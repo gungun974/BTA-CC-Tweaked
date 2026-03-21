@@ -49,7 +49,7 @@ public final class FurnaceRefuelHandler implements TurtleRefuelEvent.Handler {
             replacementStack = Items.BUCKET;
         } else {
             currentStack.stackSize--;
-            if (currentStack.stackSize < 0) {
+            if (currentStack.stackSize - limit - 1 <= 0) {
                 replacementStack = null;
             }
         }
