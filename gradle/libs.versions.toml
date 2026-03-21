@@ -1,0 +1,60 @@
+[versions]
+bta = "7.3_04"
+btaChannel = "release"
+java = "8"
+gradleJava = "21"
+loader = "0.15.6-bta.7"
+halplibe = "5.3.1"
+modMenu = "2.0.2"
+
+lwjgl = "3.3.2"
+legacyLwjgl = "1.0.5"
+
+slf4jApi = "1.8.0-beta4"
+log4jSlf4j = "2.16.0"
+log4j = "2.20.0"
+guava = "33.0.0-jre"
+gson = "2.10.1"
+commonsLang3 = "3.12.0"
+commonsCodec = "1.16.0"
+
+cobalt = "0.5.2-SNAPSHOT"
+netty = "4.1.95.Final"
+nightConfig = "3.6.5"
+
+loom = "1.10.0-bta"
+lwjglPlugin = "1.0.2"
+
+[libraries]
+clientJar = { module = "objects:client", version = "43db9b498cb67058d2e12d394e6507722e71bb45" }
+loader = { module = "net.fabricmc:fabric-loader", version.ref = "loader" }
+halplibe = { module = "turniplabs:halplibe", version.ref = "halplibe" }
+modMenu = { module = "turniplabs:modmenu-bta", version.ref = "modMenu" }
+legacyLwjgl = { module = "com.github.Better-than-Adventure:legacy-lwjgl3", version.ref = "legacyLwjgl" }
+
+slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
+log4j-slf4j2-impl = { module = "org.apache.logging.log4j:log4j-slf4j18-impl", version.ref = "log4jSlf4j" }
+log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
+log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
+log4j-api12 = { module = "org.apache.logging.log4j:log4j-1.2-api", version.ref = "log4j" }
+
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+commonsLang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang3" }
+commonsCodec = { module = "commons-codec:commons-codec", version.ref = "commonsCodec" }
+
+cobalt = { module = "org.squiddev:Cobalt", version.ref = "cobalt" }
+
+netty-buffer = { module = "io.netty:netty-buffer", version.ref = "netty" }
+netty-common = { module = "io.netty:netty-common", version.ref = "netty" }
+netty-transport = { module = "io.netty:netty-transport", version.ref = "netty" }
+netty-handler = { module = "io.netty:netty-handler", version.ref = "netty" }
+netty-codec = { module = "io.netty:netty-codec", version.ref = "netty" }
+netty-codec-http = { module = "io.netty:netty-codec-http", version.ref = "netty" }
+
+nightConfig-core = { module = "com.electronwill.night-config:core", version.ref = "nightConfig" }
+nightConfig-toml = { module = "com.electronwill.night-config:toml", version.ref = "nightConfig" }
+
+[plugins]
+loom = { id = "fabric-loom", version.ref = "loom" }
+lwjgl = { id = "com.smushytaco.lwjgl3", version.ref = "lwjglPlugin" }
