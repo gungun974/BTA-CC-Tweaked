@@ -53,7 +53,10 @@ public abstract class WorldMixin {
     @Inject(method = "getSignal(IIILnet/minecraft/core/util/helper/Side;)Z", at = @At("HEAD"), cancellable = true)
     public void computerSignal(int x, int y, int z, Side side, CallbackInfoReturnable<Boolean> cir) {
         Block<?> block = this.getBlock(x, y, z);
-        if (block == Blocks.blocksList[ComputerCraftBlocks.COMPUTER_NORMAL.id()]) {
+        if (block == Blocks.blocksList[ComputerCraftBlocks.COMPUTER_NORMAL.id()]
+            || block == Blocks.blocksList[ComputerCraftBlocks.COMPUTER_ADVANCED.id()]
+            || block == Blocks.blocksList[ComputerCraftBlocks.TURTLE_NORMAL.id()]
+            || block == Blocks.blocksList[ComputerCraftBlocks.TURTLE_ADVANCED.id()]) {
             if (block != null) {
                 cir.setReturnValue(block.getSignal((World) (Object) this, x, y, z, side));
             }
