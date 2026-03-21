@@ -72,8 +72,10 @@ public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
             BlockModel.renderBlocks.enableAO = true;
 
             if (tileEntity.worldObj == null) {
+                BlockModel.renderBlocks.blockAccess = Minecraft.getMinecraft().currentWorld;
                 BlockModel.renderBlocks.cache.setupCache(block, Minecraft.getMinecraft().currentWorld, tileEntity.x, tileEntity.y, tileEntity.z);
             } else {
+                BlockModel.renderBlocks.blockAccess = tileEntity.worldObj;
                 BlockModel.renderBlocks.cache.setupCache(block, tileEntity.worldObj, tileEntity.x, tileEntity.y, tileEntity.z);
             }
 
