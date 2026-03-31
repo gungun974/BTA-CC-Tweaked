@@ -92,7 +92,7 @@ public class BlockLogicCable extends BlockLogic {
     public void updateBlockBoundsFromState(WorldSource world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
 
-        if (!(tileEntity instanceof TileEntity)) {
+        if (!(tileEntity instanceof TileCable)) {
             setBlockBounds(0, 0, 0, 1, 1, 1);
            return;
         }
