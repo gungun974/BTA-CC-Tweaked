@@ -96,6 +96,9 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
         } else {
             // Just turn off any redstone we had on
             for (Direction dir : DirectionUtil.FACINGS) {
+                if (worldObj == null) {
+                    return;
+                }
                 RedstoneUtil.propagateRedstoneOutput(worldObj, getPos(), dir);
             }
         }
@@ -247,6 +250,9 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
 
     @Environment(EnvType.SERVER)
     protected void updateBlockServer() {
+        if (worldObj == null) {
+            return;
+        }
         NetworkHandler.sendToAllAround(x, y, z, 64, worldObj.dimension.id, new TurtleBrainClientMessage(getPos(), brain));
     }
 
@@ -326,7 +332,9 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
 
         final int currentMetadata = getBlockMeta();
 
-        worldObj.setBlockMetadata(x, y, z, BlockLogicTurtle.setDirection(currentMetadata, dir));
+        if (worldObj != null) {
+            worldObj.setBlockMetadata(x, y, z, BlockLogicTurtle.setDirection(currentMetadata, dir));
+        }
 
         updateRedstoneOutput();
         updateRedstoneInput();
@@ -364,6 +372,9 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     }
 
     public void onTileEntityChange() {
+        if (worldObj == null) {
+            return;
+        }
         worldObj.notifyBlockChange(x, y, z, getBlockId());
     }
 

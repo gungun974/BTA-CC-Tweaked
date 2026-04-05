@@ -32,6 +32,7 @@ import net.minecraft.core.item.Items;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -58,6 +59,9 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     public void destroy() {
         unload();
         for (Direction dir : DirectionUtil.FACINGS) {
+            if (worldObj == null) {
+                return;
+            }
             RedstoneUtil.propagateRedstoneOutput(worldObj, new BlockPos(x, y, z), dir);
         }
     }
@@ -87,7 +91,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             return true;
         } else if (!player.isSneaking()) {
             // Regular right click to activate computer
-            if (!worldObj.isClientSide && isUsable(player, false)) {
+            if (!EnvironmentHelper.isClientWorld() && isUsable(player, false)) {
                 createServerComputer().turnOn();
                 createServerComputer().sendTerminalState(player);
                 ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this));
@@ -306,6 +310,9 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
                     previousOutput[remapToLocalSide(dir).ordinal()] = signal;
                 }
 
+                if (worldObj == null) {
+                    return;
+                }
                 BlockLogicComputer.ENABLE_REDSTONE = true;
                 RedstoneUtil.propagateRedstoneOutput(worldObj, new BlockPos(x, y, z), dir);
                 BlockLogicComputer.ENABLE_REDSTONE = false;
@@ -316,7 +323,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         if (worldObj == null) {
             return;
         }
-        int blockId = Helper.getBlockLogic(worldObj, this.x, this.y, this.z, BlockLogicComputer.class).id();
+        int blockId = worldObj.getBlockId(this.x, this.y, this.z);
 
         worldObj.notifyBlockChange(this.x, this.y, this.z, blockId);
 
