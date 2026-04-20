@@ -29,7 +29,7 @@ public class ResourceManager {
             }
 
             Files.list(dirPath).forEach(found -> {
-                final Identifier identifier = new Identifier(namespace, found.toString().replaceFirst(".*?/assets/" + Pattern.quote(namespace) + "/", ""));
+                final Identifier identifier = new Identifier(namespace, found.toUri().toString().replaceFirst(".*?/assets/" + Pattern.quote(namespace) + "/", ""));
 
                 identifiers.add(identifier);
 
