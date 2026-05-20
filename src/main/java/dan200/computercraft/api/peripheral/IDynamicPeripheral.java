@@ -6,8 +6,7 @@
 package dan200.computercraft.api.peripheral;
 
 import dan200.computercraft.api.lua.*;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A peripheral whose methods are not known at runtime.
@@ -23,7 +22,7 @@ public interface IDynamicPeripheral extends IPeripheral {
      * @return An array of strings representing method names.
      * @see #callMethod
      */
-    @Nonnull
+    @NotNull
     String[] getMethodNames();
 
     /**
@@ -42,6 +41,6 @@ public interface IDynamicPeripheral extends IPeripheral {
      *                      to throw appropriate errors if the wrong arguments are supplied to your method.
      * @see #getMethodNames()
      */
-    @Nonnull
-    MethodResult callMethod(@Nonnull IComputerAccess computer, @Nonnull ILuaContext context, int method, @Nonnull IArguments arguments) throws LuaException;
+    @NotNull
+    MethodResult callMethod(@NotNull IComputerAccess computer, @NotNull ILuaContext context, int method, @NotNull IArguments arguments) throws LuaException;
 }

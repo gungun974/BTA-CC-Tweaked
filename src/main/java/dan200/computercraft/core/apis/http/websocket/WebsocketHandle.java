@@ -14,8 +14,8 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.Closeable;
 import java.util.Arrays;
 import java.util.Optional;
@@ -124,7 +124,7 @@ public class WebsocketHandle implements Closeable {
             this.timeoutId = timeoutId;
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public MethodResult resume(Object[] event) {
             if (event.length >= 3 && Objects.equal(event[0], MESSAGE_EVENT) && Objects.equal(event[1], websocket.address())) {

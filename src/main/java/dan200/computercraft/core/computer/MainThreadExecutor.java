@@ -8,8 +8,8 @@ package dan200.computercraft.core.computer;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.peripheral.IWorkMonitor;
 import dan200.computercraft.core.tracking.Tracking;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
@@ -19,14 +19,14 @@ import java.util.concurrent.TimeUnit;
  * them.
  * <p>
  * This provides rate-limiting mechanism for tasks enqueued with {@link Computer#queueMainThread(Runnable)}, but also
- * those run elsewhere (such as during the turtle's tick - see {@link TurtleBrain#update()}). In order to handle this,
+ * those run elsewhere (such as during the turtle's tick - see {@link dan200.computercraft.shared.turtle.core.TurtleBrain#update()}). In order to handle this,
  * the executor goes through three stages:
  * <p>
  * When {@link State#COOL}, the computer is allocated {@link ComputerCraft#maxMainComputerTime}ns to execute any work
  * this tick. At the beginning of the tick, we execute as many {@link MainThread} tasks as possible, until our
  * time-frame or the global time frame has expired.
  * <p>
- * Then, when other objects (such as {@link BlockEntity}) are ticked, we update how much time we've used using
+ * Then, when other objects (such as {@link net.minecraft.core.block.entity.TileEntity}) are ticked, we update how much time we've used using
  * {@link IWorkMonitor#trackWork(long, TimeUnit)}.
  * <p>
  * Now, if anywhere during this period, we use more than our allocated time slice, the executor is marked as
@@ -163,7 +163,7 @@ final class MainThreadExecutor implements IWorkMonitor {
     }
 
     @Override
-    public void trackWork(long time, @Nonnull TimeUnit unit) {
+    public void trackWork(long time, @NotNull TimeUnit unit) {
         long nanoTime = unit.toNanos(time);
         synchronized (queueLock) {
             pendingTime += nanoTime;

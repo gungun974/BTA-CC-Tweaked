@@ -8,12 +8,12 @@ package dan200.computercraft.shared.turtle.core;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleCommand;
 import dan200.computercraft.api.turtle.TurtleCommandResult;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.WorldUtil;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
-
-import javax.annotation.Nonnull;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
 
 public class TurtleDetectCommand implements ITurtleCommand {
     private final InteractDirection direction;
@@ -22,17 +22,17 @@ public class TurtleDetectCommand implements ITurtleCommand {
         this.direction = direction;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+    public TurtleCommandResult execute(@NotNull ITurtleAccess turtle) {
         // Get world direction from direction
         Direction direction = this.direction.toWorldDir(turtle);
 
         // Check if thing in front is air or not
         World world = turtle.getWorld();
-        BlockPos oldPosition = turtle.getPosition();
-        BlockPos newPosition = oldPosition.offset(direction);
+        TilePosc oldPosition = turtle.getPosition();
+        TilePosc newPosition = oldPosition.add(direction, new TilePos());
 
-        return !WorldUtil.isLiquidBlock(world, newPosition) && !world.isAirBlock(newPosition.x, newPosition.y, newPosition.z) ? TurtleCommandResult.success() : TurtleCommandResult.failure();
+        return !WorldUtil.isLiquidBlock(world, newPosition) && !world.isAirBlock(newPosition) ? TurtleCommandResult.success() : TurtleCommandResult.failure();
     }
 }

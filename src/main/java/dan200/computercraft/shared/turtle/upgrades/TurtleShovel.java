@@ -10,16 +10,15 @@ import dan200.computercraft.api.turtle.TurtleCommandResult;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.api.turtle.TurtleVerb;
 import dan200.computercraft.shared.turtle.core.TurtlePlaceCommand;
-import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
+import net.minecraft.core.block.material.Materials;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
 
 public class TurtleShovel extends TurtleTool {
     public TurtleShovel(int id, Item item) {
@@ -35,9 +34,9 @@ public class TurtleShovel extends TurtleTool {
         return "upgrade.minecraft.diamond_shovel.adjective";
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult useTool(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction direction) {
+    public TurtleCommandResult useTool(@NotNull ITurtleAccess turtle, @NotNull TurtleSide side, @NotNull TurtleVerb verb, @NotNull Direction direction) {
         if (verb == TurtleVerb.DIG) {
             ItemStack shovel = item.copy();
             ItemStack remainder = TurtlePlaceCommand.deploy(shovel, turtle, direction, null, null);
@@ -49,17 +48,17 @@ public class TurtleShovel extends TurtleTool {
     }
 
     @Override
-    protected boolean canBreakBlock(World world, BlockPos pos) {
+    protected boolean canBreakBlock(World world, TilePosc pos) {
         if (!super.canBreakBlock(world, pos)) {
             return false;
         }
 
-        Block<?> block = world.getBlock(pos.x, pos.y, pos.z);
+        Block<?> block = world.getBlockType(pos);
         if (block == null) {
             return false;
         }
 
         Material material = block.getMaterial();
-        return material == Material.dirt || material == Material.grass || material == Material.moss || material == Material.clay || material == Material.topSnow || material == Material.snow || material == Material.plant || material == Material.cactus || material == Material.leaves;
+        return material == Materials.DIRT || material == Materials.GRASS || material == Materials.MOSS || material == Materials.CLAY || material == Materials.TOP_SNOW || material == Materials.SNOW || material == Materials.PLANT || material == Materials.CACTUS || material == Materials.LEAVES;
     }
 }

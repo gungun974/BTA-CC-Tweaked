@@ -8,10 +8,10 @@ package dan200.computercraft.core.lua;
 import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaValues;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.squiddev.cobalt.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 import java.util.Optional;
 
@@ -67,7 +67,7 @@ class VarargArguments implements IArguments {
         return value instanceof LuaInteger ? value.toInteger() : (long) LuaValues.checkFinite(index, value.toDouble());
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ByteBuffer getBytes(int index) throws LuaException {
         LuaValue value = varargs.arg(index + 1);

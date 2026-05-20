@@ -13,10 +13,10 @@ import dan200.computercraft.api.network.IPacketSender;
 import dan200.computercraft.api.network.Packet;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3dc;
 
-import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,8 +50,8 @@ public abstract class ModemPeripheral implements IPeripheral, IPacketSender, IPa
     }
 
     @Override
-    public void receiveSameDimension(@Nonnull Packet packet, double distance) {
-        if (packet.getSender() == this || !state.isOpen(packet.getChannel())) {
+    public void receiveSameDimension(@NotNull Packet packet, double distance) {
+        if (packet.sender() == this || !state.isOpen(packet.channel())) {
             return;
         }
 
@@ -59,35 +59,35 @@ public abstract class ModemPeripheral implements IPeripheral, IPacketSender, IPa
             for (IComputerAccess computer : computers) {
                 computer.queueEvent("modem_message",
                     computer.getAttachmentName(),
-                    packet.getChannel(),
-                    packet.getReplyChannel(),
-                    packet.getPayload(),
+                    packet.channel(),
+                    packet.replyChannel(),
+                    packet.payload(),
                     distance);
             }
         }
     }
 
     @Override
-    public void receiveDifferentDimension(@Nonnull Packet packet) {
-        if (packet.getSender() == this || !state.isOpen(packet.getChannel())) {
+    public void receiveDifferentDimension(@NotNull Packet packet) {
+        if (packet.sender() == this || !state.isOpen(packet.channel())) {
             return;
         }
 
         synchronized (computers) {
             for (IComputerAccess computer : computers) {
-                computer.queueEvent("modem_message", computer.getAttachmentName(), packet.getChannel(), packet.getReplyChannel(), packet.getPayload());
+                computer.queueEvent("modem_message", computer.getAttachmentName(), packet.channel(), packet.replyChannel(), packet.payload());
             }
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getType() {
         return "modem";
     }
 
     @Override
-    public synchronized void attach(@Nonnull IComputerAccess computer) {
+    public synchronized void attach(@NotNull IComputerAccess computer) {
         synchronized (computers) {
             computers.add(computer);
         }
@@ -117,7 +117,7 @@ public abstract class ModemPeripheral implements IPeripheral, IPacketSender, IPa
     }
 
     @Override
-    public synchronized void detach(@Nonnull IComputerAccess computer) {
+    public synchronized void detach(@NotNull IComputerAccess computer) {
         boolean empty;
         synchronized (computers) {
             computers.remove(computer);
@@ -188,7 +188,7 @@ public abstract class ModemPeripheral implements IPeripheral, IPacketSender, IPa
         parseChannel(replyChannel);
 
         World world = getWorld();
-        Vec3 position = getPosition();
+        Vector3dc position = getPosition();
         IPacketNetwork network = this.network;
 
         if (world == null || position == null || network == null) {
@@ -216,7 +216,7 @@ public abstract class ModemPeripheral implements IPeripheral, IPacketSender, IPa
         return network != null && network.isWireless();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getSenderID() {
         synchronized (computers) {

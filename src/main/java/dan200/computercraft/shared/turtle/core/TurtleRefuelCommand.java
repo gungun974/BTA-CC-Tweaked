@@ -12,8 +12,7 @@ import dan200.computercraft.api.turtle.TurtleCommandResult;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.api.turtle.event.TurtleRefuelEvent;
 import net.minecraft.core.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class TurtleRefuelCommand implements ITurtleCommand {
     private final int limit;
@@ -22,9 +21,9 @@ public class TurtleRefuelCommand implements ITurtleCommand {
         this.limit = limit;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+    public TurtleCommandResult execute(@NotNull ITurtleAccess turtle) {
         int slot = turtle.getSelectedSlot();
         ItemStack stack = turtle.getInventory()
             .getItem(slot);

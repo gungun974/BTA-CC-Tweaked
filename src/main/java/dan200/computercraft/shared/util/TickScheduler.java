@@ -9,6 +9,7 @@ import com.google.common.collect.MapMaker;
 import dan200.computercraft.shared.common.TileGeneric;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.ChunkPos;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -39,7 +40,7 @@ public final class TickScheduler {
 
             World world = tile.worldObj;
 
-            if (world != null && world.isChunkLoaded(tile.x, tile.z) && world.getTileEntity(tile.x, tile.y, tile.z) == tile) {
+            if (world != null && world.isChunkLoaded(new ChunkPos(tile.tilePos)) && world.getTileEntity(tile.tilePos) == tile) {
                 tile.tick();
             }
         }

@@ -7,8 +7,8 @@ package dan200.computercraft.api.turtle.event;
 
 import dan200.computercraft.api.turtle.FakePlayer;
 import dan200.computercraft.api.turtle.ITurtleAccess;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -19,7 +19,7 @@ import java.util.Objects;
 public abstract class TurtlePlayerEvent extends TurtleActionEvent {
     private final FakePlayer player;
 
-    protected TurtlePlayerEvent(@Nonnull ITurtleAccess turtle, @Nonnull TurtleAction action, @Nonnull FakePlayer player) {
+    protected TurtlePlayerEvent(@NotNull ITurtleAccess turtle, @NotNull TurtleAction action, @NotNull FakePlayer player) {
         super(turtle, action);
 
         Objects.requireNonNull(player, "player cannot be null");
@@ -33,7 +33,7 @@ public abstract class TurtlePlayerEvent extends TurtleActionEvent {
      *
      * @return A {@link FakePlayer} representing this turtle.
      */
-    @Nonnull
+    @NotNull
     public FakePlayer getPlayer() {
         return player;
     }

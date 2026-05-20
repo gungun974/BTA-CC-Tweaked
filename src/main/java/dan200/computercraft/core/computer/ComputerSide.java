@@ -6,9 +6,8 @@
 package dan200.computercraft.core.computer;
 
 import net.minecraft.core.util.helper.Direction;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A side on a computer. Unlike {@link Direction}, this is relative to the direction the computer is
@@ -34,13 +33,13 @@ public enum ComputerSide {
         this.name = name;
     }
 
-    @Nonnull
+    @NotNull
     public static ComputerSide valueOf(int side) {
         return VALUES[side];
     }
 
     @Nullable
-    public static ComputerSide valueOfInsensitive(@Nonnull String name) {
+    public static ComputerSide valueOfInsensitive(@NotNull String name) {
         for (ComputerSide side : VALUES) {
             if (side.name.equalsIgnoreCase(name)) return side;
         }

@@ -6,9 +6,8 @@
 package dan200.computercraft.api.lua;
 
 import dan200.computercraft.api.ComputerCraftAPI;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Construct an {@link ILuaAPI} for a specific computer.
@@ -25,5 +24,5 @@ public interface ILuaAPIFactory {
      * @return The created API, or {@code null} if one should not be injected.
      */
     @Nullable
-    ILuaAPI create(@Nonnull IComputerSystem computer);
+    ILuaAPI create(@NotNull IComputerSystem computer);
 }

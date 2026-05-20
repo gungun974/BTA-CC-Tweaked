@@ -9,7 +9,8 @@ import com.google.common.collect.ImmutableMap;
 import dan200.computercraft.shared.peripheral.modem.ModemShapes;
 import dan200.computercraft.shared.util.DirectionUtil;
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.util.phys.AABB;
+import org.joml.primitives.AABBd;
+import org.joml.primitives.AABBdc;
 
 import java.util.EnumMap;
 
@@ -17,10 +18,10 @@ public final class CableShapes {
     private static final double MIN = 0.375;
     private static final double MAX = 1 - MIN;
 
-    public static final AABB SHAPE_CABLE_CORE = AABB.getPermanentBB(MIN, MIN, MIN, MAX, MAX, MAX);
-    public static final EnumMap<Direction, AABB> SHAPE_CABLE_ARM =
-        new EnumMap<>(new ImmutableMap.Builder<Direction, AABB>().put(Direction.DOWN,
-                AABB.getPermanentBB(
+    public static final AABBdc SHAPE_CABLE_CORE = new AABBd(MIN, MIN, MIN, MAX, MAX, MAX);
+    public static final EnumMap<Direction, AABBdc> SHAPE_CABLE_ARM =
+        new EnumMap<>(new ImmutableMap.Builder<Direction, AABBdc>().put(Direction.DOWN,
+                new AABBd(
                     MIN,
                     0,
                     MIN,
@@ -28,7 +29,7 @@ public final class CableShapes {
                     MIN,
                     MAX))
             .put(Direction.UP,
-                AABB.getPermanentBB(
+                new AABBd(
                     MIN,
                     MAX,
                     MIN,
@@ -36,7 +37,7 @@ public final class CableShapes {
                     1,
                     MAX))
             .put(Direction.NORTH,
-                AABB.getPermanentBB(
+                new AABBd(
                     MIN,
                     MIN,
                     0,
@@ -44,7 +45,7 @@ public final class CableShapes {
                     MAX,
                     MIN))
             .put(Direction.SOUTH,
-                AABB.getPermanentBB(
+                new AABBd(
                     MIN,
                     MIN,
                     MAX,
@@ -52,7 +53,7 @@ public final class CableShapes {
                     MAX,
                     1))
             .put(Direction.WEST,
-                AABB.getPermanentBB(
+                new AABBd(
                     0,
                     MIN,
                     MIN,
@@ -60,7 +61,7 @@ public final class CableShapes {
                     MAX,
                     MAX))
             .put(Direction.EAST,
-                AABB.getPermanentBB(
+                new AABBd(
                     MAX,
                     MIN,
                     MIN,
@@ -69,21 +70,21 @@ public final class CableShapes {
                     MAX))
             .build());
 
-    private static final AABB[] SHAPES = new AABB[(1 << 6) * 7];
-    private static final AABB[] CABLE_SHAPES = new AABB[1 << 6];
+    private static final AABBdc[] SHAPES = new AABBd[(1 << 6) * 7];
+    private static final AABBdc[] CABLE_SHAPES = new AABBd[1 << 6];
 
     private CableShapes() {
     }
 
-    public static AABB getCableShape(TileCable state) {
+    public static AABBdc getCableShape(TileCable state) {
         if (!state.blockStateCable) {
-            return AABB.getPermanentBB(0, 0, 0, 0, 0, 0);
+            return new AABBd(0, 0, 0, 0, 0, 0);
         }
         return getCableShape(getCableIndex(state));
     }
 
-    private static AABB getCableShape(int index) {
-        AABB shape = CABLE_SHAPES[index];
+    private static AABBdc getCableShape(int index) {
+        AABBdc shape = CABLE_SHAPES[index];
         if (shape != null) {
             return shape;
         }
@@ -121,7 +122,7 @@ public final class CableShapes {
                 case DOWN:
                     hasConnection = state.blockStateDown;
                     break;
-                case NONE:
+                default:
                     break;
             }
             if (hasConnection) {
@@ -132,7 +133,7 @@ public final class CableShapes {
         return index;
     }
 
-    public static AABB getShape(TileCable state) {
+    public static AABBdc getShape(TileCable state) {
         Direction facing = state.blockStateModem
             .getFacing();
         if (!state.blockStateCable) {
@@ -142,7 +143,7 @@ public final class CableShapes {
         int cableIndex = getCableIndex(state);
         int index = cableIndex + ((facing == null ? 0 : facing.ordinal() + 1) << 6);
 
-        AABB shape = SHAPES[index];
+        AABBdc shape = SHAPES[index];
         if (shape != null) {
             return shape;
         }
@@ -154,20 +155,20 @@ public final class CableShapes {
         return SHAPES[index] = shape;
     }
 
-    public static AABB getModemShape(TileCable state) {
+    public static AABBdc getModemShape(TileCable state) {
         Direction facing = state.blockStateModem
             .getFacing();
-        return facing == null ? AABB.getPermanentBB(0, 0, 0, 0, 0, 0) : ModemShapes.getBounds(facing);
+        return facing == null ? new AABBd(0, 0, 0, 0, 0, 0) : ModemShapes.getBounds(facing);
     }
 
-    private static AABB union(AABB a, AABB b) {
-        return AABB.getPermanentBB(
-            Math.min(a.minX, b.minX),
-            Math.min(a.minY, b.minY),
-            Math.min(a.minZ, b.minZ),
-            Math.max(a.maxX, b.maxX),
-            Math.max(a.maxY, b.maxY),
-            Math.max(a.maxZ, b.maxZ)
+    private static AABBdc union(AABBdc a, AABBdc b) {
+        return new AABBd(
+            Math.min(a.minX(), b.minX()),
+            Math.min(a.minY(), b.minY()),
+            Math.min(a.minZ(), b.minZ()),
+            Math.max(a.maxX(), b.maxX()),
+            Math.max(a.maxY(), b.maxY()),
+            Math.max(a.maxZ(), b.maxZ())
         );
     }
 

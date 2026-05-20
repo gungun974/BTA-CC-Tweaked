@@ -29,7 +29,6 @@ import dan200.computercraft.shared.TurtleUpgrades;
 import dan200.computercraft.shared.peripheral.modem.wired.TileCable;
 import dan200.computercraft.shared.peripheral.modem.wired.TileWiredModemFull;
 import dan200.computercraft.shared.peripheral.modem.wireless.WirelessNetwork;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.IDAssigner;
 import dan200.computercraft.shared.util.ResourceManager;
 import dan200.computercraft.shared.wired.WiredNode;
@@ -37,9 +36,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.InputStream;
 
@@ -58,7 +58,7 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getInstalledVersion() {
         if (version != null) {
@@ -73,12 +73,12 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI {
     }
 
     @Override
-    public int createUniqueNumberedSaveDir(@Nonnull World world, @Nonnull String parentSubPath) {
+    public int createUniqueNumberedSaveDir(@NotNull World world, @NotNull String parentSubPath) {
         return IDAssigner.getNextId(parentSubPath);
     }
 
     @Override
-    public IWritableMount createSaveDirMount(@Nonnull World world, @Nonnull String subPath, long capacity) {
+    public IWritableMount createSaveDirMount(@NotNull World world, @NotNull String subPath, long capacity) {
         try {
             return new FileMount(
                 new File(
@@ -91,7 +91,7 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI {
     }
 
     @Override
-    public IMount createResourceMount(@Nonnull String domain, @Nonnull String subPath) {
+    public IMount createResourceMount(@NotNull String domain, @NotNull String subPath) {
         {
             ResourceMount mount = ResourceMount.get(domain, subPath, manager);
             return mount.exists("") ? mount : null;
@@ -99,61 +99,61 @@ public final class ComputerCraftAPIImpl implements IComputerCraftAPI {
     }
 
     @Override
-    public void registerPeripheralProvider(@Nonnull IPeripheralProvider provider) {
+    public void registerPeripheralProvider(@NotNull IPeripheralProvider provider) {
         Peripherals.register(provider);
     }
 
     @Override
-    public void registerTurtleUpgrade(@Nonnull ITurtleUpgrade upgrade) {
+    public void registerTurtleUpgrade(@NotNull ITurtleUpgrade upgrade) {
         TurtleUpgrades.register(upgrade);
     }
 
     @Override
-    public void registerBundledRedstoneProvider(@Nonnull IBundledRedstoneProvider provider) {
+    public void registerBundledRedstoneProvider(@NotNull IBundledRedstoneProvider provider) {
         BundledRedstone.register(provider);
     }
 
     @Override
-    public int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side) {
+    public int getBundledRedstoneOutput(@NotNull World world, @NotNull TilePosc pos, @NotNull Direction side) {
         return BundledRedstone.getDefaultOutput(world, pos, side);
     }
 
     @Override
-    public void registerMediaProvider(@Nonnull IMediaProvider provider) {
+    public void registerMediaProvider(@NotNull IMediaProvider provider) {
         MediaProviders.register(provider);
     }
 
     @Override
-    public void registerPocketUpgrade(@Nonnull IPocketUpgrade upgrade) {
+    public void registerPocketUpgrade(@NotNull IPocketUpgrade upgrade) {
         PocketUpgrades.register(upgrade);
     }
 
     @Override
-    public void registerGenericSource(@Nonnull GenericSource source) {
+    public void registerGenericSource(@NotNull GenericSource source) {
         GenericMethod.register(source);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IPacketNetwork getWirelessNetwork() {
         return WirelessNetwork.getUniversal();
     }
 
     @Override
-    public void registerAPIFactory(@Nonnull ILuaAPIFactory factory) {
+    public void registerAPIFactory(@NotNull ILuaAPIFactory factory) {
         ApiFactories.register(factory);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public IWiredNode createWiredNodeForElement(@Nonnull IWiredElement element) {
+    public IWiredNode createWiredNodeForElement(@NotNull IWiredElement element) {
         return new WiredNode(element);
     }
 
     @Nullable
     @Override
-    public IWiredElement getWiredElementAt(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side) {
-        TileEntity tile = world.getTileEntity(pos.x, pos.y, pos.z);
+    public IWiredElement getWiredElementAt(@NotNull World world, @NotNull TilePosc pos, @NotNull Direction side) {
+        TileEntity tile = world.getTileEntity(pos);
         if (tile instanceof TileCable) {
             return ((TileCable) tile).getElement(side);
         } else if (tile instanceof TileWiredModemFull) {

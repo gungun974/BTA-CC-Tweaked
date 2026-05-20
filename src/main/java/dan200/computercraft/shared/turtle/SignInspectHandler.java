@@ -16,9 +16,8 @@ import java.util.Map;
 public class SignInspectHandler {
     @Subscribe
     public void onTurtleInspect(TurtleBlockEvent.Inspect event) {
-        TileEntity be = event.getWorld().getTileEntity(event.getPos().x, event.getPos().y, event.getPos().z);
-        if (be instanceof TileEntitySign) {
-            TileEntitySign sbe = (TileEntitySign) be;
+        TileEntity be = event.getWorld().getTileEntity(event.getPos());
+        if (be instanceof TileEntitySign sbe) {
             Map<Integer, String> textTable = new HashMap<>();
             for (int k = 0; k < 4; k++) {
                 textTable.put(k + 1, sbe.signText[k]);

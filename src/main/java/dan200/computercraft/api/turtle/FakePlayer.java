@@ -6,7 +6,7 @@
 package dan200.computercraft.api.turtle;
 
 /**
- * A wrapper for {@link ServerPlayerEntity} which denotes a "fake" player.
+ * A wrapper object which denotes a "fake" player.
  * <p>
  * Please note that this does not implement any of the traditional fake player behaviour. It simply exists to prevent me passing in normal players.
  */

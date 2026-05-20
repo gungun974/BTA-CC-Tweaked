@@ -1,40 +1,36 @@
 package dan200.computercraft.shared.peripheral.diskdrive;
 
-import net.minecraft.client.render.block.model.BlockModelHorizontalRotation;
-import net.minecraft.client.render.texture.stitcher.IconCoordinate;
-import net.minecraft.client.render.texture.stitcher.TextureRegistry;
+import dan200.computercraft.client.BlockModelCorrectRotable;
+import net.minecraft.client.render.block.model.BlockModelDispatcher;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogic;
-import net.minecraft.core.util.helper.Side;
-import net.minecraft.core.util.helper.Sides;
 import net.minecraft.core.world.WorldSource;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.useless.dragonfly.models.block.StaticBlockModel;
 
-public class BlockModelDiskDrive<T extends BlockLogic> extends BlockModelHorizontalRotation<T> {
+public class BlockModelDiskDrive<T extends BlockLogic> extends BlockModelCorrectRotable<T> {
+    public final @NotNull StaticBlockModel empty;
+    public final @NotNull StaticBlockModel full;
+    public final @NotNull StaticBlockModel invalid;
+
     public BlockModelDiskDrive(Block<T> block) {
-        super(block);
+        super(block, BlockModelDispatcher.loadDataModel("computercraft:block/disk_drive_empty").asModel());
+        this.empty = BlockModelDispatcher.loadDataModel("computercraft:block/disk_drive_empty").asModel();
+        this.full = BlockModelDispatcher.loadDataModel("computercraft:block/disk_drive_full").asModel();
+        this.invalid = BlockModelDispatcher.loadDataModel("computercraft:block/disk_drive_invalid").asModel();
     }
 
-    public IconCoordinate getBlockTexture(WorldSource blockAccess, int x, int y, int z, Side side) {
-        int currentMetadata = blockAccess.getBlockMetadata(x, y, z);
-        int index = Sides.orientationLookUpHorizontal[6 * Math.min(currentMetadata & 7, 5) + side.getId()];
-        if (index >= Sides.orientationLookUpHorizontal.length) {
-            return this.blockTextures.get(Side.BOTTOM);
-        } else if (index == Side.NORTH.getId()) {
-            IconCoordinate originalFront = this.blockTextures.get(Side.NORTH);
+    @Override
+    public @NotNull StaticBlockModel getModel(@NotNull WorldSource source, @NotNull TilePosc tilePosc) {
+        int currentMetadata = source.getBlockData(tilePosc);
 
-            final DiskDriveState currentState = DiskDriveState.class.getEnumConstants()[(currentMetadata >> 3) & 0b11];
+        final DiskDriveState currentState = DiskDriveState.class.getEnumConstants()[(currentMetadata >> 3) & 0b11];
 
-            switch (currentState) {
-                case FULL:
-                    return TextureRegistry.getTexture(originalFront.namespaceId.namespace() + ":block/" + originalFront.namespaceId.value() + "_accepted");
-                case INVALID:
-                    return TextureRegistry.getTexture(originalFront.namespaceId.namespace() + ":block/" + originalFront.namespaceId.value() + "_rejected");
-                case EMPTY:
-                default:
-                    return originalFront;
-            }
-        } else {
-            return this.blockTextures.get(Side.getSideById(index));
-        }
+        return switch (currentState) {
+            case EMPTY -> empty;
+            case FULL -> full;
+            case INVALID -> invalid;
+        };
     }
 }

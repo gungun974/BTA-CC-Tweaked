@@ -6,9 +6,9 @@
 package dan200.computercraft.shared.turtle.core;
 
 import dan200.computercraft.api.turtle.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Locale;
 
 public class TurtleToolCommand implements ITurtleCommand {
@@ -30,9 +30,9 @@ public class TurtleToolCommand implements ITurtleCommand {
         return new TurtleToolCommand(TurtleVerb.DIG, direction, side);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+    public TurtleCommandResult execute(@NotNull ITurtleAccess turtle) {
         TurtleCommandResult firstFailure = null;
         for (TurtleSide side : TurtleSide.values()) {
             if (this.side != null && this.side != side) {

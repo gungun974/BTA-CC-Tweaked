@@ -11,7 +11,6 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.core.data.registry.recipe.HasJsonAdapter;
 import net.minecraft.core.data.registry.recipe.RecipeSymbol;
-import net.minecraft.core.data.registry.recipe.SearchQuery;
 import net.minecraft.core.data.registry.recipe.adapter.RecipeCraftingShapelessJsonAdapter;
 import net.minecraft.core.data.registry.recipe.adapter.RecipeJsonAdapter;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCraftingShapeless;

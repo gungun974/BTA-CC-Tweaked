@@ -5,14 +5,15 @@
  */
 package dan200.computercraft.shared.network.client;
 
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.peripheral.monitor.TileMonitor;
-import dan200.computercraft.shared.util.BlockPos;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
 import org.jetbrains.annotations.NotNull;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.NetworkMessage;
 import turniplabs.halplibe.helper.network.UniversalPacket;
 
@@ -25,10 +26,10 @@ public class MonitorClientMessage implements NetworkMessage {
     public MonitorClientMessage() {
     }
 
-    public MonitorClientMessage(BlockPos pos, TerminalState state) {
-        this.x = pos.x;
-        this.y = pos.y;
-        this.z = pos.z;
+    public MonitorClientMessage(TilePosc pos, TerminalState state) {
+        this.x = pos.x();
+        this.y = pos.y();
+        this.z = pos.z();
         this.state = state;
     }
 
@@ -50,7 +51,7 @@ public class MonitorClientMessage implements NetworkMessage {
 
     @Override
     public void handle(NetworkContext context) {
-        if (!Helper.isServerEnvironment()) {
+        if (!EnvironmentHelper.isServerEnvironment()) {
             clientHandler(context);
         }
     }
@@ -62,7 +63,7 @@ public class MonitorClientMessage implements NetworkMessage {
             return;
         }
 
-        TileEntity te = player.world.getTileEntity(x, y, z);
+        TileEntity te = player.world.getTileEntity(new TilePos(x, y, z));
         if (!(te instanceof TileMonitor)) {
             return;
         }

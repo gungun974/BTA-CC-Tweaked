@@ -49,8 +49,7 @@ public class WebsocketHandler extends SimpleChannelInboundHandler<Object> {
             return;
         }
 
-        if (msg instanceof FullHttpResponse) {
-            FullHttpResponse response = (FullHttpResponse) msg;
+        if (msg instanceof FullHttpResponse response) {
             throw new IllegalStateException("Unexpected FullHttpResponse (getStatus=" + response.status() + ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
         }
 
@@ -65,8 +64,7 @@ public class WebsocketHandler extends SimpleChannelInboundHandler<Object> {
 
             websocket.environment().addTrackingChange(TrackingField.WEBSOCKET_INCOMING, converted.length);
             websocket.environment().queueEvent(MESSAGE_EVENT, websocket.address(), converted, true);
-        } else if (frame instanceof CloseWebSocketFrame) {
-            CloseWebSocketFrame closeFrame = (CloseWebSocketFrame) frame;
+        } else if (frame instanceof CloseWebSocketFrame closeFrame) {
             websocket.close(closeFrame.statusCode(), closeFrame.reasonText());
         } else if (frame instanceof PingWebSocketFrame) {
             frame.content().retain();

@@ -5,15 +5,12 @@
  */
 package dan200.computercraft.api.turtle;
 
-import dan200.computercraft.client.blocks.BlockAORenderer;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import net.minecraft.client.render.tessellator.Tessellator;
+import net.minecraft.client.render.tessellator.TessellatorGeneral;
 import net.minecraft.core.item.IItemConvertible;
 import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.util.helper.Side;
-import net.minecraft.core.util.phys.AABB;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A base class for {@link ITurtleUpgrade}s.
@@ -36,58 +33,54 @@ public abstract class AbstractTurtleUpgrade implements ITurtleUpgrade {
     }
 
     protected static void drawUpgradeLeft(Tessellator tessellator, TileTurtle tileEntity, float angle) {
-        (new BlockAORenderer(AABB.getTemporaryBB(0.5 / 16f, 4.5 / 16f, 3.5 / 16f, 2 / 16f, 12.5 / 16f, 11.5 / 16f)))
-            .setBottomUV(14 / 16f, 14 / 16f, 16 / 16f, 2 / 16f)
-            .setTopUV(3 / 16f, 2 / 16f, 0, 14 / 16f)
-            .setNorthUV(0, 2 / 16f, 3 / 16f, 14 / 16f)
-            .setSouthUV(13 / 16f, 2 / 16f, 16 / 16f, 14 / 16f)
-            .setWestUV(2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f)
-            .render(tessellator, tileEntity, angle, 1f, 1f, 1f);
+        drawUpgradeLeft(tessellator);
     }
 
     protected static void drawUpgradeRight(Tessellator tessellator, TileTurtle tileEntity, float angle) {
-        (new BlockAORenderer(AABB.getTemporaryBB(14 / 16f, 4.5 / 16f, 3.5 / 16f, 15.5 / 16f, 12.5 / 16f, 11.5 / 16f)))
-            .setBottomUV(16 / 16f, 2 / 16f, 14 / 16f, 14 / 16f)
-            .setTopUV(0, 14 / 16f, 3 / 16f, 2 / 16f)
-            .setNorthUV(13 / 16f, 2 / 16f, 16 / 16f, 14 / 16f)
-            .setSouthUV(0 / 16f, 2 / 16f, 3 / 16f, 14 / 16f)
-            .setEastUV(2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f)
-            .render(tessellator, tileEntity, angle, 1f, 1f, 1f);
+        drawUpgradeRight(tessellator);
     }
 
     protected static void drawUpgradeLeft(Tessellator tessellator) {
-        (new BlockAORenderer(AABB.getTemporaryBB(0.5 / 16f, 4.5 / 16f, 3.5 / 16f, 2 / 16f, 12.5 / 16f, 11.5 / 16f)))
-            .setBottomUV(14 / 16f, 14 / 16f, 16 / 16f, 2 / 16f)
-            .setTopUV(3 / 16f, 2 / 16f, 0, 14 / 16f)
-            .setNorthUV(0, 2 / 16f, 3 / 16f, 14 / 16f)
-            .setSouthUV(13 / 16f, 2 / 16f, 16 / 16f, 14 / 16f)
-            .setWestUV(2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f)
-            .render(tessellator, Side.NORTH);
+        TessellatorGeneral tess = (TessellatorGeneral) tessellator;
+        float x = -0.46875f;
+        float yMin = -0.21875f, yMax = 0.28125f;
+        float zMin = -0.28125f, zMax = 0.21875f;
+        float uMin = 0.125f, uMax = 0.875f;
+        float vMin = 0.125f, vMax = 0.875f;
+        tess.setNormal(-1f, 0f, 0f);
+        tess.addVertexWithUV(x, yMax, zMax, uMin, vMin);
+        tess.addVertexWithUV(x, yMin, zMax, uMin, vMax);
+        tess.addVertexWithUV(x, yMin, zMin, uMax, vMax);
+        tess.addVertexWithUV(x, yMax, zMin, uMax, vMin);
     }
 
     protected static void drawUpgradeRight(Tessellator tessellator) {
-        (new BlockAORenderer(AABB.getTemporaryBB(14 / 16f, 4.5 / 16f, 3.5 / 16f, 15.5 / 16f, 12.5 / 16f, 11.5 / 16f)))
-            .setBottomUV(16 / 16f, 2 / 16f, 14 / 16f, 14 / 16f)
-            .setTopUV(0, 14 / 16f, 3 / 16f, 2 / 16f)
-            .setNorthUV(13 / 16f, 2 / 16f, 16 / 16f, 14 / 16f)
-            .setSouthUV(0 / 16f, 2 / 16f, 3 / 16f, 14 / 16f)
-            .setEastUV(2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f)
-            .render(tessellator, Side.NORTH);
+        TessellatorGeneral tess = (TessellatorGeneral) tessellator;
+        float x = 0.46875f;
+        float yMin = -0.21875f, yMax = 0.28125f;
+        float zMin = -0.28125f, zMax = 0.21875f;
+        float uMin = 0.125f, uMax = 0.875f;
+        float vMin = 0.125f, vMax = 0.875f;
+        tess.setNormal(1f, 0f, 0f);
+        tess.addVertexWithUV(x, yMax, zMin, uMin, vMin);
+        tess.addVertexWithUV(x, yMin, zMin, uMin, vMax);
+        tess.addVertexWithUV(x, yMin, zMax, uMax, vMax);
+        tess.addVertexWithUV(x, yMax, zMax, uMax, vMin);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public final int getUpgradeID() {
         return id;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public final TurtleUpgradeType getType() {
         return type;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public final ItemStack getCraftingItem() {
         return stack;

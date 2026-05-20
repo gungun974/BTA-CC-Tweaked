@@ -10,8 +10,8 @@ import dan200.computercraft.api.network.wired.IWiredNetworkChange;
 import dan200.computercraft.api.network.wired.IWiredNode;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.shared.wired.WiredNode;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,20 +19,20 @@ public abstract class WiredModemElement implements IWiredElement {
     private final IWiredNode node = new WiredNode(this);
     private final Map<String, IPeripheral> remotePeripherals = new HashMap<>();
 
-    @Nonnull
+    @NotNull
     @Override
     public IWiredNode getNode() {
         return node;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getSenderID() {
         return "modem";
     }
 
     @Override
-    public void networkChanged(@Nonnull IWiredNetworkChange change) {
+    public void networkChanged(@NotNull IWiredNetworkChange change) {
         synchronized (remotePeripherals) {
             remotePeripherals.keySet()
                 .removeAll(change.peripheralsRemoved()

@@ -12,7 +12,6 @@ import dan200.computercraft.api.turtle.event.TurtleAction;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.core.apis.http.options.Action;
 import dan200.computercraft.core.apis.http.options.AddressRule;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.TurtlePermissions;
 import dan200.computercraft.shared.common.*;
 import dan200.computercraft.shared.computer.core.ClientComputerRegistry;
@@ -31,6 +30,8 @@ import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemDiscMusic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import turniplabs.halplibe.HalpLibe;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.NetworkHandler;
 import turniplabs.halplibe.util.GameStartEntrypoint;
 
@@ -41,7 +42,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public final class ComputerCraft implements ModInitializer, GameStartEntrypoint {
-    public static final String MOD_ID = "computercraft";
+    public static final String MOD_ID = HalpLibe.registerMod("computercraft", true);
     // Registries
     public static final ClientComputerRegistry clientComputerRegistry = new ClientComputerRegistry();
     public static final ServerComputerRegistry serverComputerRegistry = new ServerComputerRegistry();
@@ -122,7 +123,7 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
         NetworkHandler.registerNetworkMessage(PlayRecordClientMessage::new);
 
         ComputerCraftAPI.registerPeripheralProvider((world, pos, side) -> {
-            TileEntity tile = world.getTileEntity(pos.x, pos.y, pos.z);
+            TileEntity tile = world.getTileEntity(pos);
             return tile instanceof IPeripheralTile ? ((IPeripheralTile) tile).getPeripheral(side) : null;
         });
 
@@ -168,7 +169,7 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
 
     @Override
     public void beforeGameStart() {
-        if (Helper.isServerEnvironment()) {
+        if (EnvironmentHelper.isServerEnvironment()) {
             Config.serverStarting();
         } else {
             Config.clientStarted();

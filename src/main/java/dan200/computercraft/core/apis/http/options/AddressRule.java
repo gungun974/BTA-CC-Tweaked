@@ -9,9 +9,9 @@ import com.google.common.net.InetAddresses;
 import dan200.computercraft.core.apis.http.options.AddressPredicate.DomainPattern;
 import dan200.computercraft.core.apis.http.options.AddressPredicate.HostRange;
 import dan200.computercraft.core.apis.http.options.AddressPredicate.PrivatePattern;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -31,14 +31,14 @@ public final class AddressRule {
     private final Integer port;
     private final PartialOptions partial;
 
-    private AddressRule(@Nonnull AddressPredicate predicate, @Nullable Integer port, @Nonnull PartialOptions partial) {
+    private AddressRule(@NotNull AddressPredicate predicate, @NotNull Integer port, @NotNull PartialOptions partial) {
         this.predicate = predicate;
         this.partial = partial;
         this.port = port;
     }
 
     @Nullable
-    public static AddressRule parse(String filter, @Nullable Integer port, @Nonnull PartialOptions partial) {
+    public static AddressRule parse(String filter, @Nullable Integer port, @NotNull PartialOptions partial) {
         int cidr = filter.indexOf('/');
         if (cidr >= 0) {
             String addressStr = filter.substring(0, cidr);

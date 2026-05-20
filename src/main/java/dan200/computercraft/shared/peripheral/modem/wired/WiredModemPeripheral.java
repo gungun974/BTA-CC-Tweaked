@@ -20,9 +20,9 @@ import dan200.computercraft.core.asm.PeripheralMethod;
 import dan200.computercraft.shared.peripheral.modem.ModemPeripheral;
 import dan200.computercraft.shared.peripheral.modem.ModemState;
 import net.minecraft.core.world.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -59,7 +59,7 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
     }
 
     @Override
-    public void attach(@Nonnull IComputerAccess computer) {
+    public void attach(@NotNull IComputerAccess computer) {
         super.attach(computer);
 
         ConcurrentMap<String, RemotePeripheralWrapper> wrappers;
@@ -79,7 +79,7 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
     }
 
     @Override
-    public void detach(@Nonnull IComputerAccess computer) {
+    public void detach(@NotNull IComputerAccess computer) {
         Map<String, RemotePeripheralWrapper> wrappers;
         synchronized (peripheralWrappers) {
             wrappers = peripheralWrappers.remove(computer);
@@ -106,7 +106,7 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public World getWorld() {
         return modem.getWorld();
@@ -157,7 +157,7 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
 
     // Replace it later with CC Tweaked LuaUtil
     public static Object[] consArray(Object value, Collection<?> rest) {
-        if (rest.isEmpty()) return new Object[]{ value };
+        if (rest.isEmpty()) return new Object[]{value};
 
         Object[] out = new Object[rest.size() + 1];
         out[0] = value;
@@ -201,7 +201,7 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
     @LuaFunction
     public final Object[] hasTypeRemote(IComputerAccess computer, String name, String type) {
         RemotePeripheralWrapper wrapper = getWrapper(computer, name);
-        return wrapper == null ? null : new Object[]{ wrapper.getType().equals(type) || wrapper.getAdditionalTypes().contains(type) };
+        return wrapper == null ? null : new Object[]{wrapper.getType().equals(type) || wrapper.getAdditionalTypes().contains(type)};
     }
 
     /**
@@ -272,19 +272,18 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
         return local == null ? null : new Object[]{local};
     }
 
-    @Nonnull
+    @NotNull
     protected abstract WiredModemLocalPeripheral getLocalPeripheral();
 
     @Override
     public boolean equals(IPeripheral other) {
-        if (other instanceof WiredModemPeripheral) {
-            WiredModemPeripheral otherModem = (WiredModemPeripheral) other;
+        if (other instanceof WiredModemPeripheral otherModem) {
             return otherModem.modem == modem;
         }
         return false;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IWiredNode getNode() {
         return modem.getNode();
@@ -364,28 +363,28 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
         // IComputerAccess implementation
 
         @Override
-        public String mount(@Nonnull String desiredLocation, @Nonnull IMount mount) {
+        public String mount(@NotNull String desiredLocation, @NotNull IMount mount) {
             return computer.mount(desiredLocation, mount, name);
         }
 
         @Override
-        public String mount(@Nonnull String desiredLocation, @Nonnull IMount mount, @Nonnull String driveName) {
+        public String mount(@NotNull String desiredLocation, @NotNull IMount mount, @NotNull String driveName) {
             return computer.mount(desiredLocation, mount, driveName);
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getAttachmentName() {
             return name;
         }
 
         @Override
-        public String mountWritable(@Nonnull String desiredLocation, @Nonnull IWritableMount mount) {
+        public String mountWritable(@NotNull String desiredLocation, @NotNull IWritableMount mount) {
             return computer.mountWritable(desiredLocation, mount, name);
         }
 
         @Override
-        public String mountWritable(@Nonnull String desiredLocation, @Nonnull IWritableMount mount, @Nonnull String driveName) {
+        public String mountWritable(@NotNull String desiredLocation, @NotNull IWritableMount mount, @NotNull String driveName) {
             return computer.mountWritable(desiredLocation, mount, driveName);
         }
 
@@ -400,11 +399,11 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
         }
 
         @Override
-        public void queueEvent(@Nonnull String event, Object... arguments) {
+        public void queueEvent(@NotNull String event, Object... arguments) {
             computer.queueEvent(event, arguments);
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public Map<String, IPeripheral> getAvailablePeripherals() {
             synchronized (element.getRemotePeripherals()) {
@@ -414,14 +413,14 @@ public abstract class WiredModemPeripheral extends ModemPeripheral implements IW
 
         @Nullable
         @Override
-        public IPeripheral getAvailablePeripheral(@Nonnull String name) {
+        public IPeripheral getAvailablePeripheral(@NotNull String name) {
             synchronized (element.getRemotePeripherals()) {
                 return element.getRemotePeripherals()
                     .get(name);
             }
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public IWorkMonitor getMainThreadMonitor() {
             return computer.getMainThreadMonitor();

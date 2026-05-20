@@ -6,7 +6,6 @@
 package dan200.computercraft.shared.peripheral.modem.wired;
 
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
-import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.entity.TileEntityActivator;
 import net.minecraft.core.entity.player.Player;
@@ -17,18 +16,22 @@ import net.minecraft.core.util.collection.NamespaceID;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
 import static dan200.computercraft.shared.peripheral.modem.wired.BlockLogicCable.correctConnections;
 
 public abstract class ItemCable extends Item {
-    public ItemCable(NamespaceID namespaceId, int id) {
-        super(namespaceId, id);
+    public ItemCable(@NotNull NamespaceID namespaceId, @NotNull String translationKey, int id) {
+        super(namespaceId, translationKey, id);
     }
 
 
-    boolean placeAtCorrected(World world, BlockPos pos, TileCable state, CableModemVariant blockStateModem, boolean blockStateCable) {
+    boolean placeAtCorrected(World world, TilePosc pos, TileCable state, CableModemVariant blockStateModem, boolean blockStateCable) {
         boolean original = state.blockStateCable;
         state.blockStateCable = blockStateCable;
         correctConnections(world, pos, state);
@@ -38,23 +41,22 @@ public abstract class ItemCable extends Item {
         return placeAt(world, pos, null, blockStateModem, blockStateCable);
     }
 
-    boolean placeAt(World world, BlockPos pos, Player player, CableModemVariant blockStateModem, boolean blockStateCable) {
-        if (pos.y >= 0 && pos.y < world.getHeightBlocks()) {
-            int currentId = world.getBlockId(pos.x, pos.y, pos.z);
+    boolean placeAt(World world, TilePosc pos, Player player, CableModemVariant blockStateModem, boolean blockStateCable) {
+        if (pos.y() >= 0 && pos.y() < world.getHeightBlocks()) {
+            int currentId = world.getBlockType(pos).id();
 
             if (currentId == ComputerCraftBlocks.CABLE.id()) {
-                TileEntity tileEntity = world.getTileEntity(pos.x, pos.y, pos.z);
+                TileEntity tileEntity = world.getTileEntity(pos);
 
-                if (tileEntity instanceof TileCable) {
-                    TileCable cable = (TileCable) tileEntity;
+                if (tileEntity instanceof TileCable cable) {
 
                     if (cable.blockStateCable == blockStateCable && cable.blockStateModem == blockStateModem) {
                         return false;
                     }
 
-                    world.notifyBlockChange(pos.x, pos.y, pos.z, ComputerCraftBlocks.CABLE.id());
+                    world.notifyBlockChange(pos, ComputerCraftBlocks.CABLE);
 
-                    world.playBlockSoundEffect(player, (float) pos.x + 0.5F, (float) pos.y + 0.5F, (float) pos.z + 0.5F, ComputerCraftBlocks.CABLE, EnumBlockSoundEffectType.PLACE);
+                    world.playBlockSoundEffect(player, (float) pos.x() + 0.5F, (float) pos.y() + 0.5F, (float) pos.z() + 0.5F, ComputerCraftBlocks.CABLE, EnumBlockSoundEffectType.PLACE);
 
                     cable.blockStateModem = blockStateModem;
                     cable.blockStateCable = blockStateCable;
@@ -69,20 +71,19 @@ public abstract class ItemCable extends Item {
             }
 
 
-            if (world.canBlockBePlacedAt(ComputerCraftBlocks.CABLE.id(), pos.x, pos.y, pos.z, false, Side.NORTH)) {
-                if (world.setBlockAndMetadataWithNotify(pos.x, pos.y, pos.z, ComputerCraftBlocks.CABLE.id(), 0)) {
+            if (world.canBlockIdBePlacedAt(ComputerCraftBlocks.CABLE.id(), pos, false, Side.NORTH)) {
+                if (world.setBlockTypeDataNotify(pos, ComputerCraftBlocks.CABLE, 0)) {
                     if (player == null) {
-                        ComputerCraftBlocks.CABLE.onBlockPlacedOnSide(world, pos.x, pos.y, pos.z, Side.NORTH, 0, 0);
+                        ComputerCraftBlocks.CABLE.onPlacedOnSide(world, pos, Side.NORTH, 0, 0);
                     } else {
-                        ComputerCraftBlocks.CABLE.onBlockPlacedByMob(world, pos.x, pos.y, pos.z, Side.NORTH, player, 0, 0);
+                        ComputerCraftBlocks.CABLE.onPlacedByMob(world, pos, Side.NORTH, player, 0, 0);
                     }
 
-                    world.playBlockSoundEffect(player, (float) pos.x + 0.5F, (float) pos.y + 0.5F, (float) pos.z + 0.5F, ComputerCraftBlocks.CABLE, EnumBlockSoundEffectType.PLACE);
+                    world.playBlockSoundEffect(player, (float) pos.x() + 0.5F, (float) pos.y() + 0.5F, (float) pos.z() + 0.5F, ComputerCraftBlocks.CABLE, EnumBlockSoundEffectType.PLACE);
 
-                    TileEntity tileEntity = world.getTileEntity(pos.x, pos.y, pos.z);
+                    TileEntity tileEntity = world.getTileEntity(pos);
 
-                    if (tileEntity instanceof TileCable) {
-                        TileCable cable = (TileCable) tileEntity;
+                    if (tileEntity instanceof TileCable cable) {
 
                         cable.blockStateModem = blockStateModem;
                         cable.blockStateCable = blockStateCable;
@@ -103,32 +104,29 @@ public abstract class ItemCable extends Item {
     }
 
     public static class WiredModem extends ItemCable {
-        public WiredModem(NamespaceID namespaceId, int id) {
-            super(namespaceId, id);
+        public WiredModem(@NotNull NamespaceID namespaceId, @NotNull String translationKey, int id) {
+            super(namespaceId, translationKey, id);
         }
 
         @Override
-        public boolean onUseItemOnBlock(ItemStack stack, Player player, World world, int blockX, int blockY, int blockZ, Side side, double xPlaced, double yPlaced) {
-            if (stack.stackSize <= 0) {
+        public boolean onUseOnBlock(@NotNull ItemStack selfStack, @NotNull World world, @Nullable Player player, @NotNull TilePosc blockPos, @NotNull Side side, double xHit, double yHit) {
+            if (selfStack.stackSize <= 0) {
                 return false;
             }
 
-            BlockPos pos = new BlockPos(blockX, blockY, blockZ);
+            TilePosc insidePos = blockPos.add(side.direction(), new TilePos());
 
-            BlockPos insidePos = pos.offset(side.getDirection());
+            TileEntity tileEntity = world.getTileEntity(insidePos);
 
-            TileEntity tileEntity = world.getTileEntity(insidePos.x, insidePos.y, insidePos.z);
+            Direction direction = side.direction().opposite();
 
-            Direction direction = side.getDirection().getOpposite();
-
-            if (tileEntity instanceof TileCable) {
-                TileCable state = (TileCable) tileEntity;
+            if (tileEntity instanceof TileCable state) {
 
                 // Try to add a modem to a cable
                 if (state.blockStateModem == CableModemVariant.None) {
 
                     if (placeAt(world, insidePos, player, CableModemVariant.from(direction), state.blockStateCable)) {
-                        stack.consumeItem(player);
+                        selfStack.consumeItem(player);
                         return true;
                     }
                 }
@@ -137,7 +135,7 @@ public abstract class ItemCable extends Item {
             }
 
             if (placeAt(world, insidePos, player, CableModemVariant.from(direction), false)) {
-                stack.consumeItem(player);
+                selfStack.consumeItem(player);
                 return true;
             }
 
@@ -146,25 +144,22 @@ public abstract class ItemCable extends Item {
     }
 
     public static class Cable extends ItemCable {
-        public Cable(NamespaceID namespaceId, int id) {
-            super(namespaceId, id);
+        public Cable(@NotNull NamespaceID namespaceId, @NotNull String translationKey, int id) {
+            super(namespaceId, translationKey, id);
         }
 
         @Override
-        public boolean onUseItemOnBlock(ItemStack stack, Player player, World world, int blockX, int blockY, int blockZ, Side side, double xPlaced, double yPlaced) {
-            if (stack.stackSize <= 0) {
+        public boolean onUseOnBlock(@NotNull ItemStack selfStack, @NotNull World world, @Nullable Player player, @NotNull TilePosc blockPos, @NotNull Side side, double xHit, double yHit) {
+            if (selfStack.stackSize <= 0) {
                 return false;
             }
 
-            BlockPos pos = new BlockPos(blockX, blockY, blockZ);
-
             // Try to add a cable to a modem inside the block we're clicking on.
-            BlockPos insidePos = pos.offset(side.getDirection());
+            TilePosc insidePos = blockPos.add(side.direction(), new TilePos());
 
-            TileEntity insideTileEntity = world.getTileEntity(insidePos.x, insidePos.y, insidePos.z);
+            TileEntity insideTileEntity = world.getTileEntity(insidePos);
 
-            if (insideTileEntity instanceof TileCable) {
-                TileCable state = (TileCable) insideTileEntity;
+            if (insideTileEntity instanceof TileCable state) {
 
                 if (!state.blockStateCable) {
                     return placeAtCorrected(world,
@@ -178,14 +173,13 @@ public abstract class ItemCable extends Item {
                 return false;
             }
 
-            TileEntity tileEntity = world.getTileEntity(pos.x, pos.y, pos.z);
+            TileEntity tileEntity = world.getTileEntity(blockPos);
 
-            if (tileEntity instanceof TileCable) {
-                TileCable state = (TileCable) tileEntity;
+            if (tileEntity instanceof TileCable state) {
 
                 if (!state.blockStateCable) {
                     return placeAtCorrected(world,
-                        pos,
+                        blockPos,
                         state,
                         state.blockStateModem,
                         true
@@ -194,7 +188,7 @@ public abstract class ItemCable extends Item {
             }
 
             if (placeAt(world, insidePos, player, CableModemVariant.None, true)) {
-                stack.consumeItem(player);
+                selfStack.consumeItem(player);
                 return true;
             }
 
@@ -202,20 +196,17 @@ public abstract class ItemCable extends Item {
         }
 
         @Override
-        public void onUseByActivator(ItemStack stack, TileEntityActivator activatorBlock, World world, Random random, int blockX, int blockY, int blockZ, double offX, double offY, double offZ, Direction direction) {
-            if (stack.stackSize <= 0) {
+        public void onUseByActivator(@NotNull ItemStack selfStack, @NotNull World world, @NotNull TileEntityActivator activator, @NotNull Random random, @NotNull TilePosc blockPos, @NotNull Direction direction, double offX, double offY, double offZ) {
+            if (selfStack.stackSize <= 0) {
                 return;
             }
 
-            BlockPos pos = new BlockPos(blockX, blockY, blockZ);
-
             // Try to add a cable to a modem inside the block we're clicking on.
-            BlockPos insidePos = pos.offset(direction);
+            TilePosc insidePos = blockPos.add(direction, new TilePos());
 
-            TileEntity insideTileEntity = world.getTileEntity(insidePos.x, insidePos.y, insidePos.z);
+            TileEntity insideTileEntity = world.getTileEntity(insidePos);
 
-            if (insideTileEntity instanceof TileCable) {
-                TileCable state = (TileCable) insideTileEntity;
+            if (insideTileEntity instanceof TileCable state) {
 
                 if (!state.blockStateCable) {
                     placeAtCorrected(world,
@@ -224,32 +215,31 @@ public abstract class ItemCable extends Item {
                         state.blockStateModem,
                         true
                     );
-                    world.notifyBlockChange(pos.x, pos.y, pos.z, world.getBlockId(pos.x, pos.y, pos.z));
+                    world.notifyBlockChange(blockPos, world.getBlockType(blockPos));
                 }
                 return;
             }
 
-            TileEntity tileEntity = world.getTileEntity(pos.x, pos.y, pos.z);
+            TileEntity tileEntity = world.getTileEntity(blockPos);
 
-            if (tileEntity instanceof TileCable) {
-                TileCable state = (TileCable) tileEntity;
+            if (tileEntity instanceof TileCable state) {
 
                 if (!state.blockStateCable) {
                     placeAtCorrected(world,
-                        pos,
+                        blockPos,
                         state,
                         state.blockStateModem,
                         true
                     );
-                    world.notifyBlockChange(pos.x, pos.y, pos.z, world.getBlockId(pos.x, pos.y, pos.z));
+                    world.notifyBlockChange(blockPos, world.getBlockType(blockPos));
                 }
             }
 
             if (placeAt(world, insidePos, null, CableModemVariant.None, true)) {
-                --stack.stackSize;
+                --selfStack.stackSize;
             }
 
-            world.notifyBlockChange(pos.x, pos.y, pos.z, world.getBlockId(pos.x, pos.y, pos.z));
+            world.notifyBlockChange(blockPos, world.getBlockType(blockPos));
         }
     }
 }

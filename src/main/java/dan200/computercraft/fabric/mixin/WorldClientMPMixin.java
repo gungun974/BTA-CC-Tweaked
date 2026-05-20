@@ -15,6 +15,7 @@ public abstract class WorldClientMPMixin {
         PortableTickScheduler.mainPortableTickScheduler.tickAtStart();
         FrameInfo.onTick();
     }
+
     @Inject(method = "tick()V", at = @At("TAIL"))
     private void tickEnd(CallbackInfo info) {
         PortableTickScheduler.mainPortableTickScheduler.tickAtEnd();

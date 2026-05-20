@@ -12,8 +12,7 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.block.ItemBlock;
 import net.minecraft.core.lang.I18n;
 import net.minecraft.core.world.World;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class ItemBlockComputerBase<T extends BlockLogic> extends ItemBlock<T> implements IComputerItem, IMedia {
     private final ComputerFamily family;
@@ -32,6 +31,7 @@ public abstract class ItemBlockComputerBase<T extends BlockLogic> extends ItemBl
         family = ComputerFamily.NORMAL;
     }
 
+    @NotNull
     @Override
     public String getTranslatedDescription(ItemStack stack) {
         I18n i18n = I18n.getInstance();
@@ -49,7 +49,7 @@ public abstract class ItemBlockComputerBase<T extends BlockLogic> extends ItemBl
     }
 
     @Override
-    public String getLabel(@Nonnull ItemStack stack) {
+    public String getLabel(@NotNull ItemStack stack) {
         return IComputerItem.super.getLabel(stack);
     }
 
@@ -61,7 +61,7 @@ public abstract class ItemBlockComputerBase<T extends BlockLogic> extends ItemBl
     // IMedia implementation
 
     @Override
-    public boolean setLabel(@Nonnull ItemStack stack, String label) {
+    public boolean setLabel(@NotNull ItemStack stack, String label) {
         if (label != null) {
             stack.setCustomName(label);
         } else {
@@ -71,7 +71,7 @@ public abstract class ItemBlockComputerBase<T extends BlockLogic> extends ItemBl
     }
 
     @Override
-    public IMount createDataMount(@Nonnull ItemStack stack, @Nonnull World world) {
+    public IMount createDataMount(@NotNull ItemStack stack, @NotNull World world) {
         ComputerFamily family = getFamily();
         if (family != ComputerFamily.COMMAND) {
             int id = getComputerID(stack);

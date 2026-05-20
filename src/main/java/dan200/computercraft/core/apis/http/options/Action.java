@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.core.apis.http.options;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public enum Action {
     ALLOW,
@@ -13,7 +13,7 @@ public enum Action {
 
     private final PartialOptions partial = new PartialOptions(this, null, null, null, null);
 
-    @Nonnull
+    @NotNull
     public PartialOptions toPartial() {
         return partial;
     }

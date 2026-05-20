@@ -1,8 +1,7 @@
 package dan200.computercraft.fabric;
 
 import dan200.computercraft.shared.computer.core.IContainerComputer;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public interface IComputerPlayer {
     @Nullable

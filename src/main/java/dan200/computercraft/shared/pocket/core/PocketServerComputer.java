@@ -15,17 +15,17 @@ import dan200.computercraft.shared.common.IColouredItem;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
-import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.entity.Entity;
-import net.minecraft.core.entity.Mob;
+import net.minecraft.core.entity.IItemHolding;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.ContainerInventory;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import turniplabs.halplibe.helper.network.NetworkHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Map;
 
@@ -57,8 +57,7 @@ public class PocketServerComputer extends ServerComputer implements IPocketAcces
             }
             return null;
         }
-        if (entity instanceof Mob) {
-            Mob living = (Mob) entity;
+        if (entity instanceof IItemHolding living) {
             return living.getHeldItem() == stack ? entity : null;
         }
 
@@ -96,7 +95,7 @@ public class PocketServerComputer extends ServerComputer implements IPocketAcces
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public CompoundTag getUpgradeNBTData() {
         return ItemPocketComputer.getUpgradeInfo(stack);
@@ -115,7 +114,7 @@ public class PocketServerComputer extends ServerComputer implements IPocketAcces
         setPeripheral(ComputerSide.BACK, peripheral);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Map<Integer, IPeripheral> getUpgrades() {
         return upgrade == null ? Collections.emptyMap() : Collections.singletonMap(upgrade.getUpgradeID(), getPeripheral(ComputerSide.BACK));
@@ -145,10 +144,10 @@ public class PocketServerComputer extends ServerComputer implements IPocketAcces
         }
     }
 
-    public synchronized void updateValues(Entity entity, @Nonnull ItemStack stack, IPocketUpgrade upgrade) {
+    public synchronized void updateValues(Entity entity, @NotNull ItemStack stack, IPocketUpgrade upgrade) {
         if (entity != null) {
             setWorld(entity.world);
-            setPosition(new BlockPos((int) entity.x, (int) entity.y, (int) entity.z));
+            setPosition(new TilePos((int) entity.x, (int) entity.y, (int) entity.z));
         }
 
         // If a new entity has picked it up then rebroadcast the terminal to them
@@ -169,9 +168,8 @@ public class PocketServerComputer extends ServerComputer implements IPocketAcces
     public void broadcastState(boolean force) {
         super.broadcastState(force);
 
-        if ((hasTerminalChanged() || force) && entity instanceof Player) {
+        if ((hasTerminalChanged() || force) && entity instanceof Player player) {
             // Broadcast the state to the current entity if they're not already interacting with it.
-            Player player = (Player) entity;
             if (!isInteracting(player)) {
                 NetworkHandler.sendToPlayer(player, createTerminalPacket());
             }

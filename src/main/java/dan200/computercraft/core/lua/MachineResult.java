@@ -6,9 +6,9 @@
 package dan200.computercraft.core.lua;
 
 import dan200.computercraft.core.computer.TimeoutState;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.InputStream;
 
 /**
@@ -50,11 +50,11 @@ public final class MachineResult {
         this.error = error;
     }
 
-    public static MachineResult error(@Nonnull String error) {
+    public static MachineResult error(@NotNull String error) {
         return new MachineResult(true, false, error);
     }
 
-    public static MachineResult error(@Nonnull Exception error) {
+    public static MachineResult error(@NotNull Exception error) {
         return new MachineResult(true, false, error.getMessage());
     }
 

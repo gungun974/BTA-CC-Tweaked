@@ -14,8 +14,8 @@ import net.minecraft.core.data.registry.recipe.adapter.RecipeCraftingShapedJsonA
 import net.minecraft.core.data.registry.recipe.adapter.RecipeJsonAdapter;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCraftingShaped;
 import net.minecraft.core.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 
 public class ComputerUpgradeRecipe extends ComputerFamilyRecipe implements HasJsonAdapter {
@@ -27,9 +27,9 @@ public class ComputerUpgradeRecipe extends ComputerFamilyRecipe implements HasJs
         super();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected ItemStack convert(@Nonnull IComputerItem item, @Nonnull ItemStack stack) {
+    protected ItemStack convert(@NotNull IComputerItem item, @NotNull ItemStack stack) {
         return item.withFamily(stack, getFamily());
     }
 

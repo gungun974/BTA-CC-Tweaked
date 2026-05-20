@@ -41,9 +41,9 @@ public class WorldFeatureDungeonMixin {
             int randomIndex = random.nextInt(TreasureDisk.DISKS.length);
             TreasureDisk randomDisk = TreasureDisk.DISKS[randomIndex];
 
-            tag.putString(ItemTreasureDisk.NBT_TITLE, randomDisk.getTitle());
-            tag.putString(ItemTreasureDisk.NBT_SUB_PATH, randomDisk.getSubPath());
-            tag.putInt(ItemTreasureDisk.NBT_COLOUR, randomDisk.getColour());
+            tag.putString(ItemTreasureDisk.NBT_TITLE, randomDisk.title());
+            tag.putString(ItemTreasureDisk.NBT_SUB_PATH, randomDisk.subPath());
+            tag.putInt(ItemTreasureDisk.NBT_COLOUR, randomDisk.colour());
 
             itemStack.setData(tag);
         }

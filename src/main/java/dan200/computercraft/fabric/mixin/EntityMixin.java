@@ -28,7 +28,7 @@ public class EntityMixin {
     )
     private void dropStack(ItemStack stack, float verticalOffset, CallbackInfoReturnable<EntityItem> cir) {
         if (DropConsumer.onLivingDrops((Entity) (Object) this, stack)) {
-            EntityItem entityitem = new EntityItem(null, x, y + (double)verticalOffset, z, stack);
+            EntityItem entityitem = new EntityItem(null, x, y + (double) verticalOffset, z, stack);
 
             cir.cancel();
             cir.setReturnValue(entityitem);

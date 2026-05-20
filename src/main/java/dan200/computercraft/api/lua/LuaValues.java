@@ -5,8 +5,9 @@
  */
 package dan200.computercraft.api.lua;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.nio.ByteBuffer;
 import java.util.Map;
 
@@ -25,8 +26,8 @@ public final class LuaValues {
      * @param string The string to encode.
      * @return The encoded string.
      */
-    @Nonnull
-    public static ByteBuffer encode(@Nonnull String string) {
+    @NotNull
+    public static ByteBuffer encode(@NotNull String string) {
         byte[] chars = new byte[string.length()];
         for (int i = 0; i < chars.length; i++) {
             char c = string.charAt(i);
@@ -45,8 +46,8 @@ public final class LuaValues {
      * @param actual   The actual value provided for this argument.
      * @return The constructed exception, which should be thrown immediately.
      */
-    @Nonnull
-    public static LuaException badArgumentOf(int index, @Nonnull String expected, @Nullable Object actual) {
+    @NotNull
+    public static LuaException badArgumentOf(int index, @NotNull String expected, @Nullable Object actual) {
         return badArgument(index, expected, getType(actual));
     }
 
@@ -58,8 +59,8 @@ public final class LuaValues {
      * @param actual   The provided type for this argument.
      * @return The constructed exception, which should be thrown immediately.
      */
-    @Nonnull
-    public static LuaException badArgument(int index, @Nonnull String expected, @Nonnull String actual) {
+    @NotNull
+    public static LuaException badArgument(int index, @NotNull String expected, @NotNull String actual) {
         return new LuaException("bad argument #" + (index + 1) + " (" + expected + " expected, got " + actual + ")");
     }
 
@@ -69,7 +70,7 @@ public final class LuaValues {
      * @param value The value whose type we are trying to compute.
      * @return A string representation of the given value's type, in a similar format to that provided by Lua's {@code type} function.
      */
-    @Nonnull
+    @NotNull
     public static String getType(@Nullable Object value) {
         if (value == null) {
             return "nil";
@@ -124,7 +125,7 @@ public final class LuaValues {
      * @param value The value to extract the type for.
      * @return This value's numeric type.
      */
-    @Nonnull
+    @NotNull
     public static String getNumericType(double value) {
         if (Double.isNaN(value)) {
             return "nan";

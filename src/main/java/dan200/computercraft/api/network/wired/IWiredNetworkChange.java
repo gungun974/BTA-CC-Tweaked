@@ -6,8 +6,8 @@
 package dan200.computercraft.api.network.wired;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -22,7 +22,7 @@ public interface IWiredNetworkChange {
      *
      * @return The set of removed peripherals.
      */
-    @Nonnull
+    @NotNull
     Map<String, IPeripheral> peripheralsRemoved();
 
     /**
@@ -31,6 +31,6 @@ public interface IWiredNetworkChange {
      *
      * @return The set of added peripherals.
      */
-    @Nonnull
+    @NotNull
     Map<String, IPeripheral> peripheralsAdded();
 }

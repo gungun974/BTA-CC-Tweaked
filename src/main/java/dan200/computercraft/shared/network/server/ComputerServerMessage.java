@@ -8,10 +8,9 @@ package dan200.computercraft.shared.network.server;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.computer.core.IContainerComputer;
 import dan200.computercraft.shared.computer.core.ServerComputer;
+import org.jetbrains.annotations.NotNull;
 import turniplabs.halplibe.helper.network.NetworkMessage;
 import turniplabs.halplibe.helper.network.UniversalPacket;
-
-import javax.annotation.Nonnull;
 
 /**
  * A packet, which performs an action on a {@link ServerComputer}.
@@ -29,12 +28,12 @@ public abstract class ComputerServerMessage implements NetworkMessage {
     }
 
     @Override
-    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void encodeToUniversalPacket(@NotNull UniversalPacket buf) {
         buf.writeInt(instanceId);
     }
 
     @Override
-    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void decodeFromUniversalPacket(@NotNull UniversalPacket buf) {
         instanceId = buf.readInt();
     }
 
@@ -53,5 +52,5 @@ public abstract class ComputerServerMessage implements NetworkMessage {
         handle(computer, container);
     }
 
-    protected abstract void handle(@Nonnull ServerComputer computer, @Nonnull IContainerComputer container);
+    protected abstract void handle(@NotNull ServerComputer computer, @NotNull IContainerComputer container);
 }

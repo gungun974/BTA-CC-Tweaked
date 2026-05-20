@@ -12,9 +12,8 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.apis.TermMethods;
 import dan200.computercraft.core.terminal.Terminal;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Monitors are a block which act as a terminal, displaying information on one side. This allows them to be read and interacted with in-world without
@@ -40,19 +39,19 @@ public class MonitorPeripheral extends TermMethods implements IPeripheral {
         this.monitor = monitor;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getType() {
         return "monitor";
     }
 
     @Override
-    public void attach(@Nonnull IComputerAccess computer) {
+    public void attach(@NotNull IComputerAccess computer) {
         monitor.addComputer(computer);
     }
 
     @Override
-    public void detach(@Nonnull IComputerAccess computer) {
+    public void detach(@NotNull IComputerAccess computer) {
         monitor.removeComputer(computer);
     }
 
@@ -94,7 +93,7 @@ public class MonitorPeripheral extends TermMethods implements IPeripheral {
         getMonitor().setTextScale(scale);
     }
 
-    @Nonnull
+    @NotNull
     private ServerMonitor getMonitor() throws LuaException {
         ServerMonitor monitor = this.monitor.getCachedServerMonitor();
         if (monitor == null) {
@@ -103,7 +102,7 @@ public class MonitorPeripheral extends TermMethods implements IPeripheral {
         return monitor;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Terminal getTerminal() throws LuaException {
         Terminal terminal = getMonitor().getTerminal();

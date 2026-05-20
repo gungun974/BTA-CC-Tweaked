@@ -7,8 +7,8 @@ package dan200.computercraft.core.filesystem;
 
 import dan200.computercraft.api.filesystem.FileOperationException;
 import dan200.computercraft.api.filesystem.IMount;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -27,7 +27,7 @@ public class ComboMount implements IMount {
     // IMount implementation
 
     @Override
-    public boolean exists(@Nonnull String path) throws IOException {
+    public boolean exists(@NotNull String path) throws IOException {
         for (int i = parts.length - 1; i >= 0; --i) {
             IMount part = parts[i];
             if (part.exists(path)) {
@@ -38,7 +38,7 @@ public class ComboMount implements IMount {
     }
 
     @Override
-    public boolean isDirectory(@Nonnull String path) throws IOException {
+    public boolean isDirectory(@NotNull String path) throws IOException {
         for (int i = parts.length - 1; i >= 0; --i) {
             IMount part = parts[i];
             if (part.isDirectory(path)) {
@@ -49,7 +49,7 @@ public class ComboMount implements IMount {
     }
 
     @Override
-    public void list(@Nonnull String path, @Nonnull List<String> contents) throws IOException {
+    public void list(@NotNull String path, @NotNull List<String> contents) throws IOException {
         // Combine the lists from all the mounts
         List<String> foundFiles = null;
         int foundDirs = 0;
@@ -81,7 +81,7 @@ public class ComboMount implements IMount {
     }
 
     @Override
-    public long getSize(@Nonnull String path) throws IOException {
+    public long getSize(@NotNull String path) throws IOException {
         for (int i = parts.length - 1; i >= 0; --i) {
             IMount part = parts[i];
             if (part.exists(path)) {
@@ -91,9 +91,9 @@ public class ComboMount implements IMount {
         throw new FileOperationException(path, "No such file");
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ReadableByteChannel openForRead(@Nonnull String path) throws IOException {
+    public ReadableByteChannel openForRead(@NotNull String path) throws IOException {
         for (int i = parts.length - 1; i >= 0; --i) {
             IMount part = parts[i];
             if (part.exists(path) && !part.isDirectory(path)) {
@@ -103,9 +103,9 @@ public class ComboMount implements IMount {
         throw new FileOperationException(path, "No such file");
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public BasicFileAttributes getAttributes(@Nonnull String path) throws IOException {
+    public BasicFileAttributes getAttributes(@NotNull String path) throws IOException {
         for (int i = parts.length - 1; i >= 0; --i) {
             IMount part = parts[i];
             if (part.exists(path) && !part.isDirectory(path)) {

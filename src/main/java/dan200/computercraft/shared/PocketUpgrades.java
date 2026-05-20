@@ -8,8 +8,8 @@ package dan200.computercraft.shared;
 import dan200.computercraft.api.pocket.IPocketUpgrade;
 import dan200.computercraft.shared.common.ComputerCraftPocketUpgrades;
 import net.minecraft.core.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 
 public final class PocketUpgrades {
@@ -18,7 +18,7 @@ public final class PocketUpgrades {
     private PocketUpgrades() {
     }
 
-    public static synchronized void register(@Nonnull IPocketUpgrade upgrade) {
+    public static synchronized void register(@NotNull IPocketUpgrade upgrade) {
         Objects.requireNonNull(upgrade, "upgrade cannot be null");
 
         int id = upgrade.getUpgradeID();

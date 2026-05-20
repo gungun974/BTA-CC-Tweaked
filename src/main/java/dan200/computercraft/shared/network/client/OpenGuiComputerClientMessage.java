@@ -1,18 +1,15 @@
 package dan200.computercraft.shared.network.client;
 
 import dan200.computercraft.client.gui.GuiComputer;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Screen;
+import org.jetbrains.annotations.NotNull;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.NetworkMessage;
 import turniplabs.halplibe.helper.network.UniversalPacket;
-
-import javax.annotation.Nonnull;
-import java.lang.reflect.InvocationTargetException;
 
 public class OpenGuiComputerClientMessage implements NetworkMessage {
     private int instanceId;
@@ -31,7 +28,7 @@ public class OpenGuiComputerClientMessage implements NetworkMessage {
     }
 
     @Override
-    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void encodeToUniversalPacket(@NotNull UniversalPacket buf) {
         buf.writeInt(instanceId);
         buf.writeEnumConstant(family);
         buf.writeInt(width);
@@ -39,7 +36,7 @@ public class OpenGuiComputerClientMessage implements NetworkMessage {
     }
 
     @Override
-    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void decodeFromUniversalPacket(@NotNull UniversalPacket buf) {
         instanceId = buf.readInt();
         family = buf.readEnumConstant(ComputerFamily.class);
         width = buf.readInt();
@@ -48,7 +45,7 @@ public class OpenGuiComputerClientMessage implements NetworkMessage {
 
     @Override
     public void handle(NetworkContext context) {
-        if (!Helper.isServerEnvironment()) {
+        if (!EnvironmentHelper.isServerEnvironment()) {
             clientHandler();
         }
     }

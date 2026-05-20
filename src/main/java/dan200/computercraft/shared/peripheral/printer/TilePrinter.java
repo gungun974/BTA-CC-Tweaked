@@ -10,11 +10,13 @@ import com.mojang.nbt.tags.ListTag;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.core.terminal.Terminal;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.media.items.ItemPrintout;
 import dan200.computercraft.shared.network.client.OpenGuiPrinterClientMessage;
-import dan200.computercraft.shared.util.*;
+import dan200.computercraft.shared.util.ColourUtils;
+import dan200.computercraft.shared.util.InventoryUtil;
+import dan200.computercraft.shared.util.ItemStorage;
+import dan200.computercraft.shared.util.WorldUtil;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
@@ -23,10 +25,12 @@ import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.DyeColor;
 import net.minecraft.core.util.helper.Side;
-import net.minecraft.core.util.phys.Vec3;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3d;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,17 +81,17 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
         return item.equals(Items.PAPER) || (item instanceof ItemPrintout && ((ItemPrintout) item).getType() == ItemPrintout.Type.PAGE);
     }
 
-    static boolean isInk(@Nonnull ItemStack stack) {
+    static boolean isInk(@NotNull ItemStack stack) {
         return ColourUtils.getStackColour(stack) != null;
     }
 
-    public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
+    public boolean onInteracted(Player player, Side side, double xPlaced, double yPlaced) {
         if (player.isSneaking()) {
             return true;
         }
 
         // Open the GUI
-        if (!Helper.isClientWorld()) {
+        if (!EnvironmentHelper.isClientWorld()) {
             new OpenGuiPrinterClientMessage(this).sendToPlayer(player);
         }
         return true;
@@ -102,14 +106,14 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
 
                 // Spawn the item in the world
                 WorldUtil.dropItemStack(stack, worldObj,
-                    Vec3.getPermanentVec3(x, y, z)
+                    new Vector3d(tilePos.x, tilePos.y, tilePos.z)
                         .add(0.5, 0.75, 0.5));
             }
         }
     }
 
-    public BlockPos getPos() {
-        return new BlockPos(x, y, z);
+    public TilePosc getPos() {
+        return tilePos;
     }
 
     private void updateBlockState() {
@@ -137,7 +141,7 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
             return;
         }
 
-        if (Helper.isClientWorld()) {
+        if (EnvironmentHelper.isClientWorld()) {
             return;
         }
 
@@ -150,15 +154,13 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
             final int newMetadata = (currentMetadata & ~0b11000) | ((bottom ? 1 << 3 : 0) + (top ? 1 << 4 : 0));
 
             if (worldObj != null) {
-                worldObj.setBlockMetadataWithNotify(this.x, this.y, this.z, newMetadata);
+                worldObj.setBlockDataNotify(this.tilePos, newMetadata);
             }
         }
     }
 
     @Override
-    public void readFromNBT(CompoundTag nbt) {
-        super.readFromNBT(nbt);
-
+    public void readAdditionalData(CompoundTag nbt) {
         customName = nbt.containsKey(NBT_NAME) ? nbt.getString(NBT_NAME) : null;
 
         // Read page
@@ -182,7 +184,7 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
     }
 
     @Override
-    public void writeToNBT(CompoundTag nbt) {
+    public void writeAdditionalData(CompoundTag nbt) {
         if (customName != null) {
             nbt.putString(NBT_NAME, customName);
         }
@@ -208,8 +210,6 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
             }
         }
         nbt.put("Items", nbttaglist);
-
-        super.writeToNBT(nbt);
     }
 
     boolean isPrinting() {
@@ -275,11 +275,11 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
     }
 
     @Override
-    public void sortContainer() {
+    public void sort() {
 
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IPeripheral getPeripheral(Direction side) {
         return new PrinterPeripheral(this);

@@ -5,7 +5,6 @@
  */
 package dan200.computercraft.shared.turtle.blocks;
 
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ServerComputer;
@@ -17,10 +16,13 @@ import net.minecraft.core.entity.Mob;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
-import net.minecraft.core.util.phys.AABB;
 import net.minecraft.core.world.World;
 import net.minecraft.core.world.WorldSource;
+import net.minecraft.core.world.pos.TilePosc;
 import org.jetbrains.annotations.NotNull;
+import org.joml.primitives.AABBd;
+import org.joml.primitives.AABBdc;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
 public class BlockLogicTurtle extends BlockLogicComputer {
     public BlockLogicTurtle(Block<?> block, ComputerFamily family) {
@@ -38,27 +40,25 @@ public class BlockLogicTurtle extends BlockLogicComputer {
     }
 
     @Override
-    public AABB getBlockBoundsFromState(WorldSource world, int x, int y, int z) {
-        return AABB.getPermanentBB(0.125, 0.125, 0.125, 0.875, 0.875, 0.875);
+    public @NotNull AABBdc getBoundsFromState(@NotNull WorldSource world, @NotNull TilePosc tilePos) {
+        return new AABBd(0.125, 0.125, 0.125, 0.875, 0.875, 0.875);
     }
 
     @Override
-    public void onBlockPlacedByMob(World world, int x, int y, int z, @NotNull Side side, Mob mob, double xPlaced, double yPlaced) {
+    public void onPlacedByMob(World world, TilePosc tilePos, @NotNull Side side, Mob mob, double xPlaced, double yPlaced) {
         Direction direction = mob.getHorizontalPlacementDirection(side);
 
-        world.setBlockMetadataWithNotify(x, y, z, direction.getId());
+        world.setBlockDataNotify(tilePos, direction.id);
 
-        TileEntity entity = (world.getTileEntity(x, y, z));
-        if (!(entity instanceof TileTurtle)) {
+        TileEntity entity = (world.getTileEntity(tilePos));
+        if (!(entity instanceof TileTurtle turtle)) {
             return;
         }
-
-        TileTurtle turtle = (TileTurtle) entity;
 
         turtle.setDirection(direction);
         turtle.carriedBlock = null;
 
-        if (!Helper.isClientWorld()) {
+        if (!EnvironmentHelper.isClientWorld()) {
             ServerComputer computer = turtle.getServerComputer();
 
             if (computer != null) {

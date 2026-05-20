@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.api.network;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A packet network represents a collection of devices which can send and receive packets.
@@ -19,14 +19,14 @@ public interface IPacketNetwork {
      *
      * @param receiver The receiver to register to the network.
      */
-    void addReceiver(@Nonnull IPacketReceiver receiver);
+    void addReceiver(@NotNull IPacketReceiver receiver);
 
     /**
      * Remove a receiver from the network.
      *
      * @param receiver The device to remove from the network.
      */
-    void removeReceiver(@Nonnull IPacketReceiver receiver);
+    void removeReceiver(@NotNull IPacketReceiver receiver);
 
     /**
      * Determine whether this network is wireless.
@@ -44,7 +44,7 @@ public interface IPacketNetwork {
      * @see #transmitInterdimensional(Packet)
      * @see IPacketReceiver#receiveSameDimension(Packet, double)
      */
-    void transmitSameDimension(@Nonnull Packet packet, double range);
+    void transmitSameDimension(@NotNull Packet packet, double range);
 
     /**
      * Submit a packet for transmitting across the network. This will route the packet through the network, sending it to all receivers across all
@@ -54,5 +54,5 @@ public interface IPacketNetwork {
      * @see #transmitSameDimension(Packet, double)
      * @see IPacketReceiver#receiveDifferentDimension(Packet)
      */
-    void transmitInterdimensional(@Nonnull Packet packet);
+    void transmitInterdimensional(@NotNull Packet packet);
 }

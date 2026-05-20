@@ -9,11 +9,11 @@ import dan200.computercraft.api.lua.MethodResult;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
-import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Objects;
 
@@ -28,10 +28,10 @@ import java.util.Objects;
  */
 public abstract class TurtleBlockEvent extends TurtleActionEvent {
     private final World world;
-    private final BlockPos pos;
+    private final TilePosc pos;
 
-    protected TurtleBlockEvent(@Nonnull ITurtleAccess turtle, @Nonnull TurtleAction action, @Nonnull World world,
-                               @Nonnull BlockPos pos) {
+    protected TurtleBlockEvent(@NotNull ITurtleAccess turtle, @NotNull TurtleAction action, @NotNull World world,
+                               @NotNull TilePosc pos) {
         super(turtle, action);
 
         Objects.requireNonNull(world, "world cannot be null");
@@ -54,7 +54,7 @@ public abstract class TurtleBlockEvent extends TurtleActionEvent {
      *
      * @return The position the turtle is interacting with.
      */
-    public BlockPos getPos() {
+    public TilePosc getPos() {
         return pos;
     }
 
@@ -68,8 +68,8 @@ public abstract class TurtleBlockEvent extends TurtleActionEvent {
         private final ITurtleUpgrade upgrade;
         private final TurtleSide side;
 
-        public Dig(@Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull int block,
-                   @Nonnull ITurtleUpgrade upgrade, @Nonnull TurtleSide side) {
+        public Dig(@NotNull ITurtleAccess turtle, @NotNull World world, @NotNull TilePosc pos, @NotNull int block,
+                   @NotNull ITurtleUpgrade upgrade, @NotNull TurtleSide side) {
             super(turtle, TurtleAction.DIG, world, pos);
 
             Objects.requireNonNull(block, "block cannot be null");
@@ -85,7 +85,7 @@ public abstract class TurtleBlockEvent extends TurtleActionEvent {
          *
          * @return The block which is going to be broken.
          */
-        @Nonnull
+        @NotNull
         public int getBlock() {
             return block;
         }
@@ -95,7 +95,7 @@ public abstract class TurtleBlockEvent extends TurtleActionEvent {
          *
          * @return The upgrade doing the digging.
          */
-        @Nonnull
+        @NotNull
         public ITurtleUpgrade getUpgrade() {
             return upgrade;
         }
@@ -105,7 +105,7 @@ public abstract class TurtleBlockEvent extends TurtleActionEvent {
          *
          * @return The upgrade's side.
          */
-        @Nonnull
+        @NotNull
         public TurtleSide getSide() {
             return side;
         }
@@ -117,7 +117,7 @@ public abstract class TurtleBlockEvent extends TurtleActionEvent {
      * @see TurtleAction#MOVE
      */
     public static class Move extends TurtleBlockEvent {
-        public Move(@Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos) {
+        public Move(@NotNull ITurtleAccess turtle, @NotNull World world, @NotNull TilePosc pos) {
             super(turtle, TurtleAction.MOVE, world, pos);
         }
     }
@@ -130,7 +130,7 @@ public abstract class TurtleBlockEvent extends TurtleActionEvent {
     public static class Place extends TurtleBlockEvent {
         private final ItemStack stack;
 
-        public Place(@Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull ItemStack stack) {
+        public Place(@NotNull ITurtleAccess turtle, @NotNull World world, @NotNull TilePosc pos, @NotNull ItemStack stack) {
             super(turtle, TurtleAction.PLACE, world, pos);
 
             Objects.requireNonNull(stack, "stack cannot be null");
@@ -142,7 +142,7 @@ public abstract class TurtleBlockEvent extends TurtleActionEvent {
          *
          * @return The item stack to be placed.
          */
-        @Nonnull
+        @NotNull
         public ItemStack getStack() {
             return stack;
         }
@@ -160,8 +160,8 @@ public abstract class TurtleBlockEvent extends TurtleActionEvent {
         private final int metadata;
         private final Map<String, Object> data;
 
-        public Inspect(@Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos, int id, int metadata,
-                       @Nonnull Map<String, Object> data) {
+        public Inspect(@NotNull ITurtleAccess turtle, @NotNull World world, @NotNull TilePosc pos, int id, int metadata,
+                       @NotNull Map<String, Object> data) {
             super(turtle, TurtleAction.INSPECT, world, pos);
 
             Objects.requireNonNull(data, "data cannot be null");
@@ -193,7 +193,7 @@ public abstract class TurtleBlockEvent extends TurtleActionEvent {
          *
          * @return This block's inspection data.
          */
-        @Nonnull
+        @NotNull
         public Map<String, Object> getData() {
             return data;
         }
@@ -203,7 +203,7 @@ public abstract class TurtleBlockEvent extends TurtleActionEvent {
          *
          * @param newData The data to add. Note all values should be convertible to Lua (see {@link MethodResult#of(Object)}).
          */
-        public void addData(@Nonnull Map<String, ?> newData) {
+        public void addData(@NotNull Map<String, ?> newData) {
             Objects.requireNonNull(newData, "newData cannot be null");
             data.putAll(newData);
         }

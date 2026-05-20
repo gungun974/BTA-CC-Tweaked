@@ -10,9 +10,9 @@ import dan200.computercraft.shared.util.IoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
+import org.jetbrains.annotations.Nullable;
 import turniplabs.halplibe.helper.network.UniversalPacket;
 
-import javax.annotation.Nullable;
 import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;

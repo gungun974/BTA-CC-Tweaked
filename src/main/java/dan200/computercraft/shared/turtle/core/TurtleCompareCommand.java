@@ -8,14 +8,15 @@ package dan200.computercraft.shared.turtle.core;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleCommand;
 import dan200.computercraft.api.turtle.TurtleCommandResult;
-import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.enums.EnumDropCause;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class TurtleCompareCommand implements ITurtleCommand {
@@ -25,9 +26,9 @@ public class TurtleCompareCommand implements ITurtleCommand {
         this.direction = direction;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+    public TurtleCommandResult execute(@NotNull ITurtleAccess turtle) {
         // Get world direction from direction
         Direction direction = this.direction.toWorldDir(turtle);
 
@@ -37,16 +38,16 @@ public class TurtleCompareCommand implements ITurtleCommand {
 
         // Get stack representing thing in front
         World world = turtle.getWorld();
-        BlockPos oldPosition = turtle.getPosition();
-        BlockPos newPosition = oldPosition.offset(direction);
+        TilePosc oldPosition = turtle.getPosition();
+        TilePosc newPosition = oldPosition.add(direction, new TilePos());
 
         ItemStack lookAtStack = null;
-        if (!world.isAirBlock(newPosition.x, newPosition.y, newPosition.z)) {
-            Block<?> lookAtBlock = world.getBlock(newPosition.x, newPosition.y, newPosition.z);
+        if (!world.isAirBlock(newPosition)) {
+            Block<?> lookAtBlock = world.getBlockType(newPosition);
             // See if the block drops anything with the same ID as itself
             // (try 5 times to try and beat random number generators)
             for (int i = 0; i < 5 && lookAtStack == null; i++) {
-                ItemStack[] drops = Objects.requireNonNull(lookAtBlock).getBreakResult(world, EnumDropCause.PICK_BLOCK, newPosition.x, newPosition.y, newPosition.z, world.getBlockMetadata(newPosition.x, newPosition.y, newPosition.z), world.getTileEntity(newPosition.x, newPosition.y, newPosition.z));
+                ItemStack[] drops = Objects.requireNonNull(lookAtBlock).getBreakResult(world, EnumDropCause.PICK_BLOCK, newPosition, world.getBlockData(newPosition), world.getTileEntity(newPosition));
                 if (drops != null) {
                     for (ItemStack drop : drops) {
                         if (drop.getItem().equals(lookAtBlock.asItem())) {

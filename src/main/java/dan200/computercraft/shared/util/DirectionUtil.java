@@ -9,8 +9,6 @@ import dan200.computercraft.core.computer.ComputerSide;
 import net.minecraft.core.util.helper.Axis;
 import net.minecraft.core.util.helper.Direction;
 
-import java.util.Arrays;
-
 public final class DirectionUtil {
     public static final Direction[] FACINGS = {
         Direction.NORTH,
@@ -25,18 +23,14 @@ public final class DirectionUtil {
     }
 
     public static ComputerSide toLocal(Direction front, Direction dir) {
-        if (dir == Direction.NONE) {
-            throw new RuntimeException("Direction should not be none in Computer World");
-        }
-
-        if (front.getAxis() == Axis.Y) {
+        if (front.axis() == Axis.Y) {
             front = Direction.NORTH;
         }
 
         if (dir == front) {
             return ComputerSide.FRONT;
         }
-        if (dir == front.getOpposite()) {
+        if (dir == front.opposite()) {
             return ComputerSide.BACK;
         }
         if (dir == rotateYCounterclockwise(front)) {
@@ -52,36 +46,40 @@ public final class DirectionUtil {
     }
 
     public static float toPitchAngle(Direction dir) {
-        switch (dir) {
-            case DOWN:
-                return 90.0f;
-            case UP:
-                return 270.0f;
-            default:
-                return 0.0f;
-        }
+        return switch (dir) {
+            case DOWN -> 90.0f;
+            case UP -> 270.0f;
+            default -> 0.0f;
+        };
     }
 
     public static Direction rotateYClockwise(Direction direction) {
-        if (direction == Direction.UP || direction == Direction.DOWN || direction == Direction.NONE) {
-            return direction;
-        }
-        return Direction.horizontalDirections[(direction.getHorizontalIndex() + 1) % 4];
+        return switch (direction) {
+            case NORTH -> Direction.EAST;
+            case EAST -> Direction.SOUTH;
+            case SOUTH -> Direction.WEST;
+            case WEST -> Direction.NORTH;
+            default -> direction;
+        };
     }
 
     public static Direction rotateYCounterclockwise(Direction direction) {
-        if (direction == Direction.UP || direction == Direction.DOWN || direction == Direction.NONE) {
-            return direction;
-        }
-        return Direction.horizontalDirections[(direction.getHorizontalIndex() + 3) % 4];
+        return switch (direction) {
+            case NORTH -> Direction.WEST;
+            case WEST -> Direction.SOUTH;
+            case SOUTH -> Direction.EAST;
+            case EAST -> Direction.NORTH;
+            default -> direction;
+        };
     }
 
     public static float getRotationYaw(Direction direction) {
-        int index = Arrays.asList(Direction.horizontalDirections).indexOf(direction);
-        if (index == -1) {
-            throw new IllegalArgumentException("Invalid direction: " + direction);
-        }
-        return (index - 2 & 3) * 90.0f;
+        return switch (direction) {
+            case NORTH -> 180.0f;
+            case EAST -> 270.0f;
+            case SOUTH -> 0.0f;
+            case WEST -> 90.0f;
+            default -> throw new IllegalArgumentException("Invalid direction: " + direction);
+        };
     }
-
 }

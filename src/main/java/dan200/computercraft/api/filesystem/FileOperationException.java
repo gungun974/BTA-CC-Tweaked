@@ -5,8 +5,9 @@
  */
 package dan200.computercraft.api.filesystem;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.IOException;
 import java.util.Objects;
 
@@ -20,12 +21,12 @@ public class FileOperationException extends IOException {
 
     private final String filename;
 
-    public FileOperationException(@Nullable String filename, @Nonnull String message) {
+    public FileOperationException(@Nullable String filename, @NotNull String message) {
         super(Objects.requireNonNull(message, "message cannot be null"));
         this.filename = filename;
     }
 
-    public FileOperationException(@Nonnull String message) {
+    public FileOperationException(@NotNull String message) {
         super(Objects.requireNonNull(message, "message cannot be null"));
         filename = null;
     }

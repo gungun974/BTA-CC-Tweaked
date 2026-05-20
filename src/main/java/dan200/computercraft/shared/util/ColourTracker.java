@@ -8,7 +8,7 @@ package dan200.computercraft.shared.util;
 import net.minecraft.core.util.helper.DyeColor;
 
 /**
- * A reimplementation of the colour system in {@link ArmorDyeRecipe}, but bundled together as an object.
+ * A reimplementation of the armour dye colour system, bundled together as an object.
  */
 public class ColourTracker {
     private int total;

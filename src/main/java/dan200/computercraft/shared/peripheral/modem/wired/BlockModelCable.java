@@ -1,388 +1,145 @@
 package dan200.computercraft.shared.peripheral.modem.wired;
 
-import dan200.computercraft.shared.peripheral.modem.ModemShapes;
-import net.minecraft.client.render.LightmapHelper;
-import net.minecraft.client.render.block.color.BlockColorDispatcher;
-import net.minecraft.client.render.block.model.BlockModelStandard;
-import net.minecraft.client.render.tessellator.Tessellator;
+import net.minecraft.client.render.block.model.BlockModelDispatcher;
+import net.minecraft.client.render.block.model.generic.BlockModelGeneric;
+import net.minecraft.client.render.tessellator.TessellatorGeneral;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
-import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.util.helper.Side;
-import net.minecraft.core.util.phys.AABB;
+import net.minecraft.core.world.WorldSource;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
+import org.useless.dragonfly.models.block.StaticBlockModel;
 
-public class BlockModelCable<T extends BlockLogic> extends BlockModelStandard<T> {
-    public static final IconCoordinate CABLE_CORE = TextureRegistry.getTexture("computercraft:block/cable_core");
-    public static final IconCoordinate CABLE_SIDE = TextureRegistry.getTexture("computercraft:block/cable_side");
+public class BlockModelCable<T extends BlockLogic> extends BlockModelGeneric<T> {
+    public final @NotNull StaticBlockModel arm;
+    public final @NotNull StaticBlockModel core_any;
+    public final @NotNull StaticBlockModel core_facing;
 
-    public static final IconCoordinate MODEM_BACK = TextureRegistry.getTexture("computercraft:block/modem_back");
-
-    public static final IconCoordinate WIRED_MODEM_FACE = TextureRegistry.getTexture("computercraft:block/wired_modem_face");
-    public static final IconCoordinate WIRED_MODEM_FACE_ON = TextureRegistry.getTexture("computercraft:block/wired_modem_face_on");
-
-    public static final IconCoordinate WIRED_MODEM_FACE_PERIPHERAL = TextureRegistry.getTexture("computercraft:block/wired_modem_face_peripheral");
-    public static final IconCoordinate WIRED_MODEM_FACE_PERIPHERAL_ON = TextureRegistry.getTexture("computercraft:block/wired_modem_face_peripheral_on");
-    IconCoordinate currentCoordinate = CABLE_SIDE;
+    public final @NotNull StaticBlockModel off;
+    public final @NotNull StaticBlockModel off_peripheral;
+    public final @NotNull StaticBlockModel on;
+    public final @NotNull StaticBlockModel on_peripheral;
 
     public BlockModelCable(Block<T> block) {
-        super(block);
+        super(block, BlockModelDispatcher.loadDataModel("computercraft:block/cable_core_any").asModel());
+        this.arm = BlockModelDispatcher.loadDataModel("computercraft:block/cable_arm").asModel();
+        this.core_any = BlockModelDispatcher.loadDataModel("computercraft:block/cable_core_any").asModel();
+        this.core_facing = BlockModelDispatcher.loadDataModel("computercraft:block/cable_core_facing").asModel();
+
+        this.off = BlockModelDispatcher.loadDataModel("computercraft:block/wired_modem_off").asModel();
+        this.off_peripheral = BlockModelDispatcher.loadDataModel("computercraft:block/wired_modem_full_peripheral").asModel();
+        this.on = BlockModelDispatcher.loadDataModel("computercraft:block/wired_modem_on").asModel();
+        this.on_peripheral = BlockModelDispatcher.loadDataModel("computercraft:block/wired_modem_on_peripheral").asModel();
     }
 
-    private static void setBounds(AABB bounds, AABB shape) {
-        bounds.set(shape.minX, shape.minY, shape.minZ, shape.maxX, shape.maxY, shape.maxZ);
-    }
+    @Override
+    public boolean renderAttached(@NotNull TessellatorGeneral tessellator, @NotNull WorldSource worldSource, @NotNull TilePosc tilePos, boolean cullFaces, @Nullable IconCoordinate overrideTexture) {
+        TileEntity tileEntity = worldSource.getTileEntity(tilePos);
 
-    public boolean render(Tessellator tessellator, int x, int y, int z) {
-        AABB bounds = this.block.getBlockBoundsFromState(renderBlocks.blockAccess, x, y, z);
-
-        renderBlocks.enableAO = true;
-        renderBlocks.cache.setupCache(this.block, renderBlocks.blockAccess, x, y, z);
-
-        TileEntity tileEntity = renderBlocks.blockAccess.getTileEntity(x, y, z);
-
-        if (tileEntity instanceof TileCable) {
-            final TileCable state = (TileCable) tileEntity;
+        if (tileEntity instanceof TileCable state) {
 
             if (state.blockStateCable) {
-                setBounds(bounds, CableShapes.SHAPE_CABLE_CORE);
-                if (!state.blockStateNorth) {
-                    if (state.blockStateSouth && !state.blockStateWest && !state.blockStateEast && !state.blockStateUp && !state.blockStateDown) {
-                        currentCoordinate = CABLE_CORE;
-                    }
-                    this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
-                    currentCoordinate = CABLE_SIDE;
-                }
-                if (!state.blockStateSouth) {
-                    if (state.blockStateNorth && !state.blockStateWest && !state.blockStateEast && !state.blockStateUp && !state.blockStateDown) {
-                        currentCoordinate = CABLE_CORE;
-                    }
-                    this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
-                    currentCoordinate = CABLE_SIDE;
-                }
-                if (!state.blockStateEast) {
-                    if (state.blockStateWest && !state.blockStateSouth && !state.blockStateNorth && !state.blockStateUp && !state.blockStateDown) {
-                        currentCoordinate = CABLE_CORE;
-                    }
-                    if (!state.blockStateWest && !state.blockStateSouth && !state.blockStateNorth && !state.blockStateUp && !state.blockStateDown) {
-                        currentCoordinate = CABLE_CORE;
-                    }
+                int connections = (state.blockStateNorth ? 1 : 0)
+                    + (state.blockStateSouth ? 1 : 0)
+                    + (state.blockStateEast ? 1 : 0)
+                    + (state.blockStateWest ? 1 : 0)
+                    + (state.blockStateDown ? 1 : 0)
+                    + (state.blockStateUp ? 1 : 0);
 
-                    this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
-                    currentCoordinate = CABLE_SIDE;
-                }
-                if (!state.blockStateWest) {
-                    if (state.blockStateEast && !state.blockStateSouth && !state.blockStateNorth && !state.blockStateUp && !state.blockStateDown) {
-                        currentCoordinate = CABLE_CORE;
+                if (connections == 1) {
+                    if (state.blockStateNorth || state.blockStateSouth) {
+                        core_facing.renderAttached(this, tessellator, worldSource, tilePos, 0, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                    } else if (state.blockStateEast || state.blockStateWest) {
+                        core_facing.renderAttached(this, tessellator, worldSource, tilePos, 0, 1, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                    } else {
+                        core_facing.renderAttached(this, tessellator, worldSource, tilePos, 1, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
                     }
-                    if (!state.blockStateEast && !state.blockStateSouth && !state.blockStateNorth && !state.blockStateUp && !state.blockStateDown) {
-                        currentCoordinate = CABLE_CORE;
-                    }
-                    this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
-                    currentCoordinate = CABLE_SIDE;
-                }
-                if (!state.blockStateUp) {
-                    if (state.blockStateDown && !state.blockStateSouth && !state.blockStateNorth && !state.blockStateWest && !state.blockStateEast) {
-                        currentCoordinate = CABLE_CORE;
-                    }
-                    this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
-                    currentCoordinate = CABLE_SIDE;
-                }
-                if (!state.blockStateDown) {
-                    if (state.blockStateUp && !state.blockStateSouth && !state.blockStateNorth && !state.blockStateWest && !state.blockStateEast) {
-                        currentCoordinate = CABLE_CORE;
-                    }
-                    this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
-                    currentCoordinate = CABLE_SIDE;
+                } else {
+                    core_any.renderAttached(this, tessellator, worldSource, tilePos, 0, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
                 }
 
                 if (state.blockStateNorth) {
-                    setBounds(bounds, CableShapes.SHAPE_CABLE_ARM.get(Direction.NORTH));
-                    this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
+                    arm.renderAttached(this, tessellator, worldSource, tilePos, 0, 2, 0, 0, 0, 0, false, cullFaces, overrideTexture);
                 }
                 if (state.blockStateSouth) {
-                    setBounds(bounds, CableShapes.SHAPE_CABLE_ARM.get(Direction.SOUTH));
-                    this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
+                    arm.renderAttached(this, tessellator, worldSource, tilePos, 0, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
                 }
                 if (state.blockStateEast) {
-                    setBounds(bounds, CableShapes.SHAPE_CABLE_ARM.get(Direction.EAST));
-                    this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
+                    arm.renderAttached(this, tessellator, worldSource, tilePos, 0, 1, 0, 0, 0, 0, false, cullFaces, overrideTexture);
                 }
                 if (state.blockStateWest) {
-                    setBounds(bounds, CableShapes.SHAPE_CABLE_ARM.get(Direction.WEST));
-                    this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
+                    arm.renderAttached(this, tessellator, worldSource, tilePos, 0, 3, 0, 0, 0, 0, false, cullFaces, overrideTexture);
                 }
                 if (state.blockStateUp) {
-                    setBounds(bounds, CableShapes.SHAPE_CABLE_ARM.get(Direction.UP));
-                    this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
+                    arm.renderAttached(this, tessellator, worldSource, tilePos, 3, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
                 }
                 if (state.blockStateDown) {
-                    setBounds(bounds, CableShapes.SHAPE_CABLE_ARM.get(Direction.DOWN));
-                    this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
-                    this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
+                    arm.renderAttached(this, tessellator, worldSource, tilePos, 1, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
                 }
             }
 
-            if (state.blockStateModem.getFacing() != null) {
-                setBounds(bounds, CableShapes.getModemShape(state));
-
-                switch (state.blockStateModem.getFacing()) {
-                    case NORTH:
-                        if (state.blockStateModem == CableModemVariant.NorthOn) {
-                            currentCoordinate = WIRED_MODEM_FACE_ON;
-                        } else if (state.blockStateModem == CableModemVariant.NorthOffPeripheral) {
-                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL;
-                        } else if (state.blockStateModem == CableModemVariant.NorthOnPeripheral) {
-                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL_ON;
-                        } else {
-                            currentCoordinate = WIRED_MODEM_FACE;
-                        }
-
-                        this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
-                        renderBlocks.flipTexture = true;
-                        this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
-                        renderBlocks.flipTexture = false;
-                        this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
-
-                        currentCoordinate = MODEM_BACK;
-
-                        this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
-                        break;
-                    case EAST:
-                        if (state.blockStateModem == CableModemVariant.EastOn) {
-                            currentCoordinate = WIRED_MODEM_FACE_ON;
-                        } else if (state.blockStateModem == CableModemVariant.EastOffPeripheral) {
-                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL;
-                        } else if (state.blockStateModem == CableModemVariant.EastOnPeripheral) {
-                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL_ON;
-                        } else {
-                            currentCoordinate = WIRED_MODEM_FACE;
-                        }
-
-                        renderBlocks.uvRotateTop = 1;
-                        this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
-                        renderBlocks.flipTexture = true;
-                        this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
-                        renderBlocks.flipTexture = false;
-
-                        currentCoordinate = MODEM_BACK;
-
-                        this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
-                        break;
-                    case SOUTH:
-                        if (state.blockStateModem == CableModemVariant.SouthOn) {
-                            currentCoordinate = WIRED_MODEM_FACE_ON;
-                        } else if (state.blockStateModem == CableModemVariant.SouthOffPeripheral) {
-                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL;
-                        } else if (state.blockStateModem == CableModemVariant.SouthOnPeripheral) {
-                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL_ON;
-                        } else {
-                            currentCoordinate = WIRED_MODEM_FACE;
-                        }
-
-                        renderBlocks.uvRotateTop = 3;
-                        this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
-                        renderBlocks.flipTexture = true;
-                        this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
-                        renderBlocks.flipTexture = false;
-                        this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
-
-                        currentCoordinate = MODEM_BACK;
-
-                        this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
-                        break;
-                    case WEST:
-                        if (state.blockStateModem == CableModemVariant.WestOn) {
-                            currentCoordinate = WIRED_MODEM_FACE_ON;
-                        } else if (state.blockStateModem == CableModemVariant.WestOffPeripheral) {
-                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL;
-                        } else if (state.blockStateModem == CableModemVariant.WestOnPeripheral) {
-                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL_ON;
-                        } else {
-                            currentCoordinate = WIRED_MODEM_FACE;
-                        }
-
-                        renderBlocks.uvRotateTop = 2;
-                        this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
-                        renderBlocks.flipTexture = true;
-                        this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
-                        renderBlocks.flipTexture = false;
-
-                        currentCoordinate = MODEM_BACK;
-
-                        this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
-                        break;
-                    case UP:
-                        if (state.blockStateModem == CableModemVariant.UpOn) {
-                            currentCoordinate = WIRED_MODEM_FACE_ON;
-                        } else if (state.blockStateModem == CableModemVariant.UpOffPeripheral) {
-                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL;
-                        } else if (state.blockStateModem == CableModemVariant.UpOnPeripheral) {
-                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL_ON;
-                        } else {
-                            currentCoordinate = WIRED_MODEM_FACE;
-                        }
-
-                        this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
-
-                        currentCoordinate = MODEM_BACK;
-
-                        this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
-                        break;
-                    case DOWN:
-                        if (state.blockStateModem == CableModemVariant.DownOn) {
-                            currentCoordinate = WIRED_MODEM_FACE_ON;
-                        } else if (state.blockStateModem == CableModemVariant.DownOffPeripheral) {
-                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL;
-                        } else if (state.blockStateModem == CableModemVariant.DownOnPeripheral) {
-                            currentCoordinate = WIRED_MODEM_FACE_PERIPHERAL_ON;
-                        } else {
-                            currentCoordinate = WIRED_MODEM_FACE;
-                        }
-
-                        this.renderSide(tessellator, bounds, x, y, z, Side.SOUTH, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.TOP, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.WEST, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.EAST, 0);
-                        this.renderSide(tessellator, bounds, x, y, z, Side.NORTH, 0);
-
-                        currentCoordinate = MODEM_BACK;
-
-                        this.renderSide(tessellator, bounds, x, y, z, Side.BOTTOM, 0);
-                        break;
-                    case NONE:
+            switch (state.blockStateModem) {
+                case None -> {
                 }
+                case DownOff ->
+                    off.renderAttached(this, tessellator, worldSource, tilePos, 3, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case UpOff ->
+                    off.renderAttached(this, tessellator, worldSource, tilePos, 1, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case NorthOff ->
+                    off.renderAttached(this, tessellator, worldSource, tilePos, 0, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case SouthOff ->
+                    off.renderAttached(this, tessellator, worldSource, tilePos, 0, 2, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case WestOff ->
+                    off.renderAttached(this, tessellator, worldSource, tilePos, 0, 1, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case EastOff ->
+                    off.renderAttached(this, tessellator, worldSource, tilePos, 0, 3, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case DownOn ->
+                    on.renderAttached(this, tessellator, worldSource, tilePos, 3, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case UpOn ->
+                    on.renderAttached(this, tessellator, worldSource, tilePos, 1, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case NorthOn ->
+                    on.renderAttached(this, tessellator, worldSource, tilePos, 0, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case SouthOn ->
+                    on.renderAttached(this, tessellator, worldSource, tilePos, 0, 2, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case WestOn ->
+                    on.renderAttached(this, tessellator, worldSource, tilePos, 0, 1, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case EastOn ->
+                    on.renderAttached(this, tessellator, worldSource, tilePos, 0, 3, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case DownOffPeripheral ->
+                    off_peripheral.renderAttached(this, tessellator, worldSource, tilePos, 3, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case UpOffPeripheral ->
+                    off_peripheral.renderAttached(this, tessellator, worldSource, tilePos, 1, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case NorthOffPeripheral ->
+                    off_peripheral.renderAttached(this, tessellator, worldSource, tilePos, 0, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case SouthOffPeripheral ->
+                    off_peripheral.renderAttached(this, tessellator, worldSource, tilePos, 0, 2, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case WestOffPeripheral ->
+                    off_peripheral.renderAttached(this, tessellator, worldSource, tilePos, 0, 1, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case EastOffPeripheral ->
+                    off_peripheral.renderAttached(this, tessellator, worldSource, tilePos, 0, 3, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case DownOnPeripheral ->
+                    on_peripheral.renderAttached(this, tessellator, worldSource, tilePos, 3, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case UpOnPeripheral ->
+                    on_peripheral.renderAttached(this, tessellator, worldSource, tilePos, 1, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case NorthOnPeripheral ->
+                    on_peripheral.renderAttached(this, tessellator, worldSource, tilePos, 0, 0, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case SouthOnPeripheral ->
+                    on_peripheral.renderAttached(this, tessellator, worldSource, tilePos, 0, 2, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case WestOnPeripheral ->
+                    on_peripheral.renderAttached(this, tessellator, worldSource, tilePos, 0, 1, 0, 0, 0, 0, false, cullFaces, overrideTexture);
+                case EastOnPeripheral ->
+                    on_peripheral.renderAttached(this, tessellator, worldSource, tilePos, 0, 3, 0, 0, 0, 0, false, cullFaces, overrideTexture);
             }
-
-            currentCoordinate = CABLE_SIDE;
         }
 
-        this.resetRenderBlocks();
         return true;
     }
 
     @Override
-    public void renderBlockOnInventory(Tessellator tessellator, int metadata, float brightness, float alpha, @Nullable Integer lightmapCoordinate) {
-        if (renderBlocks.useInventoryTint) {
-            int color = BlockColorDispatcher.getInstance().getDispatch(this.block).getFallbackColor(metadata);
-            float r = (float) (color >> 16 & 255) / 255.0F;
-            float g = (float) (color >> 8 & 255) / 255.0F;
-            float b = (float) (color & 255) / 255.0F;
-            GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
-        } else {
-            GL11.glColor4f(brightness, brightness, brightness, alpha);
-        }
-
-        float yOffset = 0.5F;
-        AABB bounds = this.getBlockBoundsForItemRender();
-        GL11.glTranslatef(-0.5F, 0.0F - yOffset, -0.5F);
-
-        if (LightmapHelper.isLightmapEnabled() && lightmapCoordinate != null) {
-            LightmapHelper.setLightmapCoord(lightmapCoordinate);
-        }
-
-        tessellator.startDrawingQuads();
-
-        if (metadata == 1) {
-
-            setBounds(bounds, ModemShapes.getBounds(Direction.WEST));
-
-            renderBlocks.uvRotateTop = 1;
-            tessellator.setNormal(0.0F, 0.0F, 1.0F);
-            this.renderSouthFace(tessellator, bounds, 0.0, 0.0, 0.0, WIRED_MODEM_FACE);
-            tessellator.setNormal(0.0F, 1.0F, 0.0F);
-            this.renderTopFace(tessellator, bounds, 0.0, 0.0, 0.0, WIRED_MODEM_FACE);
-            tessellator.setNormal(0.0F, -1.0F, 0.0F);
-            this.renderBottomFace(tessellator, bounds, 0.0, 0.0, 0.0, WIRED_MODEM_FACE);
-            tessellator.setNormal(1.0F, 0.0F, 0.0F);
-            this.renderEastFace(tessellator, bounds, 0.0, 0.0, 0.0, WIRED_MODEM_FACE);
-            renderBlocks.flipTexture = true;
-            tessellator.setNormal(0.0F, 0.0F, -1.0F);
-            this.renderNorthFace(tessellator, bounds, 0.0, 0.0, 0.0, WIRED_MODEM_FACE);
-            renderBlocks.flipTexture = false;
-
-            tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-            this.renderWestFace(tessellator, bounds, 0.0, 0.0, 0.0, MODEM_BACK);
-        } else {
-
-            setBounds(bounds, CableShapes.SHAPE_CABLE_CORE);
-            tessellator.setNormal(0.0F, 0.0F, -1.0F);
-            this.renderNorthFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
-            tessellator.setNormal(0.0F, 0.0F, 1.0F);
-            this.renderSouthFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
-            tessellator.setNormal(0.0F, 1.0F, 0.0F);
-            this.renderTopFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
-            tessellator.setNormal(0.0F, -1.0F, 0.0F);
-            this.renderBottomFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
-
-            setBounds(bounds, CableShapes.SHAPE_CABLE_ARM.get(Direction.EAST));
-
-            tessellator.setNormal(0.0F, 0.0F, -1.0F);
-            this.renderNorthFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
-            tessellator.setNormal(0.0F, 0.0F, 1.0F);
-            this.renderSouthFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
-            tessellator.setNormal(0.0F, 1.0F, 0.0F);
-            this.renderTopFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
-            tessellator.setNormal(0.0F, -1.0F, 0.0F);
-            this.renderBottomFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
-            tessellator.setNormal(1.0F, 0.0F, 0.0F);
-            this.renderEastFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_CORE);
-
-            setBounds(bounds, CableShapes.SHAPE_CABLE_ARM.get(Direction.WEST));
-            tessellator.setNormal(0.0F, 0.0F, -1.0F);
-            this.renderNorthFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
-            tessellator.setNormal(0.0F, 0.0F, 1.0F);
-            this.renderSouthFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
-            tessellator.setNormal(0.0F, 1.0F, 0.0F);
-            this.renderTopFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
-            tessellator.setNormal(0.0F, -1.0F, 0.0F);
-            this.renderBottomFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_SIDE);
-            tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-            this.renderWestFace(tessellator, bounds, 0.0, 0.0, 0.0, CABLE_CORE);
-
-        }
-
-        tessellator.draw();
-
-        GL11.glTranslatef(0.5F, yOffset, 0.5F);
-    }
-
-    public IconCoordinate getBlockTextureFromSideAndMetadata(Side side, int data) {
-        return currentCoordinate;
+    public @NotNull StaticBlockModel getModel(@NotNull WorldSource source, @NotNull TilePosc tilePosc) {
+        return core_any;
     }
 }

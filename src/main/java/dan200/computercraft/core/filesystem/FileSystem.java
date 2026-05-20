@@ -11,8 +11,8 @@ import dan200.computercraft.api.filesystem.IFileSystem;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
 import dan200.computercraft.shared.util.IoUtil;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.ref.Reference;
@@ -423,7 +423,7 @@ public class FileSystem {
         }
     }
 
-    private synchronized <T extends Closeable> FileSystemWrapper<T> openFile(@Nonnull MountWrapper mount, @Nonnull Channel channel, @Nonnull T file) throws FileSystemException {
+    private synchronized <T extends Closeable> FileSystemWrapper<T> openFile(@NotNull MountWrapper mount, @NotNull Channel channel, @NotNull T file) throws FileSystemException {
         synchronized (openFiles) {
             if (ComputerCraft.maximumFilesOpen > 0 &&
                 openFiles.size() >= ComputerCraft.maximumFilesOpen) {
@@ -469,7 +469,7 @@ public class FileSystem {
         return mount.getFreeSpace();
     }
 
-    @Nonnull
+    @NotNull
     public synchronized OptionalLong getCapacity(String path) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);

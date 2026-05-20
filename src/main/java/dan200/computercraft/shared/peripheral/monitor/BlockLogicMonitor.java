@@ -5,21 +5,23 @@
  */
 package dan200.computercraft.shared.peripheral.monitor;
 
-import dan200.computercraft.fabric.Helper;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogic;
+import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.block.material.Material;
+import net.minecraft.core.block.material.Materials;
 import net.minecraft.core.entity.Mob;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
 import org.jetbrains.annotations.NotNull;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
 public class BlockLogicMonitor extends BlockLogic {
     public BlockLogicMonitor(Block<?> block, boolean advanced) {
-        super(block, Material.stone);
+        super(block, Materials.STONE);
         block.withEntity(() -> new TileMonitor(advanced));
     }
 
@@ -84,12 +86,12 @@ public class BlockLogicMonitor extends BlockLogic {
     }
 
     @Override
-    public void onBlockPlacedOnSide(World world, int x, int y, int z, @NotNull Side side, double xPlaced, double yPlaced) {
-        world.setBlockMetadataWithNotify(x, y, z, facingToMeta(side.getDirection()) + orientationToMeta(Direction.NORTH));
+    public void onPlacedOnSide(World world, TilePosc tilePos, @NotNull Side side, double xPlaced, double yPlaced) {
+        world.setBlockDataNotify(tilePos, facingToMeta(side.direction()) + orientationToMeta(Direction.NORTH));
     }
 
     @Override
-    public void onBlockPlacedByMob(World world, int x, int y, int z, @NotNull Side side, Mob mob, double xPlaced, double yPlaced) {
+    public void onPlacedByMob(World world, TilePosc tilePos, @NotNull Side side, Mob mob, double xPlaced, double yPlaced) {
         float pitch = mob.xRot;
         Direction orientation;
         if (pitch > 66.5f) {
@@ -102,30 +104,30 @@ public class BlockLogicMonitor extends BlockLogic {
             orientation = Direction.NORTH;
         }
 
-        Direction direction = mob.getHorizontalPlacementDirection(side).getOpposite();
-        world.setBlockMetadataWithNotify(x, y, z, facingToMeta(direction) + orientationToMeta(orientation));
+        Direction direction = mob.getHorizontalPlacementDirection(side).opposite();
+        world.setBlockDataNotify(tilePos, facingToMeta(direction) + orientationToMeta(orientation));
+    }
 
-        TileEntity entity = world.getTileEntity(x, y, z);
-        if (entity instanceof TileMonitor && !Helper.isClientWorld()) {
-            TileMonitor monitor = (TileMonitor) entity;
-
+    @Override
+    public void onPlacedByWorld(World world, TilePosc tilePos) {
+        TileEntity entity = world.getTileEntity(tilePos);
+        if (entity instanceof TileMonitor monitor && !EnvironmentHelper.isClientWorld()) {
             monitor.updateNeighbors();
         }
     }
 
-    public boolean onBlockRightClicked(World world, int x, int y, int z, Player player, Side side, double xPlaced, double yPlaced) {
-        return ((TileMonitor) world.getTileEntity(x, y, z)).onBlockRightClicked(player, side, xPlaced, yPlaced);
+    public boolean onInteracted(World world, TilePosc tilePos, Player player, Side side, double xPlaced, double yPlaced) {
+        return ((TileMonitor) world.getTileEntity(tilePos)).onInteracted(player, side, xPlaced, yPlaced);
     }
 
     @Override
-    public void onBlockRemoved(World world, int x, int y, int z, int data) {
-        super.onBlockRemoved(world, x, y, z, data);
-        TileEntity entity = world.getTileEntity(x, y, z);
-        if (entity instanceof TileMonitor && !Helper.isClientWorld()) {
-            world.setBlockAndMetadataRaw(x, y, z, this.id(), data);
-            TileMonitor monitor = (TileMonitor) entity;
+    public void onRemoved(World world, TilePosc tilePos, int data) {
+        super.onRemoved(world, tilePos, data);
+        TileEntity entity = world.getTileEntity(tilePos);
+        if (entity instanceof TileMonitor monitor && !EnvironmentHelper.isClientWorld()) {
+            world.setBlockTypeDataRaw(tilePos, this.block, data);
             monitor.markDestroyed();
-            world.setBlockRaw(x, y, z, 0);
+            world.setBlockTypeRaw(tilePos, Blocks.AIR);
         }
     }
 }

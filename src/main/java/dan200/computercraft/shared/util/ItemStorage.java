@@ -16,12 +16,12 @@ public interface ItemStorage {
         return new InventoryWrapper(inventory);
     }
 
-//    static ItemStorage wrap( @Nonnull SidedInventory inventory, @Nonnull Direction facing )
+//    static ItemStorage wrap(@NotNull SidedInventory inventory,@NotNull Direction facing )
 //    {
 //        return new SidedInventoryWrapper( inventory, facing );
 //    }
 
-//    static ItemStorage wrap( @Nonnull Inventory inventory, @Nonnull Direction facing )
+//    static ItemStorage wrap(@NotNull Inventory inventory,@NotNull Direction facing )
 //    {
 //        return inventory instanceof SidedInventory ? new SidedInventoryWrapper( (SidedInventory) inventory, facing ) : new InventoryWrapper( inventory );
 //    }
@@ -173,17 +173,17 @@ public interface ItemStorage {
 //            return inventory.getAvailableSlots( facing ).length;
 //        }
 //
-//        @Nonnull
+//       @NotNull
 //        @Override
-//        public ItemStack take( int slot, int limit, @Nonnull ItemStack filter, boolean simulate )
+//        public ItemStack take( int slot, int limit,@NotNull ItemStack filter, boolean simulate )
 //        {
 //            int[] slots = inventory.getAvailableSlots( facing );
 //            return slot >= 0 && slot < slots.length ? super.take( slots[slot], limit, filter, simulate ) : ItemStack.EMPTY;
 //        }
 //
-//        @Nonnull
+//       @NotNull
 //        @Override
-//        public ItemStack store( int slot, @Nonnull ItemStack stack, boolean simulate )
+//        public ItemStack store( int slot,@NotNull ItemStack stack, boolean simulate )
 //        {
 //            int[] slots = inventory.getAvailableSlots( facing );
 //            if( slot < 0 || slot >= slots.length )

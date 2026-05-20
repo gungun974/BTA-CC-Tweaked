@@ -10,14 +10,13 @@ import dan200.computercraft.api.turtle.event.TurtleAction;
 import dan200.computercraft.api.turtle.event.TurtleActionEvent;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.shared.TurtleUpgrades;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.ItemStorage;
 import dan200.computercraft.shared.util.WorldUtil;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.Container;
-
-import javax.annotation.Nonnull;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
 
 public class TurtleEquipCommand implements ITurtleCommand {
     private final TurtleSide side;
@@ -26,9 +25,9 @@ public class TurtleEquipCommand implements ITurtleCommand {
         this.side = side;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+    public TurtleCommandResult execute(@NotNull ITurtleAccess turtle) {
         // Determine the upgrade to equipLeft
         ITurtleUpgrade newUpgrade;
         ItemStack newUpgradeStack;
@@ -70,7 +69,7 @@ public class TurtleEquipCommand implements ITurtleCommand {
             ItemStack remainder = InventoryUtil.storeItems(oldUpgradeStack, ItemStorage.wrap(inventory), turtle.getSelectedSlot());
             if (remainder != null) {
                 // If there's no room for the items, drop them
-                BlockPos position = turtle.getPosition();
+                TilePosc position = turtle.getPosition();
                 WorldUtil.dropItemStack(remainder, turtle.getWorld(), position, turtle.getDirection());
             }
         }

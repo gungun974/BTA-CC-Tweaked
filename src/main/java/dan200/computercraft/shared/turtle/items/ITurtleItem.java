@@ -10,15 +10,14 @@ import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.shared.common.IColouredItem;
 import dan200.computercraft.shared.computer.items.IComputerItem;
 import net.minecraft.core.item.ItemStack;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface ITurtleItem extends IComputerItem, IColouredItem {
     @Nullable
-    ITurtleUpgrade getUpgrade(@Nonnull ItemStack stack, @Nonnull TurtleSide side);
+    ITurtleUpgrade getUpgrade(@NotNull ItemStack stack, @NotNull TurtleSide side);
 
-    int getFuelLevel(@Nonnull ItemStack stack);
+    int getFuelLevel(@NotNull ItemStack stack);
 
-    int getOverlay(@Nonnull ItemStack stack);
+    int getOverlay(@NotNull ItemStack stack);
 }

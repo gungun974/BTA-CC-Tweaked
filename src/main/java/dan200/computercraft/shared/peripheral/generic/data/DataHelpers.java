@@ -7,16 +7,15 @@ package dan200.computercraft.shared.peripheral.generic.data;
 
 import net.minecraft.core.block.Block;
 import net.minecraft.core.item.Item;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class DataHelpers {
     private DataHelpers() {
     }
 
-//    @Nonnull
-//    public static Map<String, Boolean> getTags( @Nonnull Collection<Identifier> tags )
+//   @NotNull
+//    public static Map<String, Boolean> getTags(@NotNull Collection<Identifier> tags )
 //    {
 //        Map<String, Boolean> result = new HashMap<>( tags.size() );
 //        for( Identifier location : tags ) result.put( location.toString(), true );
@@ -24,12 +23,12 @@ public final class DataHelpers {
 //    }
 
     @Nullable
-    public static int getId(@Nonnull Block block) {
+    public static int getId(@NotNull Block block) {
         return block.id();
     }
 
     @Nullable
-    public static int getId(@Nonnull Item item) {
+    public static int getId(@NotNull Item item) {
         return item.id;
     }
 }

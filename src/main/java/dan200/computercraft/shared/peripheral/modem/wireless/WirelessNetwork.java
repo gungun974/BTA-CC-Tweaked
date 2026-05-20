@@ -9,8 +9,8 @@ import dan200.computercraft.api.network.IPacketNetwork;
 import dan200.computercraft.api.network.IPacketReceiver;
 import dan200.computercraft.api.network.IPacketSender;
 import dan200.computercraft.api.network.Packet;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
@@ -32,11 +32,11 @@ public class WirelessNetwork implements IPacketNetwork {
     }
 
     private static void tryTransmit(IPacketReceiver receiver, Packet packet, double range, boolean interdimensional) {
-        IPacketSender sender = packet.getSender();
+        IPacketSender sender = packet.sender();
         if (receiver.getWorld() == sender.getWorld()) {
             double receiveRange = Math.max(range, receiver.getRange()); // Ensure range is symmetrical
             double distanceSq = receiver.getPosition()
-                .distanceToSquared(sender.getPosition());
+                .distanceSquared(sender.getPosition());
             if (interdimensional || receiver.isInterdimensional() || distanceSq <= receiveRange * receiveRange) {
                 receiver.receiveSameDimension(packet, Math.sqrt(distanceSq));
             }
@@ -48,13 +48,13 @@ public class WirelessNetwork implements IPacketNetwork {
     }
 
     @Override
-    public void addReceiver(@Nonnull IPacketReceiver receiver) {
+    public void addReceiver(@NotNull IPacketReceiver receiver) {
         Objects.requireNonNull(receiver, "device cannot be null");
         receivers.add(receiver);
     }
 
     @Override
-    public void removeReceiver(@Nonnull IPacketReceiver receiver) {
+    public void removeReceiver(@NotNull IPacketReceiver receiver) {
         Objects.requireNonNull(receiver, "device cannot be null");
         receivers.remove(receiver);
     }
@@ -65,7 +65,7 @@ public class WirelessNetwork implements IPacketNetwork {
     }
 
     @Override
-    public void transmitSameDimension(@Nonnull Packet packet, double range) {
+    public void transmitSameDimension(@NotNull Packet packet, double range) {
         Objects.requireNonNull(packet, "packet cannot be null");
         for (IPacketReceiver device : receivers) {
             tryTransmit(device, packet, range, false);
@@ -73,7 +73,7 @@ public class WirelessNetwork implements IPacketNetwork {
     }
 
     @Override
-    public void transmitInterdimensional(@Nonnull Packet packet) {
+    public void transmitInterdimensional(@NotNull Packet packet) {
         Objects.requireNonNull(packet, "packet cannot be null");
         for (IPacketReceiver device : receivers) {
             tryTransmit(device, packet, 0, true);

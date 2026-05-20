@@ -10,13 +10,13 @@ import dan200.computercraft.api.lua.ILuaContext;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.fabric.Helper;
 import net.minecraft.core.block.BlockLogicNote;
 import net.minecraft.core.sound.SoundCategory;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3dc;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -41,7 +41,7 @@ public abstract class SpeakerPeripheral implements IPeripheral {
         return clock - lastPlayTime <= ticks;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getType() {
         return "speaker";
@@ -76,14 +76,14 @@ public abstract class SpeakerPeripheral implements IPeripheral {
         }
 
         World world = getWorld();
-        Vec3 pos = getPosition();
+        Vector3dc pos = getPosition();
 
         context.issueMainThreadTask(() -> {
-            if (!Helper.isServerEnvironment() && !Helper.isSinglePlayer()) {
+            if (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer()) {
                 return null;
             }
 
-            world.playSoundEffect(null, SoundCategory.WORLD_SOUNDS, pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, name, Math.min(volume, 3.0f), pitch);
+            world.playSoundEffect(null, SoundCategory.WORLD_SOUNDS, pos.x() + 0.5, pos.y() + 0.5, pos.z() + 0.5, name, Math.min(volume, 3.0f), pitch);
 
             return null;
         });
@@ -94,7 +94,7 @@ public abstract class SpeakerPeripheral implements IPeripheral {
 
     public abstract World getWorld();
 
-    public abstract Vec3 getPosition();
+    public abstract Vector3dc getPosition();
 
     /**
      * Plays a note block note through the speaker.
@@ -118,7 +118,7 @@ public abstract class SpeakerPeripheral implements IPeripheral {
 
         BlockLogicNote.Instrument instrument = null;
         for (BlockLogicNote.Instrument testInstrument : BlockLogicNote.Instrument.instrumentMap.values()) {
-            if (testInstrument.soundKey
+            if (testInstrument.soundKey()
                 .equalsIgnoreCase(name)) {
                 instrument = testInstrument;
                 break;
@@ -132,7 +132,7 @@ public abstract class SpeakerPeripheral implements IPeripheral {
 
         // If the resource location for note block notes changes, this method call will need to be updated
         boolean success = playSound(context,
-            "note." + BlockLogicNote.Instrument.getInstrumentFromIndex(instrument.index).soundKey,
+            "note." + BlockLogicNote.Instrument.getInstrumentFromIndex(instrument.index()).soundKey(),
             volume,
             (float) Math.pow(2.0, (pitch - 12.0) / 12.0),
             true);

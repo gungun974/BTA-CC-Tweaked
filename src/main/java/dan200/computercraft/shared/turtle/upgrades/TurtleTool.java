@@ -14,7 +14,6 @@ import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.shared.TurtlePermissions;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import dan200.computercraft.shared.turtle.core.TurtleBrain;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.DropConsumer;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.WorldUtil;
@@ -23,7 +22,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.render.TextureManager;
 import net.minecraft.client.render.item.model.ItemModel;
 import net.minecraft.client.render.item.model.ItemModelDispatcher;
+import net.minecraft.client.render.renderer.GLRenderer;
 import net.minecraft.client.render.tessellator.Tessellator;
+import net.minecraft.client.render.tessellator.TessellatorGeneral;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
@@ -33,13 +34,14 @@ import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.DamageType;
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL11;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -65,7 +67,7 @@ public class TurtleTool extends AbstractTurtleUpgrade {
     }
 
     private static void stopConsuming(TileEntity turtleBlock, ITurtleAccess turtle) {
-        Direction direction = !turtleBlock.isInvalid() ? null : turtle.getDirection().getOpposite();
+        Direction direction = !turtleBlock.isInvalid() ? null : turtle.getDirection().opposite();
         List<ItemStack> extra = DropConsumer.clear();
         for (ItemStack remainder : extra) {
             WorldUtil.dropItemStack(remainder,
@@ -81,7 +83,7 @@ public class TurtleTool extends AbstractTurtleUpgrade {
     }
 
     @Override
-    public boolean isItemSuitable(@Nonnull ItemStack stack) {
+    public boolean isItemSuitable(@NotNull ItemStack stack) {
         CompoundTag tag = stack.getData();
 
         // Check we've not got anything vaguely interesting on the item. We allow other mods to add their
@@ -91,9 +93,9 @@ public class TurtleTool extends AbstractTurtleUpgrade {
             tag.getList("AttributeModifiers") != null;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult useTool(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction direction) {
+    public TurtleCommandResult useTool(@NotNull ITurtleAccess turtle, @NotNull TurtleSide side, @NotNull TurtleVerb verb, @NotNull Direction direction) {
         switch (verb) {
             case ATTACK:
                 return attack(turtle, direction, side);
@@ -106,84 +108,59 @@ public class TurtleTool extends AbstractTurtleUpgrade {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @Nonnull TurtleSide side, float partialTick) {
+    public void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @NotNull TurtleSide side, float partialTick) {
         float xOffset = side == TurtleSide.LEFT ? -0.40625f : 0.40625f;
 
-        GL11.glPushMatrix();
-
-        GL11.glScalef(-1, -1, -1);
-
-        GL11.glRotatef(270, 0, 1f, 0);
+        byte lightIndex = tileEntity.worldObj.getLightIndex(tileEntity.tilePos, 0);
 
         ItemModel model = ItemModelDispatcher.getInstance().getDispatch(item);
-
         float tileWidth = 1f / model.getIcon(null, item).width;
 
-        GL11.glTranslatef(-1 + tileWidth, -1 + tileWidth, 0.5f + tileWidth / 2f - xOffset);
+        GLRenderer.pushFrame();
 
-        GL11.glTranslatef(0.5f, 0.5f, 0);
+        GLRenderer.modelM4f().scale(-1, -1, -1);
+        GLRenderer.modelM4f().rotateY((float) Math.toRadians(270));
+        GLRenderer.modelM4f().translate(-1 + tileWidth * 9, -1 + tileWidth * 7, xOffset - tileWidth);
+        GLRenderer.modelM4f().translate(0.5f, 0.5f, 0);
+        GLRenderer.modelM4f().rotateZ((float) Math.toRadians(tileEntity.getToolRenderAngle(side, partialTick)));
+        GLRenderer.modelM4f().rotateZ((float) Math.toRadians(90));
+        GLRenderer.modelM4f().translate(tileWidth, tileWidth, tileWidth);
 
-        GL11.glRotatef(tileEntity.getToolRenderAngle(side, partialTick), 0f, 0f, 1f);
+        GLRenderer.modelM4f().scale(-1, -1, -1);
 
-        GL11.glRotatef(180, 0, 1f, 0);
-        GL11.glRotatef(-90, 0, 0f, 1);
+        model.render((TessellatorGeneral) tessellator, null, item, "none", true, 1, lightIndex, partialTick, false);
 
-        GL11.glTranslatef(-0.5f, -0.5f, 0);
-
-        GL11.glTranslatef(tileWidth, tileWidth, tileWidth);
-
-        model.renderItemInWorld(
-            tessellator, null, item, 1f, 1.0F, false
-        );
-
-        GL11.glPopMatrix();
+        GLRenderer.popFrame();
     }
 
     @Override
-    public void drawItemUpgrade(Tessellator tessellator, TextureManager textureManager, @NotNull TurtleSide side) {
+    public void drawItemUpgrade(TessellatorGeneral tessellator, byte lightIndex, @NotNull TurtleSide side) {
         float xOffset = side == TurtleSide.LEFT ? -0.40625f : 0.40625f;
-
-        GL11.glPushMatrix();
-
-        GL11.glScalef(-1, -1, -1);
-
-        GL11.glRotatef(270, 0, 1f, 0);
-
         ItemModel model = ItemModelDispatcher.getInstance().getDispatch(item);
-
         float tileWidth = 1f / model.getIcon(null, item).width;
-
-        GL11.glTranslatef(-1 + tileWidth, -1 + tileWidth, 0.5f + tileWidth / 2f - xOffset);
-
-        GL11.glTranslatef(0.5f, 0.5f, 0);
-
-        GL11.glRotatef(180, 0, 1f, 0);
-        GL11.glRotatef(-90, 0, 0f, 1);
-
-        GL11.glTranslatef(-0.5f, -0.5f, 0);
-
-        GL11.glTranslatef(tileWidth, tileWidth, tileWidth);
-
-        model.renderItemInWorld(
-            tessellator, null, item, 1f, 1.0F, false
-        );
-
-        GL11.glEnable(32826);
-
-        GL11.glPopMatrix();
+        GLRenderer.pushFrame();
+        GLRenderer.modelM4f().scale(-1, -1, -1);
+        GLRenderer.modelM4f().rotateY((float) Math.toRadians(270));
+        GLRenderer.modelM4f().translate(-1 + tileWidth * 9, -1 + tileWidth * 7, xOffset - tileWidth);
+        GLRenderer.modelM4f().translate(0.5f, 0.5f, 0);
+        GLRenderer.modelM4f().rotateZ((float) Math.toRadians(90));
+        GLRenderer.modelM4f().translate(tileWidth, tileWidth, tileWidth);
+        GLRenderer.modelM4f().scale(-1, -1, -1);
+        model.render(tessellator, null, item, "none", true, 1, lightIndex, 0, false);
+        GLRenderer.popFrame();
     }
 
     private TurtleCommandResult attack(ITurtleAccess turtle, Direction direction, TurtleSide side) {
         // Create a fake player, and orient it appropriately
         World world = turtle.getWorld();
-        BlockPos position = turtle.getPosition();
-        TileEntity turtleBlock = turtle instanceof TurtleBrain ? ((TurtleBrain) turtle).getOwner() : world.getTileEntity(position.x, position.y, position.z);
+        TilePosc position = turtle.getPosition();
+        TileEntity turtleBlock = turtle instanceof TurtleBrain ? ((TurtleBrain) turtle).getOwner() : world.getTileEntity(position);
         if (turtleBlock == null) return TurtleCommandResult.failure("Turtle has vanished from existence.");
 
         // See if there is an entity present
-        Vec3 turtlePos = Vec3.getPermanentVec3(position.x, position.y, position.z);
-        Vec3 rayDir = Vec3.getPermanentVec3(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ());
-        Pair<Entity, Vec3> hit = WorldUtil.rayTraceEntities(world, turtlePos, rayDir, 1.5);
+        Vector3d turtlePos = new Vector3d(position.x(), position.y(), position.z());
+        Vector3d rayDir = new Vector3d(direction.offsetX(), direction.offsetY(), direction.offsetZ());
+        Pair<Entity, Vector3dc> hit = WorldUtil.rayTraceEntities(world, turtlePos, rayDir, 1.5);
         if (hit != null) {
             Entity hitEntity = hit.getKey();
 
@@ -241,18 +218,18 @@ public class TurtleTool extends AbstractTurtleUpgrade {
     private TurtleCommandResult dig(ITurtleAccess turtle, Direction direction, TurtleSide side) {
         // Get ready to dig
         World world = turtle.getWorld();
-        BlockPos turtlePosition = turtle.getPosition();
-        TileEntity turtleBlock = turtle instanceof TurtleBrain ? ((TurtleBrain) turtle).getOwner() : world.getTileEntity(turtlePosition.x, turtlePosition.y, turtlePosition.z);
+        TilePosc turtlePosition = turtle.getPosition();
+        TileEntity turtleBlock = turtle instanceof TurtleBrain ? ((TurtleBrain) turtle).getOwner() : world.getTileEntity(turtlePosition);
         if (turtleBlock == null) return TurtleCommandResult.failure("Turtle has vanished from existence.");
 
 
-        BlockPos blockPosition = turtlePosition.offset(direction);
+        TilePosc blockPosition = turtlePosition.add(direction, new TilePos());
 
-        if (world.isAirBlock(blockPosition.x, blockPosition.y, blockPosition.z) || WorldUtil.isLiquidBlock(world, blockPosition)) {
+        if (world.isAirBlock(blockPosition) || WorldUtil.isLiquidBlock(world, blockPosition)) {
             return TurtleCommandResult.failure("Nothing to dig here");
         }
 
-        Block<?> block = Objects.requireNonNull(world.getBlock(blockPosition.x, blockPosition.y, blockPosition.z));
+        Block<?> block = Objects.requireNonNull(world.getBlockType(blockPosition));
 
         if (ComputerCraft.turtlesObeyBlockProtection) {
             if (!TurtlePermissions.isBlockEditable(world, blockPosition)) {
@@ -274,12 +251,12 @@ public class TurtleTool extends AbstractTurtleUpgrade {
         // Consume the items the block drops
         DropConsumer.set(world, blockPosition, turtleDropConsumer(turtleBlock, turtle));
 
-        TileEntity tile = world.getTileEntity(blockPosition.x, blockPosition.y, blockPosition.z);
+        TileEntity tile = world.getTileEntity(blockPosition);
 
         // Destroy the block
-        world.playBlockEvent(null, 2001, blockPosition.x, blockPosition.y, blockPosition.z, block.id());
-        block.dropBlockWithCause(world, dropCause, blockPosition.x, blockPosition.y, blockPosition.z, world.getBlockMetadata(blockPosition.x, blockPosition.y, blockPosition.z), tile, null);
-        world.setBlockWithNotify(blockPosition.x, blockPosition.y, blockPosition.z, 0);
+        world.playBlockEvent(null, blockPosition, 2001, block.id());
+        block.dropWithCause(world, dropCause, blockPosition, world.getBlockData(blockPosition), tile, null);
+        world.setBlockTypeNotify(blockPosition, Blocks.AIR);
 
         stopConsuming(turtleBlock, turtle);
 
@@ -291,8 +268,8 @@ public class TurtleTool extends AbstractTurtleUpgrade {
         return 3;
     }
 
-    protected boolean canBreakBlock(World world, BlockPos pos) {
-        Block<?> block = world.getBlock(pos.x, pos.y, pos.z);
+    protected boolean canBreakBlock(World world, TilePosc pos) {
+        Block<?> block = world.getBlockType(pos);
         return block != null && block != Blocks.BEDROCK;
     }
 }

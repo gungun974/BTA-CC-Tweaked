@@ -20,8 +20,8 @@ import io.netty.handler.codec.http.websocketx.WebSocketHandshakeException;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.timeout.ReadTimeoutException;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
 import javax.net.ssl.TrustManagerFactory;
@@ -152,8 +152,8 @@ public final class NetworkUtils {
         return bytes;
     }
 
-    @Nonnull
-    public static String toFriendlyError(@Nonnull Throwable cause) {
+    @NotNull
+    public static String toFriendlyError(@NotNull Throwable cause) {
         if (cause instanceof WebSocketHandshakeException || cause instanceof HTTPRequestException) {
             return cause.getMessage();
         } else if (cause instanceof TooLongFrameException) {

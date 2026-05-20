@@ -10,8 +10,8 @@ import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.InMemoryCommentedFormat;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import dan200.computercraft.ComputerCraft;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;

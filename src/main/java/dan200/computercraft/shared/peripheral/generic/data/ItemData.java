@@ -9,7 +9,6 @@ import com.mojang.nbt.tags.CompoundTag;
 import com.mojang.nbt.tags.ListTag;
 import dan200.computercraft.shared.util.NBTUtil;
 import net.minecraft.core.block.Block;
-import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.tag.BlockTags;
 import net.minecraft.core.data.registry.Registries;
 import net.minecraft.core.data.tag.Tag;
@@ -17,8 +16,8 @@ import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.block.ItemBlock;
 import net.minecraft.core.item.tag.ItemTags;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +28,8 @@ import java.util.stream.Collectors;
  * Data providers for items.
  */
 public class ItemData {
-    @Nonnull
-    public static <T extends Map<? super String, Object>> T fillBasicSafe(@Nonnull T data, @Nonnull ItemStack stack) {
+    @NotNull
+    public static <T extends Map<? super String, Object>> T fillBasicSafe(@NotNull T data, @NotNull ItemStack stack) {
         data.put("id", DataHelpers.getId(stack.getItem()));
         data.put("metadata", stack.getMetadata());
         data.put("name", stack.getItem().namespaceID.toString());
@@ -39,8 +38,8 @@ public class ItemData {
         return data;
     }
 
-    @Nonnull
-    public static <T extends Map<? super String, Object>> T fillBasic(@Nonnull T data, @Nonnull ItemStack stack) {
+    @NotNull
+    public static <T extends Map<? super String, Object>> T fillBasic(@NotNull T data, @NotNull ItemStack stack) {
         fillBasicSafe(data, stack);
         String hash = NBTUtil.getNBTHash(stack.getData());
         if (hash != null) data.put("nbt", hash);
@@ -48,8 +47,8 @@ public class ItemData {
         return data;
     }
 
-    @Nonnull
-    public static <T extends Map<? super String, Object>> T fill(@Nonnull T data, ItemStack stack) {
+    @NotNull
+    public static <T extends Map<? super String, Object>> T fill(@NotNull T data, ItemStack stack) {
         if (stack == null) return data;
 
         fillBasic(data, stack);
@@ -88,7 +87,7 @@ public class ItemData {
             }
         }
 
-        data.put( "tags", tagsTable );
+        data.put("tags", tagsTable);
 
         Map<Object, Object> groupsTable = new HashMap<>();
 
@@ -101,7 +100,7 @@ public class ItemData {
             }
         }
 
-        data.put( "groups", groupsTable );
+        data.put("groups", groupsTable);
 
         CompoundTag tag = stack.getData();
         if (tag.containsKey("display")) {

@@ -13,8 +13,8 @@ import dan200.computercraft.core.filesystem.FileSystem;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.core.tracking.Tracking;
 import dan200.computercraft.core.tracking.TrackingField;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -62,19 +62,19 @@ public final class Environment implements IAPIEnvironment {
         return computer.assignID();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IComputerEnvironment getComputerEnvironment() {
         return computer.getComputerEnvironment();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IWorkMonitor getMainThreadMonitor() {
         return computer.getMainThreadMonitor();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Terminal getTerminal() {
         return computer.getTerminal();
@@ -299,7 +299,7 @@ public final class Environment implements IAPIEnvironment {
     }
 
     @Override
-    public void addTrackingChange(@Nonnull TrackingField field, long change) {
+    public void addTrackingChange(@NotNull TrackingField field, long change) {
         Tracking.addValue(computer, field, change);
     }
 

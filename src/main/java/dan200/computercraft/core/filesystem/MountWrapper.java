@@ -8,9 +8,9 @@ package dan200.computercraft.core.filesystem;
 import dan200.computercraft.api.filesystem.FileOperationException;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
@@ -111,7 +111,7 @@ class MountWrapper {
         }
     }
 
-    @Nonnull
+    @NotNull
     public BasicFileAttributes getAttributes(String path) throws FileSystemException {
         path = toLocal(path);
         try {
@@ -217,9 +217,8 @@ class MountWrapper {
         return FileSystem.toLocal(path, location);
     }
 
-    private FileSystemException localExceptionOf(@Nullable String localPath, @Nonnull IOException e) {
-        if (!location.isEmpty() && e instanceof FileOperationException) {
-            FileOperationException ex = (FileOperationException) e;
+    private FileSystemException localExceptionOf(@Nullable String localPath, @NotNull IOException e) {
+        if (!location.isEmpty() && e instanceof FileOperationException ex) {
             if (ex.getFilename() != null) return localExceptionOf(ex.getFilename(), ex.getMessage());
         }
 

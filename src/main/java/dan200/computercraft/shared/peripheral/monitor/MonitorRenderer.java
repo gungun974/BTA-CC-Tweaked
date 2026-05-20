@@ -7,10 +7,9 @@ package dan200.computercraft.shared.peripheral.monitor;
 
 import dan200.computercraft.ComputerCraft;
 import net.fabricmc.loader.api.FabricLoader;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL;
 
-import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,44 +25,63 @@ public enum MonitorRenderer {
     BEST,
 
     /**
-     * Render using DisplayList.
+     * Render using texture buffer objects.
+     *
+     * @see org.lwjgl.opengl.GL31#glTexBuffer(int, int, int)
      */
-    DisplayList;
+    TBO;
 
-    private static boolean initialised = false;
+//    /**
+//     * Render using VBOs.
+//     */
+//    VBO;
+
+    private static final boolean initialised = false;
     private static boolean textureBuffer = false;
     private static boolean shaderMod = false;
     //TODO find out which shader mods do better with VBOs and add them here.
-    private static final List<String> shaderModIds = Collections.singletonList("optifabric");
+    private static final List<String> shaderModIds = List.of("optifabric");
 
     /**
      * Get the current renderer to use.
      *
      * @return The current renderer. Will not return {@link MonitorRenderer#BEST}.
      */
-    @Nonnull
+    @NotNull
     public static MonitorRenderer current() {
         MonitorRenderer current = ComputerCraft.monitorRenderer;
         switch (current) {
             case BEST:
                 return best();
+            case TBO:
+                checkCapabilities();
+                if (!textureBuffer) {
+                    ComputerCraft.log.warn("Texture buffers are not supported on your graphics card. Falling back to default.");
+                    ComputerCraft.monitorRenderer = BEST;
+                    return best();
+                }
+
+                return TBO;
             default:
                 return current;
         }
     }
 
     private static MonitorRenderer best() {
-        if (!initialised) {
-            checkCapabilities();
-            checkForShaderMods();
-            if (textureBuffer && shaderMod) {
-                ComputerCraft.log.warn("Shader mod detected. Enabling DisplayList renderer for compatibility.");
-            }
-
-            initialised = true;
-        }
-
-        return DisplayList;
+        return TBO;
+//        if( !initialised )
+//        {
+//            checkCapabilities();
+//            checkForShaderMods();
+//            if( textureBuffer && shaderMod )
+//            {
+//                ComputerCraft.log.warn( "Shader mod detected. Enabling VBO renderer for compatibility." );
+//            }
+//
+//            initialised = true;
+//        }
+//
+//        return textureBuffer && !shaderMod ? TBO : VBO;
     }
 
     private static void checkCapabilities() {

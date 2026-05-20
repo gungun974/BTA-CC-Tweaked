@@ -17,9 +17,9 @@ import dan200.computercraft.shared.util.ItemStorage;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.Container;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -58,7 +58,7 @@ public class InventoryMethods implements GenericSource {
      * List all items in this inventory. This returns a table, with an entry for each slot.
      * <p>
      * Each item in the inventory is represented by a table containing some basic information, much like
-     * {@link dan200.computercraft.shared.turtle.apis.TurtleAPI#getItemDetail} includes. More information can be fetched
+     * {@code turtle.getItemDetail} includes. More information can be fetched
      * with {@link #getItemDetail}. The table contains the item `name`, the `count` and an a (potentially nil) hash of
      * the item's `nbt.` This NBT data doesn't contain anything useful, but allows you to distinguish identical items.
      * <p>
@@ -314,7 +314,7 @@ public class InventoryMethods implements GenericSource {
         return count;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String id() {
         return ComputerCraft.MOD_ID + ":inventory";

@@ -12,7 +12,6 @@ import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.core.computer.ComputerSide;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.IComputerPlayer;
 import dan200.computercraft.shared.computer.blocks.ComputerProxy;
 import dan200.computercraft.shared.computer.blocks.TileComputerBase;
@@ -23,7 +22,10 @@ import dan200.computercraft.shared.computer.inventory.ContainerComputer;
 import dan200.computercraft.shared.network.client.TurtleBrainClientMessage;
 import dan200.computercraft.shared.turtle.apis.TurtleAPI;
 import dan200.computercraft.shared.turtle.core.TurtleBrain;
-import dan200.computercraft.shared.util.*;
+import dan200.computercraft.shared.util.DirectionUtil;
+import dan200.computercraft.shared.util.InventoryUtil;
+import dan200.computercraft.shared.util.RedstoneUtil;
+import dan200.computercraft.shared.util.WorldUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.block.Block;
@@ -32,21 +34,22 @@ import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemDye;
 import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.item.Items;
 import net.minecraft.core.net.packet.Packet;
 import net.minecraft.core.net.packet.PacketTileEntityData;
-import net.minecraft.core.player.gamemode.Gamemode;
+import net.minecraft.core.player.gamemode.Gamemodes;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Axis;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.DyeColor;
 import net.minecraft.core.util.helper.Side;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3dc;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.NetworkHandler;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -84,7 +87,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
             super.destroy();
 
             // Drop contents
-            if (!Helper.isClientWorld()) {
+            if (!EnvironmentHelper.isClientWorld()) {
                 int size = inventory.size();
                 for (int i = 0; i < size; i++) {
                     ItemStack stack = getItem(i);
@@ -104,8 +107,8 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
         }
     }
 
-    public BlockPos getPos() {
-        return new BlockPos(x, y, z);
+    public TilePosc getPos() {
+        return tilePos;
     }
 
     private boolean hasMoved() {
@@ -167,26 +170,24 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     }
 
     @Override
-    public void sortContainer() {
-
+    public void sort() {
     }
-
 
     private void onInventoryDefinitelyChanged() {
         inventoryChanged = true;
     }
 
-    public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
+    public boolean onInteracted(Player player, Side side, double xPlaced, double yPlaced) {
         // Apply dye
         ItemStack currentItem = player.getHeldItem();
         if (currentItem != null) {
             if (currentItem.getItem() instanceof ItemDye) {
                 // Dye to change turtle colour
-                if (!Helper.isClientWorld()) {
+                if (!EnvironmentHelper.isClientWorld()) {
                     DyeColor dye = DyeColor.colorFromItemMeta(currentItem.getMetadata());
                     if (brain.getDyeColour() != dye) {
                         brain.setDyeColour(dye);
-                        if (player.gamemode != Gamemode.creative) {
+                        if (player.gamemode != Gamemodes.CREATIVE) {
                             currentItem.stackSize -= 1;
                             if (currentItem.stackSize == 0) {
                                 player.setHeldObject(null);
@@ -195,25 +196,26 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
                     }
                 }
                 return true;
-            } else if (currentItem.getItem().equals(Items.BUCKET_WATER) && brain.getColour() != -1) {
-                // Water to remove turtle colour
-                if (!Helper.isClientWorld()) {
-                    if (brain.getColour() != -1) {
-                        brain.setColour(-1);
-                        if (player.gamemode != Gamemode.creative) {
-                            //player.setHeldObject(new ItemStack( Items.BUCKET ));
-                            //player.inventory.markDirty();
-                        }
-                    }
-                }
-                return true;
             }
+//TODO:            else if (currentItem.getItem().equals(Items.BUCKET_WATER) && brain.getColour() != -1) {
+//                // Water to remove turtle colour
+//                if (!EnvironmentHelper.isClientWorld()) {
+//                    if (brain.getColour() != -1) {
+//                        brain.setColour(-1);
+//                        if (player.gamemode != Gamemodes.CREATIVE) {
+//                            //player.setHeldObject(new ItemStack( Items.BUCKET ));
+//                            //player.inventory.markDirty();
+//                        }
+//                    }
+//                }
+//                return true;
+//            }
         }
 
         // Open GUI or whatever
         //return super.onBlockRightClicked( player, side, xPlaced, yPlaced );
         // Open the GUI
-        if (!Helper.isClientWorld() && isUsable(player, false)) {
+        if (!EnvironmentHelper.isClientWorld() && isUsable(player, false)) {
             createServerComputer().turnOn();
             createServerComputer().sendTerminalState(player);
             ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this));
@@ -223,7 +225,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     }
 
     @Override
-    public void onNeighbourChange(@Nonnull BlockPos neighbour) {
+    public void onNeighbourChange(@NotNull TilePosc neighbour) {
         if (moveState == MoveState.NOT_MOVED) {
             super.onNeighbourChange(neighbour);
         }
@@ -233,7 +235,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     public void tick() {
         super.tick();
         brain.update();
-        if (!Helper.isClientWorld() && inventoryChanged) {
+        if (!EnvironmentHelper.isClientWorld() && inventoryChanged) {
             ServerComputer computer = getServerComputer();
             if (computer != null) {
                 computer.queueEvent("turtle_inventory");
@@ -253,7 +255,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
         if (worldObj == null) {
             return;
         }
-        NetworkHandler.sendToAllAround(x, y, z, 64, worldObj.dimension.id, new TurtleBrainClientMessage(getPos(), brain));
+        NetworkHandler.sendToAllAround(tilePos.x, tilePos.y, tilePos.z, 64, worldObj.dimension.id, new TurtleBrainClientMessage(getPos(), brain));
     }
 
     @Override
@@ -261,7 +263,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     }
 
     @Override
-    public void writeToNBT(CompoundTag nbt) {
+    public void writeAdditionalData(CompoundTag nbt) {
         // Write inventory
         ListTag nbttaglist = new ListTag();
         for (int i = 0; i < INVENTORY_SIZE; i++) {
@@ -280,15 +282,15 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
         // Write brain
         nbt = brain.writeToNBT(nbt);
 
-        super.writeToNBT(nbt);
+        super.writeAdditionalData(nbt);
     }
 
     // IDirectionalTile
 
 
     @Override
-    public void readFromNBT(CompoundTag nbt) {
-        super.readFromNBT(nbt);
+    public void readAdditionalData(CompoundTag nbt) {
+        super.readAdditionalData(nbt);
 
         // Read inventory
         ListTag nbttaglist = nbt.getList("Items");
@@ -326,14 +328,14 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     }
 
     public void setDirection(Direction dir) {
-        if (dir.getAxis() == Axis.Y) {
+        if (dir.axis() == Axis.Y) {
             dir = Direction.NORTH;
         }
 
         final int currentMetadata = getBlockMeta();
 
         if (worldObj != null) {
-            worldObj.setBlockMetadata(x, y, z, BlockLogicTurtle.setDirection(currentMetadata, dir));
+            worldObj.setBlockData(tilePos, BlockLogicTurtle.setDirection(currentMetadata, dir));
         }
 
         updateRedstoneOutput();
@@ -355,13 +357,13 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     }
 
     @Override
-    public void writeDescription(@Nonnull CompoundTag nbt) {
+    public void writeDescription(@NotNull CompoundTag nbt) {
         super.writeDescription(nbt);
         brain.writeDescription(nbt);
     }
 
     @Override
-    public void readDescription(@Nonnull CompoundTag nbt) {
+    public void readDescription(@NotNull CompoundTag nbt) {
         super.readDescription(nbt);
         brain.readDescription(nbt);
     }
@@ -375,7 +377,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
         if (worldObj == null) {
             return;
         }
-        worldObj.notifyBlockChange(x, y, z, getBlockId());
+        worldObj.notifyBlockChange(tilePos, getBlock());
     }
 
     private boolean hasPeripheralUpgradeOnSide(ComputerSide side) {
@@ -435,7 +437,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     }
 
     @Override
-    public Vec3 getRenderOffset(float f) {
+    public Vector3dc getRenderOffset(float f) {
         return brain.getRenderOffset(f);
     }
 

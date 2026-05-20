@@ -13,9 +13,9 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.apis.ComputerAccess;
 import dan200.computercraft.core.apis.IAPIEnvironment;
 import dan200.computercraft.core.filesystem.FileSystem;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Map;
 
@@ -34,7 +34,7 @@ public class ComputerSystem extends ComputerAccess implements IComputerSystem {
         this.environment = environment;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getAttachmentName() {
         return "computer";
@@ -53,7 +53,7 @@ public class ComputerSystem extends ComputerAccess implements IComputerSystem {
         return environment.getLabel();
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Map<String, IPeripheral> getAvailablePeripherals() {
         // TODO: Should this return peripherals on the current computer?
@@ -62,7 +62,7 @@ public class ComputerSystem extends ComputerAccess implements IComputerSystem {
 
     @Nullable
     @Override
-    public IPeripheral getAvailablePeripheral(@Nonnull String name) {
+    public IPeripheral getAvailablePeripheral(@NotNull String name) {
         return null;
     }
 }

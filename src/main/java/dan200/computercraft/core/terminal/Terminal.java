@@ -8,9 +8,8 @@ package dan200.computercraft.core.terminal;
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.shared.util.Colour;
 import dan200.computercraft.shared.util.Palette;
+import org.jetbrains.annotations.NotNull;
 import turniplabs.halplibe.helper.network.UniversalPacket;
-
-import javax.annotation.Nonnull;
 
 public class Terminal {
     private static final String base16 = "0123456789abcdef";
@@ -159,7 +158,7 @@ public class Terminal {
         }
     }
 
-    @Nonnull
+    @NotNull
     public Palette getPalette() {
         return palette;
     }

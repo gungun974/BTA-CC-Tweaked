@@ -20,8 +20,8 @@ import net.minecraft.core.data.registry.recipe.adapter.RecipeJsonAdapter;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCrafting;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.ContainerCrafting;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
@@ -29,7 +29,7 @@ public final class PocketComputerUpgradeRecipe extends RecipeEntryCrafting<Recip
     public PocketComputerUpgradeRecipe() {
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getOutput() {
         return Objects.requireNonNull(PocketComputerItemFactory.create(-1, null, -1, ComputerFamily.NORMAL, null));
@@ -52,7 +52,7 @@ public final class PocketComputerUpgradeRecipe extends RecipeEntryCrafting<Recip
         int computerX = -1;
         int computerY = -1;
 
-        int width = ((ContainerCraftingAccessor) inventory).getWidth();
+        int width = ((ContainerCraftingAccessor) inventory).getXSize();
         int height = inventory.getContainerSize() / width;
 
         computer:

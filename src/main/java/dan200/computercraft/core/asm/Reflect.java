@@ -6,9 +6,9 @@
 package dan200.computercraft.core.asm;
 
 import dan200.computercraft.ComputerCraft;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.MethodVisitor;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.*;
 import java.nio.ByteBuffer;
 import java.util.Map;
@@ -44,8 +44,7 @@ final class Reflect {
         while (true) {
             if (underlying instanceof Class<?>) return (Class<?>) underlying;
 
-            if (underlying instanceof ParameterizedType) {
-                ParameterizedType type = (ParameterizedType) underlying;
+            if (underlying instanceof ParameterizedType type) {
                 if (!allowParameter) {
                     for (Type arg : type.getActualTypeArguments()) {
                         if (arg instanceof WildcardType) continue;

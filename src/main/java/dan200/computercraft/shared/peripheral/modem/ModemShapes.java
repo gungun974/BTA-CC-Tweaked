@@ -6,24 +6,25 @@
 package dan200.computercraft.shared.peripheral.modem;
 
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.util.phys.AABB;
+import org.joml.primitives.AABBd;
+import org.joml.primitives.AABBdc;
 
 public final class ModemShapes {
-    public static AABB getBounds(Direction facing) {
+    public static AABBdc getBounds(Direction facing) {
         switch (facing) {
             case NORTH:
-                return AABB.getPermanentBB(0.125, 0.125, 0.0, 0.875, 0.875, 0.1875);
+                return new AABBd(0.125, 0.125, 0.0, 0.875, 0.875, 0.1875);
             case EAST:
-                return AABB.getPermanentBB(0.8125, 0.125, 0.125, 1.0, 0.875, 0.875);
+                return new AABBd(0.8125, 0.125, 0.125, 1.0, 0.875, 0.875);
             case SOUTH:
-                return AABB.getPermanentBB(0.125, 0.125, 0.8125, 0.875, 0.875, 1.0);
+                return new AABBd(0.125, 0.125, 0.8125, 0.875, 0.875, 1.0);
             case WEST:
-                return AABB.getPermanentBB(0.0, 0.125, 0.125, 0.1875, 0.875, 0.875);
+                return new AABBd(0.0, 0.125, 0.125, 0.1875, 0.875, 0.875);
             case UP:
-                return AABB.getPermanentBB(0.125, 0.8125, 0.125, 0.875, 1.0, 0.875);
+                return new AABBd(0.125, 0.8125, 0.125, 0.875, 1.0, 0.875);
             case DOWN:
-                return AABB.getPermanentBB(0.125, 0.0, 0.125, 0.875, 0.1875, 0.875);
+                return new AABBd(0.125, 0.0, 0.125, 0.875, 0.1875, 0.875);
         }
-        return AABB.getPermanentBB(0, 0, 0, 1, 1, 1);
+        return new AABBd(0, 0, 0, 1, 1, 1);
     }
 }

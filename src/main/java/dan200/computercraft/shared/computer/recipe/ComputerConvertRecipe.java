@@ -10,8 +10,7 @@ import net.minecraft.core.data.registry.recipe.RecipeSymbol;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCraftingShaped;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.ContainerCrafting;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a recipe which converts a computer from one form into another.
@@ -54,6 +53,6 @@ public abstract class ComputerConvertRecipe extends RecipeEntryCraftingShaped {
         return null;
     }
 
-    @Nonnull
-    protected abstract ItemStack convert(@Nonnull IComputerItem item, @Nonnull ItemStack stack);
+    @NotNull
+    protected abstract ItemStack convert(@NotNull IComputerItem item, @NotNull ItemStack stack);
 }

@@ -9,9 +9,9 @@ import com.mojang.nbt.NbtIo;
 import com.mojang.nbt.tags.*;
 import dan200.computercraft.ComputerCraft;
 import org.apache.commons.codec.binary.Hex;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -54,8 +54,7 @@ public final class NBTUtil {
         if (object instanceof String) {
             return new StringTag(object.toString());
         }
-        if (object instanceof Map) {
-            Map<?, ?> m = (Map<?, ?>) object;
+        if (object instanceof Map<?, ?> m) {
             CompoundTag nbt = new CompoundTag();
             int i = 0;
             for (Map.Entry<?, ?> entry : m.entrySet()) {
@@ -222,7 +221,7 @@ public final class NBTUtil {
         }
 
         @Override
-        public void write(@Nonnull byte[] b, int off, int len) {
+        public void write(@NotNull byte[] b, int off, int len) {
             digest.update(b, off, len);
         }
     }

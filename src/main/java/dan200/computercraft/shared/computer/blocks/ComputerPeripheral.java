@@ -8,9 +8,8 @@ package dan200.computercraft.shared.computer.blocks;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.apis.OSAPI;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A computer or turtle wrapped as a peripheral.
@@ -29,13 +28,13 @@ public class ComputerPeripheral implements IPeripheral {
         this.computer = computer;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getType() {
         return type;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Object getTarget() {
         return computer.getTile();

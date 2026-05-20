@@ -13,7 +13,7 @@ public abstract class TileGeneric extends TileEntity {
     }
 
     public boolean isUsable(Player player, boolean ignoreRange) {
-        if (player == null || !player.isAlive() || worldObj == null || worldObj.getTileEntity(x, y, z) != this) {
+        if (player == null || !player.isAlive() || worldObj == null || worldObj.getTileEntity(tilePos) != this) {
             return false;
         }
         if (ignoreRange) {
@@ -21,7 +21,7 @@ public abstract class TileGeneric extends TileEntity {
         }
 
         double range = getInteractRange(player);
-        return player.world == worldObj && player.distanceToSqr(x + 0.5, y + 0.5, z + 0.5) <= range * range;
+        return player.world == worldObj && player.distanceToSqr(tilePos.x + 0.5, tilePos.y + 0.5, tilePos.z + 0.5) <= range * range;
     }
 
     protected double getInteractRange(Player player) {

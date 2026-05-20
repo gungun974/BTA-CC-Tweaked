@@ -7,9 +7,9 @@ package dan200.computercraft.core.computer;
 
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.InputStream;
 
 public interface IComputerEnvironment {
@@ -21,10 +21,10 @@ public interface IComputerEnvironment {
 
     long getComputerSpaceLimit();
 
-    @Nonnull
+    @NotNull
     String getHostString();
 
-    @Nonnull
+    @NotNull
     String getUserAgent();
 
     int assignNewID();

@@ -6,8 +6,7 @@
 package dan200.computercraft.api.network.wired;
 
 import dan200.computercraft.api.ComputerCraftAPI;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An object which may be part of a wired network.
@@ -25,6 +24,6 @@ public interface IWiredElement extends IWiredSender {
      * @param change The change which occurred.
      * @see IWiredNetworkChange
      */
-    default void networkChanged(@Nonnull IWiredNetworkChange change) {
+    default void networkChanged(@NotNull IWiredNetworkChange change) {
     }
 }

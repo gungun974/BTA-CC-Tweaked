@@ -5,13 +5,13 @@
  */
 package dan200.computercraft.api.lua;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface ILuaObject {
-    @Nonnull
+    @NotNull
     String[] getMethodNames();
 
     @Nullable
-    Object[] callMethod(@Nonnull ILuaContext context, int method, @Nonnull Object[] arguments) throws LuaException, InterruptedException;
+    Object[] callMethod(@NotNull ILuaContext context, int method, @NotNull Object[] arguments) throws LuaException, InterruptedException;
 }

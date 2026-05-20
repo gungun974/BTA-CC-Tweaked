@@ -8,27 +8,27 @@ package dan200.computercraft.shared;
 import com.google.common.eventbus.Subscribe;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.event.TurtleActionEvent;
-import dan200.computercraft.fabric.Helper;
-import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.util.helper.MathHelper;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
 import net.minecraft.server.MinecraftServer;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
 public final class TurtlePermissions {
-    public static boolean isBlockEditable(World world, BlockPos pos) {
+    public static boolean isBlockEditable(World world, TilePosc pos) {
         return isBlockEnterable(world, pos);
     }
 
-    public static boolean isBlockEnterable(World world, BlockPos pos) {
-        if (!Helper.isServerEnvironment()) {
+    public static boolean isBlockEnterable(World world, TilePosc pos) {
+        if (!EnvironmentHelper.isServerEnvironment()) {
             return true;
         }
 
         MinecraftServer mcServer = MinecraftServer.getInstance();
 
         if (mcServer.spawnProtectionRange > 0) {
-            int dx = (int) MathHelper.abs((float) (pos.x - world.getLevelData().getSpawnX()));
-            int dz = (int) MathHelper.abs((float) (pos.z - world.getLevelData().getSpawnZ()));
+            int dx = (int) MathHelper.abs((float) (pos.x() - world.getLevelData().getSpawnPos().x()));
+            int dz = (int) MathHelper.abs((float) (pos.z() - world.getLevelData().getSpawnPos().z()));
             return Math.max(dx, dz) > mcServer.spawnProtectionRange;
         }
 

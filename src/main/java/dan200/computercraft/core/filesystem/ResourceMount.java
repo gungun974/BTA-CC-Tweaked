@@ -15,9 +15,9 @@ import dan200.computercraft.shared.util.IoUtil;
 import dan200.computercraft.shared.util.ResourceManager;
 import dan200.computercraft.shared.util.ResourceManager.Identifier;
 import dan200.computercraft.shared.util.ResourceManager.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -151,18 +151,18 @@ public final class ResourceMount implements IMount {
     }
 
     @Override
-    public boolean exists(@Nonnull String path) {
+    public boolean exists(@NotNull String path) {
         return get(path) != null;
     }
 
     @Override
-    public boolean isDirectory(@Nonnull String path) {
+    public boolean isDirectory(@NotNull String path) {
         FileEntry file = get(path);
         return file != null && file.isDirectory();
     }
 
     @Override
-    public void list(@Nonnull String path, @Nonnull List<String> contents) throws IOException {
+    public void list(@NotNull String path, @NotNull List<String> contents) throws IOException {
         FileEntry file = get(path);
         if (file == null || !file.isDirectory()) throw new IOException("/" + path + ": Not a directory");
 
@@ -170,7 +170,7 @@ public final class ResourceMount implements IMount {
     }
 
     @Override
-    public long getSize(@Nonnull String path) throws IOException {
+    public long getSize(@NotNull String path) throws IOException {
         FileEntry file = get(path);
         if (file != null) {
             if (file.size != -1) return file.size;
@@ -197,9 +197,9 @@ public final class ResourceMount implements IMount {
         throw new IOException("/" + path + ": No such file");
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ReadableByteChannel openForRead(@Nonnull String path) throws IOException {
+    public ReadableByteChannel openForRead(@NotNull String path) throws IOException {
         FileEntry file = get(path);
         if (file != null && !file.isDirectory()) {
             byte[] contents = CONTENTS_CACHE.getIfPresent(file);

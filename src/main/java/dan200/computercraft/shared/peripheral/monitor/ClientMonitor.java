@@ -5,15 +5,12 @@
  */
 package dan200.computercraft.shared.peripheral.monitor;
 
-import dan200.computercraft.client.gui.FixedWidthFontRenderer;
 import dan200.computercraft.shared.common.ClientTerminal;
-import dan200.computercraft.shared.util.BlockPos;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.GLAllocation;
-import net.minecraft.client.render.tessellator.Tessellator;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
+import net.minecraft.core.world.pos.TilePosc;
+import org.lwjgl.opengl.*;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,12 +23,11 @@ public final class ClientMonitor extends ClientTerminal {
     private final TileMonitor origin;
 
     public long lastRenderFrame = -1;
-    public BlockPos lastRenderPos = null;
+    public TilePosc lastRenderPos = null;
 
     public int tboBuffer;
     public int tboTexture;
-    public int displayList;
-    public boolean displayListCompiled = false;
+    //public VertexBuffer buffer;
 
     public ClientMonitor(boolean colour, TileMonitor origin) {
         super(colour);
@@ -61,34 +57,38 @@ public final class ClientMonitor extends ClientTerminal {
      * @return If a buffer was created. This will return {@code false} if we already have an appropriate buffer, or this mode does not require one.
      */
     @Environment(EnvType.CLIENT)
-    public boolean createBuffer(MonitorRenderer renderer, float xMargin, float yMargin) {
+    public boolean createBuffer(MonitorRenderer renderer) {
         switch (renderer) {
-            case DisplayList:
-                if (this.displayListCompiled) {
+            case TBO:
+                if (tboBuffer != 0) {
                     return false;
                 }
 
                 deleteBuffers();
 
-                this.displayList = GLAllocation.generateDisplayLists(1);
-                GL11.glNewList(this.displayList, 4864);
-                Tessellator tessellator = Tessellator.instance;
+                tboBuffer = GL15.glGenBuffers();
+                GL15.glBindBuffer(GL31.GL_TEXTURE_BUFFER, tboBuffer);
+                GL15.glBufferData(GL31.GL_TEXTURE_BUFFER, 0, GL15.GL_STATIC_DRAW);
+                tboTexture = GL11.glGenTextures();
+                GL11.glBindTexture(GL31.GL_TEXTURE_BUFFER, tboTexture);
+                GL31.glTexBuffer(GL31.GL_TEXTURE_BUFFER, GL30.GL_R8UI, tboBuffer);
+                GL11.glBindTexture(GL31.GL_TEXTURE_BUFFER, 0);
 
-                FixedWidthFontRenderer.drawTerminalWithoutCursor(
-                    0,
-                    0,
-                    getTerminal(),
-                    !isColour(),
-                    yMargin,
-                    yMargin,
-                    xMargin,
-                    xMargin);
-
-                GL11.glEndList();
-                this.displayListCompiled = true;
+                GL15.glBindBuffer(GL31.GL_TEXTURE_BUFFER, 0);
 
                 addMonitor();
                 return true;
+
+//            case VBO:
+//                if( buffer != null )
+//                {
+//                    return false;
+//                }
+//
+//                deleteBuffers();
+//                buffer = new VertexBuffer( FixedWidthFontRenderer.TYPE.getVertexFormat() );
+//                addMonitor();
+//                return true;
 
             default:
                 return false;
@@ -98,20 +98,20 @@ public final class ClientMonitor extends ClientTerminal {
     private void deleteBuffers() {
 
         if (tboBuffer != 0) {
-            GL15.glDeleteBuffers(tboBuffer);
+            GL41.glDeleteBuffers(tboBuffer);
             tboBuffer = 0;
         }
 
         if (tboTexture != 0) {
-            GL15.glDeleteTextures(tboTexture);
+            GLAllocation.deleteTexture(tboTexture);
             tboTexture = 0;
         }
 
-        if (this.displayList != 0) {
-            GL11.glDeleteLists(this.displayList, 1);
-            this.displayList = 0;
-            this.displayListCompiled = false;
-        }
+//        if( buffer != null )
+//        {
+//            buffer.close();
+//            buffer = null;
+//        }
     }
 
     private void addMonitor() {
@@ -122,7 +122,7 @@ public final class ClientMonitor extends ClientTerminal {
 
     @Environment(EnvType.CLIENT)
     public void destroy() {
-        if (tboBuffer != 0) {
+        if (tboBuffer != 0/* || buffer != null*/) {
             synchronized (allMonitors) {
                 allMonitors.remove(this);
             }

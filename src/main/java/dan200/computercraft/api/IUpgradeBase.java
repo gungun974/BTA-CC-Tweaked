@@ -8,11 +8,10 @@ package dan200.computercraft.api;
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.api.pocket.IPocketUpgrade;
 import net.minecraft.core.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Common functionality between {@link ITurtleUpgrade} and {@link IPocketUpgrade}.
+ * Common functionality between {@link dan200.computercraft.api.turtle.ITurtleUpgrade} and {@link IPocketUpgrade}.
  */
 public interface IUpgradeBase {
     /**
@@ -33,7 +32,7 @@ public interface IUpgradeBase {
      *
      * @return The localisation key for this upgrade's adjective.
      */
-    @Nonnull
+    @NotNull
     String getUnlocalisedAdjective();
 
     /**
@@ -45,7 +44,7 @@ public interface IUpgradeBase {
      * that you cache the stack too, in order to prevent constructing it every time the method
      * is called.
      *
-     * @return The item stack to craft with, or {@link ItemStack#EMPTY} if it cannot be crafted.
+     * @return The item stack to craft with, or {@code null} if it cannot be crafted.
      */
     ItemStack getCraftingItem();
 
@@ -62,10 +61,8 @@ public interface IUpgradeBase {
      * @param stack The stack to check. This is guaranteed to be non-empty and have the same item as
      *              {@link #getCraftingItem()}.
      * @return If this stack may be used to equip this upgrade.
-     * @see net.minecraftforge.common.crafting.NBTIngredient#test(ItemStack) For the implementation of the default
-     * check.
      */
-    default boolean isItemSuitable(@Nonnull ItemStack stack) {
+    default boolean isItemSuitable(@NotNull ItemStack stack) {
         ItemStack crafting = getCraftingItem();
 
         // A more expanded form of ItemStack.areShareTagsEqual, but allowing an empty tag to be equal to a

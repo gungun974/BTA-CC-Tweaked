@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.api.turtle;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An interface for objects executing custom turtle commands, used with {@link ITurtleAccess#executeCommand(ITurtleCommand)}.
@@ -27,6 +27,6 @@ public interface ITurtleCommand {
      * @see TurtleCommandResult#failure(String)
      * @see TurtleCommandResult
      */
-    @Nonnull
-    TurtleCommandResult execute(@Nonnull ITurtleAccess turtle);
+    @NotNull
+    TurtleCommandResult execute(@NotNull ITurtleAccess turtle);
 }

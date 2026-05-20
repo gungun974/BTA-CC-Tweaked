@@ -15,10 +15,13 @@ import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.entity.TileEntityDispatcher;
 import net.minecraft.core.util.collection.NamespaceID;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 class GenericPeripheral implements IDynamicPeripheral {
     private final String type;
@@ -32,7 +35,7 @@ class GenericPeripheral implements IDynamicPeripheral {
         this.methods = methods;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String[] getMethodNames() {
         String[] names = new String[methods.size()];
@@ -40,13 +43,13 @@ class GenericPeripheral implements IDynamicPeripheral {
         return names;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public MethodResult callMethod(@Nonnull IComputerAccess computer, @Nonnull ILuaContext context, int method, @Nonnull IArguments arguments) throws LuaException {
+    public MethodResult callMethod(@NotNull IComputerAccess computer, @NotNull ILuaContext context, int method, @NotNull IArguments arguments) throws LuaException {
         return methods.get(method).apply(context, computer, arguments);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getType() {
         return type;
@@ -66,9 +69,8 @@ class GenericPeripheral implements IDynamicPeripheral {
     @Override
     public boolean equals(@Nullable IPeripheral other) {
         if (other == this) return true;
-        if (!(other instanceof GenericPeripheral)) return false;
+        if (!(other instanceof GenericPeripheral generic)) return false;
 
-        GenericPeripheral generic = (GenericPeripheral) other;
         return tile == generic.tile && methods.equals(generic.methods);
     }
 }

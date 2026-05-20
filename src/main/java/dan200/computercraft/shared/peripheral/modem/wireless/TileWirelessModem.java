@@ -13,10 +13,10 @@ import dan200.computercraft.shared.peripheral.modem.ModemPeripheral;
 import dan200.computercraft.shared.peripheral.modem.ModemState;
 import dan200.computercraft.shared.util.TickScheduler;
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 public class TileWirelessModem extends TileGeneric implements IPeripheralTile {
     private static final String NBT_ADVANCED = "Advanced";
@@ -60,7 +60,7 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile {
         }
 
         hasModemDirection = true;
-        modemDirection = BlockLogicWirelessModem.metaToDirection(worldObj.getBlockMetadata(x, y, z)).getOpposite();
+        modemDirection = BlockLogicWirelessModem.metaToDirection(worldObj.getBlockData(tilePos)).opposite();
     }
 
     private void updateBlockState() {
@@ -75,12 +75,12 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile {
             final int newMetadata = (currentMetadata & ~0b1000) | ((on ? 1 : 0) << 3);
 
             if (worldObj != null) {
-                worldObj.setBlockMetadataWithNotify(this.x, this.y, this.z, newMetadata);
+                worldObj.setBlockDataNotify(this.tilePos, newMetadata);
             }
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IPeripheral getPeripheral(Direction side) {
         refreshDirection();
@@ -88,17 +88,13 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile {
     }
 
     @Override
-    public void readFromNBT(CompoundTag nbt) {
-        super.readFromNBT(nbt);
-
+    public void readAdditionalData(CompoundTag nbt) {
         advanced = nbt.getBoolean(NBT_ADVANCED);
     }
 
     @Override
-    public void writeToNBT(CompoundTag tag) {
+    public void writeAdditionalData(CompoundTag tag) {
         tag.putBoolean(NBT_ADVANCED, advanced);
-
-        super.writeToNBT(tag);
     }
 
     private static class Peripheral extends WirelessModemPeripheral {
@@ -109,23 +105,23 @@ public class TileWirelessModem extends TileGeneric implements IPeripheralTile {
             this.entity = entity;
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public World getWorld() {
             return entity.worldObj;
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public Vec3 getPosition() {
-            return Vec3.getPermanentVec3(
-                entity.x + entity.modemDirection.getOffsetX(),
-                entity.y + entity.modemDirection.getOffsetY(),
-                entity.z + entity.modemDirection.getOffsetZ()
+        public Vector3dc getPosition() {
+            return new Vector3d(
+                entity.tilePos.x + entity.modemDirection.offsetX(),
+                entity.tilePos.y + entity.modemDirection.offsetY(),
+                entity.tilePos.z + entity.modemDirection.offsetZ()
             );
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public Object getTarget() {
             return entity;

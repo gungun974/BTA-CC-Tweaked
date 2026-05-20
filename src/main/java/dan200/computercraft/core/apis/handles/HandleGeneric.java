@@ -9,8 +9,8 @@ import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.core.filesystem.TrackingCloseable;
 import dan200.computercraft.shared.util.IoUtil;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.channels.Channel;
 import java.nio.channels.SeekableByteChannel;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public abstract class HandleGeneric {
     private TrackingCloseable closeable;
 
-    protected HandleGeneric(@Nonnull TrackingCloseable closeable) {
+    protected HandleGeneric(@NotNull TrackingCloseable closeable) {
         this.closeable = closeable;
     }
 
@@ -59,9 +59,8 @@ public abstract class HandleGeneric {
     }
 
     protected static SeekableByteChannel asSeekable(Channel channel) {
-        if (!(channel instanceof SeekableByteChannel)) return null;
+        if (!(channel instanceof SeekableByteChannel seekable)) return null;
 
-        SeekableByteChannel seekable = (SeekableByteChannel) channel;
         try {
             seekable.position(seekable.position());
             return seekable;

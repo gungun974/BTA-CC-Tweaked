@@ -16,8 +16,8 @@ import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.collection.NamespaceID;
 import net.minecraft.core.world.World;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 
 public class ItemTreasureDisk extends Item implements IMedia {
@@ -25,8 +25,8 @@ public class ItemTreasureDisk extends Item implements IMedia {
     public static final String NBT_COLOUR = "Color";
     public static final String NBT_SUB_PATH = "SubPath";
 
-    public ItemTreasureDisk(NamespaceID namespaceId, int id) {
-        super(namespaceId, id);
+    public ItemTreasureDisk(@NotNull NamespaceID namespaceId, @NotNull String translationKey, int id) {
+        super(namespaceId, translationKey, id);
     }
 
     public static ItemStack create(String subPath, int colourIndex) {
@@ -47,13 +47,13 @@ public class ItemTreasureDisk extends Item implements IMedia {
         return result;
     }
 
-    public static int getColour(@Nonnull ItemStack stack) {
+    public static int getColour(@NotNull ItemStack stack) {
         CompoundTag nbt = stack.getData();
         return nbt.containsKey(NBT_COLOUR) ? nbt.getInteger(NBT_COLOUR) : Colour.BLUE.getHex();
     }
 
-    @Nonnull
-    private static String getTitle(@Nonnull ItemStack stack) {
+    @NotNull
+    private static String getTitle(@NotNull ItemStack stack) {
         CompoundTag nbt = stack.getData();
         return nbt.containsKey(NBT_TITLE) ? nbt.getString(NBT_TITLE) : "'alongtimeago' by dan200";
     }
@@ -62,8 +62,8 @@ public class ItemTreasureDisk extends Item implements IMedia {
         return ComputerCraftAPI.createResourceMount("computercraft", "lua/treasure");
     }
 
-    @Nonnull
-    private static String getSubPath(@Nonnull ItemStack stack) {
+    @NotNull
+    private static String getSubPath(@NotNull ItemStack stack) {
         CompoundTag nbt = stack.getData();
         return nbt.containsKey(NBT_SUB_PATH) ? nbt.getString(NBT_SUB_PATH) : "dan200/alongtimeago";
     }
@@ -81,12 +81,12 @@ public class ItemTreasureDisk extends Item implements IMedia {
     }
 
     @Override
-    public String getLabel(@Nonnull ItemStack stack) {
+    public String getLabel(@NotNull ItemStack stack) {
         return getTitle(stack);
     }
 
     @Override
-    public IMount createDataMount(@Nonnull ItemStack stack, @Nonnull World world) {
+    public IMount createDataMount(@NotNull ItemStack stack, @NotNull World world) {
         IMount rootTreasure = getTreasureMount();
         String subPath = getSubPath(stack);
         try {

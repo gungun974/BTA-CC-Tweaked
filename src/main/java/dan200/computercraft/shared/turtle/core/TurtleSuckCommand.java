@@ -11,17 +11,18 @@ import dan200.computercraft.api.turtle.TurtleAnimation;
 import dan200.computercraft.api.turtle.TurtleCommandResult;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.api.turtle.event.TurtleInventoryEvent;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.ItemStorage;
 import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.util.phys.AABB;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.joml.primitives.AABBd;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TurtleSuckCommand implements ITurtleCommand {
@@ -33,9 +34,9 @@ public class TurtleSuckCommand implements ITurtleCommand {
         this.quantity = quantity;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+    public TurtleCommandResult execute(@NotNull ITurtleAccess turtle) {
         // Sucking nothing is easy
         if (quantity == 0) {
             turtle.playAnimation(TurtleAnimation.WAIT);
@@ -47,9 +48,9 @@ public class TurtleSuckCommand implements ITurtleCommand {
 
         // Get inventory for thing in front
         World world = turtle.getWorld();
-        BlockPos turtlePosition = turtle.getPosition();
-        BlockPos blockPosition = turtlePosition.offset(direction);
-        Direction side = direction.getOpposite();
+        TilePosc turtlePosition = turtle.getPosition();
+        TilePosc blockPosition = turtlePosition.add(direction, new TilePos());
+        Direction side = direction.opposite();
 
         Container inventory = InventoryUtil.getInventory(world, blockPosition, side);
 
@@ -82,12 +83,12 @@ public class TurtleSuckCommand implements ITurtleCommand {
             }
         } else {
             // Suck up loose items off the ground
-            AABB aabb = AABB.getPermanentBB(blockPosition.getX(),
-                blockPosition.getY(),
-                blockPosition.getZ(),
-                blockPosition.getX() + 1.0,
-                blockPosition.getY() + 1.0,
-                blockPosition.getZ() + 1.0);
+            AABBd aabb = new AABBd(blockPosition.x(),
+                blockPosition.y(),
+                blockPosition.z(),
+                blockPosition.x() + 1.0,
+                blockPosition.y() + 1.0,
+                blockPosition.z() + 1.0);
             List<EntityItem> list = world.getEntitiesWithinAABB(EntityItem.class, aabb);
             if (list.isEmpty()) {
                 return TurtleCommandResult.failure("No items to take");
@@ -123,7 +124,7 @@ public class TurtleSuckCommand implements ITurtleCommand {
                     }
 
                     // Play fx
-                    world.playBlockEvent(1000, turtlePosition.x, turtlePosition.y, turtlePosition.z, 0); // BLOCK_DISPENSER_DISPENSE
+                    world.playBlockEvent(turtlePosition, 1000, 0); // BLOCK_DISPENSER_DISPENSE
                     turtle.playAnimation(TurtleAnimation.WAIT);
                     return TurtleCommandResult.success();
                 }

@@ -11,8 +11,8 @@ import dan200.computercraft.api.lua.MethodResult;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.shared.turtle.core.TurtleCraftCommand;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -29,13 +29,13 @@ public class CraftingTablePeripheral implements IPeripheral {
         this.turtle = turtle;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getType() {
         return "workbench";
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Object getTarget() {
         return turtle;

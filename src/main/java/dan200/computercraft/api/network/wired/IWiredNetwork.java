@@ -6,8 +6,8 @@
 package dan200.computercraft.api.network.wired;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -36,7 +36,7 @@ public interface IWiredNetwork {
      * @see IWiredNode#connectTo(IWiredNode)
      * @see IWiredNetwork#connect(IWiredNode, IWiredNode)
      */
-    boolean connect(@Nonnull IWiredNode left, @Nonnull IWiredNode right);
+    boolean connect(@NotNull IWiredNode left, @NotNull IWiredNode right);
 
     /**
      * Destroy a connection between this node and another.
@@ -51,7 +51,7 @@ public interface IWiredNetwork {
      * @see IWiredNode#disconnectFrom(IWiredNode)
      * @see IWiredNetwork#connect(IWiredNode, IWiredNode)
      */
-    boolean disconnect(@Nonnull IWiredNode left, @Nonnull IWiredNode right);
+    boolean disconnect(@NotNull IWiredNode left, @NotNull IWiredNode right);
 
     /**
      * Sever all connections this node has, removing it from this network.
@@ -63,7 +63,7 @@ public interface IWiredNetwork {
      * @throws IllegalArgumentException If the node is not in the network.
      * @see IWiredNode#remove()
      */
-    boolean remove(@Nonnull IWiredNode node);
+    boolean remove(@NotNull IWiredNode node);
 
     /**
      * Update the peripherals a node provides.
@@ -75,5 +75,5 @@ public interface IWiredNetwork {
      * @throws IllegalArgumentException If the node is not in the network.
      * @see IWiredNode#updatePeripherals(Map)
      */
-    void updatePeripherals(@Nonnull IWiredNode node, @Nonnull Map<String, IPeripheral> peripherals);
+    void updatePeripherals(@NotNull IWiredNode node, @NotNull Map<String, IPeripheral> peripherals);
 }

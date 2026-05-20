@@ -5,7 +5,6 @@ import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
-import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.helper.Direction;
@@ -41,7 +40,7 @@ public class TileEntityComputer extends TileComputerBase {
             final int newMetadata = (currentMetadata & ~0b11000) | (newState.ordinal() << 3);
 
             if (worldObj != null) {
-                worldObj.setBlockMetadataWithNotify(this.x, this.y, this.z, newMetadata);
+                worldObj.setBlockDataNotify(tilePos, newMetadata);
             }
         }
     }
@@ -73,7 +72,7 @@ public class TileEntityComputer extends TileComputerBase {
             family,
             ComputerCraft.computerTermWidth,
             ComputerCraft.computerTermHeight);
-        computer.setPosition(new BlockPos(x, y, z));
+        computer.setPosition(tilePos);
         return computer;
     }
 

@@ -8,20 +8,20 @@ package dan200.computercraft.shared.peripheral.generic;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.asm.NamedMethod;
 import dan200.computercraft.core.asm.PeripheralMethod;
-import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GenericPeripheralProvider {
     @Nullable
-    public static IPeripheral getPeripheral(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side) {
-        TileEntity tile = world.getTileEntity(pos.x, pos.y, pos.z);
+    public static IPeripheral getPeripheral(@NotNull World world, @NotNull TilePosc pos, @NotNull Direction side) {
+        TileEntity tile = world.getTileEntity(pos);
         if (tile == null) return null;
 
         ArrayList<SaturatedMethod> saturated = new ArrayList<>(0);

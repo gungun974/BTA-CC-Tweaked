@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.shared.peripheral.monitor;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import static dan200.computercraft.shared.peripheral.monitor.MonitorEdgeState.Flags.*;
 
@@ -50,7 +50,7 @@ public enum MonitorEdgeState {
         return BY_FLAG[(up ? UP : 0) | (down ? DOWN : 0) | (left ? LEFT : 0) | (right ? RIGHT : 0)];
     }
 
-    @Nonnull
+    @NotNull
     public String asString() {
         return name;
     }

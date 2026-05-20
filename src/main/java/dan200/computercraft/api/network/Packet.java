@@ -5,8 +5,9 @@
  */
 package dan200.computercraft.api.network;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -18,13 +19,7 @@ import java.util.Objects;
  * @see IPacketReceiver#receiveDifferentDimension(Packet)
  * @see IPacketReceiver#receiveSameDimension(Packet, double)
  */
-public class Packet {
-    private final int channel;
-    private final int replyChannel;
-    private final Object payload;
-
-    private final IPacketSender sender;
-
+public record Packet(int channel, int replyChannel, Object payload, IPacketSender sender) {
     /**
      * Create a new packet, ready for transmitting across the network.
      *
@@ -34,7 +29,7 @@ public class Packet {
      *                     call.
      * @param sender       The object which sent this packet.
      */
-    public Packet(int channel, int replyChannel, @Nullable Object payload, @Nonnull IPacketSender sender) {
+    public Packet(int channel, int replyChannel, @Nullable Object payload, @NotNull IPacketSender sender) {
         Objects.requireNonNull(sender, "sender cannot be null");
 
         this.channel = channel;
@@ -48,7 +43,8 @@ public class Packet {
      *
      * @return This packet's channel.
      */
-    public int getChannel() {
+    @Override
+    public int channel() {
         return channel;
     }
 
@@ -57,7 +53,8 @@ public class Packet {
      *
      * @return This channel to reply on.
      */
-    public int getReplyChannel() {
+    @Override
+    public int replyChannel() {
         return replyChannel;
     }
 
@@ -66,8 +63,9 @@ public class Packet {
      *
      * @return The packet's payload
      */
+    @Override
     @Nullable
-    public Object getPayload() {
+    public Object payload() {
         return payload;
     }
 
@@ -76,19 +74,10 @@ public class Packet {
      *
      * @return The sending object.
      */
-    @Nonnull
-    public IPacketSender getSender() {
-        return sender;
-    }
-
     @Override
-    public int hashCode() {
-        int result;
-        result = channel;
-        result = 31 * result + replyChannel;
-        result = 31 * result + (payload != null ? payload.hashCode() : 0);
-        result = 31 * result + sender.hashCode();
-        return result;
+    @NotNull
+    public IPacketSender sender() {
+        return sender;
     }
 
     @Override

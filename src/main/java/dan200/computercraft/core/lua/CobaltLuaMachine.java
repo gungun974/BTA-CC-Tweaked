@@ -14,6 +14,8 @@ import dan200.computercraft.core.computer.TimeoutState;
 import dan200.computercraft.core.tracking.Tracking;
 import dan200.computercraft.core.tracking.TrackingField;
 import dan200.computercraft.shared.util.ThreadUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.squiddev.cobalt.*;
 import org.squiddev.cobalt.compiler.CompileException;
 import org.squiddev.cobalt.compiler.LoadState;
@@ -24,8 +26,6 @@ import org.squiddev.cobalt.function.LuaFunction;
 import org.squiddev.cobalt.lib.*;
 import org.squiddev.cobalt.lib.platform.VoidResourceManipulator;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -172,7 +172,7 @@ public class CobaltLuaMachine implements ILuaMachine {
     }
 
     @Override
-    public void addAPI(@Nonnull ILuaAPI api) {
+    public void addAPI(@NotNull ILuaAPI api) {
         // Add the methods of an API to the global table
         LuaTable table = wrapLuaObject(api);
         if (table == null) {
@@ -185,7 +185,7 @@ public class CobaltLuaMachine implements ILuaMachine {
     }
 
     @Override
-    public MachineResult loadBios(@Nonnull InputStream bios) {
+    public MachineResult loadBios(@NotNull InputStream bios) {
         // Begin executing a file (ie, the bios)
         if (mainRoutine != null) return MachineResult.OK;
 
@@ -284,18 +284,16 @@ public class CobaltLuaMachine implements ILuaMachine {
         return table;
     }
 
-    @Nonnull
+    @NotNull
     private LuaValue toValue(@Nullable Object object, @Nullable Map<Object, LuaValue> values) {
         if (object == null) return Constants.NIL;
         if (object instanceof Number) return valueOf(((Number) object).doubleValue());
         if (object instanceof Boolean) return valueOf((Boolean) object);
         if (object instanceof String) return valueOf(object.toString());
-        if (object instanceof byte[]) {
-            byte[] b = (byte[]) object;
+        if (object instanceof byte[] b) {
             return valueOf(Arrays.copyOf(b, b.length));
         }
-        if (object instanceof ByteBuffer) {
-            ByteBuffer b = (ByteBuffer) object;
+        if (object instanceof ByteBuffer b) {
             byte[] bytes = new byte[b.remaining()];
             b.get(bytes);
             return valueOf(bytes);
@@ -328,8 +326,7 @@ public class CobaltLuaMachine implements ILuaMachine {
             return table;
         }
 
-        if (object instanceof Collection) {
-            Collection<?> objects = (Collection<?>) object;
+        if (object instanceof Collection<?> objects) {
             LuaTable table = new LuaTable(objects.size(), 0);
             values.put(object, table);
             int i = 0;
@@ -337,8 +334,7 @@ public class CobaltLuaMachine implements ILuaMachine {
             return table;
         }
 
-        if (object instanceof Object[]) {
-            Object[] objects = (Object[]) object;
+        if (object instanceof Object[] objects) {
             LuaTable table = new LuaTable(objects.length, 0);
             values.put(object, table);
             for (int i = 0; i < objects.length; i++) table.rawset(i + 1, toValue(objects[i], values));

@@ -6,14 +6,13 @@
 package dan200.computercraft.shared.network.client;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import org.jetbrains.annotations.NotNull;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.UniversalPacket;
-
-import javax.annotation.Nonnull;
 
 /**
  * Provides additional data about a client computer, such as its ID and current state.
@@ -32,14 +31,14 @@ public class ComputerDataClientMessage extends ComputerClientMessage {
     }
 
     @Override
-    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void encodeToUniversalPacket(@NotNull UniversalPacket buf) {
         super.encodeToUniversalPacket(buf);
         buf.writeEnumConstant(state);
         buf.writeCompoundTag(userData);
     }
 
     @Override
-    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void decodeFromUniversalPacket(@NotNull UniversalPacket buf) {
         super.decodeFromUniversalPacket(buf);
         state = buf.readEnumConstant(ComputerState.class);
         userData = buf.readCompoundTag();
@@ -47,7 +46,7 @@ public class ComputerDataClientMessage extends ComputerClientMessage {
 
     @Override
     public void handle(NetworkContext context) {
-        if (!Helper.isServerEnvironment()) {
+        if (!EnvironmentHelper.isServerEnvironment()) {
             clientHandler();
         }
     }

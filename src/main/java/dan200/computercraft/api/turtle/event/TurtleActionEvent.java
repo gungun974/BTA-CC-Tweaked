@@ -7,9 +7,9 @@ package dan200.computercraft.api.turtle.event;
 
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.TurtleCommandResult;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 /**
@@ -20,7 +20,7 @@ public class TurtleActionEvent extends TurtleEvent {
     private String failureMessage;
     private boolean cancelled = false;
 
-    public TurtleActionEvent(@Nonnull ITurtleAccess turtle, @Nonnull TurtleAction action) {
+    public TurtleActionEvent(@NotNull ITurtleAccess turtle, @NotNull TurtleAction action) {
         super(turtle);
 
         Objects.requireNonNull(action, "action cannot be null");

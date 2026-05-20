@@ -6,7 +6,6 @@
 package dan200.computercraft.shared.media.items;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.network.client.OpenGuiPrintoutClientMessage;
 import net.minecraft.core.entity.player.Player;
@@ -14,9 +13,9 @@ import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.collection.NamespaceID;
 import net.minecraft.core.world.World;
+import org.jetbrains.annotations.NotNull;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.NetworkHandler;
-
-import javax.annotation.Nonnull;
 
 public class ItemPrintout extends Item {
     public static final int LINES_PER_PAGE = 21;
@@ -28,31 +27,31 @@ public class ItemPrintout extends Item {
     private static final String NBT_LINE_COLOUR = "Color";
     private final Type type;
 
-    public ItemPrintout(NamespaceID namespaceId, int id, Type type) {
-        super(namespaceId, id);
+    public ItemPrintout(@NotNull NamespaceID namespaceId, String translationKey, int id, Type type) {
+        super(namespaceId, translationKey, id);
         this.type = type;
     }
 
-    @Nonnull
+    @NotNull
     public static ItemStack createSingleFromTitleAndText(String title, String[] text, String[] colours) {
         return ComputerCraftItems.PRINTED_PAGE.createFromTitleAndText(title, text, colours);
     }
 
-    @Nonnull
+    @NotNull
     public static ItemStack createMultipleFromTitleAndText(String title, String[] text, String[] colours) {
         return ComputerCraftItems.PRINTED_PAGES.createFromTitleAndText(title, text, colours);
     }
 
-    @Nonnull
+    @NotNull
     public static ItemStack createBookFromTitleAndText(String title, String[] text, String[] colours) {
         return ComputerCraftItems.PRINTED_BOOK.createFromTitleAndText(title, text, colours);
     }
 
-    public static String[] getText(@Nonnull ItemStack stack) {
+    public static String[] getText(@NotNull ItemStack stack) {
         return getLines(stack, NBT_LINE_TEXT);
     }
 
-    private static String[] getLines(@Nonnull ItemStack stack, String prefix) {
+    private static String[] getLines(@NotNull ItemStack stack, String prefix) {
         CompoundTag nbt = stack.getData();
         int numLines = getPageCount(stack) * LINES_PER_PAGE;
         String[] lines = new String[numLines];
@@ -62,21 +61,21 @@ public class ItemPrintout extends Item {
         return lines;
     }
 
-    public static int getPageCount(@Nonnull ItemStack stack) {
+    public static int getPageCount(@NotNull ItemStack stack) {
         CompoundTag nbt = stack.getData();
         return nbt.containsKey(NBT_PAGES) ? nbt.getInteger(NBT_PAGES) : 1;
     }
 
-    public static String[] getColours(@Nonnull ItemStack stack) {
+    public static String[] getColours(@NotNull ItemStack stack) {
         return getLines(stack, NBT_LINE_COLOUR);
     }
 
-    public static String getTitle(@Nonnull ItemStack stack) {
+    public static String getTitle(@NotNull ItemStack stack) {
         CompoundTag nbt = stack.getData();
         return nbt.containsKey(NBT_TITLE) ? nbt.getString(NBT_TITLE) : null;
     }
 
-    @Nonnull
+    @NotNull
     private ItemStack createFromTitleAndText(String title, String[] text, String[] colours) {
         ItemStack stack = new ItemStack(this);
 
@@ -108,17 +107,18 @@ public class ItemPrintout extends Item {
     }
 
     @Override
-    public ItemStack onUseItem(ItemStack stack, World world, Player player) {
-        if (Helper.isClientWorld()) {
-            return stack;
+    public ItemStack onUse(@NotNull ItemStack selfStack, @NotNull World world, @NotNull Player player) {
+        if (EnvironmentHelper.isClientWorld()) {
+            return selfStack;
         }
 
-        NetworkHandler.sendToPlayer(player, new OpenGuiPrintoutClientMessage(stack));
+        NetworkHandler.sendToPlayer(player, new OpenGuiPrintoutClientMessage(selfStack));
 
-        return stack;
+        return selfStack;
     }
 
     @Override
+    @NotNull
     public String getTranslatedDescription(ItemStack stack) {
         String text = super.getTranslatedDescription(stack);
 

@@ -8,8 +8,8 @@ package dan200.computercraft.core.asm;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.lua.GenericSource;
 import dan200.computercraft.api.lua.LuaFunction;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
@@ -70,7 +70,7 @@ public class GenericMethod {
     }
 
 
-    public static synchronized void register(@Nonnull GenericSource source) {
+    public static synchronized void register(@NotNull GenericSource source) {
         Objects.requireNonNull(source, "Source cannot be null");
 
         if (cache != null) {

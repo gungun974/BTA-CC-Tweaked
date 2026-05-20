@@ -7,8 +7,8 @@ package dan200.computercraft.core.computer;
 
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.lua.ILuaTask;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
@@ -83,7 +83,7 @@ public final class MainThread {
         return lastTaskId.incrementAndGet();
     }
 
-    static void queue(@Nonnull MainThreadExecutor executor, boolean sleeper) {
+    static void queue(@NotNull MainThreadExecutor executor, boolean sleeper) {
         synchronized (executors) {
             if (executor.onQueue) throw new IllegalStateException("Cannot queue already queued executor");
             executor.onQueue = true;
@@ -102,7 +102,7 @@ public final class MainThread {
         }
     }
 
-    static void cooling(@Nonnull MainThreadExecutor executor) {
+    static void cooling(@NotNull MainThreadExecutor executor) {
         cooling.add(executor);
     }
 

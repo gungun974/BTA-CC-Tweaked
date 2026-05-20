@@ -1,60 +1,76 @@
 [versions]
-bta = "7.3_04"
-btaChannel = "release"
-java = "8"
+##########################################################################
+# Plugins
+# Check this on https://github.com/FabricMC/fabric-loom/releases/latest/
+loom = "1.15-SNAPSHOT"
+# Check this on https://plugins.gradle.org/plugin/com.smushytaco.lwjgl3/
+lwjglPlugin = "1.0.2"
+##########################################################################
+# Java Configuration
+# The Java version the JDK will be for compiling and running code.
+java = "17"
+# The Java version the JDK will be for running Gradle.
 gradleJava = "21"
-loader = "0.15.6-bta.7"
-halplibe = "5.3.1"
-modMenu = "2.0.2"
-
-lwjgl = "3.3.2"
-legacyLwjgl = "1.0.5"
-
-slf4jApi = "1.8.0-beta4"
-log4jSlf4j = "2.16.0"
+##########################################################################
+# Mod Dependencies
+# Check this on https://downloads.betterthanadventure.net/bta-client/
+bta = "v8.0-pre1"
+# Options are release, prerelease, nightly, and misc.
+btaChannel = "prerelease"
+# Check this on https://maven.thesignalumproject.net/#/infrastructure/net/fabricmc/fabric-loader/
+loader = "0.18.4-bta.11"
+# Check this on https://github.com/Turnip-Labs/ModMenu/releases/latest/
+modMenu = "5.0.0"
+# Check this on https://github.com/Turnip-Labs/bta-halplibe/releases/latest/
+halplibe = "6.0.0+"
+# Check this on https://github.com/Better-than-Adventure/legacy-lwjgl3/releases/latest/
+legacyLwjgl = "1.0.6"
+##########################################################################
+# Dependencies
+# Check this on https://central.sonatype.com/artifact/org.slf4j/slf4j-api/
+slf4jApi = "2.0.17"
+# Check this on https://central.sonatype.com/artifact/com.google.guava/guava/
+guava = "33.5.0-jre"
+# Check this on https://central.sonatype.com/artifact/org.apache.logging.log4j/log4j-api/
 log4j = "2.20.0"
-guava = "33.0.0-jre"
-gson = "2.10.1"
-commonsLang3 = "3.12.0"
+# Check this on https://central.sonatype.com/artifact/com.google.code.gson/gson/
+gson = "2.13.2"
+# Check this on https://central.sonatype.com/artifact/org.apache.commons/commons-lang3/
+commonsLang3 = "3.20.0"
 commonsCodec = "1.16.0"
-
+# This should match the version used by the current BTA release.
+lwjgl = "3.3.3"
 cobalt = "0.5.2-SNAPSHOT"
 netty = "4.1.95.Final"
 nightConfig = "3.6.5"
-
-loom = "1.10.0-bta"
-lwjglPlugin = "1.0.2"
+##########################################################################
 
 [libraries]
-clientJar = { module = "objects:client", version = "43db9b498cb67058d2e12d394e6507722e71bb45" }
-loader = { module = "net.fabricmc:fabric-loader", version.ref = "loader" }
-halplibe = { module = "turniplabs:halplibe", version.ref = "halplibe" }
-modMenu = { module = "turniplabs:modmenu-bta", version.ref = "modMenu" }
-legacyLwjgl = { module = "com.github.Better-than-Adventure:legacy-lwjgl3", version.ref = "legacyLwjgl" }
-
-slf4jApi = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
-log4j-slf4j2-impl = { module = "org.apache.logging.log4j:log4j-slf4j18-impl", version.ref = "log4jSlf4j" }
-log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
-log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
-log4j-api12 = { module = "org.apache.logging.log4j:log4j-1.2-api", version.ref = "log4j" }
-
-guava = { module = "com.google.guava:guava", version.ref = "guava" }
-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-commonsLang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang3" }
-commonsCodec = { module = "commons-codec:commons-codec", version.ref = "commonsCodec" }
-
-cobalt = { module = "org.squiddev:Cobalt", version.ref = "cobalt" }
-
-netty-buffer = { module = "io.netty:netty-buffer", version.ref = "netty" }
-netty-common = { module = "io.netty:netty-common", version.ref = "netty" }
-netty-transport = { module = "io.netty:netty-transport", version.ref = "netty" }
-netty-handler = { module = "io.netty:netty-handler", version.ref = "netty" }
-netty-codec = { module = "io.netty:netty-codec", version.ref = "netty" }
-netty-codec-http = { module = "io.netty:netty-codec-http", version.ref = "netty" }
-
-nightConfig-core = { module = "com.electronwill.night-config:core", version.ref = "nightConfig" }
-nightConfig-toml = { module = "com.electronwill.night-config:toml", version.ref = "nightConfig" }
+loader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "loader" }
+halplibe = { group = "turniplabs", name = "halplibe", version.ref = "halplibe" }
+modMenu = { group = "turniplabs", name = "modmenu-bta", version.ref = "modMenu" }
+legacyLwjgl = { group = "legacy-lwjgl3", name = "legacy-lwjgl3", version.ref = "legacyLwjgl" }
+slf4jApi = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4jApi" }
+guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
+log4j-slf4j2-impl = { group = "org.apache.logging.log4j", name = "log4j-slf4j2-impl", version.ref = "log4j" }
+log4j-core = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j" }
+log4j-api = { group = "org.apache.logging.log4j", name = "log4j-api", version.ref = "log4j" }
+log4j-api12 = { group = "org.apache.logging.log4j", name = "log4j-1.2-api", version.ref = "log4j" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+commonsLang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commonsLang3" }
+commonsCodec = { group = "commons-codec", name = "commons-codec", version.ref = "commonsCodec" }
+cobalt = { group = "org.squiddev", name = "Cobalt", version.ref = "cobalt" }
+netty-buffer = { group = "io.netty", name = "netty-buffer", version.ref = "netty" }
+netty-common = { group = "io.netty", name = "netty-common", version.ref = "netty" }
+netty-transport = { group = "io.netty", name = "netty-transport", version.ref = "netty" }
+netty-handler = { group = "io.netty", name = "netty-handler", version.ref = "netty" }
+netty-codec = { group = "io.netty", name = "netty-codec", version.ref = "netty" }
+netty-codec-http = { group = "io.netty", name = "netty-codec-http", version.ref = "netty" }
+nightConfig-core = { group = "com.electronwill.night-config", name = "core", version.ref = "nightConfig" }
+nightConfig-toml = { group = "com.electronwill.night-config", name = "toml", version.ref = "nightConfig" }
+# https://piston-data.mojang.com/v1/objects/43db9b498cb67058d2e12d394e6507722e71bb45/client.jar
+clientJar = { group = "objects", name = "client", version = "43db9b498cb67058d2e12d394e6507722e71bb45" }
 
 [plugins]
-loom = { id = "fabric-loom", version.ref = "loom" }
+loom = { id = "net.fabricmc.fabric-loom", version.ref = "loom" }
 lwjgl = { id = "com.smushytaco.lwjgl3", version.ref = "lwjglPlugin" }

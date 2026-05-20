@@ -10,8 +10,8 @@ import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.core.filesystem.TrackingCloseable;
 import dan200.computercraft.shared.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.channels.Channels;
@@ -29,7 +29,7 @@ import java.nio.charset.StandardCharsets;
 public class EncodedWritableHandle extends HandleGeneric {
     private final BufferedWriter writer;
 
-    public EncodedWritableHandle(@Nonnull BufferedWriter writer, @Nonnull TrackingCloseable closable) {
+    public EncodedWritableHandle(@NotNull BufferedWriter writer, @NotNull TrackingCloseable closable) {
         super(closable);
         this.writer = writer;
     }

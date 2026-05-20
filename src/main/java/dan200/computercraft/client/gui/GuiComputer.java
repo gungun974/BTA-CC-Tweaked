@@ -12,9 +12,9 @@ import dan200.computercraft.shared.computer.core.ClientComputer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
 import net.minecraft.client.gui.Screen;
+import net.minecraft.client.render.renderer.GLRenderer;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -71,10 +71,10 @@ public class GuiComputer<T extends ContainerComputerBase> extends Screen {
         final int wrapperY = (height - termPxHeight) / 2;
 
         if (terminal != null) {
-            terminal.draw(wrapperX, wrapperY);
+            terminal.draw(wrapperX, wrapperY, GLRenderer.modelM4f());
         }
 
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GLRenderer.setColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         if (Objects.requireNonNull(family) == ComputerFamily.ADVANCED) {
             this.mc.textureManager.loadTexture("/assets/computercraft/textures/gui/corners_advanced.png").bind();

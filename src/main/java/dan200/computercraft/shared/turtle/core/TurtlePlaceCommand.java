@@ -14,7 +14,6 @@ import dan200.computercraft.api.turtle.event.TurtleBlockEvent;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.shared.TurtlePermissions;
 import dan200.computercraft.shared.peripheral.modem.wired.ItemCable;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.DirectionUtil;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.block.entity.TileEntity;
@@ -27,8 +26,9 @@ import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.MathHelper;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
-
-import javax.annotation.Nonnull;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
 
 public class TurtlePlaceCommand implements ITurtleCommand {
     private final InteractDirection direction;
@@ -39,15 +39,15 @@ public class TurtlePlaceCommand implements ITurtleCommand {
         extraArguments = arguments;
     }
 
-    public static ItemStack deploy(@Nonnull ItemStack stack, ITurtleAccess turtle, Direction direction,
+    public static ItemStack deploy(@NotNull ItemStack stack, ITurtleAccess turtle, Direction direction,
                                    Object[] extraArguments, String[] outErrorMessage) {
-        BlockPos turtlePosition = turtle.getPosition();
-        BlockPos position = turtlePosition.offset(direction);
+        TilePosc turtlePosition = turtle.getPosition();
+        TilePosc position = turtlePosition.add(direction, new TilePos());
 
         // Calculate where the turtle would hit the block
-        float hitX = 0.5f + direction.getOffsetX() * 0.5f;
-        float hitY = 0.5f + direction.getOffsetY() * 0.5f;
-        float hitZ = 0.5f + direction.getOffsetZ() * 0.5f;
+        float hitX = 0.5f + direction.offsetX() * 0.5f;
+        float hitY = 0.5f + direction.offsetY() * 0.5f;
+        float hitZ = 0.5f + direction.offsetZ() * 0.5f;
         if (Math.abs(hitY - 0.5f) < 0.01f) {
             hitY = 0.45f;
         }
@@ -59,7 +59,6 @@ public class TurtlePlaceCommand implements ITurtleCommand {
         if (!(
             item instanceof ItemBucket ||
                 item instanceof ItemBoat ||
-                item instanceof ItemBucketEmpty ||
                 item instanceof ItemEgg ||
                 item instanceof ItemSnowball ||
                 item instanceof ItemCable ||
@@ -72,26 +71,26 @@ public class TurtlePlaceCommand implements ITurtleCommand {
         // Do the deploying (put everything in the players inventory)
         boolean placed = false;
         TileEntity existingTile = turtle.getWorld()
-            .getTileEntity(position.x, position.y, position.z);
+            .getTileEntity(position);
 
         TileEntityActivator tileEntityActivator = new TileEntityActivator();
 
-        tileEntityActivator.x = turtlePosition.x;
-        tileEntityActivator.y = turtlePosition.y;
-        tileEntityActivator.z = turtlePosition.z;
+        tileEntityActivator.tilePos.x = turtlePosition.x();
+        tileEntityActivator.tilePos.y = turtlePosition.y();
+        tileEntityActivator.tilePos.z = turtlePosition.z();
 
         tileEntityActivator.worldObj = turtle.getWorld();
 
         int oldStackSize = stack.stackSize;
 
-        item.onUseByActivator(stack, tileEntityActivator, turtle.getWorld(), turtle.getWorld().rand, turtlePosition.x, turtlePosition.y, turtlePosition.z, hitX, hitY, hitZ, direction);
+        item.onUseByActivator(stack, turtle.getWorld(), tileEntityActivator, turtle.getWorld().rand, turtlePosition, direction, hitX, hitY, hitZ);
 
         if (oldStackSize != stack.stackSize) {
             placed = true;
         }
 
         if (!placed && item instanceof ItemSign) {
-            placeSign(stack, turtle.getWorld(), turtlePosition.x, turtlePosition.y, turtlePosition.z, direction.getSide(), turtle.getDirection());
+            placeSign(stack, turtle.getWorld(), turtlePosition.x(), turtlePosition.y(), turtlePosition.z(), direction.side(), turtle.getDirection());
         }
 
         if (oldStackSize != stack.stackSize) {
@@ -100,15 +99,13 @@ public class TurtlePlaceCommand implements ITurtleCommand {
 
         // Set text on signs
         if (placed && item instanceof ItemSign) {
-            if (extraArguments != null && extraArguments.length >= 1 && extraArguments[0] instanceof String) {
+            if (extraArguments != null && extraArguments.length >= 1 && extraArguments[0] instanceof String s) {
                 World world = turtle.getWorld();
-                TileEntity tile = world.getTileEntity(position.x, position.y, position.z);
+                TileEntity tile = world.getTileEntity(position);
                 if (tile == null || tile == existingTile) {
-                    tile = world.getTileEntity(position.x, position.y, position.z);
+                    tile = world.getTileEntity(position);
                 }
-                if (tile instanceof TileEntitySign) {
-                    TileEntitySign signTile = (TileEntitySign) tile;
-                    String s = (String) extraArguments[0];
+                if (tile instanceof TileEntitySign signTile) {
                     String[] split = s.split("\n");
                     int firstLine = split.length <= 2 ? 1 : 0;
                     for (int i = 0; i < 4; i++) {
@@ -138,26 +135,27 @@ public class TurtlePlaceCommand implements ITurtleCommand {
     static private void placeSign(
         ItemStack itemstack, World world, int blockX, int blockY, int blockZ, Side side, Direction direction
     ) {
-        int sideHit = side.getOpposite().getId();
-        if (world.getBlockMaterial(blockX, blockY, blockZ).isSolid()) {
-            if (!world.canPlaceInsideBlock(blockX, blockY, blockZ)) {
-                blockX += side.getOffsetX();
-                blockY += side.getOffsetY();
-                blockZ += side.getOffsetZ();
+        int sideHit = side.opposite().id;
+        if (world.getBlockMaterial(new TilePos(blockX, blockY, blockZ)).isSolid()) {
+            if (!world.canPlaceInsideBlock(new TilePos(blockX, blockY, blockZ))) {
+                blockX += side.offsetX();
+                blockY += side.offsetY();
+                blockZ += side.offsetZ();
             }
 
-            if (!world.getBlockMaterial(
-                blockX + side.getOffsetX(),
-                blockY + side.getOffsetY(),
-                blockZ + side.getOffsetZ()
+            if (!world.getBlockMaterial(new TilePos(
+                    blockX + side.offsetX(),
+                    blockY + side.offsetY(),
+                    blockZ + side.offsetZ()
+                )
             ).isSolid()) {
-                sideHit = side.getId();
+                sideHit = side.id;
             }
 
             if (blockY < 0 || blockY >= world.getHeightBlocks()) {
-            } else if (!Blocks.SIGN_POST_PLANKS_OAK.canPlaceBlockAt(world, blockX, blockY, blockZ)) {
+            } else if (!Blocks.SIGN_POST_PLANKS_OAK.canPlaceAt(world, new TilePos(blockX, blockY, blockZ))) {
             } else {
-                if (sideHit == Side.TOP.getId() || sideHit == Side.BOTTOM.getId()) {
+                if (sideHit == Side.TOP.id || sideHit == Side.BOTTOM.id) {
                     world.playBlockSoundEffect(
                         null,
                         (float) blockX + 0.5F,
@@ -166,8 +164,8 @@ public class TurtlePlaceCommand implements ITurtleCommand {
                         Blocks.SIGN_POST_PLANKS_OAK,
                         EnumBlockSoundEffectType.PLACE
                     );
-                    world.setBlockAndMetadataWithNotify(
-                        blockX, blockY, blockZ, Blocks.SIGN_POST_PLANKS_OAK.id(), MathHelper.floor((double) ((DirectionUtil.getRotationYaw(direction) + 180.0F) * 16.0F / 360.0F) + 0.5) & 15
+                    world.setBlockTypeDataNotify(
+                        new TilePos(blockX, blockY, blockZ), Blocks.SIGN_POST_PLANKS_OAK, MathHelper.floor((double) ((DirectionUtil.getRotationYaw(direction) + 180.0F) * 16.0F / 360.0F) + 0.5) & 15
                     );
                 } else {
                     world.playBlockSoundEffect(
@@ -178,7 +176,7 @@ public class TurtlePlaceCommand implements ITurtleCommand {
                         Blocks.SIGN_WALL_PLANKS_OAK,
                         EnumBlockSoundEffectType.PLACE
                     );
-                    world.setBlockAndMetadataWithNotify(blockX, blockY, blockZ, Blocks.SIGN_WALL_PLANKS_OAK.id(), sideHit);
+                    world.setBlockTypeDataNotify(new TilePos(blockX, blockY, blockZ), Blocks.SIGN_WALL_PLANKS_OAK, sideHit);
                 }
 
                 itemstack.consumeItem(null);
@@ -187,9 +185,9 @@ public class TurtlePlaceCommand implements ITurtleCommand {
         }
     }
 
-    private static boolean canDeployOnBlock(ItemStack item, ITurtleAccess turtle, BlockPos position,
+    private static boolean canDeployOnBlock(ItemStack item, ITurtleAccess turtle, TilePosc position,
                                             Direction side, boolean allowReplaceable, String[] outErrorMessage) {
-        if (position.getY() < 0 || position.getY() >= World.HEIGHT_BLOCKS) {
+        if (position.y() < 0 || position.y() >= World.HEIGHT_BLOCKS) {
             return false;
         }
 
@@ -199,15 +197,14 @@ public class TurtlePlaceCommand implements ITurtleCommand {
             return false;
         }
 
-        if (world.isAirBlock(position.x, position.y, position.z)) {
+        if (world.isAirBlock(position)) {
             return true;
         }
 
         if (ComputerCraft.turtlesObeyBlockProtection) {
             // Check spawn protection
             boolean editable = allowReplaceable ? TurtlePermissions.isBlockEditable(world, position) : TurtlePermissions.isBlockEditable(world,
-                position.offset(
-                    side));
+                position.add(side, new TilePos()));
             if (!editable) {
                 if (outErrorMessage != null) {
                     outErrorMessage[0] = "Cannot place in protected area";
@@ -216,12 +213,12 @@ public class TurtlePlaceCommand implements ITurtleCommand {
             }
         }
 
-        return world.getBlockMaterial(position.x, position.y, position.z).isReplaceable();
+        return world.getBlockMaterial(position).isReplaceable();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+    public TurtleCommandResult execute(@NotNull ITurtleAccess turtle) {
         // Get thing to place
         ItemStack stack = turtle.getInventory()
             .getItem(turtle.getSelectedSlot());
@@ -231,8 +228,8 @@ public class TurtlePlaceCommand implements ITurtleCommand {
 
         // Remember old block
         Direction direction = this.direction.toWorldDir(turtle);
-        BlockPos coordinates = turtle.getPosition()
-            .offset(direction);
+        TilePosc coordinates = turtle.getPosition()
+            .add(direction, new TilePos());
 
         TurtleBlockEvent.Place place = new TurtleBlockEvent.Place(turtle, turtle.getWorld(), coordinates, stack);
         if (TurtleEvent.post(place)) {

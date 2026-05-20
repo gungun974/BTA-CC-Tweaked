@@ -7,8 +7,7 @@ package dan200.computercraft.api.lua;
 
 import dan200.computercraft.api.filesystem.IFileSystem;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An interface passed to {@link ILuaAPIFactory} in order to provide additional information about a computer.

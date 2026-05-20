@@ -6,8 +6,8 @@
 package dan200.computercraft.core.filesystem;
 
 import dan200.computercraft.api.filesystem.IFileSystem;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
@@ -23,7 +23,7 @@ public class FileSystemWrapperMount implements IFileSystem {
     }
 
     @Override
-    public void makeDirectory(@Nonnull String path) throws IOException {
+    public void makeDirectory(@NotNull String path) throws IOException {
         try {
             filesystem.makeDir(path);
         } catch (FileSystemException e) {
@@ -32,7 +32,7 @@ public class FileSystemWrapperMount implements IFileSystem {
     }
 
     @Override
-    public void delete(@Nonnull String path) throws IOException {
+    public void delete(@NotNull String path) throws IOException {
         try {
             filesystem.delete(path);
         } catch (FileSystemException e) {
@@ -40,9 +40,9 @@ public class FileSystemWrapperMount implements IFileSystem {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ReadableByteChannel openForRead(@Nonnull String path) throws IOException {
+    public ReadableByteChannel openForRead(@NotNull String path) throws IOException {
         try {
             // FIXME: Think of a better way of implementing this, so closing this will close on the computer.
             return filesystem.openForRead(path, Function.identity()).get();
@@ -51,9 +51,9 @@ public class FileSystemWrapperMount implements IFileSystem {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public WritableByteChannel openForWrite(@Nonnull String path) throws IOException {
+    public WritableByteChannel openForWrite(@NotNull String path) throws IOException {
         try {
             return filesystem.openForWrite(path, false, Function.identity()).get();
         } catch (FileSystemException e) {
@@ -61,9 +61,9 @@ public class FileSystemWrapperMount implements IFileSystem {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public WritableByteChannel openForAppend(@Nonnull String path) throws IOException {
+    public WritableByteChannel openForAppend(@NotNull String path) throws IOException {
         try {
             return filesystem.openForWrite(path, true, Function.identity()).get();
         } catch (FileSystemException e) {
@@ -81,7 +81,7 @@ public class FileSystemWrapperMount implements IFileSystem {
     }
 
     @Override
-    public boolean exists(@Nonnull String path) throws IOException {
+    public boolean exists(@NotNull String path) throws IOException {
         try {
             return filesystem.exists(path);
         } catch (FileSystemException e) {
@@ -90,7 +90,7 @@ public class FileSystemWrapperMount implements IFileSystem {
     }
 
     @Override
-    public boolean isDirectory(@Nonnull String path) throws IOException {
+    public boolean isDirectory(@NotNull String path) throws IOException {
         try {
             return filesystem.isDir(path);
         } catch (FileSystemException e) {
@@ -99,7 +99,7 @@ public class FileSystemWrapperMount implements IFileSystem {
     }
 
     @Override
-    public void list(@Nonnull String path, @Nonnull List<String> contents) throws IOException {
+    public void list(@NotNull String path, @NotNull List<String> contents) throws IOException {
         try {
             Collections.addAll(contents, filesystem.list(path));
         } catch (FileSystemException e) {
@@ -108,7 +108,7 @@ public class FileSystemWrapperMount implements IFileSystem {
     }
 
     @Override
-    public long getSize(@Nonnull String path) throws IOException {
+    public long getSize(@NotNull String path) throws IOException {
         try {
             return filesystem.getSize(path);
         } catch (FileSystemException e) {

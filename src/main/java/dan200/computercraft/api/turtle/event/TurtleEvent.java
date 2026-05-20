@@ -7,8 +7,8 @@ package dan200.computercraft.api.turtle.event;
 
 import com.google.common.eventbus.EventBus;
 import dan200.computercraft.api.turtle.ITurtleAccess;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -24,7 +24,7 @@ public abstract class TurtleEvent {
 
     private final ITurtleAccess turtle;
 
-    protected TurtleEvent(@Nonnull ITurtleAccess turtle) {
+    protected TurtleEvent(@NotNull ITurtleAccess turtle) {
         Objects.requireNonNull(turtle, "turtle cannot be null");
         this.turtle = turtle;
     }
@@ -39,7 +39,7 @@ public abstract class TurtleEvent {
      *
      * @return The access for this turtle.
      */
-    @Nonnull
+    @NotNull
     public ITurtleAccess getTurtle() {
         return turtle;
     }

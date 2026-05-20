@@ -12,8 +12,8 @@ import dan200.computercraft.api.network.wired.IWiredNetwork;
 import dan200.computercraft.api.network.wired.IWiredNode;
 import dan200.computercraft.api.network.wired.IWiredSender;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 
@@ -30,7 +30,7 @@ public final class WiredNode implements IWiredNode {
     }
 
     @Override
-    public synchronized void addReceiver(@Nonnull IPacketReceiver receiver) {
+    public synchronized void addReceiver(@NotNull IPacketReceiver receiver) {
         if (receivers == null) {
             receivers = new HashSet<>();
         }
@@ -38,7 +38,7 @@ public final class WiredNode implements IWiredNode {
     }
 
     @Override
-    public synchronized void removeReceiver(@Nonnull IPacketReceiver receiver) {
+    public synchronized void removeReceiver(@NotNull IPacketReceiver receiver) {
         if (receivers != null) {
             receivers.remove(receiver);
         }
@@ -50,9 +50,9 @@ public final class WiredNode implements IWiredNode {
     }
 
     @Override
-    public void transmitSameDimension(@Nonnull Packet packet, double range) {
+    public void transmitSameDimension(@NotNull Packet packet, double range) {
         Objects.requireNonNull(packet, "packet cannot be null");
-        if (!(packet.getSender() instanceof IWiredSender) || ((IWiredSender) packet.getSender()).getNode() != this) {
+        if (!(packet.sender() instanceof IWiredSender) || ((IWiredSender) packet.sender()).getNode() != this) {
             throw new IllegalArgumentException("Sender is not in the network");
         }
 
@@ -66,9 +66,9 @@ public final class WiredNode implements IWiredNode {
     }
 
     @Override
-    public void transmitInterdimensional(@Nonnull Packet packet) {
+    public void transmitInterdimensional(@NotNull Packet packet) {
         Objects.requireNonNull(packet, "packet cannot be null");
-        if (!(packet.getSender() instanceof IWiredSender) || ((IWiredSender) packet.getSender()).getNode() != this) {
+        if (!(packet.sender() instanceof IWiredSender) || ((IWiredSender) packet.sender()).getNode() != this) {
             throw new IllegalArgumentException("Sender is not in the network");
         }
 
@@ -106,7 +106,7 @@ public final class WiredNode implements IWiredNode {
                 if (interdimensional || receiver.isInterdimensional() || packetDistance < receiveRange) {
                     receiver.receiveSameDimension(packet,
                         packetDistance + element.getPosition()
-                            .distanceTo(receiver.getPosition()));
+                            .distance(receiver.getPosition()));
                 }
             } else {
                 if (interdimensional || receiver.isInterdimensional()) {
@@ -116,13 +116,13 @@ public final class WiredNode implements IWiredNode {
         }
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IWiredElement getElement() {
         return element;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IWiredNetwork getNetwork() {
         return network;

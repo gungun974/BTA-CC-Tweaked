@@ -12,16 +12,16 @@ import net.minecraft.core.data.registry.Registries;
 import net.minecraft.core.data.tag.Tag;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.collection.NamespaceID;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class BlockData {
-    @Nonnull
-    public static <T extends Map<? super String, Object>> T fill(@Nonnull T data, int id, int metadata, NamespaceID namespaceID) {
+    @NotNull
+    public static <T extends Map<? super String, Object>> T fill(@NotNull T data, int id, int metadata, NamespaceID namespaceID) {
         data.put("id", id);
         data.put("metadata", metadata);
         data.put("name", namespaceID.toString());
@@ -36,7 +36,7 @@ public class BlockData {
             }
         }
 
-        data.put( "tags", tagsTable );
+        data.put("tags", tagsTable);
 
         Map<Object, Object> groupsTable = new HashMap<>();
 
@@ -49,7 +49,7 @@ public class BlockData {
             }
         }
 
-        data.put( "groups", groupsTable );
+        data.put("groups", groupsTable);
 
         return data;
     }

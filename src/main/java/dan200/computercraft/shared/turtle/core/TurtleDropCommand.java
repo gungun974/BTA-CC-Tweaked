@@ -11,7 +11,6 @@ import dan200.computercraft.api.turtle.TurtleAnimation;
 import dan200.computercraft.api.turtle.TurtleCommandResult;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.api.turtle.event.TurtleInventoryEvent;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.ItemStorage;
 import dan200.computercraft.shared.util.WorldUtil;
@@ -19,8 +18,9 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
-
-import javax.annotation.Nonnull;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
 
 public class TurtleDropCommand implements ITurtleCommand {
     private final InteractDirection direction;
@@ -31,9 +31,9 @@ public class TurtleDropCommand implements ITurtleCommand {
         this.quantity = quantity;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+    public TurtleCommandResult execute(@NotNull ITurtleAccess turtle) {
         // Dropping nothing is easy
         if (quantity == 0) {
             turtle.playAnimation(TurtleAnimation.WAIT);
@@ -51,9 +51,9 @@ public class TurtleDropCommand implements ITurtleCommand {
 
         // Get inventory for thing in front
         World world = turtle.getWorld();
-        BlockPos oldPosition = turtle.getPosition();
-        BlockPos newPosition = oldPosition.offset(direction);
-        Direction side = direction.getOpposite();
+        TilePosc oldPosition = turtle.getPosition();
+        TilePosc newPosition = oldPosition.add(direction, new TilePos());
+        Direction side = direction.opposite();
 
         Container inventory = InventoryUtil.getInventory(world, newPosition, side);
 

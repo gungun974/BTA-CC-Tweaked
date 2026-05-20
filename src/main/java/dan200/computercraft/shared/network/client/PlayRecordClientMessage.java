@@ -5,49 +5,49 @@
  */
 package dan200.computercraft.shared.network.client;
 
-import dan200.computercraft.fabric.Helper;
-import dan200.computercraft.shared.util.BlockPos;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.lang.I18n;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
 import org.jetbrains.annotations.NotNull;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.NetworkMessage;
 import turniplabs.halplibe.helper.network.UniversalPacket;
 
-import javax.annotation.Nonnull;
-
 /**
- * Starts or stops a record on the client, depending on if {@link #soundEvent} is {@code null}.
+ * Starts or stops a record on the client, depending on if {@link #soundEntry} is {@code null}.
  * <p>
  * Used by disk drives to play record items.
  *
  * @see dan200.computercraft.shared.peripheral.diskdrive.TileDiskDrive
  */
 public class PlayRecordClientMessage implements NetworkMessage {
-    private BlockPos pos;
+    private TilePosc pos;
     private String name;
     private String soundEntry;
 
-    public PlayRecordClientMessage(BlockPos pos, String entry, String name) {
+    public PlayRecordClientMessage(TilePosc pos, String entry, String name) {
         this.pos = pos;
         this.name = name;
         this.soundEntry = entry;
     }
 
-    public PlayRecordClientMessage(BlockPos pos) {
+    public PlayRecordClientMessage(TilePosc pos) {
         this.pos = pos;
         name = null;
         soundEntry = null;
     }
 
-    public PlayRecordClientMessage() {}
+    public PlayRecordClientMessage() {
+    }
 
     @Override
-    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
-        buf.writeInt(pos.x);
-        buf.writeInt(pos.y);
-        buf.writeInt(pos.z);
+    public void encodeToUniversalPacket(@NotNull UniversalPacket buf) {
+        buf.writeInt(pos.x());
+        buf.writeInt(pos.y());
+        buf.writeInt(pos.z());
         if (soundEntry == null) {
             buf.writeBoolean(false);
         } else {
@@ -62,7 +62,7 @@ public class PlayRecordClientMessage implements NetworkMessage {
         final int x = buf.readInt();
         final int y = buf.readInt();
         final int z = buf.readInt();
-        pos = new BlockPos(x, y, z);
+        pos = new TilePos(x, y, z);
         if (buf.readBoolean()) {
             name = buf.readString();
             soundEntry = buf.readString();
@@ -74,7 +74,7 @@ public class PlayRecordClientMessage implements NetworkMessage {
 
     @Override
     public void handle(NetworkContext context) {
-        if (!Helper.isServerEnvironment()) {
+        if (!EnvironmentHelper.isServerEnvironment()) {
             clientHandler();
         }
     }
@@ -83,7 +83,7 @@ public class PlayRecordClientMessage implements NetworkMessage {
     private void clientHandler() {
         Minecraft mc = Minecraft.getMinecraft();
 
-        mc.sndManager.playMusic(soundEntry, pos.x, pos.y, pos.z, 1.0F, 1.0F);
+        mc.sndManager.playMusic(soundEntry, pos.x(), pos.y(), pos.z(), 1.0F, 1.0F);
 
         if (name != null) {
             mc.hudIngame.setRecordPlayingMessage(I18n.getInstance().translateKey(name));

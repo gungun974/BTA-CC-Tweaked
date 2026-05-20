@@ -13,8 +13,8 @@ import dan200.computercraft.shared.turtle.upgrades.TurtleInventoryCrafting;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.WorldUtil;
 import net.minecraft.core.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TurtleCraftCommand implements ITurtleCommand {
@@ -24,9 +24,9 @@ public class TurtleCraftCommand implements ITurtleCommand {
         this.limit = limit;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+    public TurtleCommandResult execute(@NotNull ITurtleAccess turtle) {
         // Craft the item
         TurtleInventoryCrafting crafting = new TurtleInventoryCrafting(turtle);
         List<ItemStack> results = crafting.doCrafting(turtle.getWorld(), limit);

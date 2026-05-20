@@ -6,12 +6,12 @@
 package dan200.computercraft.shared.computer.inventory;
 
 import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.computer.core.*;
 import net.minecraft.core.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 public class ContainerComputerBase implements IContainerComputer {
@@ -32,7 +32,7 @@ public class ContainerComputerBase implements IContainerComputer {
         this.family = family;
     }
 
-    @Nonnull
+    @NotNull
     public ComputerFamily getFamily() {
         return family;
     }
@@ -40,7 +40,7 @@ public class ContainerComputerBase implements IContainerComputer {
     @Nullable
     @Override
     public IComputer getComputer() {
-        if (Helper.isServerEnvironment() || Helper.isSinglePlayer()) {
+        if (EnvironmentHelper.isServerEnvironment() || EnvironmentHelper.isSinglePlayer()) {
             return ComputerCraft.serverComputerRegistry.get(instanceId);
         }
 
@@ -67,7 +67,7 @@ public class ContainerComputerBase implements IContainerComputer {
         return ComputerCraft.serverComputerRegistry.get(instanceId);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public InputState getInput() {
         return input;

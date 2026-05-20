@@ -8,33 +8,33 @@ package dan200.computercraft.shared.pocket.peripherals;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.shared.peripheral.modem.ModemState;
 import dan200.computercraft.shared.peripheral.modem.wireless.WirelessModemPeripheral;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 public class PocketModemPeripheral extends WirelessModemPeripheral {
     private World world = null;
-    private Vec3 position = Vec3.getPermanentVec3(0, 0, 0);
+    private Vector3dc position = new Vector3d(0, 0, 0);
 
     public PocketModemPeripheral(boolean advanced) {
         super(new ModemState(), advanced);
     }
 
-    void setLocation(World world, Vec3 position) {
+    void setLocation(World world, Vector3dc position) {
         this.position = position;
         this.world = world;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public World getWorld() {
         return world;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public Vec3 getPosition() {
+    public Vector3dc getPosition() {
         return position;
     }
 

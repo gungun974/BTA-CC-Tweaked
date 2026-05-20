@@ -19,12 +19,11 @@ import dan200.computercraft.api.peripheral.IPeripheralProvider;
 import dan200.computercraft.api.pocket.IPocketUpgrade;
 import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
-import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The static entry point to the ComputerCraft API.
@@ -34,18 +33,18 @@ import javax.annotation.Nullable;
 public final class ComputerCraftAPI {
     private static IComputerCraftAPI instance;
 
-    @Nonnull
+    @NotNull
     @Deprecated
     public static String getAPIVersion() {
         return getInstalledVersion();
     }
 
-    @Nonnull
+    @NotNull
     public static String getInstalledVersion() {
         return getInstance().getInstalledVersion();
     }
 
-    @Nonnull
+    @NotNull
     private static IComputerCraftAPI getInstance() {
         if (instance != null) {
             return instance;
@@ -72,7 +71,7 @@ public final class ComputerCraftAPI {
      * eg: if createUniqueNumberedSaveDir( world, "computer/disk" ) was called returns 42, then "computer/disk/42" is now available for writing.
      * @see #createSaveDirMount(World, String, long)
      */
-    public static int createUniqueNumberedSaveDir(@Nonnull World world, @Nonnull String parentSubPath) {
+    public static int createUniqueNumberedSaveDir(@NotNull World world, @NotNull String parentSubPath) {
         return getInstance().createUniqueNumberedSaveDir(world, parentSubPath);
     }
 
@@ -95,7 +94,7 @@ public final class ComputerCraftAPI {
      * @see IWritableMount
      */
     @Nullable
-    public static IWritableMount createSaveDirMount(@Nonnull World world, @Nonnull String subPath, long capacity) {
+    public static IWritableMount createSaveDirMount(@NotNull World world, @NotNull String subPath, long capacity) {
         return getInstance().createSaveDirMount(world, subPath, capacity);
     }
 
@@ -118,7 +117,7 @@ public final class ComputerCraftAPI {
      * @see IMount
      */
     @Nullable
-    public static IMount createResourceMount(@Nonnull String domain, @Nonnull String subPath) {
+    public static IMount createResourceMount(@NotNull String domain, @NotNull String subPath) {
         return getInstance().createResourceMount(domain, subPath);
     }
 
@@ -129,7 +128,7 @@ public final class ComputerCraftAPI {
      * @see IPeripheral
      * @see IPeripheralProvider
      */
-    public static void registerPeripheralProvider(@Nonnull IPeripheralProvider provider) {
+    public static void registerPeripheralProvider(@NotNull IPeripheralProvider provider) {
         getInstance().registerPeripheralProvider(provider);
     }
 
@@ -139,7 +138,7 @@ public final class ComputerCraftAPI {
      * @param source The method source to register.
      * @see GenericSource
      */
-    public static void registerGenericSource(@Nonnull GenericSource source) {
+    public static void registerGenericSource(@NotNull GenericSource source) {
         getInstance().registerGenericSource(source);
     }
 
@@ -150,7 +149,7 @@ public final class ComputerCraftAPI {
      * @param upgrade The turtle upgrade to register.
      * @see ITurtleUpgrade
      */
-    public static void registerTurtleUpgrade(@Nonnull ITurtleUpgrade upgrade) {
+    public static void registerTurtleUpgrade(@NotNull ITurtleUpgrade upgrade) {
         getInstance().registerTurtleUpgrade(upgrade);
     }
 
@@ -160,7 +159,7 @@ public final class ComputerCraftAPI {
      * @param provider The bundled redstone provider to register.
      * @see IBundledRedstoneProvider
      */
-    public static void registerBundledRedstoneProvider(@Nonnull IBundledRedstoneProvider provider) {
+    public static void registerBundledRedstoneProvider(@NotNull IBundledRedstoneProvider provider) {
         getInstance().registerBundledRedstoneProvider(provider);
     }
 
@@ -174,21 +173,21 @@ public final class ComputerCraftAPI {
      * capable of emitting bundled redstone at the location, -1 will be returned.
      * @see IBundledRedstoneProvider
      */
-    public static int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side) {
+    public static int getBundledRedstoneOutput(@NotNull World world, @NotNull TilePosc pos, @NotNull Direction side) {
         return getInstance().getBundledRedstoneOutput(world, pos, side);
     }
 
     /**
-     * Registers a media provider to provide {@link IMedia} implementations for Items.
+     * Registers a media provider to provide {@link dan200.computercraft.api.media.IMedia} implementations for Items.
      *
      * @param provider The media provider to register.
      * @see IMediaProvider
      */
-    public static void registerMediaProvider(@Nonnull IMediaProvider provider) {
+    public static void registerMediaProvider(@NotNull IMediaProvider provider) {
         getInstance().registerMediaProvider(provider);
     }
 
-    public static void registerPocketUpgrade(@Nonnull IPocketUpgrade upgrade) {
+    public static void registerPocketUpgrade(@NotNull IPocketUpgrade upgrade) {
         getInstance().registerPocketUpgrade(upgrade);
     }
 
@@ -201,7 +200,7 @@ public final class ComputerCraftAPI {
         return getInstance().getWirelessNetwork();
     }
 
-    public static void registerAPIFactory(@Nonnull ILuaAPIFactory factory) {
+    public static void registerAPIFactory(@NotNull ILuaAPIFactory factory) {
         getInstance().registerAPIFactory(factory);
     }
 
@@ -212,8 +211,8 @@ public final class ComputerCraftAPI {
      * @return The element's node
      * @see IWiredElement#getNode()
      */
-    @Nonnull
-    public static IWiredNode createWiredNodeForElement(@Nonnull IWiredElement element) {
+    @NotNull
+    public static IWiredNode createWiredNodeForElement(@NotNull IWiredElement element) {
         return getInstance().createWiredNodeForElement(element);
     }
 
@@ -227,45 +226,45 @@ public final class ComputerCraftAPI {
      * @see IWiredElement#getNode()
      */
     @Nullable
-    public static IWiredElement getWiredElementAt(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side) {
+    public static IWiredElement getWiredElementAt(@NotNull World world, @NotNull TilePosc pos, @NotNull Direction side) {
         return getInstance().getWiredElementAt(world, pos, side);
     }
 
     public interface IComputerCraftAPI {
-        @Nonnull
+        @NotNull
         String getInstalledVersion();
 
-        int createUniqueNumberedSaveDir(@Nonnull World world, @Nonnull String parentSubPath);
+        int createUniqueNumberedSaveDir(@NotNull World world, @NotNull String parentSubPath);
 
         @Nullable
-        IWritableMount createSaveDirMount(@Nonnull World world, @Nonnull String subPath, long capacity);
+        IWritableMount createSaveDirMount(@NotNull World world, @NotNull String subPath, long capacity);
 
         @Nullable
-        IMount createResourceMount(@Nonnull String domain, @Nonnull String subPath);
+        IMount createResourceMount(@NotNull String domain, @NotNull String subPath);
 
-        void registerPeripheralProvider(@Nonnull IPeripheralProvider provider);
+        void registerPeripheralProvider(@NotNull IPeripheralProvider provider);
 
-        void registerGenericSource(@Nonnull GenericSource source);
+        void registerGenericSource(@NotNull GenericSource source);
 
-        void registerTurtleUpgrade(@Nonnull ITurtleUpgrade upgrade);
+        void registerTurtleUpgrade(@NotNull ITurtleUpgrade upgrade);
 
-        void registerBundledRedstoneProvider(@Nonnull IBundledRedstoneProvider provider);
+        void registerBundledRedstoneProvider(@NotNull IBundledRedstoneProvider provider);
 
-        int getBundledRedstoneOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side);
+        int getBundledRedstoneOutput(@NotNull World world, @NotNull TilePosc pos, @NotNull Direction side);
 
-        void registerMediaProvider(@Nonnull IMediaProvider provider);
+        void registerMediaProvider(@NotNull IMediaProvider provider);
 
-        void registerPocketUpgrade(@Nonnull IPocketUpgrade upgrade);
+        void registerPocketUpgrade(@NotNull IPocketUpgrade upgrade);
 
-        @Nonnull
+        @NotNull
         IPacketNetwork getWirelessNetwork();
 
-        void registerAPIFactory(@Nonnull ILuaAPIFactory factory);
+        void registerAPIFactory(@NotNull ILuaAPIFactory factory);
 
-        @Nonnull
-        IWiredNode createWiredNodeForElement(@Nonnull IWiredElement element);
+        @NotNull
+        IWiredNode createWiredNodeForElement(@NotNull IWiredElement element);
 
         @Nullable
-        IWiredElement getWiredElementAt(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side);
+        IWiredElement getWiredElementAt(@NotNull World world, @NotNull TilePosc pos, @NotNull Direction side);
     }
 }

@@ -11,8 +11,7 @@ import dan200.computercraft.api.turtle.TurtleAnimation;
 import dan200.computercraft.api.turtle.TurtleCommandResult;
 import dan200.computercraft.shared.util.InventoryUtil;
 import net.minecraft.core.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class TurtleTransferToCommand implements ITurtleCommand {
     private final int slot;
@@ -23,9 +22,9 @@ public class TurtleTransferToCommand implements ITurtleCommand {
         quantity = limit;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+    public TurtleCommandResult execute(@NotNull ITurtleAccess turtle) {
         // Take stack
         ItemStack stack = InventoryUtil.takeItems(quantity, turtle.getItemHandler(), turtle.getSelectedSlot(), 1, turtle.getSelectedSlot());
         if (stack == null) {

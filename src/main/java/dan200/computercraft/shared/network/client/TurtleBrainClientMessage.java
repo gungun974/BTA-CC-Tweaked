@@ -1,16 +1,17 @@
 package dan200.computercraft.shared.network.client;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import dan200.computercraft.shared.turtle.core.TurtleBrain;
-import dan200.computercraft.shared.util.BlockPos;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
 import org.jetbrains.annotations.NotNull;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.NetworkMessage;
 import turniplabs.halplibe.helper.network.UniversalPacket;
 
@@ -23,10 +24,10 @@ public class TurtleBrainClientMessage implements NetworkMessage {
     public TurtleBrainClientMessage() {
     }
 
-    public TurtleBrainClientMessage(BlockPos pos, TurtleBrain brain) {
-        this.x = pos.x;
-        this.y = pos.y;
-        this.z = pos.z;
+    public TurtleBrainClientMessage(TilePosc pos, TurtleBrain brain) {
+        this.x = pos.x();
+        this.y = pos.y();
+        this.z = pos.z();
         brainData = new CompoundTag();
         brain.writeToNBT(brainData);
     }
@@ -51,7 +52,7 @@ public class TurtleBrainClientMessage implements NetworkMessage {
 
     @Override
     public void handle(NetworkContext context) {
-        if (!Helper.isServerEnvironment()) {
+        if (!EnvironmentHelper.isServerEnvironment()) {
             clientHandler(context);
         }
     }
@@ -64,10 +65,10 @@ public class TurtleBrainClientMessage implements NetworkMessage {
             return;
         }
 
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        TileEntity tileEntity = world.getTileEntity(new TilePos(x, y, z));
 
         if (!(tileEntity instanceof TileTurtle)) {
-           return;
+            return;
         }
 
         ((TileTurtle) tileEntity).updateBrainFromNBT(brainData);

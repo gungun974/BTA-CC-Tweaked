@@ -9,9 +9,8 @@ import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.IUpgradeBase;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import net.minecraft.core.world.World;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Additional peripherals for pocket computers.
@@ -30,7 +29,7 @@ public interface IPocketUpgrade extends IUpgradeBase {
      * @see #update(IPocketAccess, IPeripheral)
      */
     @Nullable
-    IPeripheral createPeripheral(@Nonnull IPocketAccess access);
+    IPeripheral createPeripheral(@NotNull IPocketAccess access);
 
     /**
      * Called when the pocket computer item stack updates.
@@ -39,7 +38,7 @@ public interface IPocketUpgrade extends IUpgradeBase {
      * @param peripheral The peripheral for this upgrade.
      * @see #createPeripheral(IPocketAccess)
      */
-    default void update(@Nonnull IPocketAccess access, @Nullable IPeripheral peripheral) {
+    default void update(@NotNull IPocketAccess access, @Nullable IPeripheral peripheral) {
     }
 
     /**
@@ -52,7 +51,7 @@ public interface IPocketUpgrade extends IUpgradeBase {
      * requiring the player to be sneaking - otherwise they will be unable to access the GUI.
      * @see #createPeripheral(IPocketAccess)
      */
-    default boolean onRightClick(@Nonnull World world, @Nonnull IPocketAccess access, @Nullable IPeripheral peripheral) {
+    default boolean onRightClick(@NotNull World world, @NotNull IPocketAccess access, @Nullable IPeripheral peripheral) {
         return false;
     }
 }

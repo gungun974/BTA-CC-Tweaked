@@ -5,10 +5,9 @@
  */
 package dan200.computercraft.api.network;
 
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3dc;
 
 /**
  * An object on a {@link IPacketNetwork}, capable of sending packets.
@@ -19,7 +18,7 @@ public interface IPacketSender {
      *
      * @return The sender's world.
      */
-    @Nonnull
+    @NotNull
     World getWorld();
 
     /**
@@ -27,8 +26,8 @@ public interface IPacketSender {
      *
      * @return The sender's position.
      */
-    @Nonnull
-    Vec3 getPosition();
+    @NotNull
+    Vector3dc getPosition();
 
     /**
      * Get some sort of identification string for this sender. This does not strictly need to be unique, but you should be able to extract some identifiable
@@ -36,6 +35,6 @@ public interface IPacketSender {
      *
      * @return This device's id.
      */
-    @Nonnull
+    @NotNull
     String getSenderID();
 }

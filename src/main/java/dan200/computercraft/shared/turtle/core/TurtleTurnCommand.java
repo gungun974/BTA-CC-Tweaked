@@ -13,8 +13,7 @@ import dan200.computercraft.api.turtle.event.TurtleAction;
 import dan200.computercraft.api.turtle.event.TurtleActionEvent;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.shared.util.DirectionUtil;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class TurtleTurnCommand implements ITurtleCommand {
     private final TurnDirection direction;
@@ -23,9 +22,9 @@ public class TurtleTurnCommand implements ITurtleCommand {
         this.direction = direction;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+    public TurtleCommandResult execute(@NotNull ITurtleAccess turtle) {
         TurtleActionEvent event = new TurtleActionEvent(turtle, TurtleAction.TURN);
         if (TurtleEvent.post(event)) {
             return TurtleCommandResult.failure(event.getFailureMessage());

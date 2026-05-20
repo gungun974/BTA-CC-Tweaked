@@ -7,9 +7,9 @@ package dan200.computercraft.api.turtle.event;
 
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import net.minecraft.core.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 /**
@@ -22,7 +22,7 @@ public class TurtleRefuelEvent extends TurtleActionEvent {
     private final ItemStack stack;
     private Handler handler;
 
-    public TurtleRefuelEvent(@Nonnull ITurtleAccess turtle, @Nonnull ItemStack stack) {
+    public TurtleRefuelEvent(@NotNull ITurtleAccess turtle, @NotNull ItemStack stack) {
         super(turtle, TurtleAction.REFUEL);
 
         Objects.requireNonNull(turtle, "turtle cannot be null");
@@ -77,6 +77,6 @@ public class TurtleRefuelEvent extends TurtleActionEvent {
          * @param limit  The maximum number of refuel operations to perform. This will often correspond to the number of items to consume.
          * @return The amount of fuel gained.
          */
-        int refuel(@Nonnull ITurtleAccess turtle, @Nonnull ItemStack stack, int slot, int limit);
+        int refuel(@NotNull ITurtleAccess turtle, @NotNull ItemStack stack, int slot, int limit);
     }
 }

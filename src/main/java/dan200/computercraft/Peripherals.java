@@ -7,15 +7,14 @@ package dan200.computercraft;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralProvider;
-import dan200.computercraft.api.peripheral.IPeripheralTile;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.peripheral.generic.GenericPeripheralProvider;
-import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -26,18 +25,18 @@ public final class Peripherals {
     private Peripherals() {
     }
 
-    public static synchronized void register(@Nonnull IPeripheralProvider provider) {
+    public static synchronized void register(@NotNull IPeripheralProvider provider) {
         Objects.requireNonNull(provider, "provider cannot be null");
         providers.add(provider);
     }
 
     @Nullable
-    public static IPeripheral getPeripheral(World world, BlockPos pos, Direction side) {
-        return pos.y < World.HEIGHT_BLOCKS && (Helper.isServerEnvironment() || Helper.isSinglePlayer()) ? getPeripheralAt(world, pos, side) : null;
+    public static IPeripheral getPeripheral(World world, TilePosc pos, Direction side) {
+        return pos.y() < World.HEIGHT_BLOCKS && (EnvironmentHelper.isServerEnvironment() || EnvironmentHelper.isSinglePlayer()) ? getPeripheralAt(world, pos, side) : null;
     }
 
     @Nullable
-    private static IPeripheral getPeripheralAt(World world, BlockPos pos, Direction side) {
+    private static IPeripheral getPeripheralAt(World world, TilePosc pos, Direction side) {
         // Try the handlers in order:
         for (IPeripheralProvider peripheralProvider : providers) {
             try {

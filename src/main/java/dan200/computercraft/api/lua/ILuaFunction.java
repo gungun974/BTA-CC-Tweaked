@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.api.lua;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A function, which can be called from Lua. If you need to return a table of functions, it is recommended to use an object with {@link LuaFunction}
@@ -23,6 +23,6 @@ public interface ILuaFunction {
      * @return The result of calling this function.
      * @throws LuaException Upon Lua errors.
      */
-    @Nonnull
-    MethodResult call(@Nonnull IArguments arguments) throws LuaException;
+    @NotNull
+    MethodResult call(@NotNull IArguments arguments) throws LuaException;
 }

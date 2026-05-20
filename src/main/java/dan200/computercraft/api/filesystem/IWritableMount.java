@@ -8,8 +8,8 @@ package dan200.computercraft.api.filesystem;
 import dan200.computercraft.api.ComputerCraftAPI;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import net.minecraft.core.world.World;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.channels.WritableByteChannel;
@@ -34,7 +34,7 @@ public interface IWritableMount extends IMount {
      * @param path A file path in normalised format, relative to the mount location. ie: "programs/mynewprograms".
      * @throws IOException If the directory already exists or could not be created.
      */
-    void makeDirectory(@Nonnull String path) throws IOException;
+    void makeDirectory(@NotNull String path) throws IOException;
 
     /**
      * Deletes a directory at a given path inside the virtual file system.
@@ -42,7 +42,7 @@ public interface IWritableMount extends IMount {
      * @param path A file path in normalised format, relative to the mount location. ie: "programs/myoldprograms".
      * @throws IOException If the file does not exist or could not be deleted.
      */
-    void delete(@Nonnull String path) throws IOException;
+    void delete(@NotNull String path) throws IOException;
 
     /**
      * Opens a file with a given path, and returns an {@link OutputStream} for writing to it.
@@ -52,8 +52,8 @@ public interface IWritableMount extends IMount {
      * positions when using binary mode.
      * @throws IOException If the file could not be opened for writing.
      */
-    @Nonnull
-    WritableByteChannel openForWrite(@Nonnull String path) throws IOException;
+    @NotNull
+    WritableByteChannel openForWrite(@NotNull String path) throws IOException;
 
     /**
      * Opens a file with a given path, and returns an {@link OutputStream} for appending to it.
@@ -63,8 +63,8 @@ public interface IWritableMount extends IMount {
      * positions when using binary mode.
      * @throws IOException If the file could not be opened for writing.
      */
-    @Nonnull
-    WritableByteChannel openForAppend(@Nonnull String path) throws IOException;
+    @NotNull
+    WritableByteChannel openForAppend(@NotNull String path) throws IOException;
 
     /**
      * Get the amount of free space on the mount, in bytes. You should decrease this value as the user writes to the mount, and write operations should fail
@@ -80,7 +80,7 @@ public interface IWritableMount extends IMount {
      *
      * @return The capacity of this mount, in bytes.
      */
-    @Nonnull
+    @NotNull
     default OptionalLong getCapacity() {
         return OptionalLong.empty();
     }

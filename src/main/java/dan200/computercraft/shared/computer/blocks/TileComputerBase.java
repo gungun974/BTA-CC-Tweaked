@@ -11,7 +11,6 @@ import dan200.computercraft.Peripherals;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.core.computer.ComputerSide;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.IComputerPlayer;
 import dan200.computercraft.shared.BundledRedstone;
 import dan200.computercraft.shared.common.TileGeneric;
@@ -19,12 +18,12 @@ import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.core.ComputerState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.computer.inventory.ContainerComputer;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.DirectionUtil;
 import dan200.computercraft.shared.util.PortableTickScheduler;
 import dan200.computercraft.shared.util.RedstoneUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.block.Block;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
@@ -32,9 +31,11 @@ import net.minecraft.core.item.Items;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
 import turniplabs.halplibe.helper.EnvironmentHelper;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public abstract class TileComputerBase extends TileGeneric implements IComputerTile, IPeripheralTile {
@@ -62,7 +63,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             if (worldObj == null) {
                 return;
             }
-            RedstoneUtil.propagateRedstoneOutput(worldObj, new BlockPos(x, y, z), dir);
+            RedstoneUtil.propagateRedstoneOutput(worldObj, tilePos, dir);
         }
     }
 
@@ -73,18 +74,18 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     protected void unload() {
         if (instanceID >= 0) {
-            if (!Helper.isServerEnvironment() && !Helper.isSinglePlayer()) {
+            if (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer()) {
                 ComputerCraft.serverComputerRegistry.remove(instanceID);
             }
             instanceID = -1;
         }
     }
 
-    public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
+    public boolean onInteracted(Player player, Side side, double xPlaced, double yPlaced) {
         ItemStack currentItem = player.getHeldItem();
         if (currentItem != null && currentItem.getItem().equals(Items.LABEL) && canNameWithTag(player) && currentItem.hasCustomName()) {
             // Label to rename computer
-            if (!Helper.isClientWorld()) {
+            if (!EnvironmentHelper.isClientWorld()) {
                 setLabel(currentItem.getCustomName());
                 currentItem.consumeItem(player);
             }
@@ -109,7 +110,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
 
     public ServerComputer createServerComputer() {
-        if (!Helper.isServerEnvironment() && !Helper.isSinglePlayer()) {
+        if (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer()) {
             return null;
         }
 
@@ -132,13 +133,13 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     public ServerComputer getServerComputer() {
-        return (!Helper.isServerEnvironment() && !Helper.isSinglePlayer()) ? null : ComputerCraft.serverComputerRegistry.get(instanceID);
+        return (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer()) ? null : ComputerCraft.serverComputerRegistry.get(instanceID);
     }
 
     protected abstract ServerComputer createComputer(int instanceID, int id);
 
     public void updateRedstoneInput() {
-        if (worldObj == null || (!Helper.isServerEnvironment() && !Helper.isSinglePlayer())) {
+        if (worldObj == null || (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer())) {
             return;
         }
 
@@ -148,14 +149,14 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             return;
         }
 
-        BlockPos pos = computer.getPosition();
+        TilePosc pos = computer.getPosition();
         for (Direction dir : DirectionUtil.FACINGS) {
-            updateRedstoneSideInput(computer, dir, pos.offset(dir));
+            updateRedstoneSideInput(computer, dir, pos.add(dir, new TilePos()));
         }
     }
 
     public void updatePeripheral() {
-        if (worldObj == null || (!Helper.isServerEnvironment() && !Helper.isSinglePlayer())) {
+        if (worldObj == null || (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer())) {
             return;
         }
 
@@ -165,22 +166,22 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             return;
         }
 
-        BlockPos pos = computer.getPosition();
+        TilePosc pos = computer.getPosition();
         for (Direction dir : DirectionUtil.FACINGS) {
-            updatePeripheralSide(computer, dir, pos.offset(dir));
+            updatePeripheralSide(computer, dir, pos.add(dir, new TilePos()));
         }
     }
 
-    private void updateRedstoneSideInput(ServerComputer computer, Direction dir, BlockPos offset) {
-        Direction offsetSide = dir.getOpposite();
+    private void updateRedstoneSideInput(ServerComputer computer, Direction dir, TilePosc offset) {
+        Direction offsetSide = dir.opposite();
         ComputerSide localDir = remapToLocalSide(dir);
 
         computer.setRedstoneInput(localDir, getRedstoneInput(offset, dir));
         computer.setBundledRedstoneInput(localDir, BundledRedstone.getOutput(worldObj, offset, offsetSide));
     }
 
-    private void updatePeripheralSide(ServerComputer computer, Direction dir, BlockPos offset) {
-        Direction offsetSide = dir.getOpposite();
+    private void updatePeripheralSide(ServerComputer computer, Direction dir, TilePosc offset) {
+        Direction offsetSide = dir.opposite();
         ComputerSide localDir = remapToLocalSide(dir);
 
         if (!isPeripheralBlockedOnSide(localDir)) {
@@ -189,7 +190,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         }
     }
 
-    protected ComputerSide remapToLocalSide(Direction globalSide) {
+    public ComputerSide remapToLocalSide(Direction globalSide) {
         return remapLocalSide(DirectionUtil.toLocal(getDirection(), globalSide));
     }
 
@@ -200,8 +201,8 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
      * @param side  The side we are reading from
      * @return The effective redstone power
      */
-    private int getRedstoneInput(BlockPos pos, Direction direction) {
-        return worldObj.getSignal(pos.x, pos.y, pos.z, direction.getSide()) ? 15 : 0;
+    private int getRedstoneInput(TilePosc pos, Direction direction) {
+        return worldObj.hasSignal(pos, direction.side()) ? 15 : 0;
     }
 
     protected boolean isPeripheralBlockedOnSide(ComputerSide localSide) {
@@ -214,19 +215,19 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     protected abstract Direction getDirection();
 
-    public void onNeighbourChange(@Nonnull BlockPos neighbour) {
+    public void onNeighbourChange(@NotNull TilePosc neighbour) {
         updateRedstoneInput(neighbour);
-        if (Helper.isServerEnvironment() || Helper.isSinglePlayer()) {
+        if (EnvironmentHelper.isServerEnvironment() || EnvironmentHelper.isSinglePlayer()) {
             portableTickScheduler.scheduleOnNextStartTick(() -> updatePeripheral(neighbour));
         }
     }
 
-    public void readDescription(@Nonnull CompoundTag nbt) {
+    public void readDescription(@NotNull CompoundTag nbt) {
         label = nbt.containsKey(NBT_LABEL) ? nbt.getString(NBT_LABEL) : null;
         computerID = nbt.containsKey(NBT_ID) ? nbt.getInteger(NBT_ID) : -1;
     }
 
-    public void writeDescription(@Nonnull CompoundTag nbt) {
+    public void writeDescription(@NotNull CompoundTag nbt) {
         if (label != null) {
             nbt.putString(NBT_LABEL, label);
         }
@@ -238,7 +239,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     @Override
     public void tick() {
         portableTickScheduler.tickAtStart();
-        if (Helper.isServerEnvironment() || Helper.isSinglePlayer()) {
+        if (EnvironmentHelper.isServerEnvironment() || EnvironmentHelper.isSinglePlayer()) {
             ServerComputer computer = createServerComputer();
             if (computer == null) {
                 portableTickScheduler.tickAtEnd();
@@ -277,7 +278,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     public void heldTick(World world, Entity holder) {
-        if (Helper.isServerEnvironment() || Helper.isSinglePlayer()) {
+        if (EnvironmentHelper.isServerEnvironment() || EnvironmentHelper.isSinglePlayer()) {
             ServerComputer computer = createServerComputer();
             if (computer == null) {
                 return;
@@ -294,53 +295,56 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         // Update redstone
         updateBlock();
 
-            for (Direction dir : DirectionUtil.FACINGS) {
-                if (Helper.isServerEnvironment() || Helper.isSinglePlayer()) {
-                    ServerComputer computer = getServerComputer();
-                    if (computer == null) {
-                        continue;
-                    }
-
-                    int signal = computer.getRedstoneOutput(remapToLocalSide(dir));
-
-                    if (signal == previousOutput[remapToLocalSide(dir).ordinal()]) {
-                        continue;
-                    }
-
-                    previousOutput[remapToLocalSide(dir).ordinal()] = signal;
+        for (Direction dir : DirectionUtil.FACINGS) {
+            if (EnvironmentHelper.isServerEnvironment() || EnvironmentHelper.isSinglePlayer()) {
+                ServerComputer computer = getServerComputer();
+                if (computer == null) {
+                    continue;
                 }
 
-                if (worldObj == null) {
-                    return;
+                int signal = computer.getRedstoneOutput(remapToLocalSide(dir));
+
+                if (signal == previousOutput[remapToLocalSide(dir).ordinal()]) {
+                    continue;
                 }
-                BlockLogicComputer.ENABLE_REDSTONE = true;
-                RedstoneUtil.propagateRedstoneOutput(worldObj, new BlockPos(x, y, z), dir);
-                BlockLogicComputer.ENABLE_REDSTONE = false;
+
+                previousOutput[remapToLocalSide(dir).ordinal()] = signal;
             }
+
+            if (worldObj == null) {
+                return;
+            }
+
+            BlockLogicComputer.ENABLE_DOOR_PROTECTION[dir.side().opposite().ordinal()] = false;
+
+            RedstoneUtil.propagateRedstoneOutput(worldObj, tilePos, dir);
+
+            BlockLogicComputer.ENABLE_DOOR_PROTECTION[dir.side().opposite().ordinal()] = true;
+        }
     }
 
     public void updateBlock() {
         if (worldObj == null) {
             return;
         }
-        int blockId = worldObj.getBlockId(this.x, this.y, this.z);
 
-        worldObj.notifyBlockChange(this.x, this.y, this.z, blockId);
+        Block<?> block = worldObj.getBlockType(tilePos);
 
-        if (Helper.isServerEnvironment()) {
+        worldObj.notifyBlockChange(tilePos, block);
+
+        if (EnvironmentHelper.isServerEnvironment()) {
             updateBlockServer();
         }
     }
 
     @Environment(EnvType.SERVER)
-    protected void updateBlockServer() {}
+    protected void updateBlockServer() {
+    }
 
     protected abstract void updateBlockState(ComputerState newState);
 
     @Override
-    public void readFromNBT(CompoundTag nbt) {
-        super.readFromNBT(nbt);
-
+    public void readAdditionalData(CompoundTag nbt) {
         // Load ID, label and power state
         computerID = nbt.containsKey(NBT_ID) ? nbt.getInteger(NBT_ID) : -1;
         label = nbt.containsKey(NBT_LABEL) ? nbt.getString(NBT_LABEL) : null;
@@ -349,7 +353,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     @Override
-    public void writeToNBT(CompoundTag nbt) {
+    public void writeAdditionalData(CompoundTag nbt) {
         // Save ID, label and power state
         if (computerID >= 0) {
             nbt.putInt(NBT_ID, computerID);
@@ -359,12 +363,10 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         }
         nbt.putBoolean(NBT_ON, on);
         nbt.putInt(NBT_FAMILY, family.ordinal());
-
-        super.writeToNBT(nbt);
     }
 
-    private void updateRedstoneInput(BlockPos neighbour) {
-        if (worldObj == null || (!Helper.isServerEnvironment() && !Helper.isSinglePlayer())) {
+    private void updateRedstoneInput(TilePosc neighbour) {
+        if (worldObj == null || (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer())) {
             return;
         }
 
@@ -374,7 +376,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         }
 
         for (Direction dir : DirectionUtil.FACINGS) {
-            BlockPos offset = new BlockPos(x, y, z).offset(dir);
+            TilePosc offset = tilePos.add(dir, new TilePos());
             if (offset.equals(neighbour)) {
                 updateRedstoneSideInput(computer, dir, offset);
                 return;
@@ -385,8 +387,8 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         updateRedstoneInput();
     }
 
-    private void updatePeripheral(BlockPos neighbour) {
-        if (worldObj == null || (!Helper.isServerEnvironment() && !Helper.isSinglePlayer())) {
+    private void updatePeripheral(TilePosc neighbour) {
+        if (worldObj == null || (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer())) {
             return;
         }
 
@@ -396,7 +398,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         }
 
         for (Direction dir : DirectionUtil.FACINGS) {
-            BlockPos offset = new BlockPos(x, y, z).offset(dir);
+            TilePosc offset = tilePos.add(dir, new TilePos());
             if (offset.equals(neighbour)) {
                 updatePeripheralSide(computer, dir, offset);
                 return;
@@ -408,7 +410,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     private void updateRedstoneInput(Direction dir) {
-        if (worldObj == null || (!Helper.isServerEnvironment() && !Helper.isSinglePlayer())) {
+        if (worldObj == null || (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer())) {
             return;
         }
 
@@ -417,7 +419,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             return;
         }
 
-        updateRedstoneSideInput(computer, dir, new BlockPos(x, y, z).offset(dir));
+        updateRedstoneSideInput(computer, dir, tilePos.add(dir, new TilePos()));
     }
 
     @Override
@@ -427,7 +429,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     @Override
     public final void setComputerID(int id) {
-        if ((!Helper.isSinglePlayer() && !Helper.isServerEnvironment()) || computerID == id) {
+        if ((!EnvironmentHelper.isSinglePlayer() && !EnvironmentHelper.isServerEnvironment()) || computerID == id) {
             return;
         }
 
@@ -440,7 +442,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         if (worldObj == null) {
             return;
         }
-        worldObj.notifyBlockChange(x, y, z, getBlockId());
+        worldObj.notifyBlockChange(tilePos, getBlock());
     }
 
     @Override
@@ -452,7 +454,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     @Override
     public final void setLabel(String label) {
-        if ((!Helper.isSinglePlayer() && !Helper.isServerEnvironment()) || Objects.equals(this.label, label)) {
+        if ((!EnvironmentHelper.isSinglePlayer() && !EnvironmentHelper.isServerEnvironment()) || Objects.equals(this.label, label)) {
             return;
         }
 
@@ -466,7 +468,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
             return;
         }
 
-        worldObj.notifyBlockChange(x, y, z, getBlockId());
+        worldObj.notifyBlockChange(tilePos, getBlock());
     }
 
     @Override
@@ -474,7 +476,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         return family;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IPeripheral getPeripheral(Direction side) {
         return new ComputerPeripheral("computer", createProxy());

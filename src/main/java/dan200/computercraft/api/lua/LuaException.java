@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.api.lua;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An exception representing an error in Lua, like that raised by the {@code error()} function.

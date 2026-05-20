@@ -13,10 +13,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.TextureManager;
 import net.minecraft.client.render.tessellator.Tessellator;
+import net.minecraft.client.render.tessellator.TessellatorGeneral;
 import net.minecraft.core.util.helper.Direction;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The primary interface for defining an update for Turtles. A turtle update can either be a new tool, or a new peripheral.
@@ -30,7 +30,7 @@ public interface ITurtleUpgrade extends IUpgradeBase {
      * @return The type of upgrade this is.
      * @see TurtleUpgradeType for the differences between them.
      */
-    @Nonnull
+    @NotNull
     TurtleUpgradeType getType();
 
     /**
@@ -44,7 +44,7 @@ public interface ITurtleUpgrade extends IUpgradeBase {
      * @return The newly created peripheral. You may return {@code null} if this upgrade is a Tool and this method is not expected to be called.
      */
     @Nullable
-    default IPeripheral createPeripheral(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side) {
+    default IPeripheral createPeripheral(@NotNull ITurtleAccess turtle, @NotNull TurtleSide side) {
         return null;
     }
 
@@ -60,8 +60,8 @@ public interface ITurtleUpgrade extends IUpgradeBase {
      * return true. If true is returned, the tool will perform a swinging animation. You may return {@code null} if this turtle is a Peripheral  and
      * this method is not expected to be called.
      */
-    @Nonnull
-    default TurtleCommandResult useTool(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction direction) {
+    @NotNull
+    default TurtleCommandResult useTool(@NotNull ITurtleAccess turtle, @NotNull TurtleSide side, @NotNull TurtleVerb verb, @NotNull Direction direction) {
         return TurtleCommandResult.failure();
     }
 
@@ -69,13 +69,13 @@ public interface ITurtleUpgrade extends IUpgradeBase {
      * Called to draw the turtle tile upgrade
      */
     @Environment(EnvType.CLIENT)
-    void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @Nonnull TurtleSide side, float partialTick);
+    void drawTileUpgrade(Tessellator tessellator, TextureManager textureManager, TileTurtle tileEntity, float angle, @NotNull TurtleSide side, float partialTick);
 
     /**
      * Called to draw the turtle item upgrade
      */
     @Environment(EnvType.CLIENT)
-    void drawItemUpgrade(Tessellator tessellator, TextureManager textureManager, @Nonnull TurtleSide side);
+    void drawItemUpgrade(TessellatorGeneral tessellator, byte lightIndex, @NotNull TurtleSide side);
 
     /**
      * Called once per tick for each turtle which has the upgrade equipped.
@@ -83,6 +83,6 @@ public interface ITurtleUpgrade extends IUpgradeBase {
      * @param turtle Access to the turtle that the upgrade resides on.
      * @param side   Which side of the turtle (left or right) the upgrade resides on.
      */
-    default void update(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side) {
+    default void update(@NotNull ITurtleAccess turtle, @NotNull TurtleSide side) {
     }
 }

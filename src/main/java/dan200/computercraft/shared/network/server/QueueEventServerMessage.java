@@ -9,10 +9,9 @@ import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.shared.computer.core.IContainerComputer;
 import dan200.computercraft.shared.computer.core.ServerComputer;
 import dan200.computercraft.shared.util.NBTUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import turniplabs.halplibe.helper.network.UniversalPacket;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Queue an event on a {@link ServerComputer}.
@@ -24,7 +23,7 @@ public class QueueEventServerMessage extends ComputerServerMessage {
     private String event;
     private Object[] args;
 
-    public QueueEventServerMessage(int instanceId, @Nonnull String event, @Nullable Object[] args) {
+    public QueueEventServerMessage(int instanceId, @NotNull String event, @Nullable Object[] args) {
         super(instanceId);
         this.event = event;
         this.args = args;
@@ -34,7 +33,7 @@ public class QueueEventServerMessage extends ComputerServerMessage {
     }
 
     @Override
-    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void encodeToUniversalPacket(@NotNull UniversalPacket buf) {
         super.encodeToUniversalPacket(buf);
         buf.writeString(event);
         buf.writeBoolean(args != null);
@@ -44,7 +43,7 @@ public class QueueEventServerMessage extends ComputerServerMessage {
     }
 
     @Override
-    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void decodeFromUniversalPacket(@NotNull UniversalPacket buf) {
         super.decodeFromUniversalPacket(buf);
         event = buf.readString();
         boolean hasArgs = buf.readBoolean();
@@ -56,7 +55,7 @@ public class QueueEventServerMessage extends ComputerServerMessage {
     }
 
     @Override
-    protected void handle(@Nonnull ServerComputer computer, @Nonnull IContainerComputer container) {
+    protected void handle(@NotNull ServerComputer computer, @NotNull IContainerComputer container) {
         computer.queueEvent(event, args);
     }
 }

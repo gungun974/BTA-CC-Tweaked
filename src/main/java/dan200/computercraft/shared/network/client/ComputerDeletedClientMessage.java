@@ -6,9 +6,9 @@
 package dan200.computercraft.shared.network.client;
 
 import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.fabric.Helper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
 public class ComputerDeletedClientMessage extends ComputerClientMessage {
     public ComputerDeletedClientMessage(int instanceId) {
@@ -20,7 +20,7 @@ public class ComputerDeletedClientMessage extends ComputerClientMessage {
 
     @Override
     public void handle(NetworkContext context) {
-        if (!Helper.isServerEnvironment()) {
+        if (!EnvironmentHelper.isServerEnvironment()) {
             clientHandler();
         }
     }

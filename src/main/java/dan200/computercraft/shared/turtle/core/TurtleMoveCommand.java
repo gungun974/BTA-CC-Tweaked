@@ -13,14 +13,16 @@ import dan200.computercraft.api.turtle.TurtleCommandResult;
 import dan200.computercraft.api.turtle.event.TurtleBlockEvent;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
 import dan200.computercraft.shared.TurtlePermissions;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.WorldUtil;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.util.phys.AABB;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.ChunkPos;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.joml.primitives.AABBd;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class TurtleMoveCommand implements ITurtleCommand {
@@ -30,31 +32,31 @@ public class TurtleMoveCommand implements ITurtleCommand {
         this.direction = direction;
     }
 
-    private static TurtleCommandResult canEnter(World world, BlockPos position) {
-        if (position.getY() < 0 || position.getY() >= World.HEIGHT_BLOCKS) {
-            return TurtleCommandResult.failure(position.getY() < 0 ? "Too low to move" : "Too high to move");
+    private static TurtleCommandResult canEnter(World world, TilePosc position) {
+        if (position.y() < 0 || position.y() >= World.HEIGHT_BLOCKS) {
+            return TurtleCommandResult.failure(position.y() < 0 ? "Too low to move" : "Too high to move");
         }
         // Check spawn protection
         if (ComputerCraft.turtlesObeyBlockProtection && !TurtlePermissions.isBlockEnterable(world, position)) {
             return TurtleCommandResult.failure("Cannot enter protected area");
         }
 
-        if (!world.isChunkLoaded(Math.floorDiv(position.x, 16), Math.floorDiv(position.z, 16))) {
+        if (!world.isChunkLoaded(new ChunkPos(Math.floorDiv(position.x(), 16), Math.floorDiv(position.z(), 16)))) {
             return TurtleCommandResult.failure("Cannot leave loaded world");
         }
         return TurtleCommandResult.success();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+    public TurtleCommandResult execute(@NotNull ITurtleAccess turtle) {
         // Get world direction from direction
         Direction direction = this.direction.toWorldDir(turtle);
 
         // Check if we can move
         World oldWorld = turtle.getWorld();
-        BlockPos oldPosition = turtle.getPosition();
-        BlockPos newPosition = oldPosition.offset(direction);
+        TilePosc oldPosition = turtle.getPosition();
+        TilePosc newPosition = oldPosition.add(direction, new TilePos());
 
 //        TurtlePlayer turtlePlayer = TurtlePlaceCommand.createPlayer( turtle, oldPosition, direction );
         TurtleCommandResult canEnterResult = canEnter(oldWorld, newPosition);
@@ -63,14 +65,14 @@ public class TurtleMoveCommand implements ITurtleCommand {
         }
 
         // Check existing block is air or replaceable
-        if (!oldWorld.isAirBlock(newPosition.x, newPosition.y, newPosition.z) && !WorldUtil.isLiquidBlock(oldWorld, newPosition) && !oldWorld.getBlockMaterial(newPosition.x, newPosition.y, newPosition.z)
+        if (!oldWorld.isAirBlock(newPosition) && !WorldUtil.isLiquidBlock(oldWorld, newPosition) && !oldWorld.getBlockMaterial(newPosition)
             .isReplaceable()) {
             return TurtleCommandResult.failure("Movement obstructed");
         }
 
         // Check there isn't anything in the way
 
-        AABB collision = AABB.getPermanentBB(newPosition.getX(), newPosition.getY(), newPosition.getZ(), newPosition.getX() + 1.0, newPosition.getY() + 1.0, newPosition.getZ() + 1.0);
+        AABBd collision = new AABBd(newPosition.x(), newPosition.y(), newPosition.z(), newPosition.x() + 1.0, newPosition.y() + 1.0, newPosition.z() + 1.0);
 
         if (!oldWorld.getEntitiesWithinAABB(Entity.class, collision).isEmpty()) {
             if (!ComputerCraft.turtlesCanPush || this.direction == MoveDirection.UP || this.direction == MoveDirection.DOWN) {
@@ -83,9 +85,19 @@ public class TurtleMoveCommand implements ITurtleCommand {
                 if (!entity.isAlive()) {
                     continue;
                 }
-                AABB pushedBB = entity.bb.copy()
-                    .move(-direction.getOffsetX() / 2.0, -direction.getOffsetY() / 2.0, -direction.getOffsetZ() / 2.0)
-                    .expand(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ());
+                double dx = Math.abs(direction.offsetX()) * 0.5;
+                double dy = Math.abs(direction.offsetY()) * 0.5;
+                double dz = Math.abs(direction.offsetZ()) * 0.5;
+
+                AABBd pushedBB = new AABBd(
+                    entity.bb.minX() - dx,
+                    entity.bb.minY() - dy,
+                    entity.bb.minZ() - dz,
+                    entity.bb.maxX() + dx,
+                    entity.bb.maxY() + dy,
+                    entity.bb.maxZ() + dz
+                );
+
                 if (!oldWorld.getEntitiesWithinAABB(Entity.class, pushedBB).isEmpty()) {
                     return TurtleCommandResult.failure("Movement obstructed");
                 }

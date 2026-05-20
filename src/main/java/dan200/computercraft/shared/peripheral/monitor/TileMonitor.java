@@ -11,11 +11,9 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.core.terminal.Terminal;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.common.ServerTerminal;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.network.client.TerminalState;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.DirectionUtil;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
@@ -25,15 +23,20 @@ import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.util.phys.HitResult;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.ChunkPos;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3i;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
-import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
 public class TileMonitor extends TileGeneric implements IPeripheralTile {
-    public static final double RENDER_BORDER = 2.0 / 16.0;
-    public static final double RENDER_MARGIN = 0.5 / 16.0;
-    public static final double RENDER_PIXEL_SCALE = 1.0 / 64.0;
+    public static final float RENDER_BORDER = 2.0f / 16.0f;
+    public static final float RENDER_MARGIN = 0.5f / 16.0f;
+    public static final float RENDER_PIXEL_SCALE = 1.0f / 64.0f;
 
     private static final String NBT_X = "XIndex";
     private static final String NBT_Y = "YIndex";
@@ -67,7 +70,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             return 0;
         }
 
-        return this.carriedBlock != null ? this.carriedBlock.metadata : this.worldObj.getBlockMetadata(this.x, this.y, this.z);
+        return this.carriedBlock != null ? this.carriedBlock.metadata : this.worldObj.getBlockData(this.tilePos);
     }
 
     @Override
@@ -84,7 +87,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             return;
         }
         destroyed = true;
-        if (!Helper.isClientWorld()) {
+        if (!EnvironmentHelper.isClientWorld()) {
             contractNeighbours();
         }
     }
@@ -98,12 +101,12 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
         clientMonitor = null;
     }
 
-    public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
-        if (!player.isSneaking() && getFront() == side.getDirection()) {
-            if (!Helper.isClientWorld()) {
-                HitResult hit = player.rayTrace(player.distanceTo(x, y, z), 0, false, false);
+    public boolean onInteracted(Player player, Side side, double xPlaced, double yPlaced) {
+        if (!player.isSneaking() && getFront() == side.direction()) {
+            if (!EnvironmentHelper.isClientWorld()) {
+                HitResult hit = player.rayCast(player.distanceTo(tilePos.x, tilePos.y, tilePos.z), 0, false, false, true);
                 if (hit != null) {
-                    monitorTouched((float) (hit.location.x - hit.x), (float) (hit.location.y - hit.y), (float) (hit.location.z - hit.z));
+                    monitorTouched((float) (hit.location.x() - tilePos.x), (float) (hit.location.y() - tilePos.y), (float) (hit.location.z() - tilePos.z));
                 }
             }
 
@@ -145,7 +148,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             updateBlock();
         }
 
-        if (Helper.isSinglePlayer()) {
+        if (EnvironmentHelper.isSinglePlayer()) {
             if (clientMonitor == null) {
                 clientMonitor = new ClientMonitor(advanced, this);
             }
@@ -158,18 +161,25 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
         return new PacketTileEntityData(this);
     }
 
+    private TilePos offset(TilePosc pos, Direction firstDirection, int firstAmount, Direction secondDirection, int secondAmount) {
+        Vector3i vector = firstDirection.getOffsetScaled(new Vector3i(), firstAmount);
+        vector.add(secondDirection.getOffsetScaled(new Vector3i(), secondAmount));
+
+        return pos.add(vector, new TilePos());
+    }
+
     private TileMonitor getNeighbour(int x, int y) {
-        BlockPos pos = getPos();
+        TilePosc pos = getPos();
         Direction right = getRight();
         Direction down = getDown();
         int xOffset = -xIndex + x;
         int yOffset = -yIndex + y;
-        return getSimilarMonitorAt(pos.offset(right, xOffset)
-            .offset(down, yOffset));
+
+        return getSimilarMonitorAt(offset(pos, right, xOffset, down, yOffset));
     }
 
-    public BlockPos getPos() {
-        return new BlockPos(x, y, z);
+    public TilePosc getPos() {
+        return tilePos;
     }
 
     public Direction getRight() {
@@ -181,31 +191,28 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
         if (orientation == Direction.NORTH) {
             return Direction.UP;
         }
-        return orientation == Direction.DOWN ? getDirection() : getDirection().getOpposite();
+        return orientation == Direction.DOWN ? getDirection() : getDirection().opposite();
     }
 
-    private TileMonitor getSimilarMonitorAt(BlockPos pos) {
+    private TileMonitor getSimilarMonitorAt(TilePosc pos) {
         if (pos.equals(getPos())) {
             return this;
         }
 
-        int y = pos.getY();
         World world = worldObj;
 
-        if (world == null || !world.isChunkLoaded(Math.floorDiv(pos.x, 16), Math.floorDiv(pos.z, 16))) {
+        if (world == null || !world.isChunkLoaded(new ChunkPos(Math.floorDiv(pos.x(), 16), Math.floorDiv(pos.z(), 16)))) {
             return null;
         }
 
-        TileEntity tile = world.getTileEntity(pos.x, pos.y, pos.z);
-        if (!(tile instanceof TileMonitor)) {
+        TileEntity tile = world.getTileEntity(pos);
+        if (!(tile instanceof TileMonitor monitor)) {
             return null;
         }
 
-        TileMonitor monitor = (TileMonitor) tile;
         return !monitor.visiting && !monitor.destroyed && advanced == monitor.advanced && getDirection() == monitor.getDirection() && getOrientation() == monitor.getOrientation() ? monitor : null;
     }
 
-    // region Sizing and placement stuff
     public Direction getDirection() {
         return BlockLogicMonitor.metaToFacing(getBlockMeta());
     }
@@ -215,9 +222,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
     }
 
     @Override
-    public void readFromNBT(CompoundTag nbt) {
-        super.readFromNBT(nbt);
-
+    public void readAdditionalData(CompoundTag nbt) {
         int oldXIndex = xIndex;
         int oldYIndex = yIndex;
         int oldWidth = width;
@@ -229,10 +234,8 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
         height = nbt.getInteger(NBT_HEIGHT);
         advanced = nbt.getBoolean(NBT_ADVANCED);
 
-        if (!Helper.isServerEnvironment()) {
+        if (!EnvironmentHelper.isServerEnvironment()) {
             if (oldXIndex != xIndex || oldYIndex != yIndex) {
-                // If our index has changed then it's possible the origin monitor has changed. Thus
-                // we'll clear our cache. If we're the origin then we'll need to remove the glList as well.
                 if (oldXIndex == 0 && oldYIndex == 0 && clientMonitor != null) {
                     clientMonitor.destroy();
                 }
@@ -240,7 +243,6 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             }
 
             if (xIndex == 0 && yIndex == 0) {
-                // If we're the origin terminal then create it.
                 if (clientMonitor == null) {
                     clientMonitor = new ClientMonitor(advanced, this);
                 }
@@ -248,11 +250,10 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             }
         }
 
-        // Always check on client if we are not referring to an old client origin
-        if (Helper.isClientWorld() && !(xIndex == 0 && yIndex == 0)) {
-            BlockPos pos = getPos().offset(getRight(), -xIndex)
-                .offset(getDown(), -yIndex);
-            TileEntity te = worldObj.getTileEntity(pos.x, pos.y, pos.z);
+        if (EnvironmentHelper.isClientWorld() && !(xIndex == 0 && yIndex == 0)) {
+            TilePos pos = offset(getPos(), getRight(), -xIndex, getDown(), -yIndex);
+
+            TileEntity te = worldObj.getTileEntity(pos);
             if (te instanceof TileMonitor) {
                 if (clientMonitor != ((TileMonitor) te).clientMonitor) {
                     clientMonitor = ((TileMonitor) te).clientMonitor;
@@ -263,15 +264,12 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
         }
 
         if (oldXIndex != xIndex || oldYIndex != yIndex || oldWidth != width || oldHeight != height) {
-            // One of our properties has changed, so ensure we redraw the block
             updateBlock();
         }
     }
 
-    // Networking stuff
-
     @Override
-    public void writeToNBT(CompoundTag tag) {
+    public void writeAdditionalData(CompoundTag tag) {
         tag.putInt(NBT_X, xIndex);
         tag.putInt(NBT_Y, yIndex);
         tag.putInt(NBT_WIDTH, width);
@@ -281,17 +279,13 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
         if (xIndex == 0 && yIndex == 0 && serverMonitor != null) {
             serverMonitor.writeDescription(tag);
         }
-
-        super.writeToNBT(tag);
     }
 
-    // Sizing and placement stuff
-
-
-    @Nonnull
+    @NotNull
     @Override
     public IPeripheral getPeripheral(Direction side) {
-        createServerMonitor(); // Ensure the monitor is created before doing anything else.
+        createServerMonitor();
+
         if (peripheral == null) {
             peripheral = new MonitorPeripheral(this);
         }
@@ -321,12 +315,10 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
         }
 
         if (xIndex == 0 && yIndex == 0) {
-            // If we're the origin, set up the new monitor
             serverMonitor = new ServerMonitor(advanced, this);
             clientMonitor = null;
             serverMonitor.rebuild();
 
-            // And propagate it to child monitormonitors
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     TileMonitor monitor = getNeighbour(x, y);
@@ -338,11 +330,9 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
 
             return serverMonitor;
         } else {
-            // Otherwise fetch the origin and attempt to get its monitor
-            // Note this may load chunks, but we don't really have a choice here.
-            BlockPos pos = getPos().offset(getRight(), -xIndex)
-                .offset(getDown(), -yIndex);
-            TileEntity te = worldObj.getTileEntity(pos.x, pos.y, pos.z);
+            TilePos pos = offset(getPos(), getRight(), -xIndex, getDown(), -yIndex);
+
+            TileEntity te = worldObj.getTileEntity(pos);
             if (!(te instanceof TileMonitor)) {
                 return null;
             }
@@ -356,9 +346,9 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             return clientMonitor;
         }
 
-        BlockPos pos = getPos().offset(getRight(), -xIndex)
-            .offset(getDown(), -yIndex);
-        TileEntity te = worldObj.getTileEntity(pos.x, pos.y, pos.z);
+        TilePos pos = offset(getPos(), getRight(), -xIndex, getDown(), -yIndex);
+
+        TileEntity te = worldObj.getTileEntity(pos);
         if (!(te instanceof TileMonitor)) {
             return null;
         }
@@ -381,13 +371,11 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
     private void updateBlockState() {
         final int currentMetadata = getBlockMeta();
 
-        final MonitorEdgeState edgeState = MonitorEdgeState.fromConnections(yIndex < height - 1,
-            yIndex > 0, xIndex > 0, xIndex < width - 1);
+        final MonitorEdgeState edgeState = MonitorEdgeState.fromConnections(yIndex < height - 1, yIndex > 0, xIndex > 0, xIndex < width - 1);
 
         if (worldObj != null) {
-            final int newMetadata = (currentMetadata & ~0b11110000) | (BlockLogicMonitor.stateToMeta(edgeState));
-
-            worldObj.setBlockMetadataWithNotify(this.x, this.y, this.z, newMetadata);
+            final int newMetadata = (currentMetadata & ~0b11110000) | BlockLogicMonitor.stateToMeta(edgeState);
+            worldObj.setBlockDataNotify(this.tilePos, newMetadata);
         }
     }
 
@@ -417,7 +405,6 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
     }
 
     private void resize(int width, int height) {
-        // If we're not already the origin then we'll need to generate a new terminal.
         if (xIndex != 0 || yIndex != 0) {
             serverMonitor = null;
             clientMonitor = null;
@@ -428,9 +415,6 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
         this.width = width;
         this.height = height;
 
-        // Determine if we actually need a monitor. In order to do this, simply check if
-        // any component monitor been wrapped as a peripheral. Whilst this flag may be
-        // out of date,
         boolean needsTerminal = false;
         terminalCheck:
         for (int x = 0; x < width; x++) {
@@ -443,7 +427,6 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             }
         }
 
-        // Either delete the current monitor or sync a new one.
         if (needsTerminal) {
             if (serverMonitor == null) {
                 serverMonitor = new ServerMonitor(advanced, this);
@@ -454,13 +437,10 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             clientMonitor = null;
         }
 
-        // Update the terminal's width and height and rebuild it. This ensures the monitor
-        // is consistent when syncing it to other monitors.
         if (serverMonitor != null) {
             serverMonitor.rebuild();
         }
 
-        // Update the other monitors, setting coordinates, dimensions and the server terminal
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 TileMonitor monitor = getNeighbour(x, y);
@@ -482,7 +462,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
 
     private void updateBlock() {
         if (worldObj != null) {
-            worldObj.notifyBlockChange(x, y, z, getBlockId());
+            worldObj.notifyBlockChange(tilePos, getBlock());
         }
     }
 
@@ -574,17 +554,19 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
 
     @SuppressWarnings("StatementWithEmptyBody")
     void expand() {
-        if (Helper.isSinglePlayer()) {
+        if (EnvironmentHelper.isSinglePlayer()) {
             createServerMonitor();
         }
+
         while (mergeLeft() || mergeRight() || mergeUp() || mergeDown()) ;
     }
 
     void contractNeighbours() {
-        if (Helper.isSinglePlayer()) {
+        if (EnvironmentHelper.isSinglePlayer()) {
             createServerMonitor();
         }
         visiting = true;
+
         if (xIndex > 0) {
             TileMonitor left = getNeighbour(xIndex - 1, yIndex);
             if (left != null) {
@@ -613,7 +595,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
     }
 
     void contract() {
-        if (Helper.isSinglePlayer()) {
+        if (EnvironmentHelper.isSinglePlayer()) {
             createServerMonitor();
         }
         int height = this.height;
@@ -647,7 +629,6 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
                     continue;
                 }
 
-                // Decompose
                 TileMonitor above = null;
                 TileMonitor left = null;
                 TileMonitor right = null;
@@ -670,7 +651,6 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
                     below.resize(width, height - (y + 1));
                 }
 
-                // Re-expand
                 if (above != null) {
                     above.expand();
                 }
@@ -687,13 +667,11 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             }
         }
     }
-    // endregion
 
     private void monitorTouched(float xPos, float yPos, float zPos) {
-        XYPair pair = XYPair.of(xPos, yPos, zPos, getDirection(), getOrientation())
-            .add(xIndex, height - yIndex - 1);
+        XYPair pair = XYPair.of(xPos, yPos, zPos, getDirection(), getOrientation()).add(xIndex, height - yIndex - 1);
 
-        if (pair.x > width - RENDER_BORDER || pair.y > height - RENDER_BORDER || pair.x < RENDER_BORDER || pair.y < RENDER_BORDER) {
+        if (pair.x() > width - RENDER_BORDER || pair.y() > height - RENDER_BORDER || pair.x() < RENDER_BORDER || pair.y() < RENDER_BORDER) {
             return;
         }
 
@@ -710,8 +688,8 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
         double xCharWidth = (width - (RENDER_BORDER + RENDER_MARGIN) * 2.0) / originTerminal.getWidth();
         double yCharHeight = (height - (RENDER_BORDER + RENDER_MARGIN) * 2.0) / originTerminal.getHeight();
 
-        int xCharPos = (int) Math.min(originTerminal.getWidth(), Math.max((pair.x - RENDER_BORDER - RENDER_MARGIN) / xCharWidth + 1.0, 1.0));
-        int yCharPos = (int) Math.min(originTerminal.getHeight(), Math.max((pair.y - RENDER_BORDER - RENDER_MARGIN) / yCharHeight + 1.0, 1.0));
+        int xCharPos = (int) Math.min(originTerminal.getWidth(), Math.max((pair.x() - RENDER_BORDER - RENDER_MARGIN) / xCharWidth + 1.0, 1.0));
+        int yCharPos = (int) Math.min(originTerminal.getHeight(), Math.max((pair.y() - RENDER_BORDER - RENDER_MARGIN) / yCharHeight + 1.0, 1.0));
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {

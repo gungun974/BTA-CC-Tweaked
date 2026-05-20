@@ -9,7 +9,7 @@ package dan200.computercraft.api.turtle;
  * An enum representing the different actions that an {@link ITurtleUpgrade} of type Tool may be called on to perform by a turtle.
  *
  * @see ITurtleUpgrade#getType()
- * @see ITurtleUpgrade#useTool(ITurtleAccess, TurtleSide, TurtleVerb, Direction)
+ * @see dan200.computercraft.api.turtle.ITurtleUpgrade#useTool(ITurtleAccess, TurtleSide, TurtleVerb, net.minecraft.core.util.helper.Direction)
  */
 public enum TurtleVerb {
     /**

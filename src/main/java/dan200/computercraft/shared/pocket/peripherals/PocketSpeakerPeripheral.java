@@ -7,14 +7,15 @@ package dan200.computercraft.shared.pocket.peripherals;
 
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.shared.peripheral.speaker.SpeakerPeripheral;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 public class PocketSpeakerPeripheral extends SpeakerPeripheral {
     private World world = null;
-    private Vec3 position = Vec3.getPermanentVec3(0, 0, 0);
+    private Vector3dc position = new Vector3d(0, 0, 0);
 
-    void setLocation(World world, Vec3 position) {
+    void setLocation(World world, Vector3dc position) {
         this.position = position;
         this.world = world;
     }
@@ -25,7 +26,7 @@ public class PocketSpeakerPeripheral extends SpeakerPeripheral {
     }
 
     @Override
-    public Vec3 getPosition() {
+    public Vector3dc getPosition() {
         return world != null ? position : null;
     }
 

@@ -9,15 +9,15 @@ import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.api.lua.ILuaCallback;
 import dan200.computercraft.api.lua.MethodResult;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.ItemStorage;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3dc;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -31,7 +31,7 @@ public interface ITurtleAccess {
      *
      * @return the world in which the turtle resides.
      */
-    @Nonnull
+    @NotNull
     World getWorld();
 
     /**
@@ -39,8 +39,8 @@ public interface ITurtleAccess {
      *
      * @return a vector containing the integer co-ordinates at which the turtle resides.
      */
-    @Nonnull
-    BlockPos getPosition();
+    @NotNull
+    TilePosc getPosition();
 
     /**
      * Attempt to move this turtle to a new position.
@@ -53,7 +53,7 @@ public interface ITurtleAccess {
      * @return Whether the movement was successful. It may fail if the block was not loaded or the block placement was cancelled.
      * @throws UnsupportedOperationException When attempting to teleport on the client side.
      */
-    boolean teleportTo(@Nonnull World world, @Nonnull BlockPos pos);
+    boolean teleportTo(@NotNull World world, @NotNull TilePosc pos);
 
     /**
      * Returns a vector containing the floating point co-ordinates at which the turtle is rendered. This will shift when the turtle is moving.
@@ -62,8 +62,8 @@ public interface ITurtleAccess {
      * @return A vector containing the floating point co-ordinates at which the turtle resides.
      * @see #getVisualYaw(float)
      */
-    @Nonnull
-    Vec3 getVisualPosition(float f);
+    @NotNull
+    Vector3dc getVisualPosition(float f);
 
     /**
      * Returns the yaw the turtle is facing when it is rendered.
@@ -80,7 +80,7 @@ public interface ITurtleAccess {
      * @return The world direction the turtle is currently facing.
      * @see #setDirection(Direction)
      */
-    @Nonnull
+    @NotNull
     Direction getDirection();
 
     /**
@@ -90,7 +90,7 @@ public interface ITurtleAccess {
      * @param dir The new direction to set. This should be on either the x or z axis (so north, south, east or west).
      * @see #getDirection()
      */
-    void setDirection(@Nonnull Direction dir);
+    void setDirection(@NotNull Direction dir);
 
     /**
      * Get the currently selected slot in the turtle's inventory.
@@ -202,8 +202,8 @@ public interface ITurtleAccess {
      * @see ITurtleCommand
      * @see MethodResult#pullEvent(String, ILuaCallback)
      */
-    @Nonnull
-    MethodResult executeCommand(@Nonnull ITurtleCommand command);
+    @NotNull
+    MethodResult executeCommand(@NotNull ITurtleCommand command);
 
     /**
      * Start playing a specific animation. This will prevent other turtle commands from executing until it is finished.
@@ -212,7 +212,7 @@ public interface ITurtleAccess {
      * @throws UnsupportedOperationException When attempting to execute play an animation on the client side.
      * @see TurtleAnimation
      */
-    void playAnimation(@Nonnull TurtleAnimation animation);
+    void playAnimation(@NotNull TurtleAnimation animation);
 
     /**
      * Returns the turtle on the specified side of the turtle, if there is one.
@@ -222,7 +222,7 @@ public interface ITurtleAccess {
      * @see #setUpgrade(TurtleSide, ITurtleUpgrade)
      */
     @Nullable
-    ITurtleUpgrade getUpgrade(@Nonnull TurtleSide side);
+    ITurtleUpgrade getUpgrade(@NotNull TurtleSide side);
 
     /**
      * Set the upgrade for a given side, resetting peripherals and clearing upgrade specific data.
@@ -231,7 +231,7 @@ public interface ITurtleAccess {
      * @param upgrade The upgrade to set, may be {@code null} to clear.
      * @see #getUpgrade(TurtleSide)
      */
-    void setUpgrade(@Nonnull TurtleSide side, @Nullable ITurtleUpgrade upgrade);
+    void setUpgrade(@NotNull TurtleSide side, @Nullable ITurtleUpgrade upgrade);
 
     /**
      * Returns the peripheral created by the upgrade on the specified side of the turtle, if there is one.
@@ -240,7 +240,7 @@ public interface ITurtleAccess {
      * @return The peripheral created by the upgrade on the specified side of the turtle, {@code null} if none exists.
      */
     @Nullable
-    IPeripheral getPeripheral(@Nonnull TurtleSide side);
+    IPeripheral getPeripheral(@NotNull TurtleSide side);
 
     /**
      * Get an upgrade-specific NBT compound, which can be used to store arbitrary data.
@@ -252,7 +252,7 @@ public interface ITurtleAccess {
      * @return The upgrade-specific data.
      * @see #updateUpgradeNBTData(TurtleSide)
      */
-    @Nonnull
+    @NotNull
     CompoundTag getUpgradeNBTData(@Nullable TurtleSide side);
 
     /**
@@ -261,7 +261,7 @@ public interface ITurtleAccess {
      * @param side The side to mark dirty.
      * @see #updateUpgradeNBTData(TurtleSide)
      */
-    void updateUpgradeNBTData(@Nonnull TurtleSide side);
+    void updateUpgradeNBTData(@NotNull TurtleSide side);
 
     default ItemStorage getItemHandler() {
         return ItemStorage.wrap(getInventory());
@@ -274,6 +274,6 @@ public interface ITurtleAccess {
      *
      * @return This turtle's inventory
      */
-    @Nonnull
+    @NotNull
     Container getInventory();
 }

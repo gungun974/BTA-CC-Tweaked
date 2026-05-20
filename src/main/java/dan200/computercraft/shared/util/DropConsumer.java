@@ -8,9 +8,9 @@ package dan200.computercraft.shared.util;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.util.phys.AABB;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
+import org.joml.primitives.AABBd;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -21,8 +21,8 @@ public final class DropConsumer {
     private static Function<ItemStack, ItemStack> dropConsumer;
     private static List<ItemStack> remainingDrops;
     private static WeakReference<World> dropWorld;
-    private static BlockPos dropPos;
-    private static AABB dropBounds;
+    private static TilePosc dropPos;
+    private static AABBd dropBounds;
     private static WeakReference<Entity> dropEntity;
 
     private DropConsumer() {
@@ -34,15 +34,15 @@ public final class DropConsumer {
         dropEntity = new WeakReference<>(entity);
         dropWorld = new WeakReference<>(entity.world);
         dropPos = null;
-        dropBounds = AABB.getPermanentBB(entity.x, entity.y, entity.z, entity.x, entity.y, entity.z).expand(2, 2, 2);
+        dropBounds = new AABBd(entity.x, entity.y, entity.z, entity.x + 2, entity.y + 2, entity.z + 2);
     }
 
-    public static void set(World world, BlockPos pos, Function<ItemStack, ItemStack> consumer) {
+    public static void set(World world, TilePosc pos, Function<ItemStack, ItemStack> consumer) {
         dropConsumer = consumer;
         remainingDrops = new ArrayList<>(2);
         dropEntity = null;
         dropWorld = new WeakReference<>(world);
-        dropBounds = AABB.getPermanentBB(pos.x, pos.y, pos.z, pos.x, pos.y, pos.z).expand(2, 2, 2);
+        dropBounds = new AABBd(pos.x(), pos.y(), pos.z(), pos.x() + 2, pos.y() + 2, pos.z() + 2);
     }
 
     public static List<ItemStack> clear() {
@@ -57,7 +57,7 @@ public final class DropConsumer {
         return remainingStacks;
     }
 
-    public static boolean onHarvestDrops(World world, BlockPos pos, ItemStack stack) {
+    public static boolean onHarvestDrops(World world, TilePosc pos, ItemStack stack) {
         if (dropWorld != null && dropWorld.get() == world && dropPos != null && dropPos.equals(pos)) {
             handleDrops(stack);
             return true;
@@ -74,7 +74,7 @@ public final class DropConsumer {
 
     public static boolean onEntitySpawn(Entity entity) {
         // Capture any nearby item spawns
-        if (dropWorld != null && dropWorld.get() == entity.world && entity instanceof EntityItem && dropBounds.contains(Vec3.getPermanentVec3(entity.x, entity.y, entity.z))) {
+        if (dropWorld != null && dropWorld.get() == entity.world && entity instanceof EntityItem && dropBounds.containsPoint(entity.x, entity.y, entity.z)) {
             handleDrops(((EntityItem) entity).item);
             return true;
         }

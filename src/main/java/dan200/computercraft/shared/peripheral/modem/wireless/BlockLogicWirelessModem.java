@@ -8,65 +8,68 @@ package dan200.computercraft.shared.peripheral.modem.wireless;
 import dan200.computercraft.shared.peripheral.modem.ModemShapes;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogicFullyRotatable;
-import net.minecraft.core.block.entity.TileEntity;
-import net.minecraft.core.block.material.Material;
+import net.minecraft.core.block.Blocks;
+import net.minecraft.core.block.material.Materials;
 import net.minecraft.core.entity.Mob;
-import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.enums.EnumDropCause;
 import net.minecraft.core.enums.PlacementMode;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
-import net.minecraft.core.util.phys.AABB;
 import net.minecraft.core.world.World;
 import net.minecraft.core.world.WorldSource;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
 import org.jetbrains.annotations.NotNull;
+import org.joml.primitives.AABBdc;
 
 public class BlockLogicWirelessModem extends BlockLogicFullyRotatable {
     public BlockLogicWirelessModem(Block<?> block, boolean advanced) {
-        super(block, Material.stone);
+        super(block, Materials.STONE);
         block.withEntity(() -> new TileWirelessModem(advanced));
         this.setBlockBounds(0.125, 0.0, 0.125, 0.875, 0.1875, 0.875);
     }
 
-    public boolean canPlaceBlockAt(World world, int x, int y, int z) {
+    @Override
+    public boolean canPlaceAt(World world, TilePosc tilePos) {
         for (Side side : Side.sides) {
-            if (world.isBlockNormalCube(x + side.getOffsetX(), y + side.getOffsetY(), z + side.getOffsetZ())) {
-               return true;
+            if (world.isBlockNormalCube(tilePos.add(side, new TilePos()))) {
+                return true;
             }
         }
         return false;
     }
 
-    private void dropIfCantStay(World world, int x, int y, int z) {
-        Direction direction = BlockLogicWirelessModem.metaToDirection(world.getBlockMetadata(x, y, z)).getOpposite();
+    private void dropIfCantStay(World world, TilePosc tilePos) {
+        Direction direction = BlockLogicWirelessModem.metaToDirection(world.getBlockData(tilePos)).opposite();
 
-        if (!(world.isBlockNormalCube(x + direction.getOffsetX(), y + direction.getOffsetY(), z + direction.getOffsetZ()))) {
-            this.dropBlockWithCause(world, EnumDropCause.WORLD, x, y, z, world.getBlockMetadata(x, y, z), (TileEntity)null, (Player)null);
-            world.setBlockWithNotify(x, y, z, 0);
+        if (!(world.isBlockNormalCube(tilePos.add(direction, new TilePos())))) {
+            this.dropWithCause(world, EnumDropCause.WORLD, tilePos, world.getBlockData(tilePos), null, null);
+            world.setBlockTypeNotify(tilePos, Blocks.AIR);
         }
-    }
-
-    public void onBlockPlacedByMob(World world, int x, int y, int z, @NotNull Side side, Mob mob, double xPlaced, double yPlaced) {
-        Direction direction = mob.getPlacementDirection(side, PlacementMode.SIDE);
-        world.setBlockMetadataWithNotify(x, y, z, directionToMeta(direction));
-        dropIfCantStay(world, x, y, z);
     }
 
     @Override
-    public void onBlockPlacedOnSide(World world, int x, int y, int z, @NotNull Side side, double xPlaced, double yPlaced) {
-       Direction direction = side.getDirection().getOpposite();
+    public void onPlacedByMob(World world, TilePosc tilePos, @NotNull Side side, Mob mob, double xPlaced, double yPlaced) {
+        Direction direction = mob.getPlacementDirection(side, PlacementMode.SIDE);
+        world.setBlockDataNotify(tilePos, directionToMeta(direction));
+        dropIfCantStay(world, tilePos);
+    }
 
-        if (world.isBlockNormalCube(x - direction.getOffsetX(), y - direction.getOffsetY(), z - direction.getOffsetZ())) {
-            world.setBlockMetadataWithNotify(x, y, z, directionToMeta(direction));
+    @Override
+    public void onPlacedOnSide(World world, TilePosc tilePos, @NotNull Side side, double xPlaced, double yPlaced) {
+        Direction direction = side.direction().opposite();
+
+        if (world.isBlockNormalCube(tilePos.sub(direction, new TilePos()))) {
+            world.setBlockDataNotify(tilePos, directionToMeta(direction));
             return;
         }
 
-        world.setBlockMetadataWithNotify(x, y, z, directionToMeta(direction.getOpposite()));
-        dropIfCantStay(world, x, y, z);
+        world.setBlockDataNotify(tilePos, directionToMeta(direction.opposite()));
+        dropIfCantStay(world, tilePos);
     }
 
-    public void onNeighborBlockChange(World world, int x, int y, int z, int blockId) {
-        dropIfCantStay(world, x, y, z);
+    public void onNeighborChanged(World world, TilePosc tilePos, Block<?> block) {
+        dropIfCantStay(world, tilePos);
     }
 
     public boolean isCubeShaped() {
@@ -78,7 +81,8 @@ public class BlockLogicWirelessModem extends BlockLogicFullyRotatable {
     }
 
     @Override
-    public AABB getBlockBoundsFromState(WorldSource world, int x, int y, int z) {
-        return ModemShapes.getBounds(BlockLogicWirelessModem.metaToDirection(world.getBlockMetadata(x, y, z)).getOpposite());
+    @NotNull
+    public AABBdc getBoundsFromState(WorldSource world, TilePosc tilePos) {
+        return ModemShapes.getBounds(BlockLogicWirelessModem.metaToDirection(world.getBlockData(tilePos)).opposite());
     }
 }

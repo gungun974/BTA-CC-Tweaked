@@ -9,10 +9,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import dan200.computercraft.ComputerCraft;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.IWorldDirNameAccess;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
 import java.io.File;
 import java.io.Reader;
@@ -66,7 +66,7 @@ public final class IDAssigner {
     }
 
     public static File getWorldDir() {
-        if (Helper.isServerEnvironment()) {
+        if (EnvironmentHelper.isServerEnvironment()) {
             return new File(MinecraftServer.getInstance().getMinecraftDir(), ((IWorldDirNameAccess) MinecraftServer.getInstance()).cc_bta$getWorldDirName() + "/computercraft");
         }
         return new File(Minecraft.getMinecraft().getMinecraftDir(), "saves/" + ((IWorldDirNameAccess) Minecraft.getMinecraft()).cc_bta$getWorldDirName() + "/computercraft");

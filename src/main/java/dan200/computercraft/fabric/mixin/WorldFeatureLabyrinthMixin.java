@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
@@ -42,9 +41,9 @@ public class WorldFeatureLabyrinthMixin {
             int randomIndex = random.nextInt(TreasureDisk.DISKS.length);
             TreasureDisk randomDisk = TreasureDisk.DISKS[randomIndex];
 
-            tag.putString(ItemTreasureDisk.NBT_TITLE, randomDisk.getTitle());
-            tag.putString(ItemTreasureDisk.NBT_SUB_PATH, randomDisk.getSubPath());
-            tag.putInt(ItemTreasureDisk.NBT_COLOUR, randomDisk.getColour());
+            tag.putString(ItemTreasureDisk.NBT_TITLE, randomDisk.title());
+            tag.putString(ItemTreasureDisk.NBT_SUB_PATH, randomDisk.subPath());
+            tag.putInt(ItemTreasureDisk.NBT_COLOUR, randomDisk.colour());
 
             itemStack.setData(tag);
         }

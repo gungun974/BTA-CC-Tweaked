@@ -12,20 +12,23 @@ import dan200.computercraft.api.network.wired.IWiredElement;
 import dan200.computercraft.api.network.wired.IWiredNode;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.peripheral.modem.ModemState;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.DirectionUtil;
 import dan200.computercraft.shared.util.TickScheduler;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.lang.I18n;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.ChunkPos;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 
 public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
@@ -41,7 +44,7 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
 
     public TileWiredModemFull() {
         for (int i = 0; i < peripherals.length; i++) {
-            Direction facing = Direction.getDirectionById(i);
+            Direction facing = Direction.fromId(i);
             peripherals[i] = new WiredModemLocalPeripheral();
         }
     }
@@ -79,14 +82,14 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
     }
 
     private void doRemove() {
-        if (worldObj == null || !Helper.isClientWorld()) {
+        if (worldObj == null || !EnvironmentHelper.isClientWorld()) {
             node.remove();
             connectionsFormed = false;
         }
     }
 
-    public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
-        if (Helper.isClientWorld()) {
+    public boolean onInteracted(Player player, Side side, double xPlaced, double yPlaced) {
+        if (EnvironmentHelper.isClientWorld()) {
             return true;
         }
 
@@ -103,8 +106,8 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
         return true;
     }
 
-    public void onNeighbourTileEntityChange(@Nonnull BlockPos neighbour) {
-        if (!Helper.isClientWorld() && peripheralAccessAllowed) {
+    public void onNeighbourTileEntityChange(@NotNull TilePosc neighbour) {
+        if (!EnvironmentHelper.isClientWorld() && peripheralAccessAllowed) {
             for (Direction facing : DirectionUtil.FACINGS) {
                 refreshPeripheral(facing);
             }
@@ -113,7 +116,7 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
 
     @Override
     public void tick() {
-        if (Helper.isClientWorld()) {
+        if (EnvironmentHelper.isClientWorld()) {
             return;
         }
 
@@ -134,23 +137,23 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
         }
     }
 
-    private BlockPos getPos() {
-        return new BlockPos(x, y, z);
+    private TilePosc getPos() {
+        return tilePos;
     }
 
     private void connectionsChanged() {
-        if (Helper.isClientWorld()) {
+        if (EnvironmentHelper.isClientWorld()) {
             return;
         }
 
-        BlockPos current = getPos();
+        TilePosc current = getPos();
         for (Direction facing : DirectionUtil.FACINGS) {
-            BlockPos offset = current.offset(facing);
-            if (!worldObj.isChunkLoaded(Math.floorDiv(offset.x, 16), Math.floorDiv(offset.z, 16))) {
+            TilePosc offset = current.add(facing, new TilePos());
+            if (!worldObj.isChunkLoaded(new ChunkPos(Math.floorDiv(offset.x(), 16), Math.floorDiv(offset.z(), 16)))) {
                 continue;
             }
 
-            IWiredElement element = ComputerCraftAPI.getWiredElementAt(worldObj, offset, facing.getOpposite());
+            IWiredElement element = ComputerCraftAPI.getWiredElementAt(worldObj, offset, facing.opposite());
             if (element == null) {
                 continue;
             }
@@ -159,7 +162,7 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
         }
     }
 
-    private void refreshPeripheral(@Nonnull Direction facing) {
+    private void refreshPeripheral(@NotNull Direction facing) {
         WiredModemLocalPeripheral peripheral = peripherals[facing.ordinal()];
         if (worldObj != null && !isInvalid() && peripheral.attach(worldObj, getPos(), facing)) {
             updateConnectedPeripherals();
@@ -200,8 +203,8 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
             return;
         }
 
-        worldObj.setBlockMetadata(x, y, z, (modemOn ? 1 : 0) + (peripheralOn ? 2 : 0));
-        worldObj.notifyBlockChange(x, y, z, getBlockId());
+        worldObj.setBlockData(tilePos, (modemOn ? 1 : 0) + (peripheralOn ? 2 : 0));
+        worldObj.notifyBlockChange(tilePos, getBlock());
     }
 
     private Set<String> getConnectedPeripheralNames() {
@@ -247,29 +250,26 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
     }
 
     @Override
-    public void readFromNBT(CompoundTag nbt) {
-        super.readFromNBT(nbt);
+    public void readAdditionalData(CompoundTag nbt) {
         peripheralAccessAllowed = nbt.getBoolean(NBT_PERIPHERAL_ENABLED);
         for (int i = 0; i < peripherals.length; i++) {
             peripherals[i].read(nbt, Integer.toString(i));
         }
     }
 
-    @Nonnull
     @Override
-    public void writeToNBT(CompoundTag nbt) {
+    public void writeAdditionalData(CompoundTag nbt) {
         nbt.putBoolean(NBT_PERIPHERAL_ENABLED, peripheralAccessAllowed);
         for (int i = 0; i < peripherals.length; i++) {
             peripherals[i].write(nbt, Integer.toString(i));
         }
-        super.writeToNBT(nbt);
     }
 
     public IWiredElement getElement() {
         return element;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IPeripheral getPeripheral(Direction side) {
         WiredModemPeripheral peripheral = modems[side.ordinal()];
@@ -279,20 +279,20 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
 
         WiredModemLocalPeripheral localPeripheral = peripherals[side.ordinal()];
         return modems[side.ordinal()] = new WiredModemPeripheral(modemState, element) {
-            @Nonnull
+            @NotNull
             @Override
             protected WiredModemLocalPeripheral getLocalPeripheral() {
                 return localPeripheral;
             }
 
-            @Nonnull
+            @NotNull
             @Override
-            public Vec3 getPosition() {
-                BlockPos pos = getPos().offset(side);
-                return Vec3.getPermanentVec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+            public Vector3dc getPosition() {
+                TilePosc pos = getPos().add(side, new TilePos());
+                return new Vector3d(pos.x() + 0.5, pos.y() + 0.5, pos.z() + 0.5);
             }
 
-            @Nonnull
+            @NotNull
             @Override
             public Object getTarget() {
                 return TileWiredModemFull.this;
@@ -327,17 +327,17 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
             }
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public World getWorld() {
             return entity.worldObj;
         }
 
-        @Nonnull
+        @NotNull
         @Override
-        public Vec3 getPosition() {
-            BlockPos pos = entity.getPos();
-            return Vec3.getPermanentVec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+        public Vector3dc getPosition() {
+            TilePosc pos = entity.getPos();
+            return new Vector3d(pos.x() + 0.5, pos.y() + 0.5, pos.z() + 0.5);
         }
     }
 }

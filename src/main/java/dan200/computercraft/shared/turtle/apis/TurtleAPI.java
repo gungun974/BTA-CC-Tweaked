@@ -703,7 +703,7 @@ public class TurtleAPI implements ILuaAPI {
      *     --  count = 13,
      *     -- }
      *     }</pre>
-     * @see InventoryMethods#getItemDetail Describes the information returned by a detailed query.
+     * @see dan200.computercraft.shared.peripheral.generic.methods.InventoryMethods#getItemDetail Describes the information returned by a detailed query.
      */
     @LuaFunction
     public final MethodResult getItemDetail(ILuaContext context, Optional<Integer> slot, Optional<Boolean> detailed) throws LuaException {

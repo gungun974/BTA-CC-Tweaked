@@ -8,8 +8,8 @@ package dan200.computercraft.api.turtle.event;
 import dan200.computercraft.api.lua.MethodResult;
 import dan200.computercraft.api.turtle.ITurtleAccess;
 import net.minecraft.core.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Objects;
 
@@ -27,11 +27,11 @@ public class TurtleInspectItemEvent extends TurtleActionEvent {
     private final boolean mainThread;
 
     @Deprecated
-    public TurtleInspectItemEvent(@Nonnull ITurtleAccess turtle, @Nonnull ItemStack stack, @Nonnull Map<String, Object> data) {
+    public TurtleInspectItemEvent(@NotNull ITurtleAccess turtle, @NotNull ItemStack stack, @NotNull Map<String, Object> data) {
         this(turtle, stack, data, false);
     }
 
-    public TurtleInspectItemEvent(@Nonnull ITurtleAccess turtle, @Nonnull ItemStack stack, @Nonnull Map<String, Object> data, boolean mainThread) {
+    public TurtleInspectItemEvent(@NotNull ITurtleAccess turtle, @NotNull ItemStack stack, @NotNull Map<String, Object> data, boolean mainThread) {
         super(turtle, TurtleAction.INSPECT_ITEM);
 
         Objects.requireNonNull(stack, "stack cannot be null");
@@ -46,7 +46,7 @@ public class TurtleInspectItemEvent extends TurtleActionEvent {
      *
      * @return The item stack which is being inspected. This should <b>not</b> be modified.
      */
-    @Nonnull
+    @NotNull
     public ItemStack getStack() {
         return stack;
     }
@@ -56,7 +56,7 @@ public class TurtleInspectItemEvent extends TurtleActionEvent {
      *
      * @return This items's inspection data.
      */
-    @Nonnull
+    @NotNull
     public Map<String, Object> getData() {
         return data;
     }
@@ -75,7 +75,7 @@ public class TurtleInspectItemEvent extends TurtleActionEvent {
      *
      * @param newData The data to add. Note all values should be convertible to Lua (see {@link MethodResult#of(Object)}).
      */
-    public void addData(@Nonnull Map<String, ?> newData) {
+    public void addData(@NotNull Map<String, ?> newData) {
         Objects.requireNonNull(newData, "newData cannot be null");
         data.putAll(newData);
     }

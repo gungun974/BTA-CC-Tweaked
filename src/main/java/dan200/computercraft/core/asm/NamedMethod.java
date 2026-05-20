@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.core.asm;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class NamedMethod<T> {
     private final String name;
@@ -18,12 +18,12 @@ public final class NamedMethod<T> {
         this.nonYielding = nonYielding;
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return name;
     }
 
-    @Nonnull
+    @NotNull
     public T getMethod() {
         return method;
     }

@@ -10,10 +10,10 @@ import dan200.computercraft.api.network.Packet;
 import dan200.computercraft.api.network.wired.IWiredNetwork;
 import dan200.computercraft.api.network.wired.IWiredNode;
 import dan200.computercraft.api.peripheral.IPeripheral;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3dc;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -37,13 +37,13 @@ public final class WiredNetwork implements IWiredNetwork {
         TreeSet<TransmitPoint> transmitTo = new TreeSet<>();
 
         {
-            TransmitPoint startEntry = start.element.getWorld() != packet.getSender()
+            TransmitPoint startEntry = start.element.getWorld() != packet.sender()
                 .getWorld() ? new TransmitPoint(start,
                 Double.POSITIVE_INFINITY,
                 true) : new TransmitPoint(start,
                 start.element.getPosition()
-                    .distanceTo(
-                        packet.getSender()
+                    .distance(
+                        packet.sender()
                             .getPosition()),
                 false);
             points.put(start, startEntry);
@@ -54,7 +54,7 @@ public final class WiredNetwork implements IWiredNetwork {
             TransmitPoint point;
             while ((point = transmitTo.pollFirst()) != null) {
                 World world = point.node.element.getWorld();
-                Vec3 position = point.node.element.getPosition();
+                Vector3dc position = point.node.element.getPosition();
                 for (WiredNode neighbour : point.node.neighbours) {
                     TransmitPoint neighbourPoint = points.get(neighbour);
 
@@ -65,7 +65,7 @@ public final class WiredNetwork implements IWiredNetwork {
                         newDistance = Double.POSITIVE_INFINITY;
                     } else {
                         newInterdimensional = false;
-                        newDistance = point.distance + position.distanceTo(neighbour.element.getPosition());
+                        newDistance = point.distance + position.distance(neighbour.element.getPosition());
                     }
 
                     if (neighbourPoint == null) {
@@ -116,7 +116,7 @@ public final class WiredNetwork implements IWiredNetwork {
     }
 
     @Override
-    public boolean connect(@Nonnull IWiredNode nodeU, @Nonnull IWiredNode nodeV) {
+    public boolean connect(@NotNull IWiredNode nodeU, @NotNull IWiredNode nodeV) {
         WiredNode wiredU = checkNode(nodeU);
         WiredNode wiredV = checkNode(nodeV);
         if (nodeU == nodeV) {
@@ -192,7 +192,7 @@ public final class WiredNetwork implements IWiredNetwork {
     }
 
     @Override
-    public boolean disconnect(@Nonnull IWiredNode nodeU, @Nonnull IWiredNode nodeV) {
+    public boolean disconnect(@NotNull IWiredNode nodeU, @NotNull IWiredNode nodeV) {
         WiredNode wiredU = checkNode(nodeU);
         WiredNode wiredV = checkNode(nodeV);
         if (nodeU == nodeV) {
@@ -282,7 +282,7 @@ public final class WiredNetwork implements IWiredNetwork {
     }
 
     @Override
-    public boolean remove(@Nonnull IWiredNode node) {
+    public boolean remove(@NotNull IWiredNode node) {
         WiredNode wired = checkNode(node);
 
         lock.writeLock()
@@ -391,7 +391,7 @@ public final class WiredNetwork implements IWiredNetwork {
     }
 
     @Override
-    public void updatePeripherals(@Nonnull IWiredNode node, @Nonnull Map<String, IPeripheral> newPeripherals) {
+    public void updatePeripherals(@NotNull IWiredNode node, @NotNull Map<String, IPeripheral> newPeripherals) {
         WiredNode wired = checkNode(node);
         Objects.requireNonNull(peripherals, "peripherals cannot be null");
 
@@ -470,7 +470,7 @@ public final class WiredNetwork implements IWiredNetwork {
         }
 
         @Override
-        public int compareTo(@Nonnull TransmitPoint o) {
+        public int compareTo(@NotNull TransmitPoint o) {
             // Objects with the same distance are not the same object, so we must add an additional layer of ordering.
             return distance == o.distance ? Integer.compare(node.hashCode(), o.node.hashCode()) : Double.compare(distance, o.distance);
         }

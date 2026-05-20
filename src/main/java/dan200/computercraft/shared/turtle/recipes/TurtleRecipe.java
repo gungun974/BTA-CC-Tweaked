@@ -16,8 +16,8 @@ import net.minecraft.core.data.registry.recipe.adapter.RecipeCraftingShapedJsonA
 import net.minecraft.core.data.registry.recipe.adapter.RecipeJsonAdapter;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCraftingShaped;
 import net.minecraft.core.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
@@ -30,9 +30,9 @@ public final class TurtleRecipe extends ComputerFamilyRecipe implements HasJsonA
         super();
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    protected ItemStack convert(@Nonnull IComputerItem item, @Nonnull ItemStack stack) {
+    protected ItemStack convert(@NotNull IComputerItem item, @NotNull ItemStack stack) {
         int computerID = item.getComputerID(stack);
         String label = item.getLabel(stack);
 

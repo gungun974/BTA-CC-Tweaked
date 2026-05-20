@@ -8,11 +8,10 @@ package dan200.computercraft.core.lua;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.lua.*;
 import dan200.computercraft.core.asm.LuaMethod;
+import org.jetbrains.annotations.NotNull;
 import org.squiddev.cobalt.*;
 import org.squiddev.cobalt.debug.DebugFrame;
 import org.squiddev.cobalt.function.ResumableVarArgFunction;
-
-import javax.annotation.Nonnull;
 
 /**
  * Calls a {@link LuaMethod}, and interprets the resulting {@link MethodResult}, either returning the result or yielding
@@ -88,7 +87,7 @@ class ResultInterpreterFunction extends ResumableVarArgFunction<ResultInterprete
         return LuaThread.yield(state, ret);
     }
 
-    @Nonnull
+    @NotNull
     static class Container {
         ILuaCallback callback;
         int errorAdjust;

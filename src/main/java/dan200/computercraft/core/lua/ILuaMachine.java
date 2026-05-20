@@ -7,9 +7,9 @@ package dan200.computercraft.core.lua;
 
 import dan200.computercraft.api.lua.IDynamicLuaObject;
 import dan200.computercraft.api.lua.ILuaAPI;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.InputStream;
 
 /**
@@ -32,7 +32,7 @@ public interface ILuaMachine {
      *
      * @param api The API to register.
      */
-    void addAPI(@Nonnull ILuaAPI api);
+    void addAPI(@NotNull ILuaAPI api);
 
     /**
      * Create a function from the provided program, and set it up to run when {@link #handleEvent(String, Object[])} is
@@ -43,7 +43,7 @@ public interface ILuaMachine {
      * @param bios The stream containing the boot program.
      * @return The result of loading this machine. Will either be OK, or the error message when loading the bios.
      */
-    MachineResult loadBios(@Nonnull InputStream bios);
+    MachineResult loadBios(@NotNull InputStream bios);
 
     /**
      * Resume the machine, either starting or resuming the coroutine.

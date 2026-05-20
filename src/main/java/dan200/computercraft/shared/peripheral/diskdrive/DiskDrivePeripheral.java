@@ -14,9 +14,9 @@ import dan200.computercraft.shared.MediaProviders;
 import dan200.computercraft.shared.media.items.ItemDisk;
 import dan200.computercraft.shared.util.StringUtil;
 import net.minecraft.core.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
@@ -38,23 +38,23 @@ public class DiskDrivePeripheral implements IPeripheral {
         this.diskDrive = diskDrive;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getType() {
         return "drive";
     }
 
     @Override
-    public void attach(@Nonnull IComputerAccess computer) {
+    public void attach(@NotNull IComputerAccess computer) {
         diskDrive.mount(computer);
     }
 
     @Override
-    public void detach(@Nonnull IComputerAccess computer) {
+    public void detach(@NotNull IComputerAccess computer) {
         diskDrive.unmount(computer);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Object getTarget() {
         return diskDrive;

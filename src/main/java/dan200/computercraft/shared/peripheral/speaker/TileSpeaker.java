@@ -5,15 +5,16 @@
  */
 package dan200.computercraft.shared.peripheral.speaker;
 
+import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
 import dan200.computercraft.shared.common.TileGeneric;
 import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3d;
+import org.joml.Vector3dc;
 
 public class TileSpeaker extends TileGeneric implements IPeripheralTile {
     public static final int MIN_TICKS_BETWEEN_SOUNDS = 1;
@@ -29,7 +30,17 @@ public class TileSpeaker extends TileGeneric implements IPeripheralTile {
         peripheral.update();
     }
 
-    @Nonnull
+    @Override
+    public void readAdditionalData(@NotNull CompoundTag var1) {
+
+    }
+
+    @Override
+    public void writeAdditionalData(@NotNull CompoundTag var1) {
+
+    }
+
+    @NotNull
     @Override
     public IPeripheral getPeripheral(Direction side) {
         return peripheral;
@@ -48,8 +59,8 @@ public class TileSpeaker extends TileGeneric implements IPeripheralTile {
         }
 
         @Override
-        public Vec3 getPosition() {
-            return Vec3.getPermanentVec3(speaker.x, speaker.y, speaker.z);
+        public Vector3dc getPosition() {
+            return new Vector3d(speaker.tilePos.x, speaker.tilePos.y, speaker.tilePos.z);
         }
 
         @Override

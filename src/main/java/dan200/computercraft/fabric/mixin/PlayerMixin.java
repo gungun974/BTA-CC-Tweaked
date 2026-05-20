@@ -3,9 +3,8 @@ package dan200.computercraft.fabric.mixin;
 import dan200.computercraft.fabric.IComputerPlayer;
 import dan200.computercraft.shared.computer.core.IContainerComputer;
 import net.minecraft.core.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-
-import javax.annotation.Nullable;
 
 @Mixin(value = Player.class, remap = false)
 public class PlayerMixin implements IComputerPlayer {

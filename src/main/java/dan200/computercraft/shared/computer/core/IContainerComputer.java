@@ -5,11 +5,11 @@
  */
 package dan200.computercraft.shared.computer.core;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * An instance of {@link Container} which provides a computer. You should implement this if you provide custom computers/GUIs to interact with them.
+ * An instance of {@link net.minecraft.core.player.inventory.container.Container} which provides a computer. You should implement this if you provide custom computers/GUIs to interact with them.
  */
 public interface IContainerComputer {
     /**
@@ -33,7 +33,7 @@ public interface IContainerComputer {
      *
      * @return This container's input.
      */
-    @Nonnull
+    @NotNull
     default InputState getInput() {
         return new InputState(this);
     }

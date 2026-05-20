@@ -11,8 +11,8 @@ import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IWorkMonitor;
 import dan200.computercraft.core.filesystem.FileSystem;
 import dan200.computercraft.core.filesystem.FileSystemException;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -34,7 +34,7 @@ public abstract class ComputerAccess implements IComputerAccess {
     }
 
     @Override
-    public synchronized String mount(@Nonnull String desiredLoc, @Nonnull IMount mount, @Nonnull String driveName) {
+    public synchronized String mount(@NotNull String desiredLoc, @NotNull IMount mount, @NotNull String driveName) {
         Objects.requireNonNull(desiredLoc, "desiredLocation cannot be null");
         Objects.requireNonNull(mount, "mount cannot be null");
         Objects.requireNonNull(driveName, "driveName cannot be null");
@@ -59,7 +59,7 @@ public abstract class ComputerAccess implements IComputerAccess {
     }
 
     @Override
-    public synchronized String mountWritable(@Nonnull String desiredLoc, @Nonnull IWritableMount mount, @Nonnull String driveName) {
+    public synchronized String mountWritable(@NotNull String desiredLoc, @NotNull IWritableMount mount, @NotNull String driveName) {
         Objects.requireNonNull(desiredLoc, "desiredLocation cannot be null");
         Objects.requireNonNull(mount, "mount cannot be null");
         Objects.requireNonNull(driveName, "driveName cannot be null");
@@ -98,12 +98,12 @@ public abstract class ComputerAccess implements IComputerAccess {
     }
 
     @Override
-    public void queueEvent(@Nonnull String event, Object... arguments) {
+    public void queueEvent(@NotNull String event, Object... arguments) {
         Objects.requireNonNull(event, "event cannot be null");
         environment.queueEvent(event, arguments);
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IWorkMonitor getMainThreadMonitor() {
         return environment.getMainThreadMonitor();

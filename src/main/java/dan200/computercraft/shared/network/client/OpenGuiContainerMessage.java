@@ -1,6 +1,5 @@
 package dan200.computercraft.shared.network.client;
 
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.mixin.PlayerServerAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -11,11 +10,11 @@ import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.player.inventory.container.ContainerInventory;
 import net.minecraft.core.player.inventory.menu.MenuAbstract;
 import net.minecraft.server.entity.player.PlayerServer;
+import org.jetbrains.annotations.NotNull;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.NetworkHandler;
 import turniplabs.halplibe.helper.network.NetworkMessage;
 import turniplabs.halplibe.helper.network.UniversalPacket;
-
-import javax.annotation.Nonnull;
 
 abstract class OpenGuiContainerMessage<A> implements NetworkMessage {
     final protected A container;
@@ -26,11 +25,11 @@ abstract class OpenGuiContainerMessage<A> implements NetworkMessage {
     }
 
     public void sendToPlayer(Player player) {
-        if (Helper.isServerEnvironment()) {
+        if (EnvironmentHelper.isServerEnvironment()) {
             serverSetWindow(player);
         }
         NetworkHandler.sendToPlayer(player, this);
-        if (Helper.isServerEnvironment()) {
+        if (EnvironmentHelper.isServerEnvironment()) {
             this.serverSetWindow2(player);
         }
     }
@@ -48,20 +47,20 @@ abstract class OpenGuiContainerMessage<A> implements NetworkMessage {
     @Environment(EnvType.SERVER)
     protected void serverSetWindow2(Player player) {
         if (player instanceof PlayerServer) {
-            player.craftingInventory.onCraftGuiClosed(player);
-            player.craftingInventory = getMenuInstance(player.inventory, container);
-            player.craftingInventory.containerId = this.windowId;
-            player.craftingInventory.addSlotListener((PlayerServer) player);
+            player.containerMenu.onCraftGuiClosed(player);
+            player.containerMenu = getMenuInstance(player.inventory, container);
+            player.containerMenu.containerId = this.windowId;
+            player.containerMenu.addSlotListener((PlayerServer) player);
         }
     }
 
     @Override
-    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void encodeToUniversalPacket(@NotNull UniversalPacket buf) {
         buf.writeInt(windowId);
     }
 
     @Override
-    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void decodeFromUniversalPacket(@NotNull UniversalPacket buf) {
         windowId = buf.readInt();
     }
 
@@ -70,11 +69,11 @@ abstract class OpenGuiContainerMessage<A> implements NetworkMessage {
 
     @Override
     public void handle(NetworkContext context) {
-        if (Helper.isSinglePlayer()) {
+        if (EnvironmentHelper.isSinglePlayer()) {
             doSinglePlayer();
             return;
         }
-        if (Helper.isClientWorld()) {
+        if (EnvironmentHelper.isClientWorld()) {
             doClient();
         }
     }
@@ -82,7 +81,7 @@ abstract class OpenGuiContainerMessage<A> implements NetworkMessage {
     @Environment(EnvType.CLIENT)
     private void doClient() {
         Minecraft.getMinecraft().displayScreen(getScreenInstance(Minecraft.getMinecraft().thePlayer.inventory, this.container));
-        Minecraft.getMinecraft().thePlayer.craftingInventory.containerId = windowId;
+        Minecraft.getMinecraft().thePlayer.containerMenu.containerId = windowId;
     }
 
     @Environment(EnvType.CLIENT)

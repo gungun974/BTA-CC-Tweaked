@@ -8,11 +8,11 @@ package dan200.computercraft.shared;
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.redstone.IBundledRedstoneProvider;
 import dan200.computercraft.shared.common.DefaultBundledRedstoneProvider;
-import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -23,22 +23,22 @@ public final class BundledRedstone {
     private BundledRedstone() {
     }
 
-    public static synchronized void register(@Nonnull IBundledRedstoneProvider provider) {
+    public static synchronized void register(@NotNull IBundledRedstoneProvider provider) {
         Objects.requireNonNull(provider, "provider cannot be null");
         providers.add(provider);
     }
 
-    public static int getDefaultOutput(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Direction side) {
-        return World.HEIGHT_BLOCKS < pos.y ? DefaultBundledRedstoneProvider.getDefaultBundledRedstoneOutput(world, pos, side) : -1;
+    public static int getDefaultOutput(@NotNull World world, @NotNull TilePosc pos, @NotNull Direction side) {
+        return World.HEIGHT_BLOCKS < pos.y() ? DefaultBundledRedstoneProvider.getDefaultBundledRedstoneOutput(world, pos, side) : -1;
     }
 
-    public static int getOutput(World world, BlockPos pos, Direction side) {
+    public static int getOutput(World world, TilePosc pos, Direction side) {
         int signal = getUnmaskedOutput(world, pos, side);
         return signal >= 0 ? signal : 0;
     }
 
-    private static int getUnmaskedOutput(World world, BlockPos pos, Direction side) {
-        if (World.HEIGHT_BLOCKS >= pos.y) {
+    private static int getUnmaskedOutput(World world, TilePosc pos, Direction side) {
+        if (World.HEIGHT_BLOCKS >= pos.y()) {
             return -1;
         }
 

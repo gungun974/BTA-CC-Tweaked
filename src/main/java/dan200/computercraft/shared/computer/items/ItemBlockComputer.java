@@ -11,10 +11,10 @@ import net.minecraft.core.enums.EnumBlockSoundEffectType;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.annotation.Nonnull;
 
 public class ItemBlockComputer<T extends BlockLogic> extends ItemBlockComputerBase<T> {
     public ItemBlockComputer(@NotNull Block<T> block) {
@@ -40,7 +40,7 @@ public class ItemBlockComputer<T extends BlockLogic> extends ItemBlockComputerBa
     }
 
     @Override
-    public ItemStack withFamily(@Nonnull ItemStack stack, @Nonnull ComputerFamily family) {
+    public ItemStack withFamily(@NotNull ItemStack stack, @NotNull ComputerFamily family) {
         ItemStack result = ComputerItemFactory.create(getComputerID(stack), null, family);
         if (stack.hasCustomName() && result != null) {
             result.setCustomName(stack.getCustomName());
@@ -48,39 +48,39 @@ public class ItemBlockComputer<T extends BlockLogic> extends ItemBlockComputerBa
         return result;
     }
 
-    public boolean onUseItemOnBlock(ItemStack stack, @Nullable Player player, World world, int x, int y, int z, Side side, double xPlaced, double yPlaced) {
-        if (stack.stackSize <= 0) {
+    public boolean onUseOnBlock(@NotNull ItemStack selfStack, @NotNull World world, @Nullable Player player, @NotNull TilePosc blockPos, @NotNull Side side, double xHit, double yHit) {
+        TilePos tilePos = new TilePos(blockPos);
+
+        if (selfStack.stackSize <= 0) {
             return false;
         } else {
-            if (!world.canPlaceInsideBlock(x, y, z)) {
-                x += side.getOffsetX();
-                y += side.getOffsetY();
-                z += side.getOffsetZ();
+            if (!world.canPlaceInsideBlock(tilePos)) {
+                tilePos.x += side.offsetX();
+                tilePos.y += side.offsetY();
+                tilePos.z += side.offsetZ();
             }
 
-            if (y >= 0 && y < world.getHeightBlocks()) {
-                if (world.canBlockBePlacedAt(this.block.id(), x, y, z, false, side) && stack.consumeItem(player)) {
-                    int meta = this.getPlacedBlockMetadata(player, stack, world, x, y, z, side, xPlaced, yPlaced);
-                    if (world.setBlockAndMetadataWithNotify(x, y, z, this.block.id(), meta)) {
+            if (tilePos.y >= 0 && tilePos.y < world.getHeightBlocks()) {
+                if (world.canBlockIdBePlacedAt(this.block.id(), tilePos, false, side) && selfStack.consumeItem(player)) {
+                    int meta = this.getPlacedData(selfStack, world, player, tilePos, side, xHit, yHit);
+                    if (world.setBlockTypeDataNotify(tilePos, this.block, meta)) {
                         if (player == null) {
-                            this.block.onBlockPlacedOnSide(world, x, y, z, side, xPlaced, yPlaced);
+                            this.block.onPlacedOnSide(world, tilePos, side, xHit, yHit);
                         } else {
-                            this.block.onBlockPlacedByMob(world, x, y, z, side, player, xPlaced, yPlaced);
+                            this.block.onPlacedByMob(world, tilePos, side, player, xHit, yHit);
                         }
 
-                        world.playBlockSoundEffect(player, (float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F, this.block, EnumBlockSoundEffectType.PLACE);
+                        world.playBlockSoundEffect(player, (float) tilePos.x + 0.5F, (float) tilePos.y + 0.5F, (float) tilePos.z + 0.5F, this.block, EnumBlockSoundEffectType.PLACE);
 
-                        TileEntity entity = (world.getTileEntity(x, y, z));
-                        if (!(entity instanceof TileComputerBase)) {
+                        TileEntity entity = (world.getTileEntity(tilePos));
+                        if (!(entity instanceof TileComputerBase computerEntity)) {
                             return false;
                         }
 
-                        TileComputerBase computerEntity = (TileComputerBase) entity;
-
-                        computerEntity.readDescription(stack.getData());
+                        computerEntity.readDescription(selfStack.getData());
 
                         // Set label
-                        String label = stack.getCustomName();
+                        String label = selfStack.getCustomName();
                         if (label != null) {
                             computerEntity.setLabel(label);
                         }
@@ -88,8 +88,8 @@ public class ItemBlockComputer<T extends BlockLogic> extends ItemBlockComputerBa
                         return true;
                     }
 
-                    if (player == null || player.getGamemode().consumeBlocks()) {
-                        ++stack.stackSize;
+                    if (player == null || player.getGamemode().hasBlockConsumption()) {
+                        ++selfStack.stackSize;
                     }
                 }
 

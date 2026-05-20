@@ -6,13 +6,13 @@
 package dan200.computercraft.api.turtle.event;
 
 import dan200.computercraft.api.turtle.ITurtleAccess;
-import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 /**
@@ -21,8 +21,8 @@ import java.util.Objects;
 public abstract class TurtleInventoryEvent extends TurtleBlockEvent {
     private final Container handler;
 
-    protected TurtleInventoryEvent(@Nonnull ITurtleAccess turtle, @Nonnull TurtleAction action, @Nonnull World world,
-                                   @Nonnull BlockPos pos, @Nullable Container handler) {
+    protected TurtleInventoryEvent(@NotNull ITurtleAccess turtle, @NotNull TurtleAction action, @NotNull World world,
+                                   @NotNull TilePosc pos, @Nullable Container handler) {
         super(turtle, action, world, pos);
         this.handler = handler;
     }
@@ -43,7 +43,7 @@ public abstract class TurtleInventoryEvent extends TurtleBlockEvent {
      * @see TurtleAction#SUCK
      */
     public static class Suck extends TurtleInventoryEvent {
-        public Suck(@Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos, @Nullable Container handler) {
+        public Suck(@NotNull ITurtleAccess turtle, @NotNull World world, @NotNull TilePosc pos, @Nullable Container handler) {
             super(turtle, TurtleAction.SUCK, world, pos, handler);
         }
     }
@@ -56,8 +56,8 @@ public abstract class TurtleInventoryEvent extends TurtleBlockEvent {
     public static class Drop extends TurtleInventoryEvent {
         private final ItemStack stack;
 
-        public Drop(@Nonnull ITurtleAccess turtle, @Nonnull World world, @Nonnull BlockPos pos, @Nullable Container handler,
-                    @Nonnull ItemStack stack) {
+        public Drop(@NotNull ITurtleAccess turtle, @NotNull World world, @NotNull TilePosc pos, @Nullable Container handler,
+                    @NotNull ItemStack stack) {
             super(turtle, TurtleAction.DROP, world, pos, handler);
 
             Objects.requireNonNull(stack, "stack cannot be null");
@@ -69,7 +69,7 @@ public abstract class TurtleInventoryEvent extends TurtleBlockEvent {
          *
          * @return The item stack which will be dropped. This should <b>not</b> be modified.
          */
-        @Nonnull
+        @NotNull
         public ItemStack getStack() {
             return stack;
         }

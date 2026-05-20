@@ -18,7 +18,7 @@ public enum MoveDirection {
                 return turtle.getDirection();
             case BACK:
                 return turtle.getDirection()
-                    .getOpposite();
+                    .opposite();
             case UP:
                 return Direction.UP;
             case DOWN:

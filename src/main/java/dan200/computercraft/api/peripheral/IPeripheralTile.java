@@ -5,15 +5,13 @@
  */
 package dan200.computercraft.api.peripheral;
 
-import dan200.computercraft.shared.util.BlockPos;
-import net.minecraft.core.util.helper.Direction;
-import net.minecraft.core.world.World;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import net.minecraft.core.util.helper.Direction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * A {@link net.minecraft.block.entity.BlockEntity} which may act as a peripheral.
+ * A {@link net.minecraft.core.block.entity.TileEntity} which may act as a peripheral.
  * <p>
  * If you need more complex capabilities (such as handling TEs not belonging to your mod), you should use {@link IPeripheralProvider}.
  */
@@ -23,8 +21,8 @@ public interface IPeripheralTile {
      *
      * @param side The side to get the peripheral from.
      * @return A peripheral, or {@code null} if there is not a peripheral here.
-     * @see IPeripheralProvider#getPeripheral(World, BlockPos, Direction)
+     * @see IPeripheralProvider#getPeripheral(net.minecraft.core.world.World, net.minecraft.core.world.pos.TilePosc, net.minecraft.core.util.helper.Direction)
      */
     @Nullable
-    IPeripheral getPeripheral(@Nonnull Direction side);
+    IPeripheral getPeripheral(@NotNull Direction side);
 }

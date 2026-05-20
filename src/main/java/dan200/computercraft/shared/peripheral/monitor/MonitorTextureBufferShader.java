@@ -8,17 +8,23 @@ package dan200.computercraft.shared.peripheral.monitor;
 
 import dan200.computercraft.client.gui.FixedWidthFontRenderer;
 import dan200.computercraft.shared.util.Palette;
+import net.minecraft.client.render.renderer.GLRenderer;
+import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 
 import java.io.InputStream;
 import java.nio.FloatBuffer;
+import java.nio.charset.StandardCharsets;
 
 class MonitorTextureBufferShader {
     static final int TEXTURE_INDEX = GL13.GL_TEXTURE3;
 
+    private static final FloatBuffer MATRIX_BUFFER = BufferUtils.createFloatBuffer(16);
     private static final FloatBuffer PALETTE_BUFFER = BufferUtils.createFloatBuffer(16 * 3);
+    private static final Matrix4f MVP_BUFFER = new Matrix4f();
+
 
     private static int uniformMv;
     private static int uniformFont;
@@ -31,18 +37,30 @@ class MonitorTextureBufferShader {
     private static boolean ok;
     private static int program;
 
-    static void setupUniform(int width, int height, Palette palette, boolean greyscale) {
+    static void setupUniform(Matrix4f transform, int width, int height, Palette palette, boolean greyscale) {
+        GLRenderer.projectionM4f().mul(GLRenderer.viewM4f(), MVP_BUFFER);
+        MVP_BUFFER.mul(transform);
+
+        MATRIX_BUFFER.rewind();
+        MVP_BUFFER.get(MATRIX_BUFFER);
+        MATRIX_BUFFER.rewind();
+        GL20.glUniformMatrix4fv(uniformMv, false, MATRIX_BUFFER);
+
         GL20.glUniform1i(uniformWidth, width);
         GL20.glUniform1i(uniformHeight, height);
 
-        PALETTE_BUFFER.clear();
+        PALETTE_BUFFER.rewind();
         for (int i = 0; i < 16; i++) {
             double[] colour = palette.getColour(i);
             if (greyscale) {
                 float f = FixedWidthFontRenderer.toGreyscale(colour);
-                PALETTE_BUFFER.put(f).put(f).put(f);
+                PALETTE_BUFFER.put(f)
+                    .put(f)
+                    .put(f);
             } else {
-                PALETTE_BUFFER.put((float) colour[0]).put((float) colour[1]).put((float) colour[2]);
+                PALETTE_BUFFER.put((float) colour[0])
+                    .put((float) colour[1])
+                    .put((float) colour[2]);
             }
         }
         PALETTE_BUFFER.flip();
@@ -115,7 +133,7 @@ class MonitorTextureBufferShader {
             if (stream == null) {
                 throw new IllegalArgumentException("Cannot find " + path);
             }
-            java.util.Scanner scanner = new java.util.Scanner(stream, "UTF-8");
+            java.util.Scanner scanner = new java.util.Scanner(stream, StandardCharsets.UTF_8);
             String contents = scanner.useDelimiter("\\A").next();
             scanner.close();
 

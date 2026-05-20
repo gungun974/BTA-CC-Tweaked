@@ -2,7 +2,6 @@ package dan200.computercraft.fabric.mixin;
 
 import dan200.computercraft.fabric.IWorldDirNameAccess;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.world.type.WorldTypeGroups;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,10 +14,10 @@ public abstract class MinecraftMixin implements IWorldDirNameAccess {
     public String worldDirName;
 
     @Inject(
-        method = "startWorld(Ljava/lang/String;Ljava/lang/String;JLnet/minecraft/core/world/type/WorldTypeGroups$Group;)V",
+        method = "startWorld(Ljava/lang/String;)V",
         at = @At("HEAD")
     )
-    private void rememberWorldDirName(String worldDirName, String worldName, long seed, WorldTypeGroups.Group worldTypeGroup, CallbackInfo ci) {
+    private void rememberWorldDirName(String worldDirName, CallbackInfo ci) {
         this.worldDirName = worldDirName;
     }
 

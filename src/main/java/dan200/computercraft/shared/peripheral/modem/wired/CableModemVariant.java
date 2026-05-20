@@ -6,9 +6,8 @@
 package dan200.computercraft.shared.peripheral.modem.wired;
 
 import net.minecraft.core.util.helper.Direction;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public enum CableModemVariant {
     None("none", null),
@@ -47,18 +46,18 @@ public enum CableModemVariant {
         this.facing = facing;
     }
 
-    @Nonnull
+    @NotNull
     public static CableModemVariant from(Direction facing) {
-        return facing == null ? None : VALUES[1 + facing.getId()];
+        return facing == null ? None : VALUES[1 + facing.id];
     }
 
-    @Nonnull
+    @NotNull
     public static CableModemVariant from(Direction facing, boolean modem, boolean peripheral) {
         int state = (modem ? 2 : 0) + (peripheral ? 1 : 0);
-        return facing == null ? None : VALUES[1 + 6 * state + facing.getId()];
+        return facing == null ? None : VALUES[1 + 6 * state + facing.id];
     }
 
-    @Nonnull
+    @NotNull
     public String asString() {
         return name;
     }

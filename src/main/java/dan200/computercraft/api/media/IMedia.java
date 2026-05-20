@@ -9,9 +9,8 @@ import dan200.computercraft.api.filesystem.IMount;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.world.World;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents an item that can be placed in a disk drive and used by a Computer.
@@ -26,7 +25,7 @@ public interface IMedia {
      * @return The label. ie: "Dan's Programs".
      */
     @Nullable
-    String getLabel(@Nonnull ItemStack stack);
+    String getLabel(@NotNull ItemStack stack);
 
     /**
      * Set a string representing the label of this item. Will be called vi {@code disk.setLabel()} in lua.
@@ -35,7 +34,7 @@ public interface IMedia {
      * @param label The string to set the label to.
      * @return true if the label was updated, false if the label may not be modified.
      */
-    default boolean setLabel(@Nonnull ItemStack stack, @Nullable String label) {
+    default boolean setLabel(@NotNull ItemStack stack, @Nullable String label) {
         return false;
     }
 
@@ -46,7 +45,7 @@ public interface IMedia {
      * @return The name, or null if this item does not represent an item with audio.
      */
     @Nullable
-    default String getAudioTitle(@Nonnull ItemStack stack) {
+    default String getAudioTitle(@NotNull ItemStack stack) {
         return null;
     }
 
@@ -57,7 +56,7 @@ public interface IMedia {
      * @return The name, or null if this item does not represent an item with audio.
      */
     @Nullable
-    default String getAudio(@Nonnull ItemStack stack) {
+    default String getAudio(@NotNull ItemStack stack) {
         return null;
     }
 
@@ -75,7 +74,7 @@ public interface IMedia {
      * @see dan200.computercraft.api.ComputerCraftAPI#createResourceMount(String, String)
      */
     @Nullable
-    default IMount createDataMount(@Nonnull ItemStack stack, @Nonnull World world) {
+    default IMount createDataMount(@NotNull ItemStack stack, @NotNull World world) {
         return null;
     }
 }

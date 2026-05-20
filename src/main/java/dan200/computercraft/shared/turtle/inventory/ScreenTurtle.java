@@ -9,9 +9,9 @@ import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.inventory.ContainerComputerBase;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import net.minecraft.client.gui.container.ScreenContainerAbstract;
+import net.minecraft.client.render.renderer.GLRenderer;
 import net.minecraft.core.player.inventory.container.ContainerInventory;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 import java.util.UUID;
 
@@ -100,17 +100,18 @@ public class ScreenTurtle<T extends ContainerComputerBase> extends ScreenContain
             final int wrapperY = (height - termPxHeight - 80) / 2;
 
             FixedWidthFontRenderer.drawEmptyTerminal(
+                GLRenderer.modelM4f(),
                 wrapperX - 1,
                 wrapperY - 1,
                 termPxWidth + 2,
                 termPxHeight + 2
             );
 
-            terminal.draw(wrapperX, wrapperY);
+            terminal.draw(wrapperX, wrapperY, GLRenderer.modelM4f());
         }
 
 
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GLRenderer.setColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         if (family == ComputerFamily.ADVANCED) {
             this.mc.textureManager.loadTexture("/assets/computercraft/textures/gui/turtle_advanced.png").bind();

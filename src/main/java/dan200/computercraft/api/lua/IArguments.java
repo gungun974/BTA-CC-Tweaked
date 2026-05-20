@@ -5,8 +5,9 @@
  */
 package dan200.computercraft.api.lua;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.Optional;
@@ -134,7 +135,7 @@ public interface IArguments {
      * @return The argument's value. This is a <em>read only</em> buffer.
      * @throws LuaException If the value is not a string.
      */
-    @Nonnull
+    @NotNull
     default ByteBuffer getBytes(int index) throws LuaException {
         return LuaValues.encode(getString(index));
     }
@@ -146,7 +147,7 @@ public interface IArguments {
      * @return The argument's value.
      * @throws LuaException If the value is not a string.
      */
-    @Nonnull
+    @NotNull
     default String getString(int index) throws LuaException {
         Object value = get(index);
         if (!(value instanceof String)) {
@@ -164,7 +165,7 @@ public interface IArguments {
      * @return The argument's value.
      * @throws LuaException If the value is not a string or not a valid option for this enum.
      */
-    @Nonnull
+    @NotNull
     default <T extends Enum<T>> T getEnum(int index, Class<T> klass) throws LuaException {
         return LuaValues.checkEnum(index, klass, getString(index));
     }
@@ -176,7 +177,7 @@ public interface IArguments {
      * @return The argument's value.
      * @throws LuaException If the value is not a table.
      */
-    @Nonnull
+    @NotNull
     default Map<?, ?> getTable(int index) throws LuaException {
         Object value = get(index);
         if (!(value instanceof Map)) {
@@ -223,7 +224,7 @@ public interface IArguments {
      * @return The argument's value.
      * @throws LuaException If the value is not a string or not a valid option for this enum.
      */
-    @Nonnull
+    @NotNull
     default <T extends Enum<T>> Optional<T> optEnum(int index, Class<T> klass) throws LuaException {
         Optional<String> str = optString(index);
         return str.isPresent() ? Optional.of(LuaValues.checkEnum(index, klass, str.get())) : Optional.empty();
@@ -248,7 +249,7 @@ public interface IArguments {
      * @return The argument's value, or {@link Optional#empty()} if not present.
      * @throws LuaException If the value is not a number.
      */
-    @Nonnull
+    @NotNull
     default Optional<Double> optDouble(int index) throws LuaException {
         Object value = get(index);
         if (value == null) {
@@ -279,7 +280,7 @@ public interface IArguments {
      * @return The argument's value, or {@link Optional#empty()} if not present.
      * @throws LuaException If the value is not a number.
      */
-    @Nonnull
+    @NotNull
     default Optional<Integer> optInt(int index) throws LuaException {
         return optLong(index).map(Long::intValue);
     }

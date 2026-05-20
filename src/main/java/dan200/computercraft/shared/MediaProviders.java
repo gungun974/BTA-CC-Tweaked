@@ -9,8 +9,8 @@ import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.media.IMediaProvider;
 import net.minecraft.core.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -21,7 +21,7 @@ public final class MediaProviders {
     private MediaProviders() {
     }
 
-    public static synchronized void register(@Nonnull IMediaProvider provider) {
+    public static synchronized void register(@NotNull IMediaProvider provider) {
         Objects.requireNonNull(provider, "provider cannot be null");
         providers.add(provider);
     }

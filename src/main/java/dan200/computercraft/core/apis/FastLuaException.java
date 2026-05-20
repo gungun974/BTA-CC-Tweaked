@@ -6,8 +6,7 @@
 package dan200.computercraft.core.apis;
 
 import dan200.computercraft.api.lua.LuaException;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A Lua exception which does not contain its stack trace.

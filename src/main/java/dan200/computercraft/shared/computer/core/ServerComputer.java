@@ -17,24 +17,24 @@ import dan200.computercraft.core.apis.IAPIEnvironment;
 import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.core.computer.IComputerEnvironment;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.fabric.IComputerPlayer;
 import dan200.computercraft.shared.common.ServerTerminal;
 import dan200.computercraft.shared.network.client.*;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
-import dan200.computercraft.shared.util.BlockPos;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
 import net.minecraft.server.MinecraftServer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.NetworkHandler;
 import turniplabs.halplibe.helper.network.NetworkMessage;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.InputStream;
 
 public class ServerComputer extends ServerTerminal implements IComputer, IComputerEnvironment {
@@ -42,7 +42,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
     private final ComputerFamily family;
     private final Computer computer;
     private World world;
-    private BlockPos position;
+    private TilePosc position;
     private CompoundTag userData;
     private boolean changed;
 
@@ -81,11 +81,11 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         this.world = world;
     }
 
-    public BlockPos getPosition() {
+    public TilePosc getPosition() {
         return position;
     }
 
-    public void setPosition(BlockPos pos) {
+    public void setPosition(TilePosc pos) {
         position = pos;
     }
 
@@ -109,7 +109,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
             return;
         }
 
-        TileEntity tileEntity = world.getTileEntity(position.x, position.y, position.z);
+        TileEntity tileEntity = world.getTileEntity(position);
         if (tileEntity instanceof TileTurtle) {
             selectedSlot = ((TileTurtle) tileEntity).getAccess().getSelectedSlot();
         }
@@ -160,7 +160,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         }
 
         if (hasTerminalChanged() || force) {
-            if (!Helper.isSinglePlayer()) {
+            if (!EnvironmentHelper.isSinglePlayer()) {
                 MinecraftServer server = MinecraftServer.getInstance();
                 // Send terminal state to clients who are currently interacting with the computer.
 
@@ -287,7 +287,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
 
     public void broadcastDelete() {
         // Send deletion to client
-        if (Helper.isServerEnvironment()) {
+        if (EnvironmentHelper.isServerEnvironment()) {
             NetworkHandler.sendToAllPlayers(new ComputerDeletedClientMessage(getInstanceID()));
         }
     }
@@ -359,13 +359,13 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         return ComputerCraft.computerSpaceLimit;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getHostString() {
         return String.format("ComputerCraft %s (Minecraft %s)", ComputerCraftAPI.getInstalledVersion(), "1.16.4");
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getUserAgent() {
         return ComputerCraft.MOD_ID + "/" + ComputerCraftAPI.getInstalledVersion();

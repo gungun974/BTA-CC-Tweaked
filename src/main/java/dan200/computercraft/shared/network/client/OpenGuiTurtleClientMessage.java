@@ -11,9 +11,8 @@ import net.minecraft.client.gui.Screen;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.player.inventory.container.ContainerInventory;
 import net.minecraft.core.player.inventory.menu.MenuAbstract;
+import org.jetbrains.annotations.NotNull;
 import turniplabs.halplibe.helper.network.UniversalPacket;
-
-import javax.annotation.Nonnull;
 
 public class OpenGuiTurtleClientMessage extends OpenGuiContainerMessage<TileTurtle> {
     private int instanceId;
@@ -40,7 +39,7 @@ public class OpenGuiTurtleClientMessage extends OpenGuiContainerMessage<TileTurt
     }
 
     @Override
-    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void encodeToUniversalPacket(@NotNull UniversalPacket buf) {
         super.encodeToUniversalPacket(buf);
         buf.writeInt(instanceId);
         buf.writeEnumConstant(family);
@@ -49,7 +48,7 @@ public class OpenGuiTurtleClientMessage extends OpenGuiContainerMessage<TileTurt
     }
 
     @Override
-    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void decodeFromUniversalPacket(@NotNull UniversalPacket buf) {
         super.decodeFromUniversalPacket(buf);
         instanceId = buf.readInt();
         family = buf.readEnumConstant(ComputerFamily.class);

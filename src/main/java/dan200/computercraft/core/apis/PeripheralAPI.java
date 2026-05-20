@@ -5,7 +5,6 @@
  */
 package dan200.computercraft.core.apis;
 
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
 import dan200.computercraft.api.lua.*;
@@ -18,9 +17,9 @@ import dan200.computercraft.core.asm.NamedMethod;
 import dan200.computercraft.core.asm.PeripheralMethod;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.core.tracking.TrackingField;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -130,7 +129,7 @@ public class PeripheralAPI implements ILuaAPI, IAPIEnvironment.IPeripheralChange
 
     // Replace it later with CC Tweaked LuaUtil
     public static Object[] consArray(Object value, Collection<?> rest) {
-        if (rest.isEmpty()) return new Object[]{ value };
+        if (rest.isEmpty()) return new Object[]{value};
 
         Object[] out = new Object[rest.size() + 1];
         out[0] = value;
@@ -158,7 +157,7 @@ public class PeripheralAPI implements ILuaAPI, IAPIEnvironment.IPeripheralChange
         synchronized (peripherals) {
             PeripheralWrapper p = peripherals[side.ordinal()];
             if (p != null) {
-                return new Object[]{ p.getType().equals(type) || p.getAdditionalTypes().contains(type) };
+                return new Object[]{p.getType().equals(type) || p.getAdditionalTypes().contains(type)};
             }
         }
         return null;
@@ -272,13 +271,13 @@ public class PeripheralAPI implements ILuaAPI, IAPIEnvironment.IPeripheralChange
 
         // IComputerAccess implementation
         @Override
-        public synchronized String mount(@Nonnull String desiredLoc, @Nonnull IMount mount, @Nonnull String driveName) {
+        public synchronized String mount(@NotNull String desiredLoc, @NotNull IMount mount, @NotNull String driveName) {
             if (!attached) throw new NotAttachedException();
             return super.mount(desiredLoc, mount, driveName);
         }
 
         @Override
-        public synchronized String mountWritable(@Nonnull String desiredLoc, @Nonnull IWritableMount mount, @Nonnull String driveName) {
+        public synchronized String mountWritable(@NotNull String desiredLoc, @NotNull IWritableMount mount, @NotNull String driveName) {
             if (!attached) throw new NotAttachedException();
             return super.mountWritable(desiredLoc, mount, driveName);
         }
@@ -296,19 +295,19 @@ public class PeripheralAPI implements ILuaAPI, IAPIEnvironment.IPeripheralChange
         }
 
         @Override
-        public void queueEvent(@Nonnull String event, Object... arguments) {
+        public void queueEvent(@NotNull String event, Object... arguments) {
             if (!attached) throw new NotAttachedException();
             super.queueEvent(event, arguments);
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getAttachmentName() {
             if (!attached) throw new NotAttachedException();
             return side;
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public Map<String, IPeripheral> getAvailablePeripherals() {
             if (!attached) throw new NotAttachedException();
@@ -325,7 +324,7 @@ public class PeripheralAPI implements ILuaAPI, IAPIEnvironment.IPeripheralChange
 
         @Nullable
         @Override
-        public IPeripheral getAvailablePeripheral(@Nonnull String name) {
+        public IPeripheral getAvailablePeripheral(@NotNull String name) {
             if (!attached) throw new NotAttachedException();
 
             for (PeripheralWrapper wrapper : peripherals) {
@@ -336,7 +335,7 @@ public class PeripheralAPI implements ILuaAPI, IAPIEnvironment.IPeripheralChange
             return null;
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public IWorkMonitor getMainThreadMonitor() {
             if (!attached) throw new NotAttachedException();

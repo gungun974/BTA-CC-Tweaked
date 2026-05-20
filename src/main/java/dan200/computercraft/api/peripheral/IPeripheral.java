@@ -6,9 +6,9 @@
 package dan200.computercraft.api.peripheral;
 
 import dan200.computercraft.api.lua.LuaFunction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +26,7 @@ public interface IPeripheral {
      *
      * @return A string identifying the type of peripheral.
      */
-    @Nonnull
+    @NotNull
     String getType();
 
 
@@ -53,7 +53,7 @@ public interface IPeripheral {
      * @param computer The interface to the computer that is being attached. Remember that multiple computers can be attached to a peripheral at once.
      * @see #detach
      */
-    default void attach(@Nonnull IComputerAccess computer) {
+    default void attach(@NotNull IComputerAccess computer) {
     }
 
     /**
@@ -69,7 +69,7 @@ public interface IPeripheral {
      * @param computer The interface to the computer that is being detached. Remember that multiple computers can be attached to a peripheral at once.
      * @see #attach
      */
-    default void detach(@Nonnull IComputerAccess computer) {
+    default void detach(@NotNull IComputerAccess computer) {
     }
 
     /**

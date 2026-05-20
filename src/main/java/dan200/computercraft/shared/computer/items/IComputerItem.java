@@ -8,22 +8,21 @@ package dan200.computercraft.shared.computer.items;
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import net.minecraft.core.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public interface IComputerItem {
     String NBT_ID = "ComputerId";
 
-    default int getComputerID(@Nonnull ItemStack stack) {
+    default int getComputerID(@NotNull ItemStack stack) {
         CompoundTag nbt = stack.getData();
         return nbt != null && nbt.containsKey(NBT_ID) ? nbt.getInteger(NBT_ID) : -1;
     }
 
-    default String getLabel(@Nonnull ItemStack stack) {
+    default String getLabel(@NotNull ItemStack stack) {
         return stack.hasCustomName() ? stack.getCustomName() : null;
     }
 
     ComputerFamily getFamily();
 
-    ItemStack withFamily(@Nonnull ItemStack stack, @Nonnull ComputerFamily family);
+    ItemStack withFamily(@NotNull ItemStack stack, @NotNull ComputerFamily family);
 }

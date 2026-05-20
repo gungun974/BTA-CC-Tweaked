@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.shared.peripheral.diskdrive;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public enum DiskDriveState {
     EMPTY("empty"), FULL("full"), INVALID("invalid");
@@ -16,7 +16,7 @@ public enum DiskDriveState {
         this.name = name;
     }
 
-    @Nonnull
+    @NotNull
     public String asString() {
         return name;
     }

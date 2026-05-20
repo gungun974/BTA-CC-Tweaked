@@ -6,13 +6,10 @@
 package dan200.computercraft.shared.media.items;
 
 import dan200.computercraft.api.media.IMedia;
-import net.minecraft.client.sound.SoundEntry;
-import net.minecraft.client.sound.SoundRepository;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemDiscMusic;
 import net.minecraft.core.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An implementation of IMedia for ItemRecords.
@@ -24,12 +21,12 @@ public final class RecordMedia implements IMedia {
     }
 
     @Override
-    public String getLabel(@Nonnull ItemStack stack) {
+    public String getLabel(@NotNull ItemStack stack) {
         return getAudioTitle(stack);
     }
 
     @Override
-    public String getAudioTitle(@Nonnull ItemStack stack) {
+    public String getAudioTitle(@NotNull ItemStack stack) {
         Item item = stack.getItem();
         if (!(item instanceof ItemDiscMusic)) {
             return null;
@@ -39,7 +36,7 @@ public final class RecordMedia implements IMedia {
     }
 
     @Override
-    public String getAudio(@Nonnull ItemStack stack) {
+    public String getAudio(@NotNull ItemStack stack) {
         Item item = stack.getItem();
         if (!(item instanceof ItemDiscMusic)) {
             return null;

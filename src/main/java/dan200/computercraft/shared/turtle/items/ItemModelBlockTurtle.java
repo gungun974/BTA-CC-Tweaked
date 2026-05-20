@@ -2,279 +2,124 @@ package dan200.computercraft.shared.turtle.items;
 
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
-import dan200.computercraft.client.blocks.BlockAORenderer;
-import dan200.computercraft.shared.common.ComputerCraftItems;
 import dan200.computercraft.shared.common.IColouredItem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.Font;
-import net.minecraft.client.render.ItemRenderer;
-import net.minecraft.client.render.LightmapHelper;
-import net.minecraft.client.render.TextureManager;
-import net.minecraft.client.render.block.model.BlockModel;
+import dan200.computercraft.shared.computer.core.ComputerFamily;
+import net.minecraft.client.render.block.color.BlockColor;
+import net.minecraft.client.render.block.color.BlockColorDispatcher;
+import net.minecraft.client.render.block.model.BlockModelDispatcher;
+import net.minecraft.client.render.block.model.generic.BlockModelGeneric;
 import net.minecraft.client.render.item.model.ItemModelBlock;
-import net.minecraft.client.render.tessellator.Tessellator;
+import net.minecraft.client.render.renderer.BlendFactor;
+import net.minecraft.client.render.renderer.GLRenderer;
+import net.minecraft.client.render.renderer.Shaders;
+import net.minecraft.client.render.renderer.State;
+import net.minecraft.client.render.tessellator.TessellatorGeneral;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
-import net.minecraft.core.Global;
 import net.minecraft.core.entity.Entity;
-import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.block.ItemBlock;
-import net.minecraft.core.util.helper.MathHelper;
-import net.minecraft.core.util.helper.Side;
-import net.minecraft.core.util.phys.AABB;
+import net.minecraft.core.world.WorldSource;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
-
-import java.util.Random;
+import org.joml.Math;
+import org.useless.dragonfly.DisplayPos;
+import org.useless.dragonfly.models.block.StaticBlockModel;
 
 public class ItemModelBlockTurtle extends ItemModelBlock {
+    private static StaticBlockModel baseModel;
+    private static StaticBlockModel advancedModel;
+    private static StaticBlockModel colourModel;
+
+    private final BlockModelGeneric standaloneModel;
+
     public ItemModelBlockTurtle(ItemBlock<?> itemBlock) {
         super(itemBlock);
-    }
-
-    @Override
-    public void renderItemFirstPerson(Tessellator tessellator, ItemRenderer renderer, Player player, ItemStack stack, float partialTick) {
-        Minecraft mc = Minecraft.getMinecraft();
-        float brightness = 1.0F;
-        if (LightmapHelper.isLightmapEnabled()) {
-            int lightmapCoord = player.getLightmapCoord(partialTick);
-            if (this.itemfullBright) {
-                lightmapCoord = LightmapHelper.setBlocklightValue(lightmapCoord, 15);
-            }
-
-            LightmapHelper.setLightmapCoord(lightmapCoord);
-        } else if (!mc.fullbright && !this.itemfullBright) {
-            brightness = player.getBrightness(1.0F);
+        if (baseModel == null) {
+            baseModel = BlockModelDispatcher.loadDataModel("computercraft:block/turtle_normal").asModel();
+            advancedModel = BlockModelDispatcher.loadDataModel("computercraft:block/turtle_advanced").asModel();
+            colourModel = BlockModelDispatcher.loadDataModel("computercraft:block/turtle_colour").asModel();
         }
-
-        float swingProgress = player.getSwingProgress(partialTick);
-        float animationProgress2 = MathHelper.sin(swingProgress * (float) Math.PI);
-        float animationProgress = MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float) Math.PI);
-        GL11.glTranslatef(-animationProgress * 0.4F, MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float) Math.PI * 2.0F) * 0.2F, -animationProgress2 * 0.2F);
-        GL11.glTranslatef(0.56F, -0.52F - (1.0F - renderer.getEquippedProgress(partialTick)) * 0.6F, -0.71999997F);
-        GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
-        GL11.glEnable(32826);
-        float animationProgress3 = MathHelper.sin(swingProgress * swingProgress * (float) Math.PI);
-        GL11.glRotatef(-animationProgress3 * 20.0F, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(-animationProgress * 20.0F, 0.0F, 0.0F, 1.0F);
-        GL11.glRotatef(-animationProgress * 80.0F, 1.0F, 0.0F, 0.0F);
-        GL11.glScalef(0.4F, 0.4F, 0.4F);
-
-        GL11.glRotatef(90, 0, 1f, 0);
-
-        this.renderItem(tessellator, renderer, stack, player, brightness, true);
+        this.standaloneModel = new BlockModelGeneric(itemBlock.getBlock(), baseModel);
     }
 
     @Override
-    public void renderItem(
-        Tessellator tessellator, ItemRenderer renderer, ItemStack itemstack, @Nullable Entity entity, float brightness, boolean handheldTransform
-    ) {
-        GL11.glEnable(3042);
-        GL11.glBlendFunc(770, 771);
-        TextureRegistry.blockAtlas.bind();
-
-        GL11.glRotatef(270, 0, 1f, 0);
-
-        GL11.glScalef(-1, -1, -1);
-
-        GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
-
-        drawTurtle(tessellator, itemstack, brightness, 1.0f);
-
-        GL11.glDisable(3042);
+    public @NotNull DisplayPos getDisplayPos(@NotNull String id) {
+        return baseModel.getItemDisplayPos(id);
     }
 
     @Override
-    public void renderItemIntoGui(
-        Tessellator tessellator, Font font, TextureManager textureManager, ItemStack itemStack, int x, int y, float brightness, float alpha
-    ) {
-        if (itemStack != null) {
-            GL11.glEnable(3042);
-            GL11.glBlendFunc(770, 771);
-            GL11.glEnable(2884);
-            GL11.glBlendFunc(770, 771);
-            TextureRegistry.blockAtlas.bind();
-            GL11.glPushMatrix();
-            GL11.glTranslatef((float) (x - 2), (float) (y + 3), -3.0F);
-            GL11.glScalef(10.0F, 10.0F, 10.0F);
-            GL11.glTranslatef(1.0F, 0.5F, 1.0F);
-            GL11.glScalef(1.0F, 1.0F, -1.0F);
-            GL11.glRotatef(210.0F, 1.0F, 0.0F, 0.0F);
-            GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
-            if (this.useColor) {
-                int color = this.getColor(itemStack);
-                float r = (float) (color >> 16 & 0xFF) / 255.0F;
-                float g = (float) (color >> 8 & 0xFF) / 255.0F;
-                float b = (float) (color & 0xFF) / 255.0F;
-                GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
-            } else {
-                GL11.glColor4f(brightness, brightness, brightness, alpha);
-            }
+    public void render(@NotNull TessellatorGeneral tessellator, @Nullable Entity holder, @NotNull ItemStack itemStack, @NotNull String displayPosId, boolean items3d, int clusterSize, byte lightIndex, float partialTick, boolean mirrorX) {
+        random.setSeed(187L);
+        GLRenderer.setShader(Shaders.ITEM);
+        DisplayPos displayPos = this.getDisplayPos(displayPosId);
+        GLRenderer.modelM4f().translate(displayPos.tx, displayPos.ty, displayPos.tz);
+        GLRenderer.modelM4f().rotateX(Math.toRadians(displayPos.rx));
+        GLRenderer.modelM4f().rotateY(Math.toRadians(displayPos.ry));
+        GLRenderer.modelM4f().rotateZ(Math.toRadians(displayPos.rz));
+        GLRenderer.modelM4f().scale(displayPos.sx, displayPos.sy, displayPos.sz);
 
-            GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-            BlockModel.renderBlocks.useInventoryTint = this.useColor;
-
-            GL11.glTranslatef(0.62f, 0, 0.62f);
-
-            GL11.glRotatef(270, 0, 1f, 0);
-
-            GL11.glTranslatef(-0.62f, 0, -0.62f);
-
-            GL11.glScalef(-1, -1, -1);
-            GL11.glTranslatef(-1, -1, -1);
-
-            GL11.glTranslatef(-0.12f, 0, -0.12f);
-
-            drawTurtle(tessellator, itemStack, brightness, alpha);
-
-
-            BlockModel.renderBlocks.useInventoryTint = true;
-            GL11.glPopMatrix();
-
-            GL11.glEnable(2884);
-            GL11.glDisable(3042);
-        }
-    }
-
-    @Override
-    public void renderAsItemEntity(
-        Tessellator tessellator, Entity entity, Random random, ItemStack itemstack, int renderCount, float yaw, float brightness, float partialTick
-    ) {
-        GL11.glRotatef(yaw, 0.0F, 1.0F, 0.0F);
-        TextureRegistry.blockAtlas.bind();
-        float itemSize = 0.25F;
-        GL11.glScalef(itemSize, itemSize, itemSize);
-
-        for (int i = 0; i < renderCount; i++) {
-            GL11.glPushMatrix();
+        for (int i = 0; i < clusterSize; i++) {
+            float rOffX = 0.0F;
+            float rOffY = 0.0F;
+            float rOffZ = 0.0F;
             if (i > 0) {
-                float rOffX = (random.nextFloat() * 2.0F - 1.0F) * 0.2F / itemSize;
-                float rOffY = (random.nextFloat() * 2.0F - 1.0F) * 0.2F / itemSize;
-                float rOffZ = (random.nextFloat() * 2.0F - 1.0F) * 0.2F / itemSize;
-                GL11.glTranslatef(rOffX, rOffY, rOffZ);
+                rOffX = (random.nextFloat() * 2.0F - 1.0F) * 0.2F / displayPos.sx;
+                rOffY = (random.nextFloat() * 2.0F - 1.0F) * 0.2F / displayPos.sy;
+                rOffZ = (random.nextFloat() * 2.0F - 1.0F) * 0.2F / displayPos.sz;
             }
-
-            if (LightmapHelper.isLightmapEnabled()) {
-                brightness = 1.0F;
-                LightmapHelper.setLightmapCoord(entity.getLightmapCoord(partialTick));
-            }
-
-            if (Global.accessor.isFullbrightEnabled() || this.itemfullBright) {
-                brightness = 1.0F;
-            }
-
-            GL11.glScalef(-1, -1, -1);
-
-            GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
-
-            drawTurtle(tessellator, itemstack, brightness, 1.0f);
-            GL11.glPopMatrix();
+            GLRenderer.modelM4f().translate(rOffX, rOffY, rOffZ);
+            this.renderSingle(tessellator, holder, itemStack, items3d, lightIndex, this.getColor(itemStack), partialTick, mirrorX);
+            GLRenderer.modelM4f().translate(-rOffX, -rOffY, -rOffZ);
         }
     }
 
     @Override
-    public void renderItemInWorld(Tessellator tessellator, Entity entity, ItemStack itemStack, float brightness, float alpha, boolean worldTransform) {
-        if (itemStack != null) {
-            GL11.glBlendFunc(770, 771);
-            GL11.glEnable(2884);
-            GL11.glEnable(3042);
-            GL11.glBlendFunc(770, 771);
-            TextureRegistry.blockAtlas.bind();
-            if (this.useColor) {
-                int color = this.getColor(itemStack);
-                float r = (float) (color >> 16 & 0xFF) / 255.0F;
-                float g = (float) (color >> 8 & 0xFF) / 255.0F;
-                float b = (float) (color & 0xFF) / 255.0F;
-                GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
-            } else {
-                GL11.glColor4f(brightness, brightness, brightness, alpha);
-            }
-
-            GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
-            BlockModel.renderBlocks.useInventoryTint = this.useColor;
-
-            drawTurtle(tessellator, itemStack, brightness, alpha);
-
-            BlockModel.renderBlocks.useInventoryTint = true;
-
-            GL11.glDisable(2884);
-            GL11.glDisable(3042);
-        }
+    public void renderGui(@NotNull TessellatorGeneral tessellator, @Nullable Entity holder, @NotNull ItemStack itemStack, int x, int y, byte lightIndex, float partialTick) {
+        GLRenderer.pushFrame();
+        GLRenderer.setShader(Shaders.ITEM);
+        GLRenderer.enableState(State.BLEND);
+        GLRenderer.setBlendFunc(BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA);
+        GLRenderer.enableState(State.CULL_FACE);
+        GLRenderer.modelM4f().translate((float) (x + 8), (float) (y + 8), 8.0F);
+        GLRenderer.modelM4f().scale(16.0F, -16.0F, 16.0F);
+        this.render(tessellator, holder, itemStack, "gui", false, 1, lightIndex, partialTick, false);
+        GLRenderer.popFrame();
     }
 
-    public void drawTurtle(Tessellator tessellator, ItemStack itemStack, float brightness, float alpha) {
-        int colour = IColouredItem.getColourBasic(itemStack);
+    @Override
+    protected void renderSingle(@NotNull TessellatorGeneral tessellator, @Nullable Entity holder, @NotNull ItemStack itemStack, boolean items3d, byte lightIndex, int color, float partialTick, boolean mirrorX) {
+        TextureRegistry.worldAtlas.bind();
 
-        if (colour != -1) {
-            float r = (float) (colour >> 16 & 0xFF) / 255.0F;
-            float g = (float) (colour >> 8 & 0xFF) / 255.0F;
-            float b = (float) (colour & 0xFF) / 255.0F;
-            GL11.glColor4f(r * brightness, g * brightness, b * brightness, alpha);
+        int turtleColour = IColouredItem.getColourBasic(itemStack);
 
-            Minecraft.getMinecraft().textureManager.loadTexture("/assets/computercraft/textures/block/turtle_colour.png").bind();
+        if (turtleColour != -1) {
+            final int argbColour = (turtleColour & 0x00FFFFFF) | 0xFF000000;
+            colourModel.renderStandalone(standaloneModel, tessellator, 0.0, 0.0, 0.0, 0, lightIndex, new BlockColor() {
+                @Override
+                public int getFallbackColor(int meta, int tintIndex) {
+                    return tintIndex == 0 ? argbColour : -1;
+                }
 
-            tessellator.startDrawingQuads();
-
-            (new BlockAORenderer(AABB.getTemporaryBB(2 / 16f, 2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f, 13 / 16f)))
-                .setBottomUV(5.75 / 16f, 8.5 / 16f, 2.75 / 16f, 5.75 / 16f)
-                .setTopUV(8.75 / 16f, 5.75 / 16f, 5.75 / 16f, 8.5 / 16f)
-                .setNorthUV(11.5 / 16f, 11.5 / 16f, 8.5 / 16f, 8.5 / 16f)
-                .setSouthUV(5.75 / 16f, 11.5 / 16f, 2.75 / 16f, 8.5 / 16f)
-                .setWestUV(8.5 / 16f, 11.5 / 16f, 5.75 / 16f, 8.555 / 16f)
-                .setEastUV(2.75 / 16f, 11.5 / 16f, 0, 8.5 / 16f)
-                .render(tessellator, Side.NORTH);
-
-            (new BlockAORenderer(AABB.getTemporaryBB(3 / 16f, 6 / 16f, 13 / 16f, 13 / 16f, 13 / 16f, 15 / 16f)))
-                .setBottomUV(11.75 / 16f, 6.25 / 16f, 9.25 / 16f, 5.75 / 16f)
-                .setTopUV(14.25 / 16f, 5.75 / 16f, 11.75 / 16f, 6.25 / 16f)
-                .setSouthUV(11.75 / 16f, 8 / 16f, 9.25 / 16f, 6.25 / 16f)
-                .setWestUV(12.25 / 16f, 8 / 16f, 11.75 / 16f, 6.25 / 16f)
-                .setEastUV(9.25 / 16f, 8 / 16f, 8.75 / 16f, 6.25 / 16f)
-                .render(tessellator, Side.NORTH);
-
-            tessellator.draw();
-        } else if (itemStack.itemID == ComputerCraftItems.TURTLE_ADVANCED.id) {
-            Minecraft.getMinecraft().textureManager.loadTexture("/assets/computercraft/textures/block/turtle_advanced.png").bind();
+                @Override
+                public int getWorldColor(@NotNull WorldSource source, @NotNull TilePosc pos, int tintIndex) {
+                    return tintIndex == 0 ? argbColour : -1;
+                }
+            });
+        } else if (itemStack.getItem() instanceof ITurtleItem turtleItem && turtleItem.getFamily() == ComputerFamily.ADVANCED) {
+            advancedModel.renderStandalone(standaloneModel, tessellator, 0.0, 0.0, 0.0, 0, lightIndex, BlockColorDispatcher.getInstance().getDispatch(standaloneModel.block));
         } else {
-            Minecraft.getMinecraft().textureManager.loadTexture("/assets/computercraft/textures/block/turtle_normal.png").bind();
+            baseModel.renderStandalone(standaloneModel, tessellator, 0.0, 0.0, 0.0, 0, lightIndex, BlockColorDispatcher.getInstance().getDispatch(standaloneModel.block));
         }
 
-        tessellator.startDrawingQuads();
-
-        GL11.glColor4f(brightness, brightness, brightness, alpha);
-
-        (new BlockAORenderer(AABB.getTemporaryBB(2 / 16f, 2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f, 13 / 16f)))
-            .setBottomUV(5.75 / 16, 2.75 / 16, 2.75 / 16, 0)
-            .setTopUV(8.75 / 16, 0, 5.75 / 16, 2.75 / 16)
-            .setNorthUV(11.5 / 16, 5.75 / 16, 8.5 / 16, 2.75 / 16)
-            .setSouthUV(5.75 / 16, 5.75 / 16, 2.75 / 16, 2.75 / 16)
-            .setWestUV(8.5 / 16, 5.75 / 16, 5.75 / 16, 2.75 / 16)
-            .setEastUV(2.75 / 16, 5.75 / 16, 0, 2.75 / 16)
-            .render(tessellator, Side.NORTH);
-
-        (new BlockAORenderer(AABB.getTemporaryBB(3 / 16f, 6 / 16f, 13 / 16f, 13 / 16f, 13 / 16f, 15 / 16f)))
-            .setBottomUV(11.75 / 16, 0.5 / 16, 9.25 / 16, 0)
-            .setTopUV(14.25 / 16, 0, 11.75 / 16, 0.5 / 16)
-            .setSouthUV(11.75 / 16, 2.25 / 16, 9.25 / 16, 0.5 / 16)
-            .setWestUV(12.25 / 16, 2.25 / 16, 11.75 / 16, 0.5 / 16)
-            .setEastUV(9.25 / 16, 2.25 / 16, 8.75 / 16, 0.5 / 16)
-            .render(tessellator, Side.NORTH);
-
-        tessellator.draw();
-
-        if (itemStack.getItem() instanceof ITurtleItem) {
-            ITurtleItem item = (ITurtleItem) itemStack.getItem();
-
-            ITurtleUpgrade leftUpgrade = item.getUpgrade(itemStack, TurtleSide.LEFT);
-
+        if (itemStack.getItem() instanceof ITurtleItem turtleItem) {
+            ITurtleUpgrade leftUpgrade = turtleItem.getUpgrade(itemStack, TurtleSide.LEFT);
             if (leftUpgrade != null) {
-                leftUpgrade.drawItemUpgrade(tessellator, Minecraft.getMinecraft().textureManager, TurtleSide.LEFT);
+                leftUpgrade.drawItemUpgrade(tessellator, lightIndex, TurtleSide.LEFT);
             }
-
-            ITurtleUpgrade rightUpgrade = item.getUpgrade(itemStack, TurtleSide.RIGHT);
-
+            ITurtleUpgrade rightUpgrade = turtleItem.getUpgrade(itemStack, TurtleSide.RIGHT);
             if (rightUpgrade != null) {
-                rightUpgrade.drawItemUpgrade(tessellator, Minecraft.getMinecraft().textureManager, TurtleSide.RIGHT);
+                rightUpgrade.drawItemUpgrade(tessellator, lightIndex, TurtleSide.RIGHT);
             }
         }
     }

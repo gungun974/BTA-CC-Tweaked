@@ -20,8 +20,8 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.Items;
 import net.minecraft.core.player.inventory.container.ContainerCrafting;
 import net.minecraft.core.util.helper.DyeColor;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 
 public class DiskRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> implements HasJsonAdapter {
@@ -104,7 +104,7 @@ public class DiskRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> i
         return returnStack;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getOutput() {
         return ItemDisk.createFromIDAndColour(-1, null, Colour.BLUE.getHex());

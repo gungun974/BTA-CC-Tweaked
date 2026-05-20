@@ -7,8 +7,8 @@ package dan200.computercraft.shared.wired;
 
 import dan200.computercraft.api.network.wired.IWiredNetworkChange;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,13 +67,13 @@ public final class WiredNetworkChange implements IWiredNetworkChange {
         return new WiredNetworkChange(Collections.unmodifiableMap(removed), Collections.unmodifiableMap(added));
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Map<String, IPeripheral> peripheralsRemoved() {
         return removed;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Map<String, IPeripheral> peripheralsAdded() {
         return added;

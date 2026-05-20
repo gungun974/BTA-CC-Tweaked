@@ -12,8 +12,8 @@ import dan200.computercraft.api.filesystem.FileOperationException;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.core.apis.handles.ArrayByteChannel;
 import dan200.computercraft.shared.util.IoUtil;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -146,18 +146,18 @@ public class JarMount implements IMount {
     }
 
     @Override
-    public boolean exists(@Nonnull String path) {
+    public boolean exists(@NotNull String path) {
         return get(path) != null;
     }
 
     @Override
-    public boolean isDirectory(@Nonnull String path) {
+    public boolean isDirectory(@NotNull String path) {
         FileEntry file = get(path);
         return file != null && file.isDirectory();
     }
 
     @Override
-    public void list(@Nonnull String path, @Nonnull List<String> contents) throws IOException {
+    public void list(@NotNull String path, @NotNull List<String> contents) throws IOException {
         FileEntry file = get(path);
         if (file == null || !file.isDirectory()) throw new FileOperationException(path, "Not a directory");
 
@@ -165,15 +165,15 @@ public class JarMount implements IMount {
     }
 
     @Override
-    public long getSize(@Nonnull String path) throws IOException {
+    public long getSize(@NotNull String path) throws IOException {
         FileEntry file = get(path);
         if (file != null) return file.size;
         throw new FileOperationException(path, "No such file");
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public ReadableByteChannel openForRead(@Nonnull String path) throws IOException {
+    public ReadableByteChannel openForRead(@NotNull String path) throws IOException {
         FileEntry file = get(path);
         if (file != null && !file.isDirectory()) {
             byte[] contents = CONTENTS_CACHE.getIfPresent(file);
@@ -198,9 +198,9 @@ public class JarMount implements IMount {
         throw new FileOperationException(path, "No such file");
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public BasicFileAttributes getAttributes(@Nonnull String path) throws IOException {
+    public BasicFileAttributes getAttributes(@NotNull String path) throws IOException {
         FileEntry file = get(path);
         if (file != null) {
             ZipEntry entry = zip.getEntry(file.path);
@@ -239,13 +239,8 @@ public class JarMount implements IMount {
         }
     }
 
-    private static class ZipEntryAttributes implements BasicFileAttributes {
+    private record ZipEntryAttributes(ZipEntry entry) implements BasicFileAttributes {
         private static final FileTime EPOCH = FileTime.from(Instant.EPOCH);
-        private final ZipEntry entry;
-
-        ZipEntryAttributes(ZipEntry entry) {
-            this.entry = entry;
-        }
 
         private static FileTime orEpoch(FileTime time) {
             return time == null ? EPOCH : time;

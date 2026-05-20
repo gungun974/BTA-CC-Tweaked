@@ -6,8 +6,8 @@
 package dan200.computercraft.core.asm;
 
 import dan200.computercraft.api.lua.*;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 
 public interface LuaMethod {
@@ -21,6 +21,6 @@ public interface LuaMethod {
 
     String[] EMPTY_METHODS = new String[0];
 
-    @Nonnull
-    MethodResult apply(@Nonnull Object target, @Nonnull ILuaContext context, @Nonnull IArguments args) throws LuaException;
+    @NotNull
+    MethodResult apply(@NotNull Object target, @NotNull ILuaContext context, @NotNull IArguments args) throws LuaException;
 }

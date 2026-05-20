@@ -5,10 +5,9 @@
  */
 package dan200.computercraft.api.network;
 
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.World;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3dc;
 
 /**
  * An object on an {@link IPacketNetwork}, capable of receiving packets.
@@ -19,7 +18,7 @@ public interface IPacketReceiver {
      *
      * @return The receivers's world.
      */
-    @Nonnull
+    @NotNull
     World getWorld();
 
     /**
@@ -27,8 +26,8 @@ public interface IPacketReceiver {
      *
      * @return The receiver's position.
      */
-    @Nonnull
-    Vec3 getPosition();
+    @NotNull
+    Vector3dc getPosition();
 
     /**
      * Get the maximum distance this receiver can send and receive messages.
@@ -66,7 +65,7 @@ public interface IPacketReceiver {
      * @see IPacketNetwork#transmitSameDimension(Packet, double)
      * @see IPacketNetwork#transmitInterdimensional(Packet)
      */
-    void receiveSameDimension(@Nonnull Packet packet, double distance);
+    void receiveSameDimension(@NotNull Packet packet, double distance);
 
     /**
      * Receive a network packet from a different dimension.
@@ -78,5 +77,5 @@ public interface IPacketReceiver {
      * @see IPacketNetwork#transmitSameDimension(Packet, double)
      * @see #isInterdimensional()
      */
-    void receiveDifferentDimension(@Nonnull Packet packet);
+    void receiveDifferentDimension(@NotNull Packet packet);
 }

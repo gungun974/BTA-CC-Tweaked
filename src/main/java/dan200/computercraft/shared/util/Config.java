@@ -38,7 +38,10 @@ public final class Config {
     private static final String serverFileName = "computercraft-server.toml";
 
     private static Path serverPath = null;
+
+    @SuppressWarnings("deprecation")
     private static final Path clientServerPath = FabricLoader.INSTANCE.getConfigDir().resolve(serverFileName);
+    @SuppressWarnings("deprecation")
     private static final Path clientPath = FabricLoader.INSTANCE.getConfigDir().resolve("computercraft-client.toml");
 
     private Config() {
@@ -322,7 +325,7 @@ public final class Config {
             ComputerCraft.floppySpaceLimit = serverConfig.<Integer>get("floppy_space_limit");
             ComputerCraft.maximumFilesOpen = serverConfig.<Integer>get("maximum_open_files");
             ComputerCraft.disableLua51Features = serverConfig.<Boolean>get("disable_lua51_features");
-            ComputerCraft.defaultComputerSettings = serverConfig.<String>get("default_computer_settings");
+            ComputerCraft.defaultComputerSettings = serverConfig.get("default_computer_settings");
             ComputerCraft.debugEnable = serverConfig.<Boolean>get("debug_enabled");
             ComputerCraft.logComputerErrors = serverConfig.<Boolean>get("log_computer_errors");
             ComputerCraft.commandRequireCreative = serverConfig.<Boolean>get("command_require_creative");

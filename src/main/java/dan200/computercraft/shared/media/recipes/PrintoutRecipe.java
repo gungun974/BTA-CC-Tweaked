@@ -17,15 +17,15 @@ import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCrafting;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.Items;
 import net.minecraft.core.player.inventory.container.ContainerCrafting;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 
 public final class PrintoutRecipe extends RecipeEntryCrafting<RecipeSymbol[], ItemStack> implements HasJsonAdapter {
     public PrintoutRecipe() {
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getOutput() {
         return ItemPrintout.createMultipleFromTitleAndText(null, null, null);
@@ -51,7 +51,7 @@ public final class PrintoutRecipe extends RecipeEntryCrafting<RecipeSymbol[], It
         boolean leatherFound = false;
         boolean printoutFound = false;
 
-        int width = ((ContainerCraftingAccessor) inventory).getWidth();
+        int width = ((ContainerCraftingAccessor) inventory).getXSize();
         int height = inventory.getContainerSize() / width;
 
         for (int y = 0; y < height; y++) {

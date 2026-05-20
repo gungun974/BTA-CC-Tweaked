@@ -7,8 +7,7 @@ package dan200.computercraft.api.pocket;
 
 import net.minecraft.core.item.IItemConvertible;
 import net.minecraft.core.item.ItemStack;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A base class for {@link IPocketUpgrade}s.
@@ -30,13 +29,13 @@ public abstract class AbstractPocketUpgrade implements IPocketUpgrade {
     }
 
 
-    @Nonnull
+    @NotNull
     @Override
     public final int getUpgradeID() {
         return id;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public final ItemStack getCraftingItem() {
         return stack;

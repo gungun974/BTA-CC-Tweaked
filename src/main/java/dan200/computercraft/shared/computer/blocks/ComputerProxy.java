@@ -11,7 +11,7 @@ import dan200.computercraft.shared.computer.core.ServerComputer;
 import java.util.function.Supplier;
 
 /**
- * A proxy object for computer objects, delegating to {@link IComputer} or {@link TileComputer} where appropriate.
+ * A proxy object for computer objects, delegating to {@link IComputer} or {@link TileComputerBase} where appropriate.
  */
 public class ComputerProxy {
     private final Supplier<TileComputerBase> get;

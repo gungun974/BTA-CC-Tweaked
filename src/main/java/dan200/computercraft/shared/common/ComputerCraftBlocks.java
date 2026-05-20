@@ -23,12 +23,18 @@ import dan200.computercraft.shared.turtle.blocks.BlockLogicTurtle;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import dan200.computercraft.shared.turtle.items.ItemBlockTurtle;
 import net.minecraft.core.block.Block;
-import net.minecraft.core.block.material.Material;
+import net.minecraft.core.block.entity.TileEntityDispatcher;
+import net.minecraft.core.block.material.Materials;
 import net.minecraft.core.block.tag.BlockTags;
+import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.block.ItemBlock;
 import net.minecraft.core.util.collection.NamespaceID;
 import turniplabs.halplibe.helper.BlockBuilder;
-import turniplabs.halplibe.helper.EntityHelper;
+import turniplabs.halplibe.helper.creativeInventory.CreativeInventoryCategory;
+import turniplabs.halplibe.helper.creativeInventory.CreativeInventoryPlacement;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static dan200.computercraft.ComputerCraft.MOD_ID;
 
@@ -64,12 +70,13 @@ public class ComputerCraftBlocks {
     public static void RegisterBlocks() {
         currentGeneratedId = ComputerCraft.startBlockID;
 
-        EntityHelper.createTileEntity(TileEntityComputer.class, NamespaceID.getPermanent(MOD_ID, "computer"));
+        TileEntityDispatcher.addMapping(TileEntityComputer.class, new NamespaceID(MOD_ID, "computer"));
 
         COMPUTER_NORMAL = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
             .setTileEntity(() -> new TileEntityComputer(ComputerFamily.NORMAL))
             .setBlockItem(block -> {
                 ComputerCraftItems.COMPUTER_NORMAL = new ItemBlockComputer<>(block);
@@ -82,6 +89,7 @@ public class ComputerCraftBlocks {
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
             .setTileEntity(() -> new TileEntityComputer(ComputerFamily.ADVANCED))
             .setBlockItem(block -> {
                 ComputerCraftItems.COMPUTER_ADVANCED = new ItemBlockComputer<>(block);
@@ -89,12 +97,19 @@ public class ComputerCraftBlocks {
             })
             .build("computer_advanced", generateNexId(), b -> new BlockLogicComputer(b, ComputerFamily.ADVANCED));
 
-        EntityHelper.createTileEntity(TileTurtle.class, NamespaceID.getPermanent(MOD_ID, "turtle"));
+        TileEntityDispatcher.addMapping(TileTurtle.class, new NamespaceID(MOD_ID, "turtle"));
 
         TURTLE_NORMAL = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.NOT_IN_CREATIVE_MENU, BlockTags.MINEABLE_BY_PICKAXE)
+            .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS).setCustomSupplier(() -> {
+                List<ItemStack> creativeItems = new LinkedList<>();
+
+                ComputerCraftItems.TURTLE_NORMAL.addToCreativeMenu(creativeItems);
+
+                return creativeItems;
+            }))
             .setTileEntity(() -> new TileTurtle(ComputerFamily.NORMAL))
             .setBlockItem(block -> {
                 ComputerCraftItems.TURTLE_NORMAL = new ItemBlockTurtle(block);
@@ -106,6 +121,13 @@ public class ComputerCraftBlocks {
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.NOT_IN_CREATIVE_MENU, BlockTags.MINEABLE_BY_PICKAXE)
+            .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS).setCustomSupplier(() -> {
+                List<ItemStack> creativeItems = new LinkedList<>();
+
+                ComputerCraftItems.TURTLE_ADVANCED.addToCreativeMenu(creativeItems);
+
+                return creativeItems;
+            }))
             .setTileEntity(() -> new TileTurtle(ComputerFamily.ADVANCED))
             .setBlockItem(block -> {
                 ComputerCraftItems.TURTLE_ADVANCED = new ItemBlockTurtle(block);
@@ -113,12 +135,13 @@ public class ComputerCraftBlocks {
             })
             .build("turtle_advanced", generateNexId(), b -> new BlockLogicTurtle(b, ComputerFamily.ADVANCED));
 
-        EntityHelper.createTileEntity(TileWirelessModem.class, NamespaceID.getPermanent(MOD_ID, "wireless_modem"));
+        TileEntityDispatcher.addMapping(TileWirelessModem.class, new NamespaceID(MOD_ID, "wireless_modem"));
 
         WIRELESS_MODEM_NORMAL = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
             .setTileEntity(() -> new TileWirelessModem(false))
             .setBlockItem(block -> {
                 ComputerCraftItems.WIRELESS_MODEM_NORMAL = new ItemBlock<>(block);
@@ -130,6 +153,7 @@ public class ComputerCraftBlocks {
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
             .setTileEntity(() -> new TileWirelessModem(true))
             .setBlockItem(block -> {
                 ComputerCraftItems.WIRELESS_MODEM_ADVANCED = new ItemBlock<>(block);
@@ -137,30 +161,32 @@ public class ComputerCraftBlocks {
             })
             .build("wireless_modem_advanced", generateNexId(), b -> new BlockLogicWirelessModem(b, true));
 
-        EntityHelper.createTileEntity(TileWiredModemFull.class, NamespaceID.getPermanent(MOD_ID, "wired_modem_full"));
+        TileEntityDispatcher.addMapping(TileWiredModemFull.class, new NamespaceID(MOD_ID, "wired_modem_full"));
 
         WIRED_MODEM_FULL = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
             .setTileEntity(TileWiredModemFull::new)
-            .build("wired_modem_full", generateNexId(), b -> new BlockLogicWiredModemFull(b, Material.stone));
+            .build("wired_modem_full", generateNexId(), b -> new BlockLogicWiredModemFull(b, Materials.STONE));
 
-        EntityHelper.createTileEntity(TileCable.class, NamespaceID.getPermanent(MOD_ID, "cable"));
+        TileEntityDispatcher.addMapping(TileCable.class, new NamespaceID(MOD_ID, "cable"));
 
         CABLE = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.NOT_IN_CREATIVE_MENU, BlockTags.MINEABLE_BY_PICKAXE)
             .setTileEntity(TileCable::new)
-            .build("cable", generateNexId(), b -> new BlockLogicCable(b, Material.stone));
+            .build("cable", generateNexId(), b -> new BlockLogicCable(b, Materials.STONE));
 
-        EntityHelper.createTileEntity(TileMonitor.class, NamespaceID.getPermanent(MOD_ID, "monitor"));
+        TileEntityDispatcher.addMapping(TileMonitor.class, new NamespaceID(MOD_ID, "monitor"));
 
         MONITOR_NORMAL = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
             .setTileEntity(() -> new TileMonitor(false))
             .setBlockItem(block -> {
                 ComputerCraftItems.MONITOR_NORMAL = new ItemBlock<>(block);
@@ -172,6 +198,7 @@ public class ComputerCraftBlocks {
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
             .setTileEntity(() -> new TileMonitor(true))
             .setBlockItem(block -> {
                 ComputerCraftItems.MONITOR_ADVANCED = new ItemBlock<>(block);
@@ -179,12 +206,13 @@ public class ComputerCraftBlocks {
             })
             .build("monitor_advanced", generateNexId(), b -> new BlockLogicMonitor(b, true));
 
-        EntityHelper.createTileEntity(TileDiskDrive.class, NamespaceID.getPermanent(MOD_ID, "disk_drive"));
+        TileEntityDispatcher.addMapping(TileDiskDrive.class, new NamespaceID(MOD_ID, "disk_drive"));
 
         DISK_DRIVE = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
             .setTileEntity(TileDiskDrive::new)
             .setBlockItem(block -> {
                 ComputerCraftItems.DISK_DRIVE = new ItemBlock<>(block);
@@ -192,12 +220,13 @@ public class ComputerCraftBlocks {
             })
             .build("disk_drive", generateNexId(), b -> new BlockLogicDiskDrive(b));
 
-        EntityHelper.createTileEntity(TileSpeaker.class, NamespaceID.getPermanent(MOD_ID, "speaker"));
+        TileEntityDispatcher.addMapping(TileSpeaker.class, new NamespaceID(MOD_ID, "speaker"));
 
         SPEAKER = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
             .setTileEntity(TileSpeaker::new)
             .setBlockItem(block -> {
                 ComputerCraftItems.SPEAKER = new ItemBlock<>(block);
@@ -205,12 +234,13 @@ public class ComputerCraftBlocks {
             })
             .build("speaker", generateNexId(), b -> new BlockLogicSpeaker(b));
 
-        EntityHelper.createTileEntity(TilePrinter.class, NamespaceID.getPermanent(MOD_ID, "printer"));
+        TileEntityDispatcher.addMapping(TilePrinter.class, new NamespaceID(MOD_ID, "printer"));
 
         PRINTER = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
             .setTags(BlockTags.MINEABLE_BY_PICKAXE)
+            .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
             .setTileEntity(TileDiskDrive::new)
             .setBlockItem(block -> {
                 ComputerCraftItems.PRINTER = new ItemBlock<>(block);

@@ -6,30 +6,28 @@
 package dan200.computercraft.shared.peripheral.diskdrive;
 
 import com.mojang.nbt.tags.CompoundTag;
-import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
 import dan200.computercraft.api.media.IMedia;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.peripheral.IPeripheralTile;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.MediaProviders;
 import dan200.computercraft.shared.common.TileGeneric;
 import dan200.computercraft.shared.network.client.OpenGuiDiskDriveClientMessage;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.InventoryUtil;
 import dan200.computercraft.shared.util.RecordUtil;
-import net.minecraft.client.sound.SoundEntry;
 import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.Side;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -59,21 +57,21 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
         super.invalidate();
     }
 
-    public boolean onBlockRightClicked(Player player, Side side, double xPlaced, double yPlaced) {
+    public boolean onInteracted(Player player, Side side, double xPlaced, double yPlaced) {
         if (player.isSneaking()) {
             // Try to put a disk into the drive
             ItemStack disk = player.getHeldItem();
             if (disk == null) {
                 return true;
             }
-            if (!Helper.isClientWorld() && getItem(0) == null && MediaProviders.get(disk) != null) {
-                setDiskStack(player.inventory.removeItem(player.inventory.getCurrentItemIndex(), 1));
+            if (!EnvironmentHelper.isClientWorld() && getItem(0) == null && MediaProviders.get(disk) != null) {
+                setDiskStack(player.inventory.removeItem(player.inventory.getCurrentSlot(), 1));
                 player.setHeldObject(null);
             }
             return true;
         } else {
             // Open the GUI
-            if (!Helper.isClientWorld()) {
+            if (!EnvironmentHelper.isClientWorld()) {
                 new OpenGuiDiskDriveClientMessage(this).sendToPlayer(player);
             }
             return true;
@@ -85,8 +83,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
     }
 
     @Override
-    public void readFromNBT(CompoundTag nbt) {
-        super.readFromNBT(nbt);
+    public void readAdditionalData(CompoundTag nbt) {
         customName = nbt.containsKey(NBT_NAME) ? nbt.getString(NBT_NAME) : null;
         if (nbt.containsKey(NBT_ITEM)) {
             CompoundTag item = nbt.getCompound(NBT_ITEM);
@@ -96,7 +93,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
     }
 
     @Override
-    public void writeToNBT(CompoundTag nbt) {
+    public void writeAdditionalData(CompoundTag nbt) {
         if (customName != null) {
             nbt.putString(NBT_NAME, customName);
         }
@@ -106,12 +103,10 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
             diskStack.writeToNBT(item);
             nbt.put(NBT_ITEM, item);
         }
-
-        super.writeToNBT(nbt);
     }
 
     public void markDirty() {
-        if (!Helper.isClientWorld()) {
+        if (!EnvironmentHelper.isClientWorld()) {
             updateBlockState();
         }
     }
@@ -126,7 +121,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
 
         // Music
         synchronized (this) {
-            if (!Helper.isClientWorld() && recordPlaying != recordQueued || restartRecord) {
+            if (!EnvironmentHelper.isClientWorld() && recordPlaying != recordQueued || restartRecord) {
                 restartRecord = false;
                 if (recordQueued) {
                     IMedia contents = getDiskMedia();
@@ -176,7 +171,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
 
     @Override
     public void setItem(int i, @Nullable ItemStack stack) {
-        if (Helper.isClientWorld()) {
+        if (EnvironmentHelper.isClientWorld()) {
             diskStack = stack;
             diskMount = null;
             markDirty();
@@ -238,10 +233,10 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
     }
 
     @Override
-    public void sortContainer() {
+    public void sort() {
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public IPeripheral getPeripheral(Direction side) {
         return new DiskDrivePeripheral(this);
@@ -368,13 +363,13 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
             final int newMetadata = (currentMetadata & ~0b11000) | (newState.ordinal() << 3);
 
             if (worldObj != null) {
-                worldObj.setBlockMetadataWithNotify(this.x, this.y, this.z, newMetadata);
+                worldObj.setBlockDataNotify(this.tilePos, newMetadata);
             }
         }
     }
 
     private synchronized void ejectContents(boolean destroyed) {
-        if (Helper.isClientWorld() || diskStack == null) {
+        if (EnvironmentHelper.isClientWorld() || diskStack == null) {
             return;
         }
 
@@ -387,14 +382,14 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
         int zOff = 0;
         if (!destroyed) {
             Direction dir = getDirection();
-            xOff = dir.getOffsetX();
-            zOff = dir.getOffsetZ();
+            xOff = dir.offsetX();
+            zOff = dir.offsetZ();
         }
 
-        BlockPos pos = getPos();
-        double x = pos.getX() + 0.5 + xOff * 0.5;
-        double y = pos.getY() + 0.75;
-        double z = pos.getZ() + 0.5 + zOff * 0.5;
+        TilePosc pos = getPos();
+        double x = pos.x() + 0.5 + xOff * 0.5;
+        double y = pos.y() + 0.75;
+        double z = pos.z() + 0.5 + zOff * 0.5;
         EntityItem entityitem = new EntityItem(worldObj, x, y, z, disks);
         entityitem.xd = xOff * 0.15;
         entityitem.yd = 0;
@@ -406,27 +401,27 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
         }
     }
 
-    private BlockPos getPos() {
-        return new BlockPos(x, y, z);
+    private TilePosc getPos() {
+        return tilePos;
     }
 
     private void playRecord() {
         IMedia contents = getDiskMedia();
         String record = contents != null ? contents.getAudio(diskStack) : null;
         if (record != null) {
-            RecordUtil.playRecord(record, contents.getAudioTitle(diskStack), worldObj, new BlockPos(x, y, z));
+            RecordUtil.playRecord(record, contents.getAudioTitle(diskStack), worldObj, tilePos);
         } else {
-            RecordUtil.playRecord(null, null, worldObj, new BlockPos(x, y, z));
+            RecordUtil.playRecord(null, null, worldObj, tilePos);
         }
     }
 
     // Private methods
 
     private void stopRecord() {
-        RecordUtil.playRecord(null, null, worldObj, new BlockPos(x, y, z));
+        RecordUtil.playRecord(null, null, worldObj, tilePos);
     }
 
-    @Nonnull
+    @NotNull
     public String getName() {
         return customName != null ? customName : "A name";
     }

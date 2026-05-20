@@ -6,8 +6,8 @@
 package dan200.computercraft.core.asm;
 
 import dan200.computercraft.api.lua.*;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 
 public final class TaskCallback implements ILuaCallback {
@@ -33,7 +33,7 @@ public final class TaskCallback implements ILuaCallback {
         return new TaskCallback(task).pull;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public MethodResult resume(Object[] response) throws LuaException {
         if (response.length < 3 || !(response[1] instanceof Number) || !(response[2] instanceof Boolean)) {

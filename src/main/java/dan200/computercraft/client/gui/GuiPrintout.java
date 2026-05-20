@@ -10,9 +10,9 @@ import dan200.computercraft.core.terminal.TextBuffer;
 import dan200.computercraft.fabric.GLFWMouseManager;
 import dan200.computercraft.shared.media.items.ItemPrintout;
 import net.minecraft.client.gui.Screen;
+import net.minecraft.client.render.renderer.GLRenderer;
 import net.minecraft.core.item.ItemStack;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 import java.util.UUID;
 
@@ -76,7 +76,6 @@ public class GuiPrintout extends Screen {
             return;
         }
 
-        return;
     }
 
     @Override
@@ -88,15 +87,16 @@ public class GuiPrintout extends Screen {
         zLevel += 1;
 
         // Draw the printout
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GLRenderer.setColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         this.mc.textureManager.loadTexture("/assets/computercraft/textures/gui/printout.png").bind();
 
         int x = (width - PrintoutRenderer.X_SIZE) / 2;
         int y = (height - PrintoutRenderer.Y_SIZE) / 2;
 
-        PrintoutRenderer.drawBorder(x, y, zLevel, page, pages, book);
-        PrintoutRenderer.drawText(x + PrintoutRenderer.X_TEXT_MARGIN, y + PrintoutRenderer.Y_TEXT_MARGIN, 0.02f, ItemPrintout.LINES_PER_PAGE * page, text, colours);
+        PrintoutRenderer.drawBorder(x, y, zLevel, page, pages, book, GLRenderer.getTessellator());
+        GLRenderer.modelM4f().translate(0, 0, 0.02f);
+        PrintoutRenderer.drawText(x + PrintoutRenderer.X_TEXT_MARGIN, y + PrintoutRenderer.Y_TEXT_MARGIN, 0.02f, ItemPrintout.LINES_PER_PAGE * page, text, colours, GLRenderer.modelM4f());
     }
 
     @Override

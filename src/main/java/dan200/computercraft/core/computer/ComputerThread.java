@@ -7,9 +7,9 @@ package dan200.computercraft.core.computer;
 
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.shared.util.ThreadUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.TreeSet;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -179,7 +179,7 @@ public final class ComputerThread {
      *
      * @param executor The computer to execute work on.
      */
-    static void queue(@Nonnull ComputerExecutor executor) {
+    static void queue(@NotNull ComputerExecutor executor) {
         computerLock.lock();
         try {
             if (executor.onComputerQueue) throw new IllegalStateException("Cannot queue already queued executor");

@@ -5,7 +5,8 @@
  */
 package dan200.computercraft.api.lua;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;

@@ -8,9 +8,8 @@ package dan200.computercraft.shared.network.server;
 import dan200.computercraft.shared.computer.core.IContainerComputer;
 import dan200.computercraft.shared.computer.core.InputState;
 import dan200.computercraft.shared.computer.core.ServerComputer;
+import org.jetbrains.annotations.NotNull;
 import turniplabs.halplibe.helper.network.UniversalPacket;
-
-import javax.annotation.Nonnull;
 
 public class KeyEventServerMessage extends ComputerServerMessage {
     public static final int TYPE_DOWN = 0;
@@ -30,21 +29,21 @@ public class KeyEventServerMessage extends ComputerServerMessage {
     }
 
     @Override
-    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void encodeToUniversalPacket(@NotNull UniversalPacket buf) {
         super.encodeToUniversalPacket(buf);
         buf.writeByte(type);
         buf.writeInt(key);
     }
 
     @Override
-    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void decodeFromUniversalPacket(@NotNull UniversalPacket buf) {
         super.decodeFromUniversalPacket(buf);
         type = buf.readByte();
         key = buf.readInt();
     }
 
     @Override
-    protected void handle(@Nonnull ServerComputer computer, @Nonnull IContainerComputer container) {
+    protected void handle(@NotNull ServerComputer computer, @NotNull IContainerComputer container) {
         InputState input = container.getInput();
         if (type == TYPE_UP) {
             input.keyUp(key);

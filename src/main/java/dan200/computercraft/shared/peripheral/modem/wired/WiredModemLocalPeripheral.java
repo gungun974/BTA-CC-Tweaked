@@ -9,13 +9,14 @@ import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.Peripherals;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.shared.common.ComputerCraftBlocks;
-import dan200.computercraft.shared.util.BlockPos;
 import dan200.computercraft.shared.util.IDAssigner;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public final class WiredModemLocalPeripheral {
      * @param direction The direction so search in
      * @return Whether the peripheral changed.
      */
-    public boolean attach(@Nonnull World world, @Nonnull BlockPos origin, @Nonnull Direction direction) {
+    public boolean attach(@NotNull World world, @NotNull TilePosc origin, @NotNull Direction direction) {
         IPeripheral oldPeripheral = peripheral;
         IPeripheral peripheral = this.peripheral = getPeripheralFrom(world, origin, direction);
 
@@ -64,15 +65,15 @@ public final class WiredModemLocalPeripheral {
     }
 
     @Nullable
-    private IPeripheral getPeripheralFrom(World world, BlockPos pos, Direction direction) {
-        final BlockPos offset = pos.offset(direction);
+    private IPeripheral getPeripheralFrom(World world, TilePosc pos, Direction direction) {
+        final TilePosc offset = pos.add(direction, new TilePos());
 
-        final int block = world.getBlockId(offset.x, offset.y, offset.z);
+        final int block = world.getBlockType(offset).id();
         if (block == ComputerCraftBlocks.WIRED_MODEM_FULL.id() || block == ComputerCraftBlocks.CABLE.id()) {
             return null;
         }
 
-        IPeripheral peripheral = Peripherals.getPeripheral(world, offset, direction.getOpposite());
+        IPeripheral peripheral = Peripherals.getPeripheral(world, offset, direction.opposite());
         return peripheral instanceof WiredModemPeripheral ? null : peripheral;
     }
 
@@ -103,7 +104,7 @@ public final class WiredModemLocalPeripheral {
         return peripheral != null;
     }
 
-    public void extendMap(@Nonnull Map<String, IPeripheral> peripherals) {
+    public void extendMap(@NotNull Map<String, IPeripheral> peripherals) {
         if (peripheral != null) {
             peripherals.put(type + "_" + id, peripheral);
         }
@@ -113,7 +114,7 @@ public final class WiredModemLocalPeripheral {
         return peripheral == null ? Collections.emptyMap() : Collections.singletonMap(type + "_" + id, peripheral);
     }
 
-    public void write(@Nonnull CompoundTag tag, @Nonnull String suffix) {
+    public void write(@NotNull CompoundTag tag, @NotNull String suffix) {
         if (id >= 0) {
             tag.putInt(NBT_PERIPHERAL_ID + suffix, id);
         }
@@ -122,7 +123,7 @@ public final class WiredModemLocalPeripheral {
         }
     }
 
-    public void read(@Nonnull CompoundTag tag, @Nonnull String suffix) {
+    public void read(@NotNull CompoundTag tag, @NotNull String suffix) {
         id = tag.containsKey(NBT_PERIPHERAL_ID + suffix) ? tag.getInteger(NBT_PERIPHERAL_ID + suffix) : -1;
 
         type = tag.containsKey(NBT_PERIPHERAL_TYPE + suffix) ? tag.getString(NBT_PERIPHERAL_TYPE + suffix) : null;

@@ -10,8 +10,8 @@ import dan200.computercraft.api.lua.ILuaAPI;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.shared.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -403,17 +403,10 @@ public class OSAPI implements ILuaAPI {
         return formatter.toFormatter(Locale.ROOT).format(date);
     }
 
-    private static class Alarm implements Comparable<Alarm> {
-        final double time;
-        final int day;
-
-        Alarm(double time, int day) {
-            this.time = time;
-            this.day = day;
-        }
+    private record Alarm(double time, int day) implements Comparable<Alarm> {
 
         @Override
-        public int compareTo(@Nonnull Alarm o) {
+        public int compareTo(@NotNull Alarm o) {
             double t = day * 24.0 + time;
             double ot = day * 24.0 + time;
             return Double.compare(t, ot);

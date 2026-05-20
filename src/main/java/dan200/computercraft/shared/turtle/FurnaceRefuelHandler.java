@@ -13,10 +13,9 @@ import dan200.computercraft.shared.util.ItemStorage;
 import dan200.computercraft.shared.util.WorldUtil;
 import net.minecraft.core.crafting.LookupFuelFurnace;
 import net.minecraft.core.item.Item;
+import net.minecraft.core.item.ItemBucket;
 import net.minecraft.core.item.ItemStack;
-import net.minecraft.core.item.Items;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class FurnaceRefuelHandler implements TurtleRefuelEvent.Handler {
     public static final FurnaceRefuelHandler INSTANCE = new FurnaceRefuelHandler();
@@ -31,13 +30,13 @@ public final class FurnaceRefuelHandler implements TurtleRefuelEvent.Handler {
         }
     }
 
-    private static int getFuelPerItem(@Nonnull ItemStack stack) {
+    private static int getFuelPerItem(@NotNull ItemStack stack) {
         int burnTime = LookupFuelFurnace.instance.getFuelYield(stack.getItem().id);
         return (burnTime * 5) / 100;
     }
 
     @Override
-    public int refuel(@Nonnull ITurtleAccess turtle, @Nonnull ItemStack currentStack, int slot, int limit) {
+    public int refuel(@NotNull ITurtleAccess turtle, @NotNull ItemStack currentStack, int slot, int limit) {
         ItemStorage storage = ItemStorage.wrap(turtle.getInventory());
         ItemStack stack = storage.take(slot, limit, null, false);
         int fuelToGive = getFuelPerItem(stack) * stack.stackSize;
@@ -45,8 +44,10 @@ public final class FurnaceRefuelHandler implements TurtleRefuelEvent.Handler {
         // Store the replacement item in the inventory
         Item replacementStack = stack.getItem();
 
-        if (stack.getItem().equals(Items.BUCKET_LAVA)) {
-            replacementStack = Items.BUCKET;
+        if (replacementStack instanceof ItemBucket) {
+            if (ItemBucket.getState(stack) == ItemBucket.STATE_LAVA) {
+                ItemBucket.setState(stack, ItemBucket.STATE_EMPTY);
+            }
         } else {
             currentStack.stackSize--;
             if (currentStack.stackSize - limit - 1 <= 0) {
@@ -61,7 +62,7 @@ public final class FurnaceRefuelHandler implements TurtleRefuelEvent.Handler {
                     turtle.getWorld(),
                     turtle.getPosition(),
                     turtle.getDirection()
-                        .getOpposite());
+                        .opposite());
             }
         }
 

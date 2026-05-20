@@ -11,8 +11,8 @@ import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.shared.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 /**
@@ -27,7 +27,7 @@ public class PrinterPeripheral implements IPeripheral {
         this.printer = printer;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public String getType() {
         return "printer";
@@ -39,7 +39,7 @@ public class PrinterPeripheral implements IPeripheral {
     // FIXME: None of our page modification functions actually mark the tile as dirty, so the page may not be
     //  persisted correctly.
 
-    @Nonnull
+    @NotNull
     @Override
     public Object getTarget() {
         return printer;
@@ -65,7 +65,7 @@ public class PrinterPeripheral implements IPeripheral {
         page.setCursorPos(page.getCursorX() + text.length(), page.getCursorY());
     }
 
-    @Nonnull
+    @NotNull
     private Terminal getCurrentPage() throws LuaException {
         Terminal currentPage = printer.getCurrentPage();
         if (currentPage == null) {

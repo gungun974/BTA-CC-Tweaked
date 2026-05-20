@@ -10,9 +10,9 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class InventoryUtil {
     private InventoryUtil() {
@@ -31,11 +31,11 @@ public final class InventoryUtil {
 
     // Methods for finding inventories:
 
-    public static Container getInventory(World world, BlockPos pos, Direction side) {
+    public static Container getInventory(World world, TilePosc pos, Direction side) {
         // Look for tile with inventory
-        int y = pos.getY();
+        int y = pos.y();
         if (y >= 0 && y < World.HEIGHT_BLOCKS) {
-            TileEntity tileEntity = world.getTileEntity(pos.x, pos.y, pos.z);
+            TileEntity tileEntity = world.getTileEntity(pos);
 
             Container inventory = getInventory(tileEntity);
             return inventory;
@@ -45,15 +45,14 @@ public final class InventoryUtil {
     }
 
     public static Container getInventory(TileEntity tileEntity) {
-        if (tileEntity instanceof Container) {
-            Container inventory = (Container) tileEntity;
+        if (tileEntity instanceof Container inventory) {
             return inventory;
         }
 
         return null;
     }
 
-    public static ItemStack storeItems(@Nonnull ItemStack itemstack, ItemStorage inventory, int begin) {
+    public static ItemStack storeItems(@NotNull ItemStack itemstack, ItemStorage inventory, int begin) {
         return storeItems(itemstack, inventory, 0, inventory.size(), begin);
     }
 
@@ -80,13 +79,13 @@ public final class InventoryUtil {
         return a == b || ItemStack.areItemStacksEqual(a, b);
     }
 
-    public static ItemStack storeItems(@Nonnull ItemStack itemstack, ItemStorage inventory) {
+    public static ItemStack storeItems(@NotNull ItemStack itemstack, ItemStorage inventory) {
         return storeItems(itemstack, inventory, 0, inventory.size(), 0);
     }
 
     // Methods for taking out of inventories
 
-    @Nonnull
+    @NotNull
     public static ItemStack takeItems(int count, ItemStorage inventory, int begin) {
         return takeItems(count, inventory, 0, inventory.size(), begin);
     }

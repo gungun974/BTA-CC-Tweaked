@@ -12,8 +12,7 @@ import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.core.computer.IComputerEnvironment;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.shared.util.Colour;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The Terminal API provides functions for writing text to the terminal and monitors, and drawing ASCII graphics.
@@ -57,7 +56,7 @@ public class TermAPI extends TermMethods implements ILuaAPI {
         return rgbObj;
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public Terminal getTerminal() {
         return terminal;

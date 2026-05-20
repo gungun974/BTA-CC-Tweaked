@@ -6,8 +6,7 @@
 package dan200.computercraft.api.lua;
 
 import dan200.computercraft.api.peripheral.IDynamicPeripheral;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An interface for representing custom objects returned by peripherals or other Lua objects.
@@ -22,7 +21,7 @@ public interface IDynamicLuaObject {
      * @return The method names this object provides.
      * @see IDynamicPeripheral#getMethodNames()
      */
-    @Nonnull
+    @NotNull
     String[] getMethodNames();
 
     /**
@@ -34,6 +33,6 @@ public interface IDynamicLuaObject {
      * @return The result of this function. Either an immediate value ({@link MethodResult#of(Object...)} or an instruction to yield.
      * @throws LuaException If the function threw an exception.
      */
-    @Nonnull
-    MethodResult callMethod(@Nonnull ILuaContext context, int method, @Nonnull IArguments arguments) throws LuaException;
+    @NotNull
+    MethodResult callMethod(@NotNull ILuaContext context, int method, @NotNull IArguments arguments) throws LuaException;
 }

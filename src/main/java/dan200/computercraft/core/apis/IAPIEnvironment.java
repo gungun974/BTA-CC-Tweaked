@@ -12,22 +12,21 @@ import dan200.computercraft.core.computer.IComputerEnvironment;
 import dan200.computercraft.core.filesystem.FileSystem;
 import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.core.tracking.TrackingField;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface IAPIEnvironment {
     String TIMER_EVENT = "timer";
 
     int getComputerID();
 
-    @Nonnull
+    @NotNull
     IComputerEnvironment getComputerEnvironment();
 
-    @Nonnull
+    @NotNull
     IWorkMonitor getMainThreadMonitor();
 
-    @Nonnull
+    @NotNull
     Terminal getTerminal();
 
     FileSystem getFileSystem();
@@ -63,9 +62,9 @@ public interface IAPIEnvironment {
 
     void cancelTimer(int id);
 
-    void addTrackingChange(@Nonnull TrackingField field, long change);
+    void addTrackingChange(@NotNull TrackingField field, long change);
 
-    default void addTrackingChange(@Nonnull TrackingField field) {
+    default void addTrackingChange(@NotNull TrackingField field) {
         addTrackingChange(field, 1);
     }
 

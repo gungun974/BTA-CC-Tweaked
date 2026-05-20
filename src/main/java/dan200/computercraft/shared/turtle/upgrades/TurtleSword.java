@@ -5,12 +5,14 @@
  */
 package dan200.computercraft.shared.turtle.upgrades;
 
-import dan200.computercraft.shared.util.BlockPos;
+
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
+import net.minecraft.core.block.material.Materials;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
 import org.jetbrains.annotations.NotNull;
 
 public class TurtleSword extends TurtleTool {
@@ -33,17 +35,17 @@ public class TurtleSword extends TurtleTool {
     }
 
     @Override
-    protected boolean canBreakBlock(World world, BlockPos pos) {
+    protected boolean canBreakBlock(World world, TilePosc pos) {
         if (!super.canBreakBlock(world, pos)) {
             return false;
         }
 
-        Block<?> block = world.getBlock(pos.x, pos.y, pos.z);
+        Block<?> block = world.getBlockType(pos);
         if (block == null) {
             return false;
         }
 
         Material material = block.getMaterial();
-        return material == Material.plant || material == Material.leaves || material == Material.cloth || material == Material.web;
+        return material == Materials.PLANT || material == Materials.LEAVES || material == Materials.CLOTH || material == Materials.WEB;
     }
 }

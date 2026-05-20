@@ -10,11 +10,9 @@ import dan200.computercraft.api.pocket.AbstractPocketUpgrade;
 import dan200.computercraft.api.pocket.IPocketAccess;
 import dan200.computercraft.shared.common.ComputerCraftItems;
 import net.minecraft.core.entity.Entity;
-import net.minecraft.core.util.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3d;
 
 public class PocketSpeaker extends AbstractPocketUpgrade {
     public PocketSpeaker(int id) {
@@ -23,7 +21,7 @@ public class PocketSpeaker extends AbstractPocketUpgrade {
 
     @Nullable
     @Override
-    public IPeripheral createPeripheral(@Nonnull IPocketAccess access) {
+    public IPeripheral createPeripheral(@NotNull IPocketAccess access) {
         return new PocketSpeakerPeripheral();
     }
 
@@ -33,16 +31,14 @@ public class PocketSpeaker extends AbstractPocketUpgrade {
     }
 
     @Override
-    public void update(@Nonnull IPocketAccess access, @Nullable IPeripheral peripheral) {
-        if (!(peripheral instanceof PocketSpeakerPeripheral)) {
+    public void update(@NotNull IPocketAccess access, @Nullable IPeripheral peripheral) {
+        if (!(peripheral instanceof PocketSpeakerPeripheral speaker)) {
             return;
         }
 
-        PocketSpeakerPeripheral speaker = (PocketSpeakerPeripheral) peripheral;
-
         Entity entity = access.getEntity();
         if (entity != null) {
-            speaker.setLocation(entity.world, Vec3.getPermanentVec3(entity.x, entity.y + entity.getHeadHeight(), entity.z));
+            speaker.setLocation(entity.world, new Vector3d(entity.x, entity.y + entity.getHeadHeight(), entity.z));
         }
 
         speaker.update();

@@ -15,12 +15,12 @@ import dan200.computercraft.api.lua.IArguments;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.lua.MethodResult;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -85,8 +85,8 @@ public final class Generator<T> {
         };
     }
 
-    @Nonnull
-    public List<NamedMethod<T>> getMethods(@Nonnull Class<?> klass) {
+    @NotNull
+    public List<NamedMethod<T>> getMethods(@NotNull Class<?> klass) {
         try {
             return classCache.get(klass);
         } catch (ExecutionException e) {
@@ -95,7 +95,7 @@ public final class Generator<T> {
         }
     }
 
-    @Nonnull
+    @NotNull
     private List<NamedMethod<T>> build(Class<?> klass) {
         ArrayList<NamedMethod<T>> methods = null;
         for (Method method : klass.getMethods()) {
@@ -143,7 +143,7 @@ public final class Generator<T> {
         }
     }
 
-    @Nonnull
+    @NotNull
     private Optional<T> build(Method method) {
         String name = method.getDeclaringClass().getName() + "." + method.getName();
         int modifiers = method.getModifiers();

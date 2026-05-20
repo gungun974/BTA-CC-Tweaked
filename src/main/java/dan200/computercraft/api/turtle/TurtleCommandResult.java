@@ -5,14 +5,14 @@
  */
 package dan200.computercraft.api.turtle;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Used to indicate the result of executing a turtle command.
  *
  * @see ITurtleCommand#execute(ITurtleAccess)
- * @see ITurtleUpgrade#useTool(ITurtleAccess, TurtleSide, TurtleVerb, Direction)
+ * @see dan200.computercraft.api.turtle.ITurtleUpgrade#useTool(ITurtleAccess, TurtleSide, TurtleVerb, net.minecraft.core.util.helper.Direction)
  */
 public final class TurtleCommandResult {
     private static final TurtleCommandResult EMPTY_SUCCESS = new TurtleCommandResult(true, null, null);
@@ -32,7 +32,7 @@ public final class TurtleCommandResult {
      *
      * @return A successful command result with no values.
      */
-    @Nonnull
+    @NotNull
     public static TurtleCommandResult success() {
         return EMPTY_SUCCESS;
     }
@@ -43,7 +43,7 @@ public final class TurtleCommandResult {
      * @param results The results of executing this command.
      * @return A successful command result with the given values.
      */
-    @Nonnull
+    @NotNull
     public static TurtleCommandResult success(@Nullable Object[] results) {
         if (results == null || results.length == 0) {
             return EMPTY_SUCCESS;
@@ -56,7 +56,7 @@ public final class TurtleCommandResult {
      *
      * @return A failed command result with no message.
      */
-    @Nonnull
+    @NotNull
     public static TurtleCommandResult failure() {
         return EMPTY_FAILURE;
     }
@@ -67,7 +67,7 @@ public final class TurtleCommandResult {
      * @param errorMessage The error message to provide.
      * @return A failed command result with a message.
      */
-    @Nonnull
+    @NotNull
     public static TurtleCommandResult failure(@Nullable String errorMessage) {
         if (errorMessage == null) {
             return EMPTY_FAILURE;

@@ -30,7 +30,7 @@ configurations {
 
 loom {
     noIntermediateMappings()
-    customMinecraftMetadata.set("https://downloads.betterthanadventure.net/bta-client/${libs.versions.btaChannel.get()}/v${libs.versions.bta.get()}/manifest.json")
+    customMinecraftMetadata.set("https://downloads.betterthanadventure.net/bta-client/${libs.versions.btaChannel.get()}/${libs.versions.bta.get()}/manifest.json")
 }
 
 repositories {
@@ -40,10 +40,11 @@ repositories {
     maven("https://maven.fabricmc.net/") { name = "Fabric" }
     maven("https://maven.thesignalumproject.net/infrastructure") { name = "SignalumMavenInfrastructure" }
     maven("https://maven.thesignalumproject.net/releases") { name = "SignalumMavenReleases" }
+    maven("https://maven.thesignalumproject.net/nightly") { name = "SignalumMavenNightly" }
     maven("https://squiddev.cc/maven") { name = "SquidDev" }
     ivy("https://github.com/Better-than-Adventure") {
         patternLayout {
-            artifact("[organisation]/releases/download/v[revision]/[module].jar")
+            artifact("[organisation]/releases/download/[revision]/[module]-bta-[revision].jar")
             setM2compatible(true)
         }
         metadataSources { artifact() }
@@ -78,12 +79,11 @@ lwjgl {
 
 dependencies {
     minecraft("::${libs.versions.bta.get()}")
-    mappings(loom.layered {})
 
-    modRuntimeOnly(libs.clientJar)
-    modImplementation(libs.loader)
+    runtimeOnly(libs.clientJar)
+    implementation(libs.loader)
 
-    modImplementation(libs.halplibe)
+    implementation(libs.halplibe)
 
     implementation(libs.slf4jApi)
     implementation(libs.log4j.slf4j2.impl)
@@ -97,7 +97,7 @@ dependencies {
     implementation(libs.commonsLang3)
     include(libs.commonsLang3)
 
-    modImplementation(libs.legacyLwjgl)
+    implementation(libs.legacyLwjgl)
 
     shade(libs.cobalt)
 

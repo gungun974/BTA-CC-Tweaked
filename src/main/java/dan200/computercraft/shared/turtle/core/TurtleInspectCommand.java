@@ -10,15 +10,14 @@ import dan200.computercraft.api.turtle.ITurtleCommand;
 import dan200.computercraft.api.turtle.TurtleCommandResult;
 import dan200.computercraft.api.turtle.event.TurtleBlockEvent;
 import dan200.computercraft.api.turtle.event.TurtleEvent;
-import dan200.computercraft.fabric.Helper;
 import dan200.computercraft.shared.peripheral.generic.data.BlockData;
-import dan200.computercraft.shared.util.BlockPos;
-import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogic;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,23 +28,23 @@ public class TurtleInspectCommand implements ITurtleCommand {
         this.direction = direction;
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult execute(@Nonnull ITurtleAccess turtle) {
+    public TurtleCommandResult execute(@NotNull ITurtleAccess turtle) {
         // Get world direction from direction
         Direction direction = this.direction.toWorldDir(turtle);
 
         // Check if thing in front is air or not
         World world = turtle.getWorld();
-        BlockPos oldPosition = turtle.getPosition();
-        BlockPos newPosition = oldPosition.offset(direction);
+        TilePosc oldPosition = turtle.getPosition();
+        TilePosc newPosition = oldPosition.add(direction, new TilePos());
 
-        if (world.isAirBlock(newPosition.x, newPosition.y, newPosition.z)) {
+        if (world.isAirBlock(newPosition)) {
             return TurtleCommandResult.failure("No block to inspect");
         }
 
-        BlockLogic block = Helper.getBlockLogic(world, newPosition.x, newPosition.y, newPosition.z);
-        int metadata = world.getBlockMetadata(newPosition.x, newPosition.y, newPosition.z);
+        BlockLogic block = world.getBlockType(newPosition).getLogic();
+        int metadata = world.getBlockData(newPosition);
 
         Map<String, Object> table = BlockData.fill(new HashMap<>(), block.id(), metadata, block.namespaceId());
 

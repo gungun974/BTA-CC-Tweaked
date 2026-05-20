@@ -1,12 +1,11 @@
 package dan200.computercraft.shared.peripheral.diskdrive;
 
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.InventoryAction;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.player.inventory.container.Container;
 import net.minecraft.core.player.inventory.menu.MenuAbstract;
 import net.minecraft.core.player.inventory.slot.Slot;
-
-import java.util.List;
 
 public class MenuDiskDrive extends MenuAbstract {
     private final int diskDriveSlotsStart;
@@ -40,7 +39,7 @@ public class MenuDiskDrive extends MenuAbstract {
     }
 
     @Override
-    public List<Integer> getMoveSlots(InventoryAction action, Slot slot, int target, Player player) {
+    public IntList getMoveSlots(InventoryAction action, Slot slot, int target, Player player) {
         if (slot.index >= this.diskDriveSlotsStart && slot.index < this.inventorySlotsStart) {
             return this.getSlots(this.diskDriveSlotsStart, 1, false);
         } else {
@@ -59,7 +58,7 @@ public class MenuDiskDrive extends MenuAbstract {
     }
 
     @Override
-    public List<Integer> getTargetSlots(InventoryAction action, Slot slot, int target, Player player) {
+    public IntList getTargetSlots(InventoryAction action, Slot slot, int target, Player player) {
         return slot.index >= this.diskDriveSlotsStart && slot.index < this.inventorySlotsStart
             ? this.getSlots(this.inventorySlotsStart, 36, false)
             : this.getSlots(this.diskDriveSlotsStart, 1, false);

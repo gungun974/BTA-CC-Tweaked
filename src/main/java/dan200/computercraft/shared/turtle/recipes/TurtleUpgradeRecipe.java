@@ -21,8 +21,8 @@ import net.minecraft.core.data.registry.recipe.adapter.RecipeJsonAdapter;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCrafting;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.player.inventory.container.ContainerCrafting;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
@@ -30,7 +30,7 @@ public final class TurtleUpgradeRecipe extends RecipeEntryCrafting<RecipeSymbol[
     public TurtleUpgradeRecipe() {
     }
 
-    @Nonnull
+    @NotNull
     @Override
     public ItemStack getOutput() {
         return Objects.requireNonNull(TurtleItemFactory.create(-1, null, -1, ComputerFamily.NORMAL, null, null, 0, -1));
@@ -53,7 +53,7 @@ public final class TurtleUpgradeRecipe extends RecipeEntryCrafting<RecipeSymbol[
         ItemStack turtle = null;
         ItemStack rightItem = null;
 
-        int width = ((ContainerCraftingAccessor) inventory).getWidth();
+        int width = ((ContainerCraftingAccessor) inventory).getXSize();
         int height = inventory.getContainerSize() / width;
 
         for (int y = 0; y < height; y++) {

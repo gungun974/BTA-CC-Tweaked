@@ -8,8 +8,8 @@ package dan200.computercraft.core.apis.handles;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.core.filesystem.TrackingCloseable;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.channels.Channels;
@@ -31,12 +31,12 @@ public class EncodedReadableHandle extends HandleGeneric {
 
     private final BufferedReader reader;
 
-    public EncodedReadableHandle(@Nonnull BufferedReader reader, @Nonnull TrackingCloseable closable) {
+    public EncodedReadableHandle(@NotNull BufferedReader reader, @NotNull TrackingCloseable closable) {
         super(closable);
         this.reader = reader;
     }
 
-    public EncodedReadableHandle(@Nonnull BufferedReader reader) {
+    public EncodedReadableHandle(@NotNull BufferedReader reader) {
         this(reader, new TrackingCloseable.Impl(reader));
     }
 

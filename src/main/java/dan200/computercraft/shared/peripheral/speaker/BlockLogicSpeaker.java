@@ -7,11 +7,11 @@ package dan200.computercraft.shared.peripheral.speaker;
 
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogicRotatable;
-import net.minecraft.core.block.material.Material;
+import net.minecraft.core.block.material.Materials;
 
 public class BlockLogicSpeaker extends BlockLogicRotatable {
     public BlockLogicSpeaker(Block<?> block) {
-        super(block, Material.stone);
+        super(block, Materials.STONE);
         block.withEntity(TileSpeaker::new);
     }
 }

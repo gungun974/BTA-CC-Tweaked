@@ -17,8 +17,8 @@ import io.netty.handler.codec.http.DefaultHttpHeaders;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Locale;
@@ -156,8 +156,8 @@ public class HTTPAPI implements ILuaAPI {
         }
     }
 
-    @Nonnull
-    private HttpHeaders getHeaders(@Nonnull Map<?, ?> headerTable) throws LuaException {
+    @NotNull
+    private HttpHeaders getHeaders(@NotNull Map<?, ?> headerTable) throws LuaException {
         HttpHeaders headers = new DefaultHttpHeaders();
         for (Map.Entry<?, ?> entry : headerTable.entrySet()) {
             Object value = entry.getValue();

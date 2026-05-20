@@ -12,8 +12,7 @@ import dan200.computercraft.api.lua.MethodResult;
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.core.asm.NamedMethod;
 import dan200.computercraft.core.asm.PeripheralMethod;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 final class SaturatedMethod {
     private final Object target;
@@ -26,12 +25,12 @@ final class SaturatedMethod {
         this.method = method.getMethod();
     }
 
-    @Nonnull
-    MethodResult apply(@Nonnull ILuaContext context, @Nonnull IComputerAccess computer, @Nonnull IArguments args) throws LuaException {
+    @NotNull
+    MethodResult apply(@NotNull ILuaContext context, @NotNull IComputerAccess computer, @NotNull IArguments args) throws LuaException {
         return method.apply(target, context, computer, args);
     }
 
-    @Nonnull
+    @NotNull
     String getName() {
         return name;
     }
@@ -39,9 +38,8 @@ final class SaturatedMethod {
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
-        if (!(obj instanceof SaturatedMethod)) return false;
+        if (!(obj instanceof SaturatedMethod other)) return false;
 
-        SaturatedMethod other = (SaturatedMethod) obj;
         return method == other.method && target.equals(other.target);
     }
 

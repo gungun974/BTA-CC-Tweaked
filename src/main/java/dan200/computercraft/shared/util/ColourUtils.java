@@ -9,8 +9,7 @@ import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemDye;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.DyeColor;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public final class ColourUtils {
     @Nullable

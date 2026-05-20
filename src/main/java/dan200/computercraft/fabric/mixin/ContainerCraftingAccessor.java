@@ -7,5 +7,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(value = ContainerCrafting.class, remap = false)
 public interface ContainerCraftingAccessor {
     @Accessor
-    int getWidth();
+    int getXSize();
 }

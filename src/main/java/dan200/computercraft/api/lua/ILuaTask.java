@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.api.lua;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A task which can be executed via {@link ILuaContext#issueMainThreadTask(ILuaTask)} This will be run on the main thread, at the beginning of the next

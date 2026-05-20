@@ -11,8 +11,7 @@ import dan200.computercraft.api.lua.ILuaTask;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.core.computer.MainThread;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 class LuaContext implements ILuaContext {
     private final Computer computer;
@@ -22,7 +21,7 @@ class LuaContext implements ILuaContext {
     }
 
     @Override
-    public long issueMainThreadTask(@Nonnull final ILuaTask task) throws LuaException {
+    public long issueMainThreadTask(@NotNull final ILuaTask task) throws LuaException {
         // Issue command
         final long taskID = MainThread.getUniqueTaskID();
         final Runnable iTask = () -> {

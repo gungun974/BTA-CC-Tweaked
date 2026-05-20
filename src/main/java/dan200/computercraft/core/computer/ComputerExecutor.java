@@ -20,9 +20,9 @@ import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.core.tracking.Tracking;
 import dan200.computercraft.shared.util.Colour;
 import dan200.computercraft.shared.util.IoUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -252,7 +252,7 @@ final class ComputerExecutor {
      * @param event The event's name
      * @param args  The event's arguments
      */
-    void queueEvent(@Nonnull String event, @Nullable Object[] args) {
+    void queueEvent(@NotNull String event, @Nullable Object[] args) {
         // Events should be skipped if we're not on.
         if (!isOn) return;
 
@@ -578,13 +578,6 @@ final class ComputerExecutor {
         ERROR,
     }
 
-    private static final class Event {
-        final String name;
-        final Object[] args;
-
-        private Event(String name, Object[] args) {
-            this.name = name;
-            this.args = args;
-        }
+    private record Event(String name, Object[] args) {
     }
 }

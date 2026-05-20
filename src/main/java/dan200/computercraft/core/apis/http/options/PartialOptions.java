@@ -5,7 +5,7 @@
  */
 package dan200.computercraft.core.apis.http.options;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class PartialOptions {
     static final PartialOptions DEFAULT = new PartialOptions(null, null, null, null, null);
@@ -26,7 +26,7 @@ public final class PartialOptions {
         this.websocketMessage = websocketMessage;
     }
 
-    @Nonnull
+    @NotNull
     Options toOptions() {
         if (options != null) return options;
 
@@ -39,7 +39,7 @@ public final class PartialOptions {
         );
     }
 
-    void merge(@Nonnull PartialOptions other) {
+    void merge(@NotNull PartialOptions other) {
         if (action == null && other.action != null) action = other.action;
         if (maxUpload == null && other.maxUpload != null) maxUpload = other.maxUpload;
         if (maxDownload == null && other.maxDownload != null) maxDownload = other.maxDownload;

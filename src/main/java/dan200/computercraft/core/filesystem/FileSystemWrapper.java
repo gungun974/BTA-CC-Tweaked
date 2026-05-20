@@ -6,8 +6,8 @@
 package dan200.computercraft.core.filesystem;
 
 import dan200.computercraft.shared.util.IoUtil;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.ref.ReferenceQueue;
@@ -57,7 +57,7 @@ public class FileSystemWrapper<T extends Closeable> implements TrackingCloseable
         return isOpen;
     }
 
-    @Nonnull
+    @NotNull
     public T get() {
         return closeable.get();
     }

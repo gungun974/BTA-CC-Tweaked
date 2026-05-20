@@ -8,7 +8,9 @@ package dan200.computercraft.client.render;
 import dan200.computercraft.client.gui.FixedWidthFontRenderer;
 import dan200.computercraft.core.terminal.TextBuffer;
 import dan200.computercraft.shared.util.Palette;
-import net.minecraft.client.render.tessellator.Tessellator;
+import net.minecraft.client.render.renderer.DrawMode;
+import net.minecraft.client.render.tessellator.TessellatorGeneral;
+import org.joml.Matrix4f;
 
 import static dan200.computercraft.client.gui.FixedWidthFontRenderer.FONT_HEIGHT;
 import static dan200.computercraft.shared.media.items.ItemPrintout.LINES_PER_PAGE;
@@ -45,12 +47,13 @@ public final class PrintoutRenderer {
     private PrintoutRenderer() {
     }
 
-    public static void drawText(int x, int y, float z, int start, TextBuffer[] text, TextBuffer[] colours) {
+    public static void drawText(int x, int y, float z, int start, TextBuffer[] text, TextBuffer[] colours,
+                                Matrix4f matrix) {
         for (int line = 0; line < LINES_PER_PAGE && line < text.length; line++) {
             FixedWidthFontRenderer.drawString(
+                matrix,
                 x,
                 y + line * FONT_HEIGHT,
-                z,
                 text[start + line],
                 colours[start + line],
                 null,
@@ -61,7 +64,8 @@ public final class PrintoutRenderer {
         }
     }
 
-    public static void drawBorder(float x, float y, float z, int page, int pages, boolean isBook) {
+    public static void drawBorder(float x, float y, float z, int page, int pages, boolean isBook,
+                                  TessellatorGeneral tessellator) {
         int leftPages = page;
         int rightPages = pages - page - 1;
 
@@ -72,42 +76,37 @@ public final class PrintoutRenderer {
             float right = x + X_SIZE + offset - 4;
 
             // Left and right border
-            drawTexture(left - 4, y - 8, z, COVER_X, 0, COVER_SIZE, Y_SIZE + COVER_SIZE * 2);
-            drawTexture(right, y - 8, z, COVER_X + COVER_SIZE, 0, COVER_SIZE, Y_SIZE + COVER_SIZE * 2);
+            drawTexture(tessellator, left - 4, y - 8, z, COVER_X, 0, COVER_SIZE, Y_SIZE + COVER_SIZE * 2);
+            drawTexture(tessellator, right, y - 8, z, COVER_X + COVER_SIZE, 0, COVER_SIZE, Y_SIZE + COVER_SIZE * 2);
 
             // Draw centre panel (just stretched texture, sorry).
-            drawTexture(
-                x - offset,
-                y,
-                z,
-                X_SIZE + offset * 2,
-                Y_SIZE,
-                COVER_X + COVER_SIZE / 2.0f,
-                COVER_SIZE,
-                COVER_SIZE,
-                Y_SIZE);
+            drawTexture(tessellator,
+                x - offset, y, z,
+                X_SIZE + offset * 2, Y_SIZE,
+                COVER_X + COVER_SIZE / 2.0f, COVER_SIZE,
+                COVER_SIZE, Y_SIZE);
 
             float borderX = left;
             while (borderX < right) {
                 double thisWidth = Math.min(right - borderX, X_SIZE);
-                drawTexture(borderX, y - 8, z, 0, COVER_Y, (float) thisWidth, COVER_SIZE);
-                drawTexture(borderX, y + Y_SIZE - 4, z, 0, COVER_Y + COVER_SIZE, (float) thisWidth, COVER_SIZE);
+                drawTexture(tessellator, borderX, y - 8, z, 0, COVER_Y, (float) thisWidth, COVER_SIZE);
+                drawTexture(tessellator, borderX, y + Y_SIZE - 4, z, 0, COVER_Y + COVER_SIZE, (float) thisWidth, COVER_SIZE);
                 borderX += thisWidth;
             }
         }
 
         // Left half
-        drawTexture(x, y, z + 0.02f, X_FOLD_SIZE * 2, 0, X_SIZE / 2.0f, Y_SIZE);
+        drawTexture(tessellator, x, y, z + 0.02f, X_FOLD_SIZE * 2, 0, X_SIZE / 2.0f, Y_SIZE);
         for (int n = 0; n <= leftPages; n++) {
-            drawTexture(x - offsetAt(n), y, z - 1e-3f * n + 0.02f,
+            drawTexture(tessellator, x - offsetAt(n), y, z - 1e-3f * n + 0.02f,
                 // Use the left "bold" fold for the outermost page
                 n == leftPages ? 0 : X_FOLD_SIZE, 0, X_FOLD_SIZE, Y_SIZE);
         }
 
         // Right half
-        drawTexture(x + X_SIZE / 2.0f, y, z + 0.02f, X_FOLD_SIZE * 2 + X_SIZE / 2.0f, 0, X_SIZE / 2.0f, Y_SIZE);
+        drawTexture(tessellator, x + X_SIZE / 2.0f, y, z + 0.02f, X_FOLD_SIZE * 2 + X_SIZE / 2.0f, 0, X_SIZE / 2.0f, Y_SIZE);
         for (int n = 0; n <= rightPages; n++) {
-            drawTexture(x + (X_SIZE - X_FOLD_SIZE) + offsetAt(n), y, z - 1e-3f * n + 0.02f,
+            drawTexture(tessellator, x + (X_SIZE - X_FOLD_SIZE) + offsetAt(n), y, z - 1e-3f * n + 0.02f,
                 // Two folds, then the main page. Use the right "bold" fold for the outermost page.
                 X_FOLD_SIZE * 2 + X_SIZE + (n == rightPages ? X_FOLD_SIZE : 0), 0, X_FOLD_SIZE, Y_SIZE);
         }
@@ -117,30 +116,27 @@ public final class PrintoutRenderer {
         return (float) (32 * (1 - Math.pow(1.2, -page)));
     }
 
-    private static void drawTexture(float x, float y, float z, float u, float v, float width, float height) {
-        Tessellator tessellator = Tessellator.instance;
-
-        tessellator.startDrawingQuads();
-
+    private static void drawTexture(TessellatorGeneral tessellator, float x, float y, float z,
+                                    float u, float v, float width, float height) {
+        tessellator.startDrawing(DrawMode.TRIANGLES);
+        tessellator.addVertexWithUV(x, y, z, u / BG_SIZE, v / BG_SIZE);
         tessellator.addVertexWithUV(x, y + height, z, u / BG_SIZE, (v + height) / BG_SIZE);
+        tessellator.addVertexWithUV(x + width, y + height, z, (u + width) / BG_SIZE, (v + height) / BG_SIZE);
         tessellator.addVertexWithUV(x + width, y + height, z, (u + width) / BG_SIZE, (v + height) / BG_SIZE);
         tessellator.addVertexWithUV(x + width, y, z, (u + width) / BG_SIZE, v / BG_SIZE);
         tessellator.addVertexWithUV(x, y, z, u / BG_SIZE, v / BG_SIZE);
-
         tessellator.draw();
     }
 
-    private static void drawTexture(float x, float y, float z, float width, float height, float u, float v,
-                                    float tWidth, float tHeight) {
-        Tessellator tessellator = Tessellator.instance;
-
-        tessellator.startDrawingQuads();
-
+    private static void drawTexture(TessellatorGeneral tessellator, float x, float y, float z,
+                                    float width, float height, float u, float v, float tWidth, float tHeight) {
+        tessellator.startDrawing(DrawMode.TRIANGLES);
+        tessellator.addVertexWithUV(x, y, z, u / BG_SIZE, v / BG_SIZE);
         tessellator.addVertexWithUV(x, y + height, z, u / BG_SIZE, (v + tHeight) / BG_SIZE);
+        tessellator.addVertexWithUV(x + width, y + height, z, (u + tWidth) / BG_SIZE, (v + tHeight) / BG_SIZE);
         tessellator.addVertexWithUV(x + width, y + height, z, (u + tWidth) / BG_SIZE, (v + tHeight) / BG_SIZE);
         tessellator.addVertexWithUV(x + width, y, z, (u + tWidth) / BG_SIZE, v / BG_SIZE);
         tessellator.addVertexWithUV(x, y, z, u / BG_SIZE, v / BG_SIZE);
-
         tessellator.draw();
     }
 }

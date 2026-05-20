@@ -2,15 +2,14 @@ package dan200.computercraft.shared.network.client;
 
 import com.mojang.nbt.tags.CompoundTag;
 import dan200.computercraft.client.gui.GuiPrintout;
-import dan200.computercraft.fabric.Helper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.NetworkMessage;
 import turniplabs.halplibe.helper.network.UniversalPacket;
-
-import javax.annotation.Nonnull;
 
 public class OpenGuiPrintoutClientMessage implements NetworkMessage {
     public int itemID;
@@ -33,14 +32,14 @@ public class OpenGuiPrintoutClientMessage implements NetworkMessage {
     }
 
     @Override
-    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void encodeToUniversalPacket(@NotNull UniversalPacket buf) {
         buf.writeShort((short) this.itemID);
         buf.writeShort((short) this.itemMeta);
         buf.writeCompoundTag(this.itemData);
     }
 
     @Override
-    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void decodeFromUniversalPacket(@NotNull UniversalPacket buf) {
         this.itemID = buf.readShort();
         this.itemMeta = buf.readShort();
         this.itemData = buf.readCompoundTag();
@@ -48,7 +47,7 @@ public class OpenGuiPrintoutClientMessage implements NetworkMessage {
 
     @Override
     public void handle(NetworkContext context) {
-        if (!Helper.isServerEnvironment()) {
+        if (!EnvironmentHelper.isServerEnvironment()) {
             clientHandler();
         }
     }

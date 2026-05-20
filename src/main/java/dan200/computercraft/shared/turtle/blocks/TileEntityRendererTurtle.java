@@ -2,140 +2,106 @@ package dan200.computercraft.shared.turtle.blocks;
 
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
-import dan200.computercraft.client.blocks.BlockAORenderer;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.block.model.BlockModel;
-import net.minecraft.client.render.tessellator.Tessellator;
+import net.minecraft.client.render.block.color.BlockColor;
+import net.minecraft.client.render.block.model.BlockModelDispatcher;
+import net.minecraft.client.render.block.model.generic.BlockModelGeneric;
+import net.minecraft.client.render.renderer.GLRenderer;
+import net.minecraft.client.render.tessellator.TessellatorGeneral;
+import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.client.render.tileentity.TileEntityRenderer;
 import net.minecraft.core.block.Block;
-import net.minecraft.core.util.phys.AABB;
-import net.minecraft.core.util.phys.Vec3;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.core.world.WorldSource;
+import net.minecraft.core.world.pos.TilePosc;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3dc;
+import org.useless.dragonfly.models.block.StaticBlockModel;
 
 @Environment(EnvType.CLIENT)
 public class TileEntityRendererTurtle extends TileEntityRenderer<TileTurtle> {
-    private static void drawBase(Tessellator tessellator, TileTurtle tileEntity, float angle) {
-        (new BlockAORenderer(AABB.getTemporaryBB(2 / 16f, 2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f, 13 / 16f)))
-            .setBottomUV(5.75 / 16, 2.75 / 16, 2.75 / 16, 0)
-            .setTopUV(8.75 / 16, 0, 5.75 / 16, 2.75 / 16)
-            .setNorthUV(11.5 / 16, 5.75 / 16, 8.5 / 16, 2.75 / 16)
-            .setSouthUV(5.75 / 16, 5.75 / 16, 2.75 / 16, 2.75 / 16)
-            .setWestUV(8.5 / 16, 5.75 / 16, 5.75 / 16, 2.75 / 16)
-            .setEastUV(2.75 / 16, 5.75 / 16, 0, 2.75 / 16)
-            .render(tessellator, tileEntity, angle, 1f, 1f, 1f);
+    public final @NotNull StaticBlockModel base;
+    public final @NotNull StaticBlockModel advanced;
+    public final @NotNull StaticBlockModel colour;
 
-        (new BlockAORenderer(AABB.getTemporaryBB(3 / 16f, 6 / 16f, 13 / 16f, 13 / 16f, 13 / 16f, 15 / 16f)))
-            .setBottomUV(11.75 / 16, 0.5 / 16, 9.25 / 16, 0)
-            .setTopUV(14.25 / 16, 0, 11.75 / 16, 0.5 / 16)
-            .setSouthUV(11.75 / 16, 2.25 / 16, 9.25 / 16, 0.5 / 16)
-            .setWestUV(12.25 / 16, 2.25 / 16, 11.75 / 16, 0.5 / 16)
-            .setEastUV(9.25 / 16, 2.25 / 16, 8.75 / 16, 0.5 / 16)
-            .render(tessellator, tileEntity, angle, 1f, 1f, 1f);
+    @Nullable
+    private BlockModelGeneric baseGeneric = null;
+    @Nullable
+    private BlockModelGeneric advancedGeneric = null;
+    @Nullable
+    private BlockModelGeneric colourGeneric = null;
+
+    public TileEntityRendererTurtle() {
+        this.base = BlockModelDispatcher.loadDataModel("computercraft:block/turtle_normal").asModel();
+        this.advanced = BlockModelDispatcher.loadDataModel("computercraft:block/turtle_advanced").asModel();
+        this.colour = BlockModelDispatcher.loadDataModel("computercraft:block/turtle_colour").asModel();
     }
 
-    public void doRender(Tessellator tessellator, TileTurtle tileEntity, double x, double y, double z, float partialTick) {
-        if (this.renderDispatcher.textureManager == null) {
-            return;
+    private void ensureGenericModels(Block<?> block) {
+        if (baseGeneric == null) {
+            baseGeneric = new BlockModelGeneric(block, this.base);
+            advancedGeneric = new BlockModelGeneric(block, this.advanced);
+            colourGeneric = new BlockModelGeneric(block, this.colour);
         }
+    }
 
+    @Override
+    public void doRender(TessellatorGeneral tessellator, TileTurtle tileEntity, double x, double y, double z, float partialTick) {
         if (tileEntity.carriedBlock == null && tileEntity.worldObj == null) {
             return;
         }
 
         Block<?> block = tileEntity.getBlock();
-
-        if (block != null && block.getLogic() instanceof BlockLogicTurtle) {
-            GL11.glEnable(32826);
-            GL11.glPushMatrix();
-
-            Vec3 pos = tileEntity.getAccess().getVisualPosition(partialTick);
-
-            GL11.glTranslatef((float) x + (float) pos.x + 1, (float) y + (float) pos.y + 1, (float) z + (float) pos.z + 1);
-
-            GL11.glTranslatef(-0.5f, 0, -0.5f);
-
-            float angle = tileEntity.getAccess().getVisualYaw(partialTick);
-
-            GL11.glRotatef(-angle + 180, 0, 1f, 0);
-
-            GL11.glTranslatef(0.5f, 0, 0.5f);
-
-            GL11.glPushMatrix();
-
-            GL11.glScalef(-1, -1, -1);
-
-            int colour = tileEntity.getColour();
-
-            BlockModel.renderBlocks.enableAO = true;
-
-            if (tileEntity.worldObj == null) {
-                BlockModel.renderBlocks.blockAccess = Minecraft.getMinecraft().currentWorld;
-                BlockModel.renderBlocks.cache.setupCache(block, Minecraft.getMinecraft().currentWorld, tileEntity.x, tileEntity.y, tileEntity.z);
-            } else {
-                BlockModel.renderBlocks.blockAccess = tileEntity.worldObj;
-                BlockModel.renderBlocks.cache.setupCache(block, tileEntity.worldObj, tileEntity.x, tileEntity.y, tileEntity.z);
-            }
-
-            if (colour != -1) {
-                float r = (float) (colour >> 16 & 0xFF) / 255.0F;
-                float g = (float) (colour >> 8 & 0xFF) / 255.0F;
-                float b = (float) (colour & 0xFF) / 255.0F;
-
-                this.loadTexture("/assets/computercraft/textures/block/turtle_colour.png");
-
-                tessellator.startDrawingQuads();
-
-                (new BlockAORenderer(AABB.getTemporaryBB(2 / 16f, 2 / 16f, 2 / 16f, 14 / 16f, 14 / 16f, 13 / 16f)))
-                    .setBottomUV(5.75 / 16f, 8.5 / 16f, 2.75 / 16f, 5.75 / 16f)
-                    .setTopUV(8.75 / 16f, 5.75 / 16f, 5.75 / 16f, 8.5 / 16f)
-                    .setNorthUV(11.5 / 16f, 11.5 / 16f, 8.5 / 16f, 8.5 / 16f)
-                    .setSouthUV(5.75 / 16f, 11.5 / 16f, 2.75 / 16f, 8.5 / 16f)
-                    .setWestUV(8.5 / 16f, 11.5 / 16f, 5.75 / 16f, 8.555 / 16f)
-                    .setEastUV(2.75 / 16f, 11.5 / 16f, 0, 8.5 / 16f)
-                    .render(tessellator, tileEntity, angle, r, g, b);
-
-                (new BlockAORenderer(AABB.getTemporaryBB(3 / 16f, 6 / 16f, 13 / 16f, 13 / 16f, 13 / 16f, 15 / 16f)))
-                    .setBottomUV(11.75 / 16f, 6.25 / 16f, 9.25 / 16f, 5.75 / 16f)
-                    .setTopUV(14.25 / 16f, 5.75 / 16f, 11.75 / 16f, 6.25 / 16f)
-                    .setSouthUV(11.75 / 16f, 8 / 16f, 9.25 / 16f, 6.25 / 16f)
-                    .setWestUV(12.25 / 16f, 8 / 16f, 11.75 / 16f, 6.25 / 16f)
-                    .setEastUV(9.25 / 16f, 8 / 16f, 8.75 / 16f, 6.25 / 16f)
-                    .render(tessellator, tileEntity, angle, r, g, b);
-
-                tessellator.draw();
-            } else if (tileEntity.getFamily() == ComputerFamily.ADVANCED) {
-                this.loadTexture("/assets/computercraft/textures/block/turtle_advanced.png");
-            } else {
-                this.loadTexture("/assets/computercraft/textures/block/turtle_normal.png");
-            }
-
-            tessellator.startDrawingQuads();
-            drawBase(tessellator, tileEntity, angle);
-            tessellator.draw();
-
-
-            ITurtleUpgrade leftUpgrade = tileEntity.getAccess().getUpgrade(TurtleSide.LEFT);
-
-            if (leftUpgrade != null) {
-                leftUpgrade.drawTileUpgrade(tessellator, this.renderDispatcher.textureManager, tileEntity, angle, TurtleSide.LEFT, partialTick);
-            }
-
-            ITurtleUpgrade rightUpgrade = tileEntity.getAccess().getUpgrade(TurtleSide.RIGHT);
-
-            if (rightUpgrade != null) {
-                rightUpgrade.drawTileUpgrade(tessellator, this.renderDispatcher.textureManager, tileEntity, angle, TurtleSide.RIGHT, partialTick);
-            }
-
-            BlockModel.renderBlocks.enableAO = false;
-
-            GL11.glPopMatrix();
-
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GL11.glPopMatrix();
-            GL11.glDisable(32826);
+        if (block == null || !(block.getLogic() instanceof BlockLogicTurtle)) {
+            return;
         }
+
+        ensureGenericModels(block);
+
+        Vector3dc offset = tileEntity.getRenderOffset(partialTick);
+        float yaw = tileEntity.getRenderYaw(partialTick);
+        byte lightIndex = tileEntity.worldObj.getLightIndex(tileEntity.tilePos, 0);
+
+        int colour = tileEntity.getColour();
+        ComputerFamily family = tileEntity.getFamily();
+
+        TextureRegistry.worldAtlas.bind();
+
+        GLRenderer.pushFrame();
+        GLRenderer.modelM4f().translate((float) (x + offset.x() + 0.5), (float) (y + offset.y() + 0.5), (float) (z + offset.z() + 0.5));
+        GLRenderer.modelM4f().rotateY((float) Math.toRadians(180.0f - yaw));
+
+        if (colour != -1) {
+            final int turtleColour = (colour & 0x00FFFFFF) | 0xFF000000;
+            this.colour.renderStandalone(colourGeneric, tessellator, 0.0, 0.0, 0.0, 0, lightIndex, new BlockColor() {
+                @Override
+                public int getFallbackColor(int meta, int tintIndex) {
+                    return tintIndex == 0 ? turtleColour : -1;
+                }
+
+                @Override
+                public int getWorldColor(@NotNull WorldSource source, @NotNull TilePosc pos, int tintIndex) {
+                    return tintIndex == 0 ? turtleColour : -1;
+                }
+            });
+        } else if (family == ComputerFamily.ADVANCED) {
+            advancedGeneric.renderStandalone(tessellator, 0, lightIndex);
+        } else {
+            baseGeneric.renderStandalone(tessellator, 0, lightIndex);
+        }
+
+        ITurtleUpgrade leftUpgrade = tileEntity.getAccess().getUpgrade(TurtleSide.LEFT);
+        if (leftUpgrade != null) {
+            leftUpgrade.drawTileUpgrade(tessellator, this.renderDispatcher.textureManager, tileEntity, yaw, TurtleSide.LEFT, partialTick);
+        }
+
+        ITurtleUpgrade rightUpgrade = tileEntity.getAccess().getUpgrade(TurtleSide.RIGHT);
+        if (rightUpgrade != null) {
+            rightUpgrade.drawTileUpgrade(tessellator, this.renderDispatcher.textureManager, tileEntity, yaw, TurtleSide.RIGHT, partialTick);
+        }
+
+        GLRenderer.popFrame();
     }
 }

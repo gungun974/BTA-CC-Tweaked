@@ -5,12 +5,11 @@
  */
 package dan200.computercraft.shared.network.client;
 
-import dan200.computercraft.fabric.Helper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import org.jetbrains.annotations.NotNull;
+import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.UniversalPacket;
-
-import javax.annotation.Nonnull;
 
 public class ComputerTerminalClientMessage extends ComputerClientMessage {
     protected TerminalState state;
@@ -24,20 +23,20 @@ public class ComputerTerminalClientMessage extends ComputerClientMessage {
     }
 
     @Override
-    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void encodeToUniversalPacket(@NotNull UniversalPacket buf) {
         super.encodeToUniversalPacket(buf);
         state.write(buf);
     }
 
     @Override
-    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void decodeFromUniversalPacket(@NotNull UniversalPacket buf) {
         super.decodeFromUniversalPacket(buf);
         state = new TerminalState(buf);
     }
 
     @Override
     public void handle(NetworkContext context) {
-        if (!Helper.isServerEnvironment()) {
+        if (!EnvironmentHelper.isServerEnvironment()) {
             clientHandler();
         }
     }

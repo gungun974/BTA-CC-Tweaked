@@ -12,8 +12,7 @@ import dan200.computercraft.core.terminal.Terminal;
 import dan200.computercraft.shared.util.Palette;
 import dan200.computercraft.shared.util.StringUtil;
 import org.apache.commons.lang3.ArrayUtils;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A base class for all objects which interact with a terminal. Namely the {@link TermAPI} and monitors.
@@ -46,7 +45,7 @@ public abstract class TermMethods {
         terminal.setChanged();
     }
 
-    @Nonnull
+    @NotNull
     public abstract Terminal getTerminal() throws LuaException;
 
     public abstract boolean isColour() throws LuaException;

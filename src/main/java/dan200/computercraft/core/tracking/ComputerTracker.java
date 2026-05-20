@@ -6,8 +6,8 @@
 package dan200.computercraft.core.tracking;
 
 import dan200.computercraft.core.computer.Computer;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 

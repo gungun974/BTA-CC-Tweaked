@@ -10,16 +10,15 @@ import dan200.computercraft.api.turtle.TurtleCommandResult;
 import dan200.computercraft.api.turtle.TurtleSide;
 import dan200.computercraft.api.turtle.TurtleVerb;
 import dan200.computercraft.shared.turtle.core.TurtlePlaceCommand;
-import dan200.computercraft.shared.util.BlockPos;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
+import net.minecraft.core.block.material.Materials;
 import net.minecraft.core.item.Item;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePosc;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
 
 public class TurtleHoe extends TurtleTool {
     public TurtleHoe(int id, Item item) {
@@ -35,9 +34,9 @@ public class TurtleHoe extends TurtleTool {
         return "upgrade.minecraft.diamond_hoe.adjective";
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public TurtleCommandResult useTool(@Nonnull ITurtleAccess turtle, @Nonnull TurtleSide side, @Nonnull TurtleVerb verb, @Nonnull Direction direction) {
+    public TurtleCommandResult useTool(@NotNull ITurtleAccess turtle, @NotNull TurtleSide side, @NotNull TurtleVerb verb, @NotNull Direction direction) {
         if (verb == TurtleVerb.DIG) {
             ItemStack hoe = item.copy();
             ItemStack remainder = TurtlePlaceCommand.deploy(hoe, turtle, direction, null, null);
@@ -49,17 +48,17 @@ public class TurtleHoe extends TurtleTool {
     }
 
     @Override
-    protected boolean canBreakBlock(World world, BlockPos pos) {
+    protected boolean canBreakBlock(World world, TilePosc pos) {
         if (!super.canBreakBlock(world, pos)) {
             return false;
         }
 
-        Block<?> block = world.getBlock(pos.x, pos.y, pos.z);
+        Block<?> block = world.getBlockType(pos);
         if (block == null) {
             return false;
         }
 
         Material material = block.getMaterial();
-        return material == Material.plant || material == Material.cactus || material == Material.leaves || material == Material.moss;
+        return material == Materials.PLANT || material == Materials.CACTUS || material == Materials.LEAVES || material == Materials.MOSS;
     }
 }

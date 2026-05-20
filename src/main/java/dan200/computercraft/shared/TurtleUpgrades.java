@@ -10,9 +10,9 @@ import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.shared.common.ComputerCraftTurtleUpgrades;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import net.minecraft.core.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -25,7 +25,7 @@ public final class TurtleUpgrades {
     private TurtleUpgrades() {
     }
 
-    public static void register(@Nonnull ITurtleUpgrade upgrade) {
+    public static void register(@NotNull ITurtleUpgrade upgrade) {
         Objects.requireNonNull(upgrade, "upgrade cannot be null");
         rebuild();
 
@@ -47,7 +47,7 @@ public final class TurtleUpgrades {
     }
 
     @Nullable
-    public static String getOwner(@Nonnull ITurtleUpgrade upgrade) {
+    public static String getOwner(@NotNull ITurtleUpgrade upgrade) {
         Wrapper wrapper = wrappers.get(upgrade);
         return wrapper != null ? wrapper.modId : null;
     }

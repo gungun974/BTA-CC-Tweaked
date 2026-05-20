@@ -6,9 +6,9 @@
 package dan200.computercraft.api.lua;
 
 import dan200.computercraft.api.peripheral.IComputerAccess;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Map;
@@ -44,7 +44,7 @@ public final class MethodResult {
      *
      * @return A method result which returns immediately with no values.
      */
-    @Nonnull
+    @NotNull
     public static MethodResult of() {
         return empty;
     }
@@ -61,7 +61,7 @@ public final class MethodResult {
      * @param value The value to return to the calling Lua function.
      * @return A method result which returns immediately with the given value.
      */
-    @Nonnull
+    @NotNull
     public static MethodResult of(@Nullable Object value) {
         return new MethodResult(new Object[]{value}, null);
     }
@@ -72,7 +72,7 @@ public final class MethodResult {
      * @param values The values to return. See {@link #of(Object)} for acceptable values.
      * @return A method result which returns immediately with the given values.
      */
-    @Nonnull
+    @NotNull
     public static MethodResult of(@Nullable Object... values) {
         return values == null || values.length == 0 ? empty : new MethodResult(values, null);
     }
@@ -86,8 +86,8 @@ public final class MethodResult {
      * @return The method result which represents this yield.
      * @see IComputerAccess#queueEvent(String, Object[])
      */
-    @Nonnull
-    public static MethodResult pullEvent(@Nullable String filter, @Nonnull ILuaCallback callback) {
+    @NotNull
+    public static MethodResult pullEvent(@Nullable String filter, @NotNull ILuaCallback callback) {
         Objects.requireNonNull(callback, "callback cannot be null");
         return new MethodResult(new Object[]{filter}, results -> {
             if (results.length >= 1 && results[0].equals("terminate")) {
@@ -106,8 +106,8 @@ public final class MethodResult {
      * @return The method result which represents this yield.
      * @see #pullEvent(String, ILuaCallback)
      */
-    @Nonnull
-    public static MethodResult pullEventRaw(@Nullable String filter, @Nonnull ILuaCallback callback) {
+    @NotNull
+    public static MethodResult pullEventRaw(@Nullable String filter, @NotNull ILuaCallback callback) {
         Objects.requireNonNull(callback, "callback cannot be null");
         return new MethodResult(new Object[]{filter}, callback);
     }
@@ -121,8 +121,8 @@ public final class MethodResult {
      * @return The method result which represents this yield.
      * @see #pullEvent(String, ILuaCallback)
      */
-    @Nonnull
-    public static MethodResult yield(@Nullable Object[] arguments, @Nonnull ILuaCallback callback) {
+    @NotNull
+    public static MethodResult yield(@Nullable Object[] arguments, @NotNull ILuaCallback callback) {
         Objects.requireNonNull(callback, "callback cannot be null");
         return new MethodResult(arguments, callback);
     }
@@ -147,7 +147,7 @@ public final class MethodResult {
      * @param adjust The amount to increase the level by.
      * @return The new {@link MethodResult} with an adjusted error. This has no effect on immediate results.
      */
-    @Nonnull
+    @NotNull
     public MethodResult adjustError(int adjust) {
         if (adjust < 0) {
             throw new IllegalArgumentException("cannot adjust by a negative amount");

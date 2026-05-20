@@ -7,8 +7,8 @@ package dan200.computercraft.api.network.wired;
 
 import dan200.computercraft.api.network.IPacketNetwork;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -29,7 +29,7 @@ public interface IWiredNode extends IPacketNetwork {
      *
      * @return This node's element.
      */
-    @Nonnull
+    @NotNull
     IWiredElement getElement();
 
     /**
@@ -42,7 +42,7 @@ public interface IWiredNode extends IPacketNetwork {
      * @see IWiredNetwork#connect(IWiredNode, IWiredNode)
      * @see IWiredNode#disconnectFrom(IWiredNode)
      */
-    default boolean connectTo(@Nonnull IWiredNode node) {
+    default boolean connectTo(@NotNull IWiredNode node) {
         return getNetwork().connect(this, node);
     }
 
@@ -53,7 +53,7 @@ public interface IWiredNode extends IPacketNetwork {
      *
      * @return This node's network.
      */
-    @Nonnull
+    @NotNull
     IWiredNetwork getNetwork();
 
     /**
@@ -67,7 +67,7 @@ public interface IWiredNode extends IPacketNetwork {
      * @see IWiredNetwork#disconnect(IWiredNode, IWiredNode)
      * @see IWiredNode#connectTo(IWiredNode)
      */
-    default boolean disconnectFrom(@Nonnull IWiredNode node) {
+    default boolean disconnectFrom(@NotNull IWiredNode node) {
         return getNetwork().disconnect(this, node);
     }
 
@@ -92,7 +92,7 @@ public interface IWiredNode extends IPacketNetwork {
      * @param peripherals The new peripherals for this node.
      * @see IWiredNetwork#updatePeripherals(IWiredNode, Map)
      */
-    default void updatePeripherals(@Nonnull Map<String, IPeripheral> peripherals) {
+    default void updatePeripherals(@NotNull Map<String, IPeripheral> peripherals) {
         getNetwork().updatePeripherals(this, peripherals);
     }
 }

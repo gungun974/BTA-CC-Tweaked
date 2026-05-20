@@ -7,9 +7,8 @@ package dan200.computercraft.shared.network.server;
 
 import dan200.computercraft.shared.computer.core.IContainerComputer;
 import dan200.computercraft.shared.computer.core.ServerComputer;
+import org.jetbrains.annotations.NotNull;
 import turniplabs.halplibe.helper.network.UniversalPacket;
-
-import javax.annotation.Nonnull;
 
 public class ComputerActionServerMessage extends ComputerServerMessage {
     private Action action;
@@ -23,19 +22,19 @@ public class ComputerActionServerMessage extends ComputerServerMessage {
     }
 
     @Override
-    public void encodeToUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void encodeToUniversalPacket(@NotNull UniversalPacket buf) {
         super.encodeToUniversalPacket(buf);
         buf.writeEnumConstant(action);
     }
 
     @Override
-    public void decodeFromUniversalPacket(@Nonnull UniversalPacket buf) {
+    public void decodeFromUniversalPacket(@NotNull UniversalPacket buf) {
         super.decodeFromUniversalPacket(buf);
         action = buf.readEnumConstant(Action.class);
     }
 
     @Override
-    protected void handle(@Nonnull ServerComputer computer, @Nonnull IContainerComputer container) {
+    protected void handle(@NotNull ServerComputer computer, @NotNull IContainerComputer container) {
         switch (action) {
             case TURN_ON:
                 computer.turnOn();

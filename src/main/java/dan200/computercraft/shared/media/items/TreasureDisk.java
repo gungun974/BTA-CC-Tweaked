@@ -1,6 +1,6 @@
 package dan200.computercraft.shared.media.items;
 
-public class TreasureDisk {
+public record TreasureDisk(String title, String subPath, int colour) {
     public static TreasureDisk[] DISKS = new TreasureDisk[]{
         new TreasureDisk("gameoflife by vilsol", "vilsol/gameoflife", 15905331),
         new TreasureDisk("maze3d by jtk", "jtk/maze3d", 3368652),
@@ -13,27 +13,6 @@ public class TreasureDisk {
         new TreasureDisk("battleship by gopher_atl", "gopher_atl/battleship", 11691749),
         new TreasureDisk("alongtimeago by dan200", "dan200/alongtimeago", 14605932)
     };
-    private final String title;
-    private final String subPath;
-    private final int colour;
-
-    public TreasureDisk(String title, String subPath, int colour) {
-        this.title = title;
-        this.subPath = subPath;
-        this.colour = colour;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getSubPath() {
-        return subPath;
-    }
-
-    public int getColour() {
-        return colour;
-    }
 
 }
 

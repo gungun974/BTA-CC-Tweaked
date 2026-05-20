@@ -22,10 +22,11 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.lang.I18n;
 import net.minecraft.core.util.helper.Side;
 import net.minecraft.core.world.World;
+import net.minecraft.core.world.pos.TilePos;
+import net.minecraft.core.world.pos.TilePosc;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 import static dan200.computercraft.shared.turtle.core.TurtleBrain.*;
@@ -35,7 +36,7 @@ public class ItemBlockTurtle extends ItemBlockComputerBase implements ITurtleIte
         super(block);
     }
 
-    public void addToCreativeMenu(@Nonnull List<ItemStack> list) {
+    public void addToCreativeMenu(@NotNull List<ItemStack> list) {
         ComputerFamily family = getFamily();
 
         list.add(create(-1, null, -1, null, null, 0, -1));
@@ -106,7 +107,7 @@ public class ItemBlockTurtle extends ItemBlockComputerBase implements ITurtleIte
     }
 
     @Override
-    public ITurtleUpgrade getUpgrade(@Nonnull ItemStack stack, @Nonnull TurtleSide side) {
+    public ITurtleUpgrade getUpgrade(@NotNull ItemStack stack, @NotNull TurtleSide side) {
         CompoundTag tag = stack.getData();
 
         String key = side == TurtleSide.LEFT ? NBT_LEFT_UPGRADE : NBT_RIGHT_UPGRADE;
@@ -114,60 +115,60 @@ public class ItemBlockTurtle extends ItemBlockComputerBase implements ITurtleIte
     }
 
     @Override
-    public int getFuelLevel(@Nonnull ItemStack stack) {
+    public int getFuelLevel(@NotNull ItemStack stack) {
         CompoundTag tag = stack.getData();
         return tag.containsKey(NBT_FUEL) ? tag.getInteger(NBT_FUEL) : 0;
     }
 
     @Override
-    public int getOverlay(@Nonnull ItemStack stack) {
+    public int getOverlay(@NotNull ItemStack stack) {
         CompoundTag tag = stack.getData();
         return tag.containsKey(NBT_OVERLAY) ? tag.getInteger(NBT_OVERLAY) : -1;
     }
 
     @Override
-    public ItemStack withFamily(@Nonnull ItemStack stack, @Nonnull ComputerFamily family) {
+    public ItemStack withFamily(@NotNull ItemStack stack, @NotNull ComputerFamily family) {
         return TurtleItemFactory.create(getComputerID(stack), getLabel(stack), getColour(stack),
             family, getUpgrade(stack, TurtleSide.LEFT),
             getUpgrade(stack, TurtleSide.RIGHT), getFuelLevel(stack), getOverlay(stack));
     }
 
     @Override
-    public boolean onUseItemOnBlock(ItemStack stack, @Nullable Player player, World world, int x, int y, int z, Side side, double xPlaced, double yPlaced) {
-        if (stack.stackSize <= 0) {
+    public boolean onUseOnBlock(@NotNull ItemStack selfStack, @NotNull World world, @Nullable Player player, @NotNull TilePosc blockPos, @NotNull Side side, double xHit, double yHit) {
+        TilePos tilePos = new TilePos(blockPos);
+
+        if (selfStack.stackSize <= 0) {
             return false;
         } else {
-            if (!world.canPlaceInsideBlock(x, y, z)) {
-                x += side.getOffsetX();
-                y += side.getOffsetY();
-                z += side.getOffsetZ();
+            if (!world.canPlaceInsideBlock(tilePos)) {
+                tilePos.x += side.offsetX();
+                tilePos.y += side.offsetY();
+                tilePos.z += side.offsetZ();
             }
 
-            if (y >= 0 && y < world.getHeightBlocks()) {
-                if (world.canBlockBePlacedAt(this.block.id(), x, y, z, false, side) && stack.consumeItem(player)) {
-                    int meta = this.getPlacedBlockMetadata(player, stack, world, x, y, z, side, xPlaced, yPlaced);
-                    if (world.setBlockAndMetadataWithNotify(x, y, z, this.block.id(), meta)) {
+            if (tilePos.y >= 0 && tilePos.y < world.getHeightBlocks()) {
+                if (world.canBlockIdBePlacedAt(this.block.id(), tilePos, false, side) && selfStack.consumeItem(player)) {
+                    int meta = this.getPlacedData(selfStack, world, player, tilePos, side, xHit, yHit);
+                    if (world.setBlockTypeDataNotify(tilePos, this.block, meta)) {
                         if (player == null) {
-                            this.block.onBlockPlacedOnSide(world, x, y, z, side, xPlaced, yPlaced);
+                            this.block.onPlacedOnSide(world, tilePos, side, xHit, yHit);
                         } else {
-                            this.block.onBlockPlacedByMob(world, x, y, z, side, player, xPlaced, yPlaced);
+                            this.block.onPlacedByMob(world, tilePos, side, player, xHit, yHit);
                         }
 
                         world.playBlockSoundEffect(
-                            player, (float) x + 0.5F, (float) y + 0.5F, (float) z + 0.5F, this.block, EnumBlockSoundEffectType.PLACE
+                            player, (float) tilePos.x + 0.5F, (float) tilePos.y + 0.5F, (float) tilePos.z + 0.5F, this.block, EnumBlockSoundEffectType.PLACE
                         );
 
-                        TileEntity entity = (world.getTileEntity(x, y, z));
-                        if (!(entity instanceof TileTurtle)) {
+                        TileEntity entity = (world.getTileEntity(tilePos));
+                        if (!(entity instanceof TileTurtle turtle)) {
                             return false;
                         }
 
-                        TileTurtle turtle = (TileTurtle) entity;
-
-                        turtle.readDescription(stack.getData());
+                        turtle.readDescription(selfStack.getData());
 
                         // Set label
-                        String label = stack.getCustomName();
+                        String label = selfStack.getCustomName();
                         if (label != null) {
                             turtle.setLabel(label);
                         }
@@ -176,27 +177,26 @@ public class ItemBlockTurtle extends ItemBlockComputerBase implements ITurtleIte
                             turtle.setOwningPlayer(player.uuid);
                         }
 
-                        if (stack.getItem() instanceof ITurtleItem) {
-                            ITurtleItem item = (ITurtleItem) stack.getItem();
+                        if (selfStack.getItem() instanceof ITurtleItem item) {
 
                             // Set Upgrades
                             for (TurtleSide turtleSide : TurtleSide.values()) {
                                 turtle.getAccess()
-                                    .setUpgrade(turtleSide, item.getUpgrade(stack, turtleSide));
+                                    .setUpgrade(turtleSide, item.getUpgrade(selfStack, turtleSide));
                             }
 
                             turtle.getAccess()
-                                .setFuelLevel(item.getFuelLevel(stack));
+                                .setFuelLevel(item.getFuelLevel(selfStack));
 
                             // Set colour
-                            int colour = item.getColour(stack);
+                            int colour = item.getColour(selfStack);
                             if (colour != -1) {
                                 turtle.getAccess()
                                     .setColour(colour);
                             }
 
                             // Set overlay
-                            int overlay = item.getOverlay(stack);
+                            int overlay = item.getOverlay(selfStack);
                             if (overlay != -1) {
                                 ((TurtleBrain) turtle.getAccess()).setOverlay(overlay);
                             }
@@ -205,8 +205,8 @@ public class ItemBlockTurtle extends ItemBlockComputerBase implements ITurtleIte
                         return true;
                     }
 
-                    if (player == null || player.getGamemode().consumeBlocks()) {
-                        stack.stackSize++;
+                    if (player == null || player.getGamemode().hasBlockConsumption()) {
+                        selfStack.stackSize++;
                     }
                 }
 

@@ -6,8 +6,8 @@
 package dan200.computercraft.core.apis;
 
 import dan200.computercraft.api.lua.ILuaAPIFactory;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -20,7 +20,7 @@ public final class ApiFactories {
     private ApiFactories() {
     }
 
-    public static synchronized void register(@Nonnull ILuaAPIFactory factory) {
+    public static synchronized void register(@NotNull ILuaAPIFactory factory) {
         Objects.requireNonNull(factory, "provider cannot be null");
         factories.add(factory);
     }

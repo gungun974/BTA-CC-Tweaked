@@ -9,8 +9,8 @@ import dan200.computercraft.api.turtle.ITurtleAccess;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
 import dan200.computercraft.api.turtle.TurtleSide;
 import net.minecraft.core.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 /**
@@ -23,8 +23,8 @@ public class TurtleAttackEvent extends TurtleActionEvent {
     private final ITurtleUpgrade upgrade;
     private final TurtleSide side;
 
-    public TurtleAttackEvent(@Nonnull ITurtleAccess turtle, @Nonnull Entity target, @Nonnull ITurtleUpgrade upgrade,
-                             @Nonnull TurtleSide side) {
+    public TurtleAttackEvent(@NotNull ITurtleAccess turtle, @NotNull Entity target, @NotNull ITurtleUpgrade upgrade,
+                             @NotNull TurtleSide side) {
         super(turtle, TurtleAction.ATTACK);
         Objects.requireNonNull(target, "target cannot be null");
         Objects.requireNonNull(upgrade, "upgrade cannot be null");
@@ -39,7 +39,7 @@ public class TurtleAttackEvent extends TurtleActionEvent {
      *
      * @return The entity being attacked.
      */
-    @Nonnull
+    @NotNull
     public Entity getTarget() {
         return target;
     }
@@ -49,7 +49,7 @@ public class TurtleAttackEvent extends TurtleActionEvent {
      *
      * @return The upgrade responsible for attacking.
      */
-    @Nonnull
+    @NotNull
     public ITurtleUpgrade getUpgrade() {
         return upgrade;
     }
@@ -59,7 +59,7 @@ public class TurtleAttackEvent extends TurtleActionEvent {
      *
      * @return The upgrade's side.
      */
-    @Nonnull
+    @NotNull
     public TurtleSide getSide() {
         return side;
     }

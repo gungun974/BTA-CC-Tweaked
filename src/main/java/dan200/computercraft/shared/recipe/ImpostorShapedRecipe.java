@@ -9,7 +9,6 @@ import com.google.gson.*;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.data.registry.recipe.HasJsonAdapter;
 import net.minecraft.core.data.registry.recipe.RecipeSymbol;
-import net.minecraft.core.data.registry.recipe.SearchQuery;
 import net.minecraft.core.data.registry.recipe.adapter.RecipeCraftingShapedJsonAdapter;
 import net.minecraft.core.data.registry.recipe.adapter.RecipeJsonAdapter;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCraftingShaped;
@@ -43,6 +42,7 @@ public class ImpostorShapedRecipe extends RecipeEntryCraftingShaped implements H
             if (result.getData().containsKey(key)) {
                 String currentKey = result.getData().getString(key);
 
+                @Deprecated
                 Integer itemId = Item.nameToIdMap.get(currentKey);
 
                 if (itemId != null) {
