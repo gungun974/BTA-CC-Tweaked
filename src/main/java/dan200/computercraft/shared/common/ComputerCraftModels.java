@@ -118,19 +118,19 @@ public class ComputerCraftModels implements ModelEntrypoint {
         });
 
         ModelHelper.setItemModel(ComputerCraftItems.PRINTED_PAGE, () -> {
-            ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.PRINTED_PAGE);
+            ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.PRINTED_PAGE, false);
             itemModelStandard.icon = TextureRegistry.getTexture(new NamespaceID(MOD_ID, "item/printed_page"));
             return itemModelStandard;
         });
 
         ModelHelper.setItemModel(ComputerCraftItems.PRINTED_PAGES, () -> {
-            ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.PRINTED_PAGES);
+            ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.PRINTED_PAGES, false);
             itemModelStandard.icon = TextureRegistry.getTexture(new NamespaceID(MOD_ID, "item/printed_pages"));
             return itemModelStandard;
         });
 
         ModelHelper.setItemModel(ComputerCraftItems.PRINTED_BOOK, () -> {
-            ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.PRINTED_BOOK);
+            ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.PRINTED_BOOK, false);
             itemModelStandard.icon = TextureRegistry.getTexture(new NamespaceID(MOD_ID, "item/printed_book"));
             return itemModelStandard;
         });

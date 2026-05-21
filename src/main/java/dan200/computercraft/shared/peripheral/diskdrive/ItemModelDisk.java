@@ -15,7 +15,7 @@ public class ItemModelDisk extends ItemModelStandard {
     public static final IconCoordinate DISK_COLOUR = TextureRegistry.getTexture("computercraft:item/disk_colour");
 
     public ItemModelDisk(Item item) {
-        super(item);
+        super(item, false);
     }
 
     @Override

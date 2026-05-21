@@ -31,7 +31,7 @@ public class ItemModelCable extends ItemModelStandard {
     private final boolean isModem;
 
     public ItemModelCable(Item item) {
-        super(item);
+        super(item, false);
         this.isModem = item instanceof ItemCable.WiredModem;
         if (cableModel == null) {
             cableModel = BlockModelDispatcher.loadDataModel("computercraft:item/cable").asModel();

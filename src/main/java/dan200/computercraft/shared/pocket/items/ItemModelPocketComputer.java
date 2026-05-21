@@ -19,7 +19,7 @@ public class ItemModelPocketComputer extends ItemModelStandard {
     public static final IconCoordinate POCKET_COMPUTER_COLOUR = TextureRegistry.getTexture("computercraft:item/pocket_computer_colour");
 
     public ItemModelPocketComputer(Item item) {
-        super(item);
+        super(item, false);
     }
 
     @Override
