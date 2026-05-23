@@ -21,7 +21,7 @@
         "Gungun974"
     ],
     "depends": {
-        "minecraft": "8.0-beta.1",
+        "minecraft": "8.0-beta.2",
         "fabricloader": ">=0.15.5",
         "halplibe": ">=5.3.1"
     },
