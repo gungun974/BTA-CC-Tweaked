@@ -42,6 +42,8 @@ import net.minecraft.core.util.helper.Axis;
 import net.minecraft.core.util.helper.Direction;
 import net.minecraft.core.util.helper.DyeColor;
 import net.minecraft.core.util.helper.Side;
+import net.minecraft.core.world.ICarriable;
+import net.minecraft.core.world.ICarrySource;
 import net.minecraft.core.world.World;
 import net.minecraft.core.world.pos.TilePosc;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +57,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class TileTurtle extends TileComputerBase implements ITurtleTile, Container {
+public class TileTurtle extends TileComputerBase implements ITurtleTile, Container, ICarrySource {
     public static final int INVENTORY_SIZE = 16;
     public static final int INVENTORY_WIDTH = 4;
     public static final int INVENTORY_HEIGHT = 4;
@@ -501,6 +503,15 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     public boolean canBeCarried(World world, Entity potentialHolder) {
         return !brain.isRunningAnimation();
     }
+
+    @Override
+    public ICarriable pickup(@NotNull World world, @NotNull Entity holder, @NotNull TilePosc tilePos) {
+        if (!brain.isRunningAnimation()) {
+            return super.pickup(world, holder, tilePos);
+        }
+        return null;
+    }
+
 
     public CarriedBlock getCarriedEntry(World world, Entity holder, Block<?> currentBlock, int currentMeta) {
         return super.getCarriedEntry(world, holder, currentBlock, BlockLogicTurtle.setDirection(currentMeta, Direction.NORTH));

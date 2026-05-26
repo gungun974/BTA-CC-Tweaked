@@ -21,11 +21,6 @@ public class TileEntityComputer extends TileComputerBase {
         super(family);
     }
 
-    public boolean canBeCarried(World world, Entity potentialHolder) {
-        return false;
-    }
-
-
     public boolean isUsableByPlayer(Player player) {
         return isUsable(player, false);
     }
