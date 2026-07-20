@@ -62,7 +62,7 @@ public class ItemDisk extends Item implements IMedia, IColouredItem {
         @NotNull ItemStack selfStack, @NotNull World world, @Nullable Player player, @NotNull TilePosc blockPos, @NotNull Side side, double xHit, double yHit
     ) {
         if (world.getBlockType(blockPos).id() == ComputerCraftBlocks.DISK_DRIVE.id()) {
-            if (!EnvironmentHelper.isClientWorld()) {
+            if (!EnvironmentHelper.isMultiplayerClient()) {
                 return ((TileDiskDrive) world.getTileEntity(blockPos)).onInteracted(player, side, xHit, yHit);
             }
 

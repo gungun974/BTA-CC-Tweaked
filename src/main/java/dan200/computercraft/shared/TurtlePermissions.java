@@ -20,7 +20,7 @@ public final class TurtlePermissions {
     }
 
     public static boolean isBlockEnterable(World world, TilePosc pos) {
-        if (!EnvironmentHelper.isServerEnvironment()) {
+        if (!EnvironmentHelper.isMultiplayerServer()) {
             return true;
         }
 

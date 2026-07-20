@@ -146,7 +146,7 @@ public class TurtleBrain implements ITurtleAccess {
 
     public void update() {
         World world = getWorld();
-        if (!EnvironmentHelper.isClientWorld()) {
+        if (!EnvironmentHelper.isMultiplayerClient()) {
             // Advance movement
             updateCommands();
 
@@ -181,7 +181,7 @@ public class TurtleBrain implements ITurtleAccess {
 
     @Override
     public boolean teleportTo(@NotNull World world, @NotNull TilePosc pos) {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             throw new UnsupportedOperationException("Cannot teleport on the client");
         }
 
@@ -281,7 +281,7 @@ public class TurtleBrain implements ITurtleAccess {
                         }
                     }
 
-                    if (!EnvironmentHelper.isServerEnvironment()) {
+                    if (!EnvironmentHelper.isMultiplayerServer()) {
                         PortableTickScheduler.mainPortableTickScheduler.scheduleOnNextEndTick(() -> {
                             if (!Minecraft.getMinecraft().renderGlobal.renderableTileEntities.contains(owner)) {
                                 Minecraft.getMinecraft().renderGlobal.renderableTileEntities.add((owner));
@@ -359,7 +359,7 @@ public class TurtleBrain implements ITurtleAccess {
 
     @Override
     public void setSelectedSlot(int slot) {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             throw new UnsupportedOperationException("Cannot set the slot on the client");
         }
 
@@ -424,7 +424,7 @@ public class TurtleBrain implements ITurtleAccess {
 
     @Override
     public boolean consumeFuel(int fuel) {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             throw new UnsupportedOperationException("Cannot consume fuel on the client");
         }
 
@@ -442,7 +442,7 @@ public class TurtleBrain implements ITurtleAccess {
 
     @Override
     public void addFuel(int fuel) {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             throw new UnsupportedOperationException("Cannot add fuel on the client");
         }
 
@@ -453,7 +453,7 @@ public class TurtleBrain implements ITurtleAccess {
     @NotNull
     @Override
     public MethodResult executeCommand(@NotNull ITurtleCommand command) {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             throw new UnsupportedOperationException("Cannot run commands on the client");
         }
 
@@ -469,7 +469,7 @@ public class TurtleBrain implements ITurtleAccess {
 
     @Override
     public void playAnimation(@NotNull TurtleAnimation animation) {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             throw new UnsupportedOperationException("Cannot play animations on the client");
         }
 
@@ -669,7 +669,7 @@ public class TurtleBrain implements ITurtleAccess {
             }
 
             // Advance valentines day easter egg
-            if (EnvironmentHelper.isClientWorld() && animation == TurtleAnimation.MOVE_FORWARD && animationProgress == 4) {
+            if (EnvironmentHelper.isMultiplayerClient() && animation == TurtleAnimation.MOVE_FORWARD && animationProgress == 4) {
                 // Spawn love pfx if valentines day
                 Holiday currentHoliday = HolidayUtil.getCurrentHoliday();
                 if (currentHoliday == Holiday.VALENTINES) {

@@ -51,7 +51,7 @@ public class MonitorClientMessage implements NetworkMessage {
 
     @Override
     public void handle(NetworkContext context) {
-        if (!EnvironmentHelper.isServerEnvironment()) {
+        if (!EnvironmentHelper.isMultiplayerServer()) {
             clientHandler(context);
         }
     }

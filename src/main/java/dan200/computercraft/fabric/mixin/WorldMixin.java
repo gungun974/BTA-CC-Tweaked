@@ -29,7 +29,7 @@ public abstract class WorldMixin {
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tickStart(CallbackInfo ci) {
-        if (!EnvironmentHelper.isSinglePlayer()) {
+        if (!EnvironmentHelper.isSingleplayerClient()) {
             return;
         }
         PortableTickScheduler.mainPortableTickScheduler.tickAtStart();
@@ -42,7 +42,7 @@ public abstract class WorldMixin {
 
     @Inject(method = "tick", at = @At("RETURN"))
     public void tickEnd(CallbackInfo ci) {
-        if (!EnvironmentHelper.isSinglePlayer()) {
+        if (!EnvironmentHelper.isSingleplayerClient()) {
             return;
         }
         PortableTickScheduler.mainPortableTickScheduler.tickAtEnd();

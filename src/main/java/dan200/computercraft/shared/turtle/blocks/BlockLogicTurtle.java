@@ -58,7 +58,7 @@ public class BlockLogicTurtle extends BlockLogicComputer {
         turtle.setDirection(direction);
         turtle.carriedBlock = null;
 
-        if (!EnvironmentHelper.isClientWorld()) {
+        if (!EnvironmentHelper.isMultiplayerClient()) {
             ServerComputer computer = turtle.getServerComputer();
 
             if (computer != null) {

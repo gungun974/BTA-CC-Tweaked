@@ -160,7 +160,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
         }
 
         if (hasTerminalChanged() || force) {
-            if (!EnvironmentHelper.isSinglePlayer()) {
+            if (!EnvironmentHelper.isSingleplayerClient()) {
                 MinecraftServer server = MinecraftServer.getInstance();
                 // Send terminal state to clients who are currently interacting with the computer.
 
@@ -287,7 +287,7 @@ public class ServerComputer extends ServerTerminal implements IComputer, IComput
 
     public void broadcastDelete() {
         // Send deletion to client
-        if (EnvironmentHelper.isServerEnvironment()) {
+        if (EnvironmentHelper.isMultiplayerServer()) {
             NetworkHandler.sendToAllPlayers(new ComputerDeletedClientMessage(getInstanceID()));
         }
     }

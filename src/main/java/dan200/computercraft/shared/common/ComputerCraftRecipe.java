@@ -17,9 +17,8 @@ import net.minecraft.core.data.registry.recipe.RecipeGroup;
 import net.minecraft.core.data.registry.recipe.RecipeSymbol;
 import net.minecraft.core.data.registry.recipe.entry.RecipeEntryCrafting;
 import net.minecraft.core.item.ItemStack;
-import turniplabs.halplibe.util.RecipeEntrypoint;
 
-public class ComputerCraftRecipe implements RecipeEntrypoint {
+public class ComputerCraftRecipe {
 
     public static ComputerCraftRecipeNamespace COMPUTER_CRAFT = new ComputerCraftRecipeNamespace();
     public static RecipeGroup<RecipeEntryCrafting<?, ?>> WORKBENCH;
@@ -33,7 +32,6 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
     public static RecipeGroup<DiskRecipe> DISK;
     public static RecipeGroup<PrintoutRecipe> PRINTOUT;
 
-    @Override
     public void onRecipesReady() {
         ComputerCraft.log.info("Loading ComputerCraft recipes...");
         resetGroups();
@@ -41,7 +39,6 @@ public class ComputerCraftRecipe implements RecipeEntrypoint {
         load();
     }
 
-    @Override
     public void initNamespaces() {
         ComputerCraft.log.info("Loading ComputerCraft recipe namespaces...");
         resetGroups();

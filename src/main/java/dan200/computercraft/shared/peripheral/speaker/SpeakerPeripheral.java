@@ -79,7 +79,7 @@ public abstract class SpeakerPeripheral implements IPeripheral {
         Vector3dc pos = getPosition();
 
         context.issueMainThreadTask(() -> {
-            if (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer()) {
+            if (!EnvironmentHelper.isMultiplayerServer() && !EnvironmentHelper.isSingleplayerClient()) {
                 return null;
             }
 

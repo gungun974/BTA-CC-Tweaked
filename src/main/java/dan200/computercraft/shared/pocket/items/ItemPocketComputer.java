@@ -154,7 +154,7 @@ public class ItemPocketComputer extends Item implements IComputerItem, IMedia, I
     @Override
     public ItemStack onUse(@NotNull ItemStack selfStack, @NotNull World world, @NotNull Player player) {
         ItemStack stack = player.getHeldItem();
-        if (!EnvironmentHelper.isClientWorld()) {
+        if (!EnvironmentHelper.isMultiplayerClient()) {
             PocketServerComputer computer = createServerComputer(world, player.inventory, player, stack);
 
             boolean stop = false;
@@ -181,7 +181,7 @@ public class ItemPocketComputer extends Item implements IComputerItem, IMedia, I
 
     @Override
     public void inventoryTick(@NotNull ItemStack stack, World world, @NotNull Entity entity, int slotNum, boolean selected) {
-        if (!EnvironmentHelper.isClientWorld()) {
+        if (!EnvironmentHelper.isMultiplayerClient()) {
             // Server side
             ContainerInventory inventory = entity instanceof Player ? ((Player) entity).inventory : null;
             PocketServerComputer computer = createServerComputer(world, inventory, entity, stack);
@@ -286,7 +286,7 @@ public class ItemPocketComputer extends Item implements IComputerItem, IMedia, I
     }
 
     public PocketServerComputer createServerComputer(final World world, ContainerInventory inventory, Entity entity, @NotNull ItemStack stack) {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             return null;
         }
 

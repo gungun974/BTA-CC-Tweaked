@@ -5,7 +5,6 @@ import dan200.computercraft.client.BlockModelCorrectRotable;
 import dan200.computercraft.client.items.ItemModelRotatedBlock;
 import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
 import dan200.computercraft.shared.peripheral.diskdrive.BlockModelDiskDrive;
-import dan200.computercraft.shared.peripheral.diskdrive.ItemModelDisk;
 import dan200.computercraft.shared.peripheral.modem.wired.BlockModelCable;
 import dan200.computercraft.shared.peripheral.modem.wired.BlockModelModemFull;
 import dan200.computercraft.shared.peripheral.modem.wired.ItemModelCable;
@@ -27,15 +26,8 @@ import net.minecraft.client.render.item.model.ItemModelDispatcher;
 import net.minecraft.client.render.item.model.ItemModelStandard;
 import net.minecraft.client.render.texture.stitcher.IconCoordinate;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
-import net.minecraft.core.util.collection.NamespaceID;
-import turniplabs.halplibe.helper.ModelHelper;
-import turniplabs.halplibe.util.ModelEntrypoint;
 
-import static dan200.computercraft.ComputerCraft.MOD_ID;
-
-public class ComputerCraftModels implements ModelEntrypoint {
-
-    @Override
+public class ComputerCraftModels {
     public void initBlockModels(BlockModelDispatcher dispatcher) {
 
         final IconCoordinate a = TextureRegistry.getTexture("computercraft:block/computer_normal_front");
@@ -75,7 +67,6 @@ public class ComputerCraftModels implements ModelEntrypoint {
         ComputerCraft.log.info("Block Models initialized.");
     }
 
-    @Override
     public void initItemModels(ItemModelDispatcher dispatcher) {
         dispatcher.addDispatch(new ItemModelRotatedBlock(ComputerCraftItems.COMPUTER_NORMAL));
         dispatcher.addDispatch(new ItemModelRotatedBlock(ComputerCraftItems.COMPUTER_ADVANCED));
@@ -120,12 +111,10 @@ public class ComputerCraftModels implements ModelEntrypoint {
         ComputerCraft.log.info("Item Models initialized.");
     }
 
-    @Override
     public void initEntityModels(EntityRendererDispatcher dispatcher) {
 
     }
 
-    @Override
     public void initTileEntityModels(TileEntityRenderDispatcher dispatcher) {
         dispatcher.assignRenderer(TileMonitor.class, new TileEntityMonitorRenderer());
 
@@ -134,7 +123,6 @@ public class ComputerCraftModels implements ModelEntrypoint {
         ComputerCraft.log.info("Tile Entity Models initialized.");
     }
 
-    @Override
     public void initBlockColors(BlockColorDispatcher dispatcher) {
     }
 }

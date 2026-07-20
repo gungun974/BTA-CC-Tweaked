@@ -30,17 +30,8 @@
         "main": [
             "dan200.computercraft.ComputerCraft"
         ],
-        "recipesReady": [
-            "dan200.computercraft.shared.common.ComputerCraftRecipe"
-        ],
-        "initModels": [
-            "dan200.computercraft.shared.common.ComputerCraftModels"
-        ],
-        "beforeGameStart": [
-            "dan200.computercraft.ComputerCraft"
-        ],
-        "afterGameStart": [
-            "dan200.computercraft.ComputerCraft"
+        "client": [
+            "dan200.computercraft.ComputerCraftClient"
         ]
     },
     "mixins": [

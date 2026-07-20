@@ -108,7 +108,7 @@ public class ItemPrintout extends Item {
 
     @Override
     public ItemStack onUse(@NotNull ItemStack selfStack, @NotNull World world, @NotNull Player player) {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             return selfStack;
         }
 

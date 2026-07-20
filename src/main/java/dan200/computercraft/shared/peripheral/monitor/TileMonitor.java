@@ -87,7 +87,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             return;
         }
         destroyed = true;
-        if (!EnvironmentHelper.isClientWorld()) {
+        if (!EnvironmentHelper.isMultiplayerClient()) {
             contractNeighbours();
         }
     }
@@ -103,7 +103,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
 
     public boolean onInteracted(Player player, Side side, double xPlaced, double yPlaced) {
         if (!player.isSneaking() && getFront() == side.direction()) {
-            if (!EnvironmentHelper.isClientWorld()) {
+            if (!EnvironmentHelper.isMultiplayerClient()) {
                 HitResult hit = player.rayCast(player.distanceTo(tilePos.x, tilePos.y, tilePos.z), 0, false, false, true);
                 if (hit != null) {
                     monitorTouched((float) (hit.location.x() - tilePos.x), (float) (hit.location.y() - tilePos.y), (float) (hit.location.z() - tilePos.z));
@@ -148,7 +148,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             updateBlock();
         }
 
-        if (EnvironmentHelper.isSinglePlayer()) {
+        if (EnvironmentHelper.isSingleplayerClient()) {
             if (clientMonitor == null) {
                 clientMonitor = new ClientMonitor(advanced, this);
             }
@@ -234,7 +234,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
         height = nbt.getInteger(NBT_HEIGHT);
         advanced = nbt.getBoolean(NBT_ADVANCED);
 
-        if (!EnvironmentHelper.isServerEnvironment()) {
+        if (!EnvironmentHelper.isMultiplayerServer()) {
             if (oldXIndex != xIndex || oldYIndex != yIndex) {
                 if (oldXIndex == 0 && oldYIndex == 0 && clientMonitor != null) {
                     clientMonitor.destroy();
@@ -250,7 +250,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
             }
         }
 
-        if (EnvironmentHelper.isClientWorld() && !(xIndex == 0 && yIndex == 0)) {
+        if (EnvironmentHelper.isMultiplayerClient() && !(xIndex == 0 && yIndex == 0)) {
             TilePos pos = offset(getPos(), getRight(), -xIndex, getDown(), -yIndex);
 
             TileEntity te = worldObj.getTileEntity(pos);
@@ -554,7 +554,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
 
     @SuppressWarnings("StatementWithEmptyBody")
     void expand() {
-        if (EnvironmentHelper.isSinglePlayer()) {
+        if (EnvironmentHelper.isSingleplayerClient()) {
             createServerMonitor();
         }
 
@@ -562,7 +562,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
     }
 
     void contractNeighbours() {
-        if (EnvironmentHelper.isSinglePlayer()) {
+        if (EnvironmentHelper.isSingleplayerClient()) {
             createServerMonitor();
         }
         visiting = true;
@@ -595,7 +595,7 @@ public class TileMonitor extends TileGeneric implements IPeripheralTile {
     }
 
     void contract() {
-        if (EnvironmentHelper.isSinglePlayer()) {
+        if (EnvironmentHelper.isSingleplayerClient()) {
             createServerMonitor();
         }
         int height = this.height;

@@ -66,7 +66,7 @@ public final class IDAssigner {
     }
 
     public static File getWorldDir() {
-        if (EnvironmentHelper.isServerEnvironment()) {
+        if (EnvironmentHelper.isMultiplayerServer()) {
             return new File(MinecraftServer.getInstance().getMinecraftDir(), ((IWorldDirNameAccess) MinecraftServer.getInstance()).cc_bta$getWorldDirName() + "/computercraft");
         }
         return new File(Minecraft.getMinecraft().getMinecraftDir(), "saves/" + ((IWorldDirNameAccess) Minecraft.getMinecraft()).cc_bta$getWorldDirName() + "/computercraft");

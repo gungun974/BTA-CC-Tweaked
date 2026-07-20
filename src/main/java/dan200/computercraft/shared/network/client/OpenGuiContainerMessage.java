@@ -25,11 +25,11 @@ abstract class OpenGuiContainerMessage<A> implements NetworkMessage {
     }
 
     public void sendToPlayer(Player player) {
-        if (EnvironmentHelper.isServerEnvironment()) {
+        if (EnvironmentHelper.isMultiplayerServer()) {
             serverSetWindow(player);
         }
         NetworkHandler.sendToPlayer(player, this);
-        if (EnvironmentHelper.isServerEnvironment()) {
+        if (EnvironmentHelper.isMultiplayerServer()) {
             this.serverSetWindow2(player);
         }
     }
@@ -69,11 +69,11 @@ abstract class OpenGuiContainerMessage<A> implements NetworkMessage {
 
     @Override
     public void handle(NetworkContext context) {
-        if (EnvironmentHelper.isSinglePlayer()) {
+        if (EnvironmentHelper.isSingleplayerClient()) {
             doSinglePlayer();
             return;
         }
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             doClient();
         }
     }

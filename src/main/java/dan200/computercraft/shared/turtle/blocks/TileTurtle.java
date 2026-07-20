@@ -89,7 +89,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
             super.destroy();
 
             // Drop contents
-            if (!EnvironmentHelper.isClientWorld()) {
+            if (!EnvironmentHelper.isMultiplayerClient()) {
                 int size = inventory.size();
                 for (int i = 0; i < size; i++) {
                     ItemStack stack = getItem(i);
@@ -185,7 +185,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
         if (currentItem != null) {
             if (currentItem.getItem() instanceof ItemDye) {
                 // Dye to change turtle colour
-                if (!EnvironmentHelper.isClientWorld()) {
+                if (!EnvironmentHelper.isMultiplayerClient()) {
                     DyeColor dye = DyeColor.colorFromItemMeta(currentItem.getMetadata());
                     if (brain.getDyeColour() != dye) {
                         brain.setDyeColour(dye);
@@ -201,7 +201,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
             }
 //TODO:            else if (currentItem.getItem().equals(Items.BUCKET_WATER) && brain.getColour() != -1) {
 //                // Water to remove turtle colour
-//                if (!EnvironmentHelper.isClientWorld()) {
+//                if (!EnvironmentHelper.isMultiplayerClient()) {
 //                    if (brain.getColour() != -1) {
 //                        brain.setColour(-1);
 //                        if (player.gamemode != Gamemodes.CREATIVE) {
@@ -217,7 +217,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
         // Open GUI or whatever
         //return super.onBlockRightClicked( player, side, xPlaced, yPlaced );
         // Open the GUI
-        if (!EnvironmentHelper.isClientWorld() && isUsable(player, false)) {
+        if (!EnvironmentHelper.isMultiplayerClient() && isUsable(player, false)) {
             createServerComputer().turnOn();
             createServerComputer().sendTerminalState(player);
             ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this));
@@ -237,7 +237,7 @@ public class TileTurtle extends TileComputerBase implements ITurtleTile, Contain
     public void tick() {
         super.tick();
         brain.update();
-        if (!EnvironmentHelper.isClientWorld() && inventoryChanged) {
+        if (!EnvironmentHelper.isMultiplayerClient() && inventoryChanged) {
             ServerComputer computer = getServerComputer();
             if (computer != null) {
                 computer.queueEvent("turtle_inventory");

@@ -56,7 +56,7 @@ public class TurtleInventoryCrafting extends ContainerCrafting {
 
     @Nullable
     public List<ItemStack> doCrafting(World world, int maxCount) {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             return null;
         }
 

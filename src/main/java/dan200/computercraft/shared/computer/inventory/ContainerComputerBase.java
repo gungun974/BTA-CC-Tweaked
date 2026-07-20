@@ -40,7 +40,7 @@ public class ContainerComputerBase implements IContainerComputer {
     @Nullable
     @Override
     public IComputer getComputer() {
-        if (EnvironmentHelper.isServerEnvironment() || EnvironmentHelper.isSinglePlayer()) {
+        if (EnvironmentHelper.isMultiplayerServer() || EnvironmentHelper.isSingleplayerClient()) {
             return ComputerCraft.serverComputerRegistry.get(instanceId);
         }
 

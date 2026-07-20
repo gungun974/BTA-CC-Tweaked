@@ -114,7 +114,7 @@ public class TurtleModem extends AbstractTurtleUpgrade {
     @Override
     public void update(@NotNull ITurtleAccess turtle, @NotNull TurtleSide side) {
         // Advance the modem
-        if (!EnvironmentHelper.isClientWorld()) {
+        if (!EnvironmentHelper.isMultiplayerClient()) {
             IPeripheral peripheral = turtle.getPeripheral(side);
             if (peripheral instanceof Peripheral) {
                 ModemState state = ((Peripheral) peripheral).getModemState();

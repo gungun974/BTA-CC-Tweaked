@@ -91,7 +91,7 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
         }
 
         // Open the GUI
-        if (!EnvironmentHelper.isClientWorld()) {
+        if (!EnvironmentHelper.isMultiplayerClient()) {
             new OpenGuiPrinterClientMessage(this).sendToPlayer(player);
         }
         return true;
@@ -141,7 +141,7 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
             return;
         }
 
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             return;
         }
 

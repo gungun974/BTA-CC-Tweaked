@@ -94,7 +94,7 @@ public class TileCable extends TileGeneric implements IPeripheralTile {
     }
 
     private void onRemove() {
-        if (worldObj == null || !EnvironmentHelper.isClientWorld()) {
+        if (worldObj == null || !EnvironmentHelper.isMultiplayerClient()) {
             node.remove();
             connectionsFormed = false;
         }
@@ -108,7 +108,7 @@ public class TileCable extends TileGeneric implements IPeripheralTile {
             return false;
         }
 
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             return true;
         }
 
@@ -146,7 +146,7 @@ public class TileCable extends TileGeneric implements IPeripheralTile {
             return;
         }
 
-        if (EnvironmentHelper.isServerEnvironment() || EnvironmentHelper.isSinglePlayer()) {
+        if (EnvironmentHelper.isMultiplayerServer() || EnvironmentHelper.isSingleplayerClient()) {
             portableTickScheduler.scheduleOnNextEndTick(() -> onNeighbourTileEntityChange(neighbour));
         }
     }
@@ -168,7 +168,7 @@ public class TileCable extends TileGeneric implements IPeripheralTile {
 
     void modemChanged() {
         // Tell anyone who cares that the connection state has changed
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             return;
         }
 
@@ -184,7 +184,7 @@ public class TileCable extends TileGeneric implements IPeripheralTile {
     }
 
     void connectionsChanged() {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             return;
         }
 
@@ -260,7 +260,7 @@ public class TileCable extends TileGeneric implements IPeripheralTile {
     }
 
     public void onNeighbourTileEntityChange(@NotNull TilePosc neighbour) {
-        if (!EnvironmentHelper.isClientWorld() && peripheralAccessAllowed) {
+        if (!EnvironmentHelper.isMultiplayerClient() && peripheralAccessAllowed) {
             Direction facing = getDirection();
             refreshPeripheral();
         }
@@ -273,7 +273,7 @@ public class TileCable extends TileGeneric implements IPeripheralTile {
         super.tick();
         portableTickScheduler.tickAtStart();
 
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             portableTickScheduler.tickAtEnd();
             return;
         }

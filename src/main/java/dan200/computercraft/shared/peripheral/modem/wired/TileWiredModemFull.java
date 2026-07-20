@@ -82,14 +82,14 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
     }
 
     private void doRemove() {
-        if (worldObj == null || !EnvironmentHelper.isClientWorld()) {
+        if (worldObj == null || !EnvironmentHelper.isMultiplayerClient()) {
             node.remove();
             connectionsFormed = false;
         }
     }
 
     public boolean onInteracted(Player player, Side side, double xPlaced, double yPlaced) {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             return true;
         }
 
@@ -107,7 +107,7 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
     }
 
     public void onNeighbourTileEntityChange(@NotNull TilePosc neighbour) {
-        if (!EnvironmentHelper.isClientWorld() && peripheralAccessAllowed) {
+        if (!EnvironmentHelper.isMultiplayerClient() && peripheralAccessAllowed) {
             for (Direction facing : DirectionUtil.FACINGS) {
                 refreshPeripheral(facing);
             }
@@ -116,7 +116,7 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
 
     @Override
     public void tick() {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             return;
         }
 
@@ -142,7 +142,7 @@ public class TileWiredModemFull extends TileGeneric implements IPeripheralTile {
     }
 
     private void connectionsChanged() {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             return;
         }
 

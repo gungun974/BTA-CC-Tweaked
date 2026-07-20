@@ -57,7 +57,6 @@ public class ComputerCraftItems {
         currentGeneratedId = ComputerCraft.startItemID;
 
         POCKET_COMPUTER_NORMAL = new ItemBuilder(MOD_ID)
-            .setKey("item.pocket_computer_normal")
             .addTags(ItemTags.NOT_IN_CREATIVE_MENU)
             .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS).setCustomSupplier(() -> {
                 List<ItemStack> creativeItems = new LinkedList<>();
@@ -66,10 +65,9 @@ public class ComputerCraftItems {
 
                 return creativeItems;
             }))
-            .build((new ItemPocketComputer(new NamespaceID(MOD_ID, "pocket_computer_normal"), "computercraft.pocket_computer_normal", generateNexId(), ComputerFamily.NORMAL)));
+            .build((new ItemPocketComputer(new NamespaceID(MOD_ID, "pocket_computer_normal"), "pocket_computer_normal", generateNexId(), ComputerFamily.NORMAL)));
 
         POCKET_COMPUTER_ADVANCED = new ItemBuilder(MOD_ID)
-            .setKey("item.pocket_computer_advanced")
             .addTags(ItemTags.NOT_IN_CREATIVE_MENU)
             .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS).setCustomSupplier(() -> {
                 List<ItemStack> creativeItems = new LinkedList<>();
@@ -78,10 +76,9 @@ public class ComputerCraftItems {
 
                 return creativeItems;
             }))
-            .build((new ItemPocketComputer(new NamespaceID(MOD_ID, "pocket_computer_advanced"), "computercraft.pocket_computer_advanced", generateNexId(), ComputerFamily.ADVANCED)));
+            .build((new ItemPocketComputer(new NamespaceID(MOD_ID, "pocket_computer_advanced"), "pocket_computer_advanced", generateNexId(), ComputerFamily.ADVANCED)));
 
         DISK = new ItemBuilder(MOD_ID)
-            .setKey("item.disk")
             .addTags(ItemTags.NOT_IN_CREATIVE_MENU)
             .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS).setCustomSupplier(() -> {
                 List<ItemStack> creativeItems = new LinkedList<>();
@@ -90,36 +87,30 @@ public class ComputerCraftItems {
 
                 return creativeItems;
             }))
-            .build((new ItemDisk(new NamespaceID(MOD_ID, "disk"), "computercraft.disk", generateNexId())));
+            .build((new ItemDisk(new NamespaceID(MOD_ID, "disk"), "disk", generateNexId())));
 
         TREASURE_DISK = new ItemBuilder(MOD_ID)
-            .setKey("item.treasure_disk")
             .addTags(ItemTags.NOT_IN_CREATIVE_MENU)
-            .build((new ItemTreasureDisk(new NamespaceID(MOD_ID, "treasure_disk"), "computercraft.treasure_disk", generateNexId())));
+            .build((new ItemTreasureDisk(new NamespaceID(MOD_ID, "treasure_disk"), "treasure_disk", generateNexId())));
 
         PRINTED_PAGE = new ItemBuilder(MOD_ID)
-            .setKey("item.printed_page")
             .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
-            .build((new ItemPrintout(new NamespaceID(MOD_ID, "printed_page"), "computercraft.printed_page", generateNexId(), ItemPrintout.Type.PAGE)));
+            .build((new ItemPrintout(new NamespaceID(MOD_ID, "printed_page"), "printed_page", generateNexId(), ItemPrintout.Type.PAGE)));
 
         PRINTED_PAGES = new ItemBuilder(MOD_ID)
-            .setKey("item.printed_pages")
             .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
-            .build((new ItemPrintout(new NamespaceID(MOD_ID, "printed_pages"), "computercraft.printed_page", generateNexId(), ItemPrintout.Type.PAGES)));
+            .build((new ItemPrintout(new NamespaceID(MOD_ID, "printed_pages"), "printed_page", generateNexId(), ItemPrintout.Type.PAGES)));
 
         PRINTED_BOOK = new ItemBuilder(MOD_ID)
-            .setKey("item.printed_book")
             .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
-            .build((new ItemPrintout(new NamespaceID(MOD_ID, "printed_book"), "computercraft.printed_page", generateNexId(), ItemPrintout.Type.BOOK)));
+            .build((new ItemPrintout(new NamespaceID(MOD_ID, "printed_book"), "printed_page", generateNexId(), ItemPrintout.Type.BOOK)));
 
         CABLE = new ItemBuilder(MOD_ID)
-            .setKey("item.cable")
             .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
-            .build((new ItemCable.Cable(new NamespaceID(MOD_ID, "cable"), "computercraft.cable", generateNexId())));
+            .build((new ItemCable.Cable(new NamespaceID(MOD_ID, "cable"), "cable", generateNexId())));
 
         WIRED_MODEM = new ItemBuilder(MOD_ID)
-            .setKey("item.wired_modem")
             .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS))
-            .build((new ItemCable.WiredModem(new NamespaceID(MOD_ID, "wired_modem"), "computercraft.wired_modem", generateNexId())));
+            .build((new ItemCable.WiredModem(new NamespaceID(MOD_ID, "wired_modem"), "wired_modem", generateNexId())));
     }
 }

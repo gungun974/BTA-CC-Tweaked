@@ -64,14 +64,14 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
             if (disk == null) {
                 return true;
             }
-            if (!EnvironmentHelper.isClientWorld() && getItem(0) == null && MediaProviders.get(disk) != null) {
+            if (!EnvironmentHelper.isMultiplayerClient() && getItem(0) == null && MediaProviders.get(disk) != null) {
                 setDiskStack(player.inventory.removeItem(player.inventory.getCurrentSlot(), 1));
                 player.setHeldObject(null);
             }
             return true;
         } else {
             // Open the GUI
-            if (!EnvironmentHelper.isClientWorld()) {
+            if (!EnvironmentHelper.isMultiplayerClient()) {
                 new OpenGuiDiskDriveClientMessage(this).sendToPlayer(player);
             }
             return true;
@@ -106,7 +106,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
     }
 
     public void markDirty() {
-        if (!EnvironmentHelper.isClientWorld()) {
+        if (!EnvironmentHelper.isMultiplayerClient()) {
             updateBlockState();
         }
     }
@@ -121,7 +121,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
 
         // Music
         synchronized (this) {
-            if (!EnvironmentHelper.isClientWorld() && recordPlaying != recordQueued || restartRecord) {
+            if (!EnvironmentHelper.isMultiplayerClient() && recordPlaying != recordQueued || restartRecord) {
                 restartRecord = false;
                 if (recordQueued) {
                     IMedia contents = getDiskMedia();
@@ -171,7 +171,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
 
     @Override
     public void setItem(int i, @Nullable ItemStack stack) {
-        if (EnvironmentHelper.isClientWorld()) {
+        if (EnvironmentHelper.isMultiplayerClient()) {
             diskStack = stack;
             diskMount = null;
             markDirty();
@@ -369,7 +369,7 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
     }
 
     private synchronized void ejectContents(boolean destroyed) {
-        if (EnvironmentHelper.isClientWorld() || diskStack == null) {
+        if (EnvironmentHelper.isMultiplayerClient() || diskStack == null) {
             return;
         }
 

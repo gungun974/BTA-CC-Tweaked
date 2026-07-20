@@ -31,9 +31,10 @@ import net.minecraft.core.item.ItemDiscMusic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import turniplabs.halplibe.HalpLibe;
+import turniplabs.halplibe.event.defs.CommonEvents;
 import turniplabs.halplibe.helper.EnvironmentHelper;
 import turniplabs.halplibe.helper.network.NetworkHandler;
-import turniplabs.halplibe.util.GameStartEntrypoint;
+import turniplabs.halplibe.util.dependency.Key;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,7 +42,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public final class ComputerCraft implements ModInitializer, GameStartEntrypoint {
+public final class ComputerCraft implements ModInitializer {
     public static final String MOD_ID = HalpLibe.registerMod("computercraft", true);
     // Registries
     public static final ClientComputerRegistry clientComputerRegistry = new ClientComputerRegistry();
@@ -100,6 +101,12 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onInitialize() {
+        log.info("Binding to events...");
+        CommonEvents.BEFORE_GAME_START.listen(Key.of(MOD_ID), this::beforeGameStart);
+        CommonEvents.AFTER_GAME_START.listen(Key.of(MOD_ID), this::afterGameStart);
+        CommonEvents.RECIPES_NAMESPACE_INIT.listen(Key.of(MOD_ID), () -> new ComputerCraftRecipe().initNamespaces());
+        CommonEvents.RECIPES_READY.listen(Key.of(MOD_ID), () -> new ComputerCraftRecipe().onRecipesReady());
+
         ComputerCraftBlocks.RegisterBlocks();
         ComputerCraftItems.RegisterItems();
 
@@ -167,16 +174,14 @@ public final class ComputerCraft implements ModInitializer, GameStartEntrypoint 
     }
 
 
-    @Override
     public void beforeGameStart() {
-        if (EnvironmentHelper.isServerEnvironment()) {
+        if (EnvironmentHelper.isMultiplayerServer()) {
             Config.serverStarting();
         } else {
             Config.clientStarted();
         }
     }
 
-    @Override
     public void afterGameStart() {
         ComputerCraftPocketUpgrades.registerPocketUpgrades();
         ComputerCraftTurtleUpgrades.registerTurtleUpgrades();

@@ -20,7 +20,7 @@ public class ComputerDeletedClientMessage extends ComputerClientMessage {
 
     @Override
     public void handle(NetworkContext context) {
-        if (!EnvironmentHelper.isServerEnvironment()) {
+        if (!EnvironmentHelper.isMultiplayerServer()) {
             clientHandler();
         }
     }

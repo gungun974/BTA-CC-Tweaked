@@ -74,7 +74,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     protected void unload() {
         if (instanceID >= 0) {
-            if (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer()) {
+            if (!EnvironmentHelper.isMultiplayerServer() && !EnvironmentHelper.isSingleplayerClient()) {
                 ComputerCraft.serverComputerRegistry.remove(instanceID);
             }
             instanceID = -1;
@@ -85,14 +85,14 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         ItemStack currentItem = player.getHeldItem();
         if (currentItem != null && currentItem.getItem().equals(Items.LABEL) && canNameWithTag(player) && currentItem.hasCustomName()) {
             // Label to rename computer
-            if (!EnvironmentHelper.isClientWorld()) {
+            if (!EnvironmentHelper.isMultiplayerClient()) {
                 setLabel(currentItem.getCustomName());
                 currentItem.consumeItem(player);
             }
             return true;
         } else if (!player.isSneaking()) {
             // Regular right click to activate computer
-            if (!EnvironmentHelper.isClientWorld() && isUsable(player, false)) {
+            if (!EnvironmentHelper.isMultiplayerClient() && isUsable(player, false)) {
                 createServerComputer().turnOn();
                 createServerComputer().sendTerminalState(player);
                 ((IComputerPlayer) player).setCurrentContainerComputer(new ContainerComputer(this));
@@ -110,7 +110,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
 
     public ServerComputer createServerComputer() {
-        if (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer()) {
+        if (!EnvironmentHelper.isMultiplayerServer() && !EnvironmentHelper.isSingleplayerClient()) {
             return null;
         }
 
@@ -133,13 +133,13 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     public ServerComputer getServerComputer() {
-        return (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer()) ? null : ComputerCraft.serverComputerRegistry.get(instanceID);
+        return (!EnvironmentHelper.isMultiplayerServer() && !EnvironmentHelper.isSingleplayerClient()) ? null : ComputerCraft.serverComputerRegistry.get(instanceID);
     }
 
     protected abstract ServerComputer createComputer(int instanceID, int id);
 
     public void updateRedstoneInput() {
-        if (worldObj == null || (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer())) {
+        if (worldObj == null || (!EnvironmentHelper.isMultiplayerServer() && !EnvironmentHelper.isSingleplayerClient())) {
             return;
         }
 
@@ -156,7 +156,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     public void updatePeripheral() {
-        if (worldObj == null || (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer())) {
+        if (worldObj == null || (!EnvironmentHelper.isMultiplayerServer() && !EnvironmentHelper.isSingleplayerClient())) {
             return;
         }
 
@@ -217,7 +217,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     public void onNeighbourChange(@NotNull TilePosc neighbour) {
         updateRedstoneInput(neighbour);
-        if (EnvironmentHelper.isServerEnvironment() || EnvironmentHelper.isSinglePlayer()) {
+        if (EnvironmentHelper.isMultiplayerServer() || EnvironmentHelper.isSingleplayerClient()) {
             portableTickScheduler.scheduleOnNextStartTick(() -> updatePeripheral(neighbour));
         }
     }
@@ -239,7 +239,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     @Override
     public void tick() {
         portableTickScheduler.tickAtStart();
-        if (EnvironmentHelper.isServerEnvironment() || EnvironmentHelper.isSinglePlayer()) {
+        if (EnvironmentHelper.isMultiplayerServer() || EnvironmentHelper.isSingleplayerClient()) {
             ServerComputer computer = createServerComputer();
             if (computer == null) {
                 portableTickScheduler.tickAtEnd();
@@ -278,7 +278,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     public void heldTick(World world, Entity holder) {
-        if (EnvironmentHelper.isServerEnvironment() || EnvironmentHelper.isSinglePlayer()) {
+        if (EnvironmentHelper.isMultiplayerServer() || EnvironmentHelper.isSingleplayerClient()) {
             ServerComputer computer = createServerComputer();
             if (computer == null) {
                 return;
@@ -296,7 +296,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
         updateBlock();
 
         for (Direction dir : DirectionUtil.FACINGS) {
-            if (EnvironmentHelper.isServerEnvironment() || EnvironmentHelper.isSinglePlayer()) {
+            if (EnvironmentHelper.isMultiplayerServer() || EnvironmentHelper.isSingleplayerClient()) {
                 ServerComputer computer = getServerComputer();
                 if (computer == null) {
                     continue;
@@ -332,7 +332,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
         worldObj.notifyBlockChange(tilePos, block);
 
-        if (EnvironmentHelper.isServerEnvironment()) {
+        if (EnvironmentHelper.isMultiplayerServer()) {
             updateBlockServer();
         }
     }
@@ -366,7 +366,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     private void updateRedstoneInput(TilePosc neighbour) {
-        if (worldObj == null || (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer())) {
+        if (worldObj == null || (!EnvironmentHelper.isMultiplayerServer() && !EnvironmentHelper.isSingleplayerClient())) {
             return;
         }
 
@@ -388,7 +388,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     private void updatePeripheral(TilePosc neighbour) {
-        if (worldObj == null || (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer())) {
+        if (worldObj == null || (!EnvironmentHelper.isMultiplayerServer() && !EnvironmentHelper.isSingleplayerClient())) {
             return;
         }
 
@@ -410,7 +410,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     private void updateRedstoneInput(Direction dir) {
-        if (worldObj == null || (!EnvironmentHelper.isServerEnvironment() && !EnvironmentHelper.isSinglePlayer())) {
+        if (worldObj == null || (!EnvironmentHelper.isMultiplayerServer() && !EnvironmentHelper.isSingleplayerClient())) {
             return;
         }
 
@@ -429,7 +429,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     @Override
     public final void setComputerID(int id) {
-        if ((!EnvironmentHelper.isSinglePlayer() && !EnvironmentHelper.isServerEnvironment()) || computerID == id) {
+        if ((!EnvironmentHelper.isSingleplayerClient() && !EnvironmentHelper.isMultiplayerServer()) || computerID == id) {
             return;
         }
 
@@ -454,7 +454,7 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
 
     @Override
     public final void setLabel(String label) {
-        if ((!EnvironmentHelper.isSinglePlayer() && !EnvironmentHelper.isServerEnvironment()) || Objects.equals(this.label, label)) {
+        if ((!EnvironmentHelper.isSingleplayerClient() && !EnvironmentHelper.isMultiplayerServer()) || Objects.equals(this.label, label)) {
             return;
         }
 

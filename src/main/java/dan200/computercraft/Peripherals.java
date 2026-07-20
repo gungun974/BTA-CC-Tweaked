@@ -32,7 +32,7 @@ public final class Peripherals {
 
     @Nullable
     public static IPeripheral getPeripheral(World world, TilePosc pos, Direction side) {
-        return pos.y() < World.HEIGHT_BLOCKS && (EnvironmentHelper.isServerEnvironment() || EnvironmentHelper.isSinglePlayer()) ? getPeripheralAt(world, pos, side) : null;
+        return pos.y() < World.HEIGHT_BLOCKS && (EnvironmentHelper.isMultiplayerServer() || EnvironmentHelper.isSingleplayerClient()) ? getPeripheralAt(world, pos, side) : null;
     }
 
     @Nullable

@@ -111,7 +111,7 @@ public class BlockLogicMonitor extends BlockLogic {
     @Override
     public void onPlacedByWorld(World world, TilePosc tilePos) {
         TileEntity entity = world.getTileEntity(tilePos);
-        if (entity instanceof TileMonitor monitor && !EnvironmentHelper.isClientWorld()) {
+        if (entity instanceof TileMonitor monitor && !EnvironmentHelper.isMultiplayerClient()) {
             monitor.updateNeighbors();
         }
     }
@@ -124,7 +124,7 @@ public class BlockLogicMonitor extends BlockLogic {
     public void onRemoved(World world, TilePosc tilePos, int data) {
         super.onRemoved(world, tilePos, data);
         TileEntity entity = world.getTileEntity(tilePos);
-        if (entity instanceof TileMonitor monitor && !EnvironmentHelper.isClientWorld()) {
+        if (entity instanceof TileMonitor monitor && !EnvironmentHelper.isMultiplayerClient()) {
             world.setBlockTypeDataRaw(tilePos, this.block, data);
             monitor.markDestroyed();
             world.setBlockTypeRaw(tilePos, Blocks.AIR);
