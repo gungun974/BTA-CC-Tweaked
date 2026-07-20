@@ -46,97 +46,76 @@ public class ComputerCraftModels implements ModelEntrypoint {
             throw new RuntimeException(e);
         }
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.COMPUTER_NORMAL, () -> new BlockModelComputer<>(ComputerCraftBlocks.COMPUTER_NORMAL, "computercraft:block/computer_normal"));
+        dispatcher.addDispatch(new BlockModelComputer<>(ComputerCraftBlocks.COMPUTER_NORMAL, "computercraft:block/computer_normal"));
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.COMPUTER_ADVANCED, () -> new BlockModelComputer<>(ComputerCraftBlocks.COMPUTER_ADVANCED, "computercraft:block/computer_advanced"));
+        dispatcher.addDispatch(new BlockModelComputer<>(ComputerCraftBlocks.COMPUTER_ADVANCED, "computercraft:block/computer_advanced"));
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.SPEAKER, () -> new BlockModelCorrectRotable<>(ComputerCraftBlocks.SPEAKER, BlockModelDispatcher.loadDataModel("computercraft:block/speaker").asModel()));
+        dispatcher.addDispatch(new BlockModelCorrectRotable<>(ComputerCraftBlocks.SPEAKER, BlockModelDispatcher.loadDataModel("computercraft:block/speaker").asModel()));
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.WIRELESS_MODEM_NORMAL, () -> new BlockModelWirelessModem<>(ComputerCraftBlocks.WIRELESS_MODEM_NORMAL, "computercraft:block/wireless_modem_normal"));
+        dispatcher.addDispatch(new BlockModelWirelessModem<>(ComputerCraftBlocks.WIRELESS_MODEM_NORMAL, "computercraft:block/wireless_modem_normal"));
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.WIRELESS_MODEM_ADVANCED, () -> new BlockModelWirelessModem<>(ComputerCraftBlocks.WIRELESS_MODEM_ADVANCED, "computercraft:block/wireless_modem_advanced"));
+        dispatcher.addDispatch(new BlockModelWirelessModem<>(ComputerCraftBlocks.WIRELESS_MODEM_ADVANCED, "computercraft:block/wireless_modem_advanced"));
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.WIRED_MODEM_FULL, () -> new BlockModelModemFull<>(ComputerCraftBlocks.WIRED_MODEM_FULL));
+        dispatcher.addDispatch(new BlockModelModemFull<>(ComputerCraftBlocks.WIRED_MODEM_FULL));
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.CABLE, () -> new BlockModelCable<>(ComputerCraftBlocks.CABLE));
+        dispatcher.addDispatch(new BlockModelCable<>(ComputerCraftBlocks.CABLE));
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.DISK_DRIVE, () -> new BlockModelDiskDrive<>(ComputerCraftBlocks.DISK_DRIVE));
+        dispatcher.addDispatch(new BlockModelDiskDrive<>(ComputerCraftBlocks.DISK_DRIVE));
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.PRINTER, () -> new BlockModelPrinter<>(ComputerCraftBlocks.PRINTER));
+        dispatcher.addDispatch(new BlockModelPrinter<>(ComputerCraftBlocks.PRINTER));
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.TURTLE_NORMAL, () -> new BlockModelTurtle<>(ComputerCraftBlocks.TURTLE_NORMAL));
+        dispatcher.addDispatch(new BlockModelTurtle<>(ComputerCraftBlocks.TURTLE_NORMAL));
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.TURTLE_ADVANCED, () -> new BlockModelTurtle<>(ComputerCraftBlocks.TURTLE_ADVANCED));
+        dispatcher.addDispatch(new BlockModelTurtle<>(ComputerCraftBlocks.TURTLE_ADVANCED));
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.MONITOR_NORMAL, () -> new BlockModelMonitor<>(ComputerCraftBlocks.MONITOR_NORMAL, "computercraft:block/monitor_normal"));
+        dispatcher.addDispatch(new BlockModelMonitor<>(ComputerCraftBlocks.MONITOR_NORMAL, "computercraft:block/monitor_normal"));
 
-        ModelHelper.setBlockModel(ComputerCraftBlocks.MONITOR_ADVANCED, () -> new BlockModelMonitor<>(ComputerCraftBlocks.MONITOR_ADVANCED, "computercraft:block/monitor_advanced"));
+        dispatcher.addDispatch(new BlockModelMonitor<>(ComputerCraftBlocks.MONITOR_ADVANCED, "computercraft:block/monitor_advanced"));
 
         ComputerCraft.log.info("Block Models initialized.");
     }
 
     @Override
     public void initItemModels(ItemModelDispatcher dispatcher) {
-        ModelHelper.setItemModel(ComputerCraftItems.COMPUTER_NORMAL, () -> new ItemModelRotatedBlock(ComputerCraftItems.COMPUTER_NORMAL));
-        ModelHelper.setItemModel(ComputerCraftItems.COMPUTER_ADVANCED, () -> new ItemModelRotatedBlock(ComputerCraftItems.COMPUTER_ADVANCED));
+        dispatcher.addDispatch(new ItemModelRotatedBlock(ComputerCraftItems.COMPUTER_NORMAL));
+        dispatcher.addDispatch(new ItemModelRotatedBlock(ComputerCraftItems.COMPUTER_ADVANCED));
 
-        ModelHelper.setItemModel(ComputerCraftItems.POCKET_COMPUTER_NORMAL, () -> {
-            ItemModelStandard itemModelStandard = new ItemModelPocketComputer(ComputerCraftItems.POCKET_COMPUTER_NORMAL);
-            itemModelStandard.icon = TextureRegistry.getTexture(new NamespaceID(MOD_ID, "item/pocket_computer_normal"));
-            return itemModelStandard;
-        });
+        dispatcher.addDispatch(new ItemModelPocketComputer(ComputerCraftItems.POCKET_COMPUTER_NORMAL)
+            .setIcon("computercraft:item/pocket_computer_normal"));
 
-        ModelHelper.setItemModel(ComputerCraftItems.POCKET_COMPUTER_ADVANCED, () -> {
-            ItemModelStandard itemModelStandard = new ItemModelPocketComputer(ComputerCraftItems.POCKET_COMPUTER_ADVANCED);
-            itemModelStandard.icon = TextureRegistry.getTexture(new NamespaceID(MOD_ID, "item/pocket_computer_advanced"));
-            return itemModelStandard;
-        });
+        dispatcher.addDispatch(new ItemModelPocketComputer(ComputerCraftItems.POCKET_COMPUTER_ADVANCED)
+            .setIcon("computercraft:item/pocket_computer_advanced"));
 
-        ModelHelper.setItemModel(ComputerCraftItems.SPEAKER, () -> new ItemModelRotatedBlock(ComputerCraftItems.SPEAKER));
-        ModelHelper.setItemModel(ComputerCraftItems.DISK_DRIVE, () -> new ItemModelRotatedBlock(ComputerCraftItems.DISK_DRIVE));
-        ModelHelper.setItemModel(ComputerCraftItems.PRINTER, () -> new ItemModelRotatedBlock(ComputerCraftItems.PRINTER));
+        dispatcher.addDispatch(new ItemModelRotatedBlock(ComputerCraftItems.SPEAKER));
+        dispatcher.addDispatch(new ItemModelRotatedBlock(ComputerCraftItems.DISK_DRIVE));
+        dispatcher.addDispatch(new ItemModelRotatedBlock(ComputerCraftItems.PRINTER));
 
-        ModelHelper.setItemModel(ComputerCraftItems.MONITOR_NORMAL, () -> new ItemModelRotatedBlock(ComputerCraftItems.MONITOR_NORMAL));
-        ModelHelper.setItemModel(ComputerCraftItems.MONITOR_ADVANCED, () -> new ItemModelRotatedBlock(ComputerCraftItems.MONITOR_ADVANCED));
+        dispatcher.addDispatch(new ItemModelRotatedBlock(ComputerCraftItems.MONITOR_NORMAL));
+        dispatcher.addDispatch(new ItemModelRotatedBlock(ComputerCraftItems.MONITOR_ADVANCED));
 
-        ModelHelper.setItemModel(ComputerCraftItems.TURTLE_NORMAL, () -> new ItemModelBlockTurtle(ComputerCraftItems.TURTLE_NORMAL));
-        ModelHelper.setItemModel(ComputerCraftItems.TURTLE_ADVANCED, () -> new ItemModelBlockTurtle(ComputerCraftItems.TURTLE_ADVANCED));
+        dispatcher.addDispatch(new ItemModelBlockTurtle(ComputerCraftItems.TURTLE_NORMAL));
+        dispatcher.addDispatch(new ItemModelBlockTurtle(ComputerCraftItems.TURTLE_ADVANCED));
 
-        ModelHelper.setItemModel(ComputerCraftItems.WIRELESS_MODEM_NORMAL, () -> new ItemModelRotatedBlock(ComputerCraftItems.WIRELESS_MODEM_NORMAL));
-        ModelHelper.setItemModel(ComputerCraftItems.WIRELESS_MODEM_ADVANCED, () -> new ItemModelRotatedBlock(ComputerCraftItems.WIRELESS_MODEM_ADVANCED));
+        dispatcher.addDispatch(new ItemModelRotatedBlock(ComputerCraftItems.WIRELESS_MODEM_NORMAL));
+        dispatcher.addDispatch(new ItemModelRotatedBlock(ComputerCraftItems.WIRELESS_MODEM_ADVANCED));
 
-        ModelHelper.setItemModel(ComputerCraftItems.DISK, () -> {
-            ItemModelStandard itemModelStandard = new ItemModelDisk(ComputerCraftItems.DISK);
-            itemModelStandard.icon = TextureRegistry.getTexture(new NamespaceID(MOD_ID, "item/disk_frame"));
-            return itemModelStandard;
-        });
+        dispatcher.addDispatch(new ItemModelStandard(ComputerCraftItems.DISK, false)
+            .setIcon("computercraft:item/disk_frame"));
 
-        ModelHelper.setItemModel(ComputerCraftItems.TREASURE_DISK, () -> {
-            ItemModelStandard itemModelStandard = new ItemModelDisk(ComputerCraftItems.TREASURE_DISK);
-            itemModelStandard.icon = TextureRegistry.getTexture(new NamespaceID(MOD_ID, "item/disk_frame"));
-            return itemModelStandard;
-        });
+        dispatcher.addDispatch(new ItemModelStandard(ComputerCraftItems.TREASURE_DISK, false)
+            .setIcon("computercraft:item/disk_frame"));
 
-        ModelHelper.setItemModel(ComputerCraftItems.PRINTED_PAGE, () -> {
-            ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.PRINTED_PAGE, false);
-            itemModelStandard.icon = TextureRegistry.getTexture(new NamespaceID(MOD_ID, "item/printed_page"));
-            return itemModelStandard;
-        });
+        dispatcher.addDispatch(new ItemModelStandard(ComputerCraftItems.PRINTED_PAGE, false)
+            .setIcon("computercraft:item/printed_page"));
 
-        ModelHelper.setItemModel(ComputerCraftItems.PRINTED_PAGES, () -> {
-            ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.PRINTED_PAGES, false);
-            itemModelStandard.icon = TextureRegistry.getTexture(new NamespaceID(MOD_ID, "item/printed_pages"));
-            return itemModelStandard;
-        });
+        dispatcher.addDispatch(new ItemModelStandard(ComputerCraftItems.PRINTED_PAGES, false)
+            .setIcon("computercraft:item/printed_pages"));
 
-        ModelHelper.setItemModel(ComputerCraftItems.PRINTED_BOOK, () -> {
-            ItemModelStandard itemModelStandard = new ItemModelStandard(ComputerCraftItems.PRINTED_BOOK, false);
-            itemModelStandard.icon = TextureRegistry.getTexture(new NamespaceID(MOD_ID, "item/printed_book"));
-            return itemModelStandard;
-        });
+        dispatcher.addDispatch(new ItemModelStandard(ComputerCraftItems.PRINTED_BOOK, false)
+            .setIcon("computercraft:item/printed_book"));
 
-        ModelHelper.setItemModel(ComputerCraftItems.CABLE, () -> new ItemModelCable(ComputerCraftItems.CABLE));
-        ModelHelper.setItemModel(ComputerCraftItems.WIRED_MODEM, () -> new ItemModelCable(ComputerCraftItems.WIRED_MODEM));
+        dispatcher.addDispatch(new ItemModelCable(ComputerCraftItems.CABLE));
+        dispatcher.addDispatch(new ItemModelCable(ComputerCraftItems.WIRED_MODEM));
 
         ComputerCraft.log.info("Item Models initialized.");
     }
@@ -148,9 +127,9 @@ public class ComputerCraftModels implements ModelEntrypoint {
 
     @Override
     public void initTileEntityModels(TileEntityRenderDispatcher dispatcher) {
-        ModelHelper.setTileEntityModel(TileMonitor.class, new TileEntityMonitorRenderer());
+        dispatcher.assignRenderer(TileMonitor.class, new TileEntityMonitorRenderer());
 
-        ModelHelper.setTileEntityModel(TileTurtle.class, new TileEntityRendererTurtle());
+        dispatcher.assignRenderer(TileTurtle.class, new TileEntityRendererTurtle());
 
         ComputerCraft.log.info("Tile Entity Models initialized.");
     }
