@@ -69,8 +69,11 @@ public final class TilePrinter extends TileGeneric implements IPeripheralTile, C
 
     @Override
     public void invalidate() {
-        ejectContents();
         super.invalidate();
+    }
+
+    public void destroy() {
+        ejectContents();
     }
 
     private static boolean isPaper(ItemStack stack) {

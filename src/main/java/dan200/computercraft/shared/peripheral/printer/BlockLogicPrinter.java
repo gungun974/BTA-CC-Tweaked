@@ -7,6 +7,7 @@ package dan200.computercraft.shared.peripheral.printer;
 
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.BlockLogicRotatable;
+import net.minecraft.core.block.entity.TileEntity;
 import net.minecraft.core.block.material.Materials;
 import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.util.helper.Side;
@@ -21,5 +22,13 @@ public class BlockLogicPrinter extends BlockLogicRotatable {
 
     public boolean onInteracted(World world, TilePosc tilePos, Player player, Side side, double xPlaced, double yPlaced) {
         return ((TilePrinter) world.getTileEntity(tilePos)).onInteracted(player, side, xPlaced, yPlaced);
+    }
+
+    @Override
+    public void onRemoved(World world, TilePosc tilePos, int data) {
+        TileEntity entity = world.getTileEntity(tilePos);
+        if (entity instanceof TilePrinter printer) {
+            printer.destroy();
+        }
     }
 }
