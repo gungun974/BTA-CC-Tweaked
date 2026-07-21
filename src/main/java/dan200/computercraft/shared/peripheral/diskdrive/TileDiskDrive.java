@@ -50,11 +50,17 @@ public final class TileDiskDrive extends TileGeneric implements IPeripheralTile,
 
     @Override
     public void invalidate() {
-        ejectContents(true);
         if (recordPlaying) {
             stopRecord();
         }
         super.invalidate();
+    }
+
+    public void destroy() {
+        ejectContents(true);
+        if (recordPlaying) {
+            stopRecord();
+        }
     }
 
     public boolean onInteracted(Player player, Side side, double xPlaced, double yPlaced) {
