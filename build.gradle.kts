@@ -169,7 +169,11 @@ tasks {
     }
     processResources {
         val resourceMap = mapOf(
-            "version" to modVersion.get()
+            "version" to modVersion.get(),
+            "fabricloader" to libs.versions.loader.get(),
+            "halplibe" to libs.versions.halplibe.get(),
+            "java" to libs.versions.java.get(),
+            "modmenu" to libs.versions.modMenu.get()
         )
         inputs.properties(resourceMap)
         filesMatching("fabric.mod.json") { expand(resourceMap) }
