@@ -102,7 +102,7 @@ public class ComputerCraftBlocks {
         TURTLE_NORMAL = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
-            .setTags(BlockTags.NOT_IN_CREATIVE_MENU, BlockTags.MINEABLE_BY_PICKAXE)
+            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS).setCustomSupplier(() -> {
                 List<ItemStack> creativeItems = new LinkedList<>();
 
@@ -120,7 +120,7 @@ public class ComputerCraftBlocks {
         TURTLE_ADVANCED = new BlockBuilder(MOD_ID)
             .setHardness(1.5f)
             .setResistance(10f)
-            .setTags(BlockTags.NOT_IN_CREATIVE_MENU, BlockTags.MINEABLE_BY_PICKAXE)
+            .setTags(BlockTags.MINEABLE_BY_PICKAXE)
             .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS).setCustomSupplier(() -> {
                 List<ItemStack> creativeItems = new LinkedList<>();
 

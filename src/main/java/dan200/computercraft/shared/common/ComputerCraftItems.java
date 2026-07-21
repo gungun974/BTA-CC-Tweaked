@@ -57,7 +57,6 @@ public class ComputerCraftItems {
         currentGeneratedId = ComputerCraft.startItemID;
 
         POCKET_COMPUTER_NORMAL = new ItemBuilder(MOD_ID)
-            .addTags(ItemTags.NOT_IN_CREATIVE_MENU)
             .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS).setCustomSupplier(() -> {
                 List<ItemStack> creativeItems = new LinkedList<>();
 
@@ -68,7 +67,6 @@ public class ComputerCraftItems {
             .build((new ItemPocketComputer(new NamespaceID(MOD_ID, "pocket_computer_normal"), "pocket_computer_normal", generateNexId(), ComputerFamily.NORMAL)));
 
         POCKET_COMPUTER_ADVANCED = new ItemBuilder(MOD_ID)
-            .addTags(ItemTags.NOT_IN_CREATIVE_MENU)
             .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS).setCustomSupplier(() -> {
                 List<ItemStack> creativeItems = new LinkedList<>();
 
@@ -79,7 +77,6 @@ public class ComputerCraftItems {
             .build((new ItemPocketComputer(new NamespaceID(MOD_ID, "pocket_computer_advanced"), "pocket_computer_advanced", generateNexId(), ComputerFamily.ADVANCED)));
 
         DISK = new ItemBuilder(MOD_ID)
-            .addTags(ItemTags.NOT_IN_CREATIVE_MENU)
             .setCreativeInventoryPlacement(new CreativeInventoryPlacement.Category(CreativeInventoryCategory.MISCELLANEOUS).setCustomSupplier(() -> {
                 List<ItemStack> creativeItems = new LinkedList<>();
 
