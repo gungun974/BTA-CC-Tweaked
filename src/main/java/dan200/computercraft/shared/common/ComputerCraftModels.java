@@ -5,6 +5,7 @@ import dan200.computercraft.client.BlockModelCorrectRotable;
 import dan200.computercraft.client.items.ItemModelRotatedBlock;
 import dan200.computercraft.shared.computer.blocks.BlockModelComputer;
 import dan200.computercraft.shared.peripheral.diskdrive.BlockModelDiskDrive;
+import dan200.computercraft.shared.peripheral.diskdrive.ItemModelDisk;
 import dan200.computercraft.shared.peripheral.modem.wired.BlockModelCable;
 import dan200.computercraft.shared.peripheral.modem.wired.BlockModelModemFull;
 import dan200.computercraft.shared.peripheral.modem.wired.ItemModelCable;
@@ -90,7 +91,7 @@ public class ComputerCraftModels {
         dispatcher.addDispatch(new ItemModelRotatedBlock(ComputerCraftItems.WIRELESS_MODEM_NORMAL));
         dispatcher.addDispatch(new ItemModelRotatedBlock(ComputerCraftItems.WIRELESS_MODEM_ADVANCED));
 
-        dispatcher.addDispatch(new ItemModelStandard(ComputerCraftItems.DISK, false)
+        dispatcher.addDispatch(new ItemModelDisk(ComputerCraftItems.DISK)
             .setIcon("computercraft:item/disk_frame"));
 
         dispatcher.addDispatch(new ItemModelStandard(ComputerCraftItems.TREASURE_DISK, false)
