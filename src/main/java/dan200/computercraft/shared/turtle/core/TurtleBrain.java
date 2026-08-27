@@ -12,6 +12,7 @@ import dan200.computercraft.api.lua.ILuaCallback;
 import dan200.computercraft.api.lua.MethodResult;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.api.turtle.*;
+import dan200.computercraft.core.computer.Computer;
 import dan200.computercraft.core.computer.ComputerSide;
 import dan200.computercraft.shared.TurtleUpgrades;
 import dan200.computercraft.shared.computer.blocks.BlockLogicComputer;
@@ -196,7 +197,7 @@ public class TurtleBrain implements ITurtleAccess {
         }
 
         // Ensure the chunk is loaded
-        if (!world.isChunkLoaded(new ChunkPos(Math.floorDiv(pos.x(), 16), Math.floorDiv(pos.z(), 16)))) {
+        if (!world.isChunkLoaded(new ChunkPos(pos))) {
             return false;
         }
 
@@ -206,7 +207,7 @@ public class TurtleBrain implements ITurtleAccess {
             // Create a new turtle
             if (world.setBlockTypeDataRaw(pos, owner.getBlock(), owner.getBlockMeta())) {
                 TileEntity newTile = world.getTileEntity(pos);
-                if (newTile instanceof TileTurtle) {
+                if (newTile instanceof TileTurtle newOwner) {
                     if (owner.createServerComputer().getRedstoneOutput(owner.remapToLocalSide(Direction.NORTH)) != 0) {
                         BlockLogicComputer.ENABLE_DOOR_PROTECTION[Side.NORTH.ordinal()] = false;
                     }
@@ -245,34 +246,22 @@ public class TurtleBrain implements ITurtleAccess {
                     BlockLogicComputer.ENABLE_DOOR_PROTECTION[Side.TOP.ordinal()] = true;
                     BlockLogicComputer.ENABLE_DOOR_PROTECTION[Side.BOTTOM.ordinal()] = true;
 
-                    newTile.invalidate();
+                    newOwner.transferStateFrom(owner);
+                    newOwner.createServerComputer()
+                        .setWorld(world);
+                    newOwner.createServerComputer()
+                        .setPosition(pos);
 
-                    // Remove the old turtle
+                    // Make sure everybody knows about it
+                    newOwner.updateBlock();
+                    newOwner.updateRedstoneInput();
+                    newOwner.updateRedstoneOutput();
+
                     world.removeTileEntity(oldPos);
                     world.setBlockTypeRaw(oldPos, Blocks.AIR);
                     world.notifyBlockChange(oldPos, Blocks.AIR);
 
-                    // Copy the old turtle state into the new turtle
-                    owner.validate();
-                    owner.tilePos.x = pos.x();
-                    owner.tilePos.y = pos.y();
-                    owner.tilePos.z = pos.z();
-
-                    world.removeTileEntity(pos);
-                    world.setTileEntity(pos, owner);
-
-                    owner.transferStateFrom(owner);
-                    owner.createServerComputer()
-                        .setWorld(world);
-                    owner.createServerComputer()
-                        .setPosition(pos);
-
-                    // Make sure everybody knows about it
-                    owner.updateBlock();
-                    owner.updateRedstoneInput();
-                    owner.updateRedstoneOutput();
-
-                    owner.notifyMoveEnd();
+                    newOwner.notifyMoveEnd();
 
                     Chunk oldChunk = world.getChunk(oldPos);
                     if (oldChunk != null) {

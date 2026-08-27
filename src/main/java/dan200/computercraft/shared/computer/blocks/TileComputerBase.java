@@ -483,4 +483,16 @@ public abstract class TileComputerBase extends TileGeneric implements IComputerT
     }
 
     public abstract ComputerProxy createProxy();
+
+    protected void transferStateFrom(TileComputerBase copy) {
+        if (copy.computerID != computerID || !Objects.equals(copy.instanceID, instanceID)) {
+            unload();
+            instanceID = copy.instanceID;
+            computerID = copy.computerID;
+            label = copy.label;
+            on = copy.on;
+            startOn = copy.startOn;
+        }
+        //copy.instanceID = null;
+    }
 }
